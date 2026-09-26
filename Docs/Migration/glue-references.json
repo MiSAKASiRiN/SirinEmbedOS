@@ -1,0 +1,30 @@
+{
+  "prototype_commit": "4ae5428c6fb9447b12a79a5cc30a8f47334f8f11",
+  "files": [
+    {
+      "source": "Core/Src/main.c",
+      "sha256": "8a51ab707944a0ec1dfffe0dc8106040ad69bda3664826519094e9a6987fb331",
+      "usage": "startup, indicator binding and board timing reference"
+    },
+    {
+      "source": "Core/Src/freertos.c",
+      "sha256": "ffc730c46cbfca200bc3d396201f361e4f6ec778c2658437cd261f4e4aa89751",
+      "usage": "kernel integration reference"
+    },
+    {
+      "source": "Tasks/Config/CONF_IMU_Task.h",
+      "sha256": "5c408be0f117532f1357e3ae386f48a5d2f15576345b4fc79cbca3bb237e49d1",
+      "usage": "Config/IMUConfig.h fixed wiring and startup defaults"
+    },
+    {
+      "source": "Tasks/Config/omx_uart_router_config.h",
+      "sha256": "e2239580327105b082f36bb90b3d9a5c873ad2bbf6a9350b323a5163c4560bab",
+      "usage": "Examples/PrototypeBindings/bindings.c actual port assignments"
+    },
+    {
+      "source": "Tasks/Config/omx_task_catalog.cpp",
+      "sha256": "43c09ba2471a036f0ab135d776cf3900df8359b9aa207d07c1fbd3670eb53a9b",
+      "usage": "Source/Kernel/kernel.c preserved bus and IMU priorities/stacks"
+    }
+  ]
+}

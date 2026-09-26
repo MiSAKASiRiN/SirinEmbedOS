@@ -1,0 +1,15 @@
+{
+  "source": "/Users/sirin/CLionProjects/h723vg-v2-prototype/Middlewares/ST/ARM/DSP/Inc",
+  "usage": "Headers only; SDK keeps the prototype weak matrix fallback and does not import a DSP binary.",
+  "files": [
+    {
+      "source": "Middlewares/ST/ARM/DSP/Inc/arm_math.h",
+      "sha256": "fd2d5cea2e3a8550635c51850f554f60c5a2c225d904bd565799050a89379866"
+    }
+  ],
+  "prototype_commit": "4ae5428c6fb9447b12a79a5cc30a8f47334f8f11",
+  "header_version": "CMSIS DSP V1.7.0 (18 March 2019)",
+  "license": "Apache-2.0",
+  "license_source": "Middlewares/Third_Party/ARM/DSP/LICENSE.txt",
+  "license_sha256": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363"
+}

@@ -1,0 +1,49 @@
+# Explicit fixed-board buses and devices.
+set(SRNOS_DEVICES_SOURCES
+    Source/IO/SPI/bsp_spi.c
+    Source/IO/I2C/bsp_i2c.c
+    Source/IO/CAN/External/tskptt_exfdcan_device.cpp
+    Source/IO/CAN/External/tskptt_exfdcan_rx_router.cpp
+    Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp
+    Source/IO/CAN/Native/bsp_fdcan.c
+    Source/IO/CAN/Router/can_router_core.cpp
+    Source/IO/CAN/Router/tskptt_ntfdcan_rx_router.cpp
+    Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp
+    Source/Devices/IMU/BMI088/bsp_bmi088.c
+    Source/Devices/IMU/Worker/tskptt_imu.c
+    Source/Devices/IMU/Worker/tskptt_imu_debug.c
+    Source/Devices/IMU/Worker/tskptt_imu_dt.c
+    Source/Devices/IMU/Worker/tskptt_imu_recovery.c
+    Source/Devices/IMU/Worker/tskptt_imu_snapshot.c
+    Source/Devices/IMU/imu_temp_controller.cpp
+    Source/Devices/IMU/lib_adp_omximu.cpp
+    Source/Devices/IMU/lib_imu.cpp
+    Source/Devices/IMU/lib_imu_orientation.c
+    Source/Devices/IMU/lib_ins.c
+    Source/Devices/IMU/mahony_filter.c
+    Source/Devices/IMU/quaternion_ekf.cpp
+    Source/Devices/EEPROM/lib_24c02.c
+    Source/Devices/EEPROM/lib_24c02_bl.c
+    Source/Devices/MCP2518FD/drv_canfdspi_api.c
+    Source/Devices/MCP2518FD/drv_spi.c
+    Source/Devices/Motors/C610/lib_adp_dji_c610.cpp
+    Source/Devices/Motors/C620/lib_adp_dji_c620.cpp
+    Source/Devices/Motors/DM4310/lib_adp_dm_4310.cpp
+    Source/Devices/Motors/DM4340/lib_adp_dm_4340.cpp
+    Source/Devices/Motors/GM6020/lib_adp_dji_gm6020.cpp
+    Source/Devices/Motors/LK8016E/lib_adp_lk_mg8016e.cpp
+    Source/Devices/Buzzer/bsp_buzzer.c
+    Source/Devices/WS2812/bsp_ws2812.c
+    Source/Devices/WS2812/ws2812_critical.c
+    Source/Devices/NaviVision/lib_adp_navision.cpp
+    Source/Devices/Supercapacitor/lib_adp_supcap.cpp
+    Board/Glue/fixed_resources.cpp
+    Board/Glue/indicators.c
+    Board/Glue/fixed_buses.c
+)
+set(SRNOS_DEVICES_PRIVATE_INCLUDES
+    Board/Glue
+    Source/IO/CAN/Router
+    Source/IO/CAN/External
+    Source/Devices/IMU/Worker
+)

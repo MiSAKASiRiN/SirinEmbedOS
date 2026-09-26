@@ -1,0 +1,3 @@
+#ifndef CAN_ROUTER_TEST_CMSIS_OS2_H
+#define CAN_ROUTER_TEST_CMSIS_OS2_H
+#endif

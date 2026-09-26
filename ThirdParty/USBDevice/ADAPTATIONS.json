@@ -1,0 +1,78 @@
+{
+  "prototype_commit": "4ae5428c6fb9447b12a79a5cc30a8f47334f8f11",
+  "files": [
+    {
+      "sdk_path": "Board/Glue/usb_device_board.c",
+      "prototype_path": "Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Target/usbd_conf.c",
+      "source_sha256": "724acd94e931645b3d4437ca11ad3454800ed3d7cc30e125df8de5093666426b",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/AL94.I-CUBE-USBD-COMPOSITE_conf.h",
+      "prototype_path": "Composite/AL94.I-CUBE-USBD-COMPOSITE_conf.h",
+      "source_sha256": "e1d3c09eb0d8f41d7445144320e338e91324e936640f7e9fa518b24ba0e187eb",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/omx_usbd_cdc_acm_if.c",
+      "prototype_path": "Project/UsbComposite/Src/omx_usbd_cdc_acm_if.c",
+      "source_sha256": "60f2f665663706fdcd49590dc2d4ef43dfbc819a5267ec7c4de181603c9aa160",
+      "prototype_worktree_changed": true
+    },
+    {
+      "sdk_path": "Source/Services/USB/omx_usb_cdc_channels.c",
+      "prototype_path": "Project/UsbComposite/Src/omx_usb_cdc_channels.c",
+      "source_sha256": "2e78f77dd1089013381e59eeff8f1af4d286424df4c4e4ef4afc84cf2f80e0a7",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/omx_usb_cdc_log_transport.c",
+      "prototype_path": "Project/UsbComposite/Src/omx_usb_cdc_log_transport.c",
+      "source_sha256": "54814e6a90e73770ef02be795790150f4313bc92efeba946d86548735055339a",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/omx_usb_cdc_channels.h",
+      "prototype_path": "Project/UsbComposite/Inc/omx_usb_cdc_channels.h",
+      "source_sha256": "38f966d988243339a91ad1f9b29646b8619b4581f8c6e614e082fee394ea74f9",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/omx_usb_cdc_log_transport.h",
+      "prototype_path": "Project/UsbComposite/Inc/omx_usb_cdc_log_transport.h",
+      "source_sha256": "eac1bbfbc63c5ed0372b0fdc42c90d9f8513420ce65b1c90adaea5f14d7cb570",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/omx_usb_composite_memcpy.h",
+      "prototype_path": "Project/UsbComposite/Inc/omx_usb_composite_memcpy.h",
+      "source_sha256": "02e43190788f6bfd4e027754b8695035956b63c6f55a523f99a23cdb64f0a758",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/usbd_desc.c",
+      "prototype_path": "Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/App/usbd_desc.c",
+      "source_sha256": "2170701d1ac5bf1eb0247d830ea4aa25f5b3055005c9cba332240804fa7e006d",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/usbd_desc.h",
+      "prototype_path": "Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/App/usbd_desc.h",
+      "source_sha256": "774aae0bdf6fb01e29078344a9b4c86558de92d139b23f9b024065693b2ae504",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/usbd_cdc_acm_if.h",
+      "prototype_path": "Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/App/usbd_cdc_acm_if.h",
+      "source_sha256": "4243b870e8b628780339061a6faeec7c77980f8d431c063787f0cd21783ccc20",
+      "prototype_worktree_changed": false
+    },
+    {
+      "sdk_path": "Source/Services/USB/usbd_conf.h",
+      "prototype_path": "Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Target/usbd_conf.h",
+      "source_sha256": "fa345e3eb4e3846d5c67bb0972a0fa21befcf340e03279287aa1db0ece975a68",
+      "prototype_worktree_changed": false
+    }
+  ],
+  "license_source": "/Users/sirin/STM32Cube/Repository/Packs/AL94/I-CUBE-USBD-COMPOSITE/1.0.3/I-CUBE-USBD-Composite/LICENSE.txt"
+}
