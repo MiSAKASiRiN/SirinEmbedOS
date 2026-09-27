@@ -22,15 +22,15 @@ notes={
 'lib_modbus_rtu':'迁入并适配共享RS485完整请求/应答调度。',
 'lib_rs485_lc_tl42r':'迁入：使用RS485总线endpoint，配置时声明，默认不控制设备。',
 'bsp_srn_log':'迁入：普通日志使用USB/SWO/已声明Serial通道，删除强制复位USART1路径。',
-'bsp_i2c':'迁入：固定I2C4绑定到Board，BDMA缓冲在D3，保留回调worker。',
-'bsp_spi':'迁入：固定SPI4绑定到Board，保留共享总线并发与回调worker。',
+'bsp_i2c':'迁入并修正：固定I2C4、D3 BDMA；按设备完成状态，确认abort及迟到IRQ隔离。',
+'bsp_spi':'迁入并重写：SPI4唯一High6分发、8槽复制队列、IMU/普通公平仲裁、确认取消及故障隔离。',
 'bsp_fdcan':'迁入：固定三路FDCAN由Board绑定，IO持有路由和收发。',
 'lib_mcp2518fd':'迁入：保留Microchip源码内许可；器件寄存器与CAN路由分开，Board管理引脚。',
-'lib_imu':'迁入：BMI088/INS/温控/校准，板上EEPROM分区固定，外部IMU默认不绑定。',
+'lib_imu':'拆分并替换：保留BMI驱动、Mahony及独立EKF数学/OMX协议；删除旧全局INS、方向预设、校准存储及温控worker。正式INS与统一温控位于Services/INS，原始采样位于Devices/Sensors。见Docs/INS.md。',
 'tskptt_referee_tx':'合并：发送经Serial队列；兼容的任务函数仅退出，不默认创建冗余TX线程。',
 'tskptt_rs485_router':'重写：固定UART7总线，多个endpoint串行事务、TC完成/应答超时/静默间隔。',
-'tskptt_param_console':'迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数。',
-'tskptt_host_comm':'迁入：启动注册冻结，CDC1传输，耗时存储由命令worker处理。',
+'tskptt_param_console':'迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数；增加启动冻结的LOAD/SAVE权限门控。',
+'tskptt_host_comm':'迁入并完善：注册冻结，CDC1会话清理、FIFO遥测和有界处理；SensorBringUp禁用存储。新增双IMU遥测与CLI见Docs/HostLink.md。',
 }
 rows=[]; records=[]
 for mod in manifest['modules']:
@@ -50,7 +50,7 @@ for mod in manifest['modules']:
                 target='ThirdParty/CMSISDSP/Include/arm_math.h';dst=root/target
             if not dst.exists() and dst.suffix=='.ld':
                 target='Board/Linker/SirinEmbedOS.ld';dst=root/target
-            files.append({'source':f['source'],'source_sha256':f['sha256'],'destination':target,'destination_sha256':hashlib.sha256(dst.read_bytes()).hexdigest() if dst.exists() else None})
+            files.append({'source':f['source'],'source_sha256':f['sha256'],'destination':target,'destination_sha256':hashlib.sha256(dst.read_bytes()).hexdigest() if dst.exists() else None,'disposition':'present' if dst.exists() else 'removed or superseded; see module result'})
     x['license_files']=licenses;x['source_notice_files']=notices
     x['license_status']='保留原许可文件及源码声明' if licenses else ('未发现独立LICENSE文件；保留源码内许可/版权声明' if notices else '原快照未发现独立许可证或源码许可声明；不推定许可证')
     x['files']=files;records.append(x)

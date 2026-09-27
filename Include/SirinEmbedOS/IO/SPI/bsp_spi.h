@@ -8,6 +8,7 @@
 #include "SirinEmbedOS/Diagnostics/Watch/omx_debug_watch.h"
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +41,9 @@ typedef enum
     BSP_SPI_OK = 0,
     BSP_SPI_BUSY,
     BSP_SPI_ERROR,
-    BSP_SPI_INVALID_PARAM
+    BSP_SPI_INVALID_PARAM,
+    BSP_SPI_TIMEOUT,
+    BSP_SPI_CANCELLED
 } bsp_spi_status_t;
 
 typedef enum
@@ -50,6 +53,12 @@ typedef enum
 } bsp_spi_bus_id_t;
 
 struct bsp_spi_bus;
+typedef struct {
+    uint32_t accepted, completed, queue_full, queue_expired, errors, timeouts, recoveries;
+    uint32_t max_queue_us, max_transfer_us;
+    /* <=25, <=100, <=250, <=500, <=1000, >1000 us. */
+    uint32_t queue_us[6], transfer_us[6];
+} bsp_spi_statistics_t;
 
 /* ============================================================
  * SPI Device Structure
@@ -63,6 +72,8 @@ typedef struct
     uint32_t            max_speed_hz;
     uint8_t             mode;
     uint8_t             bits_per_word;
+    uint8_t             imu_priority; /* Fixed at device initialization. */
+    bsp_spi_statistics_t statistics;
 } bsp_spi_device_t;
 
 /* Callback type */
@@ -110,6 +121,14 @@ typedef struct
  * PUBLIC API
  * ============================================================ */
 
+/* Task context only, after scheduler starts. Eight static slots (4 IMU / 4
+ * normal), TX copied on admission, maximum 512 bytes including command.
+ * Async OK means accepted, RX lives until callback or cancel returns OK.
+ * Callbacks run on High6 dispatcher and MUST NOT block. "direct" names also
+ * use staging. Sync waits for completion/cancellation; timeout never releases
+ * caller RX while a request may still copy into it. No external bus locking. */
+bsp_spi_status_t bsp_spi_cancel(bsp_spi_device_t *dev);
+void bsp_spi_get_statistics(const bsp_spi_device_t *, bsp_spi_statistics_t *);
 void bsp_spi_init_pre(void);
 void bsp_spi_init_rtos(void);
 
@@ -118,13 +137,6 @@ bsp_spi_status_t bsp_spi_device_init(bsp_spi_device_t *dev,
                                      GPIO_TypeDef *cs_port,
                                      uint16_t cs_pin);
 
-/**
- * @brief Start an async DMA transfer through internal staging buffers.
- *
- * This is the default safe API. tx_buf/rx_buf may live in normal cacheable RAM,
- * but len must not exceed BSP_SPI_DMA_STAGING_SIZE. The callback runs from HAL
- * bsp_spi_cb task context after the transfer owner has released the bus.
- */
 bsp_spi_status_t bsp_spi_transfer_dma(bsp_spi_device_t *dev,
                                       const uint8_t *tx_buf,
                                       uint8_t *rx_buf,
@@ -132,14 +144,6 @@ bsp_spi_status_t bsp_spi_transfer_dma(bsp_spi_device_t *dev,
                                       bsp_spi_callback_t cb,
                                       void *user_ctx);
 
-/**
- * @brief Start an async DMA transfer using caller buffers directly.
- *
- * Use this only when caller buffers are DMA-safe for the active cache policy
- * (for example BSP_SPI_DMA_SEC/static non-cacheable buffers, or explicit cache
- * maintenance). No staging copy is performed and len is not limited by
- * BSP_SPI_DMA_STAGING_SIZE.
- */
 bsp_spi_status_t bsp_spi_transfer_dma_direct(bsp_spi_device_t *dev,
                                              const uint8_t *tx_buf,
                                              uint8_t *rx_buf,
@@ -147,18 +151,12 @@ bsp_spi_status_t bsp_spi_transfer_dma_direct(bsp_spi_device_t *dev,
                                              bsp_spi_callback_t cb,
                                              void *user_ctx);
 
-/**
- * Blocking wrapper using the default safe staging path.
- */
 bsp_spi_status_t bsp_spi_transfer_dma_blocking(bsp_spi_device_t *dev,
                                                const uint8_t *tx_buf,
                                                uint8_t *rx_buf,
                                                size_t len,
                                                uint32_t timeout_ms);
 
-/**
- * Unified transfer (blocking or async), default safe staging path.
- */
 bsp_spi_status_t bsp_spi_transfer_ex(bsp_spi_device_t *dev,
                                      const uint8_t *tx_buf,
                                      uint8_t *rx_buf,
@@ -168,9 +166,6 @@ bsp_spi_status_t bsp_spi_transfer_ex(bsp_spi_device_t *dev,
                                      uint8_t blocking,
                                      uint32_t timeout_ms);
 
-/**
- * Unified transfer (blocking or async), direct caller-buffer path.
- */
 bsp_spi_status_t bsp_spi_transfer_direct_ex(bsp_spi_device_t *dev,
                                             const uint8_t *tx_buf,
                                             uint8_t *rx_buf,
@@ -180,9 +175,6 @@ bsp_spi_status_t bsp_spi_transfer_direct_ex(bsp_spi_device_t *dev,
                                             uint8_t blocking,
                                             uint32_t timeout_ms);
 
-/**
- * Convenience wrappers
- */
 static inline bsp_spi_status_t bsp_spi_transfer_blocking(bsp_spi_device_t *dev,
                                                          const uint8_t *tx,
                                                          uint8_t *rx,
@@ -202,10 +194,6 @@ static inline bsp_spi_status_t bsp_spi_transfer_async(bsp_spi_device_t *dev,
     return bsp_spi_transfer_ex(dev, tx, rx, len, cb, ctx, 0, 0);
 }
 
-/**
- * Start an async transfer after waiting at most timeout_ms for the bus.
- * Existing bsp_spi_transfer_async() keeps its zero-wait behavior.
- */
 static inline bsp_spi_status_t bsp_spi_transfer_async_wait(bsp_spi_device_t *dev,
                                                            const uint8_t *tx,
                                                            uint8_t *rx,
@@ -242,14 +230,8 @@ bsp_spi_status_t bsp_spi_get_snapshot(bsp_spi_bus_id_t bus_id,
 bsp_spi_status_t bsp_spi_recover_bus(bsp_spi_bus_id_t bus_id,
                                      uint32_t reason);
 
-/**
- * Bus-level acquire/release (DMA lifetime lock).
- * - timeout_ms == 0: try-acquire (no wait)
- * - async completion releases in ISR, unless completion arrived before the HAL
- *   launch call returned; blocking completion is released by its owner task
- */
-bsp_spi_status_t bsp_spi_bus_acquire(bsp_spi_device_t *dev, uint32_t timeout_ms);
-void bsp_spi_bus_release_isr(const bsp_spi_device_t *dev);
+
+
 
 #ifdef __cplusplus
 }

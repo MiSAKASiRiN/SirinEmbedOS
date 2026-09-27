@@ -37,6 +37,15 @@ def check(elf):
     assert 0x30000000 <= address("__dma_nc_start__") <= address("__debug_watch_end__")
     assert address("__debug_watch_end__") <= address("__sirinos_noinit_start__") < address("__sirinos_noinit_end__") <= 0x30008000
     assert 0x38000000 <= address("__bdma_buf_start__") <= address("__bdma_buf_end__") <= 0x38004000
+    # Queued SPI TX copies are ordinary D1 data; only staging is DMA-visible.
+    for name, size in (("tx_stage", 512), ("rx_stage", 512)):
+        if name in symbols:
+            assert address(name) % 32 == 0, name
+            assert 0x30000000 <= address(name) < address(name) + size <= 0x30008000, name
+    for name in ("s_i2c_tx_stage", "s_i2c_rx_stage"):
+        if name in symbols:
+            assert address(name) % 32 == 0, name
+            assert 0x38000000 <= address(name) < address(name) + 256 <= 0x38004000, name
     sections = run("starm-readelf", "-SW", str(elf))
     bss = re.search(r"\]\s+\.bss\s+NOBITS\s+([0-9a-fA-F]+)", sections)
     assert bss and address("__tls_end") <= int(bss[1], 16)
@@ -49,7 +58,7 @@ def check(elf):
     vectors = ["NMI_Handler", "HardFault_Handler", "MemManage_Handler", "BusFault_Handler", "UsageFault_Handler"]
     with tempfile.TemporaryDirectory(prefix="srnos-vectors-") as temp:
         vector_file = pathlib.Path(temp) / "vectors.bin"
-        subprocess.run(["starm-objcopy", "--dump-section", f".isr_vector={vector_file}", str(elf)], check=True)
+        subprocess.run(["starm-objcopy", "--dump-section", f".isr_vector={vector_file}", str(elf), str(pathlib.Path(temp) / "inspected.elf")], check=True)
         vector_bytes = vector_file.read_bytes()
         assert struct.unpack_from("<I", vector_bytes)[0] == address("_estack")
         for index, name in enumerate(vectors, 2):

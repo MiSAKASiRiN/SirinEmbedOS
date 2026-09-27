@@ -1,5 +1,11 @@
 # Explicit fixed-board buses and devices.
 set(SRNOS_DEVICES_SOURCES
+    Source/Devices/Sensors/sensors.c
+    Source/Devices/Sensors/sensor_codec.c
+    Source/Devices/Sensors/sensor_registers.c
+    Board/Glue/sensors_board.c
+    Board/Glue/sensor_frames.c
+    Board/Glue/ins_board.c
     Source/IO/SPI/bsp_spi.c
     Source/IO/I2C/bsp_i2c.c
     Source/IO/CAN/External/tskptt_exfdcan_device.cpp
@@ -10,20 +16,12 @@ set(SRNOS_DEVICES_SOURCES
     Source/IO/CAN/Router/tskptt_ntfdcan_rx_router.cpp
     Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp
     Source/Devices/IMU/BMI088/bsp_bmi088.c
-    Source/Devices/IMU/Worker/tskptt_imu.c
-    Source/Devices/IMU/Worker/tskptt_imu_debug.c
-    Source/Devices/IMU/Worker/tskptt_imu_dt.c
-    Source/Devices/IMU/Worker/tskptt_imu_recovery.c
-    Source/Devices/IMU/Worker/tskptt_imu_snapshot.c
-    Source/Devices/IMU/imu_temp_controller.cpp
     Source/Devices/IMU/lib_adp_omximu.cpp
-    Source/Devices/IMU/lib_imu.cpp
-    Source/Devices/IMU/lib_imu_orientation.c
-    Source/Devices/IMU/lib_ins.c
     Source/Devices/IMU/mahony_filter.c
     Source/Devices/IMU/quaternion_ekf.cpp
     Source/Devices/EEPROM/lib_24c02.c
     Source/Devices/EEPROM/lib_24c02_bl.c
+    Source/Devices/EEPROM/ft24c128a.c
     Source/Devices/MCP2518FD/drv_canfdspi_api.c
     Source/Devices/MCP2518FD/drv_spi.c
     Source/Devices/Motors/C610/lib_adp_dji_c610.cpp
@@ -45,5 +43,4 @@ set(SRNOS_DEVICES_PRIVATE_INCLUDES
     Board/Glue
     Source/IO/CAN/Router
     Source/IO/CAN/External
-    Source/Devices/IMU/Worker
 )

@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "SirinEmbedOS/Devices/Sensors.h"
+#include "SirinEmbedOS/Services/INS.h"
 #include "SirinEmbedOS/IO/Serial/Serial.h"
 #include "SirinEmbedOS/Services/RemoteControl/Startup.h"
 #include "SirinEmbedOS/Services/HostLink/tskptt_host_comm.h"
@@ -20,6 +22,8 @@ typedef struct {
     uint32_t priority;    /* CMSIS priority 1..39, below fixed bus workers. */
 } SRNOS_ThreadConfig;
 typedef struct {
+    SRNOS_SensorConfig sensors;
+    SRNOS_INSConfig ins;
     SRNOS_SerialConfig serial[SRNOS_SYSTEM_MAX_SERIAL];
     size_t serial_count;
     SRNOS_RemoteControlConfig remote;
@@ -29,6 +33,8 @@ typedef struct {
     bool logging_enabled;
     bool usb_enabled;
     bool host_link_enabled;
+    bool host_link_storage_enabled;
+    bool bringup_indicators;
     bool diagnostics_enabled;
     bool load_parameters;
     uint32_t rs485_response_timeout_ms;

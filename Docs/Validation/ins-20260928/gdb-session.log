@@ -1,0 +1,141 @@
+Remote debugging using localhost:2331
+0x08010ef6 in DWT_Init ()
+pc             0x8010ef6           0x8010ef6 <DWT_Init+158>
+lr             0x8013701           134297345
+sp             0x240026f0          0x240026f0 <pxReadyTasksLists+76>
+Reading symbols from /tmp/srnos-ins-debug-20260928.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x39b10 lma 0x80002d0
+Loading section .rodata, size 0x3178 lma 0x8039de0
+Loading section .ARM, size 0x10 lma 0x803cf58
+Loading section .preinit_array, size 0x4 lma 0x803cf68
+Loading section .data, size 0x3d4 lma 0x803cf6c
+Loading section .itcm_text, size 0xe0 lma 0x803d340
+Start address 0x080024dc, load size 250908
+Transfer rate: 81675 KB/sec, 25090 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8039de0: matched.
+Hardware assisted breakpoint 1 at 0x8014f00: file /Users/sirin/CLionProjects/SirinEmbedOS/Source/Core/Fault/Fault.c, line 78.
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+HAL_DMA_IRQHandler (hdma=0x24000e08 <hdma_spi4_rx>) at /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c:1210
+1210	  uint32_t timeout = SystemCoreClock / 9600U;
+$1 = {sampling = false, sequence = 81, free_heap = 112448, minimum_heap = 112448, ins = {attitude = {sequence = 0, epoch = 1, flags = 0, attitude_us = 0, published_us = 0, input_sequence = {79581, 79988}, input_age_us = {1858, 930}, source_mask = 0 '\000', new_sample_mask = 3 '\003', weights = {0, 0}, quaternion_wxyz = {1, 0, 0, 0}, euler_rad = {0, 0, 0}, accel_m_s2 = {-0.119701125, -0.371451229, 9.74623871}, gyro_rad_s = {-0.0141431317, -0.00922621228, -0.00842888281}}, status = {phase = SRNOS_INS_OBSERVING, flags = 768, epoch = 1, healthy_imu_mask = 3 '\003', calibrated = false, absolute_heading = false, updated_us = 80824968, cycles = 80004, publications = 0, dual_cycles = 0, single_cycles = 0, predicted_cycles = 0, missing_cycles = 16, recoveries = 0, missed_deadlines = 0, max_execution_us = 35, max_period_us = 1056, max_input_skew_us = 985, max_copy_us = 6, heater = {enabled = true, faulted = false, source = 1 '\001', source_selections = 1, target_c = 60, feedback_c = 60.1132812, duty = 0.235694855, thermal_ready = true, overtemperature = false, hardware_fault = false, feedback_missing = false, hot_sensor_mask = 0 '\000', protection_count = 0, protection_recoveries = 0}, sensors = {SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY}}, imu = {{header = {sequence = 79581, valid_fields = 19, acquisition_start_us = 80823044, acquisition_end_us = 80823110, state = SRNOS_SENSOR_READY}, raw_accel = {-232, 445, -10885}, raw_gyro = {9, 7, 25}, raw_temperature = 269, accel_m_s2 = {-0.208295554, -0.399532408, 9.77283192}, gyro_rad_s = {0.0095873801, -0.00745685119, -0.0266316105}, temperature_c = 56.625}, {header = {sequence = 79988, valid_fields = 19, acquisition_start_us = 80823988, acquisition_end_us = 80824038, state = SRNOS_SENSOR_READY}, raw_accel = {287, -26, 8124}, raw_gyro = {9, -31, 8}, raw_temperature = 8989, accel_m_s2 = {-0.0311066937, -0.34337005, 9.7196455}, gyro_rad_s = {-0.0378736444, -0.0109955743, 0.00977384392}, temperature_c = 60.1132812}}, magnetic = {header = {sequence = 7400, valid_fields = 20, acquisition_start_us = 80815324, acquisition_end_us = 80818257, state = SRNOS_SENSOR_READY}, raw_magnetic = {-346, 49, -249}, raw_temperature = 257, magnetic_uT = {7.35000038, 51.9000015, -37.3500023}, temperature_c = 57.125}, pressure = {header = {sequence = 1305, valid_fields = 24, acquisition_start_us = 80788261, acquisition_end_us = 80790318, state = SRNOS_SENSOR_READY}, raw_pressure = 281908, raw_temperature = 146742, pressure_pa = 80532.9688, temperature_c = 58.0117645}}, mcp = {accepted = 32040, completed = 32040, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 13, max_transfer_us = 18, queue_us = {32040, 0, 0, 0, 0, 0}, transfer_us = {32040, 0, 0, 0, 0, 0}}}
+$2 = {config = {enabled = true, board_to_robot_wxyz = {1, 0, 0, 0}}, snapshot = {attitude = {sequence = 0, epoch = 1, flags = 0, attitude_us = 0, published_us = 0, input_sequence = {80087, 80494}, input_age_us = {1856, 930}, source_mask = 0 '\000', new_sample_mask = 3 '\003', weights = {0, 0}, quaternion_wxyz = {1, 0, 0, 0}, euler_rad = {0, 0, 0}, accel_m_s2 = {-0.166979015, -0.322973788, 9.71436882}, gyro_rad_s = {-0.0139234317, -0.0102282427, -0.0119676068}}, status = {phase = SRNOS_INS_OBSERVING, flags = 768, epoch = 1, healthy_imu_mask = 3 '\003', calibrated = false, absolute_heading = false, updated_us = 81330967, cycles = 80510, publications = 0, dual_cycles = 0, single_cycles = 0, predicted_cycles = 0, missing_cycles = 16, recoveries = 0, missed_deadlines = 0, max_execution_us = 35, max_period_us = 1056, max_input_skew_us = 985, max_copy_us = 0, heater = {enabled = true, faulted = false, source = 1 '\001', source_selections = 1, target_c = 60, feedback_c = 60.1171875, duty = 0.237246439, thermal_ready = true, overtemperature = false, hardware_fault = false, feedback_missing = false, hot_sensor_mask = 0 '\000', protection_count = 0, protection_recoveries = 0}, sensors = {SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY}}, imu = {{header = {sequence = 80087, valid_fields = 19, acquisition_start_us = 81329045, acquisition_end_us = 81329111, state = SRNOS_SENSOR_READY}, raw_accel = {-308, 357, -10822}, raw_gyro = {14, 2, 11}, raw_temperature = 269, accel_m_s2 = {-0.276530296, -0.320523739, 9.71626949}, gyro_rad_s = {0.0149137024, -0.00213052891, -0.011717909}, temperature_c = 56.625}, {header = {sequence = 80494, valid_fields = 19, acquisition_start_us = 81329988, acquisition_end_us = 81330037, state = SRNOS_SENSOR_READY}, raw_accel = {272, -48, 8118}, raw_gyro = {15, -35, -10}, raw_temperature = 8990, accel_m_s2 = {-0.0574277416, -0.325423867, 9.71246719}, gyro_rad_s = {-0.0427605659, -0.0183259565, -0.0122173047}, temperature_c = 60.1171875}}, magnetic = {header = {sequence = 7451, valid_fields = 20, acquisition_start_us = 81325323, acquisition_end_us = 81328256, state = SRNOS_SENSOR_READY}, raw_magnetic = {-347, 45, -246}, raw_temperature = 255, magnetic_uT = {6.75000048, 52.0500031, -36.9000015}, temperature_c = 56.875}, pressure = {header = {sequence = 1313, valid_fields = 24, acquisition_start_us = 81278260, acquisition_end_us = 81280316, state = SRNOS_SENSOR_READY}, raw_pressure = 281878, raw_temperature = 146712, pressure_pa = 80533.2578, temperature_c = 58.0280151}}, filter = {Kp = 1, Ki = 0, dt = 0.00100000005, gyro = {x = 0, y = 0, z = 0}, acc = {x = 0, y = 0, z = 0}, exInt = 0, eyInt = 0, ezInt = 0, q0 = 1, q1 = 0, q2 = 0, q3 = 0, rMat = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}, pitch = 0, roll = 0, yaw = 0, mahony_init = 0x0 <HAL_DMA_DeInit>, mahony_input = 0x8021e01 <mahony_input>, mahony_update = 0x8021e11 <mahony_update>, mahony_output = 0x8022181 <mahony_output>, RotationMatrix_update = 0x8021d49 <RotationMatrix_update>}, window = {start_us = 0, count = 0, mean = {0, 0, 0, 0, 0, 0}, m2 = {0, 0, 0, 0, 0, 0}}, probe_us = 822014, thermal_start_us = 837965, last_step_us = 81330967, convergence_us = 0, good_since = {1244967, 837965}, used_sequence = {80087, 80494}, primary = 1, ever_available = true, session_active = true, seeded = false, running = false, warmup_expired = false}
+$3 = {start_us = 0, count = 0, mean = {0, 0, 0, 0, 0, 0}, m2 = {0, 0, 0, 0, 0, 0}}
+$4 = {sequence = 0, epoch = 1, flags = 0, attitude_us = 0, published_us = 0, input_sequence = {80087, 80494}, input_age_us = {1856, 930}, source_mask = 0 '\000', new_sample_mask = 3 '\003', weights = {0, 0}, quaternion_wxyz = {1, 0, 0, 0}, euler_rad = {0, 0, 0}, accel_m_s2 = {-0.166979015, -0.322973788, 9.71436882}, gyro_rad_s = {-0.0139234317, -0.0102282427, -0.0119676068}}
+$5 = {80087, 80494}
+$6 = 80760
+$7 = 0
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+rotate (q=0x2401a02c <core+4>, v=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/INS/ins_core.c:16
+warning: Source file is more recent than executable.
+16	    v[0]+=q[0]*t[0]+q[2]*t[2]-q[3]*t[1];
+Reading symbols from /tmp/srnos-ins-final-20260928.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x39b38 lma 0x80002d0
+Loading section .rodata, size 0x3178 lma 0x8039e08
+Loading section .ARM, size 0x10 lma 0x803cf80
+Loading section .preinit_array, size 0x4 lma 0x803cf90
+Loading section .data, size 0x3d4 lma 0x803cf94
+Loading section .itcm_text, size 0xe0 lma 0x803d368
+Start address 0x080024dc, load size 250948
+Transfer rate: 40844 KB/sec, 25094 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8039e08: matched.
+Hardware assisted breakpoint 2 at 0x8014f20: file /Users/sirin/CLionProjects/SirinEmbedOS/Source/Core/Fault/Fault.c, line 78.
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0801f594 in can_router_core_drain_tx (ch=1 '\001', now_ms=304307) at /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Router/can_router_core.cpp:964
+964	        attempts++;
+Reading symbols from /tmp/srnos-ins-accepted-20260928.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x398e8 lma 0x80002d0
+Loading section .rodata, size 0x3178 lma 0x8039bb8
+Loading section .ARM, size 0x10 lma 0x803cd30
+Loading section .preinit_array, size 0x4 lma 0x803cd40
+Loading section .data, size 0x3d0 lma 0x803cd44
+Loading section .itcm_text, size 0xe0 lma 0x803d118
+Start address 0x080024dc, load size 250352
+Transfer rate: 48896 KB/sec, 25035 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8039bb8: matched.
+Hardware assisted breakpoint 3 at 0x8014fa0: file /Users/sirin/CLionProjects/SirinEmbedOS/Source/Core/Fault/Fault.c, line 78.
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+bsp_i2c_wait_complete (dev=0x24006d24 <spa_device>, timeout_ms=5) at /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/I2C/bsp_i2c.c:1157
+1157	        if ((now - start) > timeout_ms)
+SRNOS_STACK_SCAN_BEGIN /tmp/srnos-ins-before
+SRNOS_STACK IDLE 0 0x24002030 0x2400222c
+SRNOS_STACK Indicators 8 0x24029be0 0x24029fdc
+SRNOS_STACK Environment 24 0x2402a7f0 0x2402afec
+SRNOS_STACK HostComm 24 0x20008048 0x20008844
+SRNOS_STACK CAN1_RX 40 0x200088c8 0x200098c4
+SRNOS_STACK CAN2_RX 40 0x2000a9c8 0x2000b9c4
+SRNOS_STACK CAN3_RX 40 0x2000cac8 0x2000dac4
+SRNOS_STACK INS 45 0x24028fd8 0x24029bd4
+SRNOS_STACK bsp_spi_cb 46 0x200002f0 0x20000eec
+SRNOS_STACK BMI 45 0x240287d0 0x24028fcc
+SRNOS_STACK LSM 45 0x24029fe8 0x2402a7e4
+SRNOS_STACK CAN4_TX 44 0x240277c8 0x240287c4
+SRNOS_STACK CAN1_TX 40 0x20009948 0x2000a944
+SRNOS_STACK CAN2_TX 40 0x2000ba48 0x2000ca44
+SRNOS_STACK CAN3_TX 40 0x2000db48 0x2000eb44
+SRNOS_STACK CAN4_RX 44 0x2000ebc8 0x2000fbc4
+SRNOS_STACK Logging 8 0x200067f8 0x20006ff4
+SRNOS_STACK Application 24 0x2402aff8 0x2402bff4
+SRNOS_STACK bsp_i2c_cb 46 0x20000f70 0x20001b6c
+SRNOS_STACK HostCmd 9 0x200077c8 0x20007fc4
+SRNOS_STACK Tmr Svc 2 0x240022a0 0x2400269c
+SRNOS_STACK_SCAN_END /tmp/srnos-ins-before
+$8 = {sampling = false, sequence = 46, free_heap = 112448, minimum_heap = 112448, ins = {attitude = {sequence = 0, epoch = 1, flags = 0, attitude_us = 0, published_us = 0, input_sequence = {44582, 44988}, input_age_us = {916, 865}, source_mask = 0 '\000', new_sample_mask = 3 '\003', weights = {0, 0}, quaternion_wxyz = {1, 0, 0, 0}, euler_rad = {0, 0, 0}, accel_m_s2 = {-0.18538031, -0.328204215, 9.73501015}, gyro_rad_s = {-0.0222108494, -0.00885004643, -0.0119526079}}, status = {phase = SRNOS_INS_WARMUP, flags = 784, epoch = 1, healthy_imu_mask = 3 '\003', calibrated = false, absolute_heading = false, updated_us = 45809294, cycles = 45004, publications = 0, dual_cycles = 0, single_cycles = 0, predicted_cycles = 0, missing_cycles = 16, recoveries = 0, missed_deadlines = 0, max_execution_us = 40, max_period_us = 1054, max_input_skew_us = 69, max_copy_us = 6, heater = {enabled = true, faulted = false, source = 1 '\001', source_selections = 1, target_c = 60, feedback_c = 59.546875, duty = 0.212053567, thermal_ready = false, overtemperature = false, hardware_fault = false, feedback_missing = false, hot_sensor_mask = 0 '\000', protection_count = 0, protection_recoveries = 0}, sensors = {SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY}}, imu = {{header = {sequence = 44582, valid_fields = 19, acquisition_start_us = 45808313, acquisition_end_us = 45808378, state = SRNOS_SENSOR_READY}, raw_accel = {-333, 342, -10836}, raw_gyro = {-5, 4, 19}, raw_temperature = 264, accel_m_s2 = {-0.298975945, -0.307056367, 9.72883892}, gyro_rad_s = {-0.00532632228, -0.00426105782, -0.0202400237}, temperature_c = 56}, {header = {sequence = 44988, valid_fields = 19, acquisition_start_us = 45808330, acquisition_end_us = 45808429, state = SRNOS_SENSOR_READY}, raw_accel = {292, -60, 8142}, raw_gyro = {11, -32, -3}, raw_temperature = 8844, accel_m_s2 = {-0.0717846826, -0.349352092, 9.74118137}, gyro_rad_s = {-0.0390953757, -0.013439035, -0.00366519159}, temperature_c = 59.546875}}, magnetic = {header = {sequence = 4175, valid_fields = 20, acquisition_start_us = 45799649, acquisition_end_us = 45802574, state = SRNOS_SENSOR_READY}, raw_magnetic = {-341, 58, -245}, raw_temperature = 250, magnetic_uT = {8.70000076, 51.1500015, -36.75}, temperature_c = 56.25}, pressure = {header = {sequence = 733, valid_fields = 24, acquisition_start_us = 45752586, acquisition_end_us = 45754642, state = SRNOS_SENSOR_READY}, raw_pressure = 281468, raw_temperature = 147686, pressure_pa = 80534.1328, temperature_c = 57.500412}}, mcp = {accepted = 18040, completed = 18040, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 14, max_transfer_us = 19, queue_us = {18040, 0, 0, 0, 0, 0}, transfer_us = {18040, 0, 0, 0, 0, 0}}}
+$9 = 0
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08010f78 in prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+SRNOS_STACK_SCAN_BEGIN /tmp/srnos-ins-after
+SRNOS_STACK IDLE 0 0x24002030 0x2400222c
+SRNOS_STACK Logging 8 0x200067f8 0x20006ff4
+SRNOS_STACK INS 45 0x24028fd8 0x24029bd4
+SRNOS_STACK LSM 45 0x24029fe8 0x2402a7e4
+SRNOS_STACK BMI 45 0x240287d0 0x24028fcc
+SRNOS_STACK CAN4_TX 44 0x240277c8 0x240287c4
+SRNOS_STACK bsp_spi_cb 46 0x200002f0 0x20000eec
+SRNOS_STACK CAN1_TX 40 0x20009948 0x2000a944
+SRNOS_STACK CAN2_TX 40 0x2000ba48 0x2000ca44
+SRNOS_STACK CAN3_TX 40 0x2000db48 0x2000eb44
+SRNOS_STACK Environment 24 0x2402a7f0 0x2402afec
+SRNOS_STACK HostComm 24 0x20008048 0x20008844
+SRNOS_STACK Indicators 8 0x24029be0 0x24029fdc
+SRNOS_STACK CAN1_RX 40 0x200088c8 0x200098c4
+SRNOS_STACK CAN2_RX 40 0x2000a9c8 0x2000b9c4
+SRNOS_STACK CAN3_RX 40 0x2000cac8 0x2000dac4
+SRNOS_STACK CAN4_RX 44 0x2000ebc8 0x2000fbc4
+SRNOS_STACK Application 24 0x2402aff8 0x2402bff4
+SRNOS_STACK bsp_i2c_cb 46 0x20000f70 0x20001b6c
+SRNOS_STACK HostCmd 9 0x200077c8 0x20007fc4
+SRNOS_STACK Tmr Svc 2 0x240022a0 0x2400269c
+SRNOS_STACK_SCAN_END /tmp/srnos-ins-after
+$10 = {sampling = false, sequence = 137, free_heap = 112448, minimum_heap = 112448, ins = {attitude = {sequence = 73488, epoch = 1, flags = 801, attitude_us = 136255089, published_us = 136255101, input_sequence = {135582, 135988}, input_age_us = {911, 854}, source_mask = 3 '\003', new_sample_mask = 3 '\003', weights = {0.5, 0.5}, quaternion_wxyz = {0.999621689, -0.0262286793, 0.00610729447, 0.005601421}, euler_rad = {-0.0523971654, 0.0125041297, 0.0108792968}, accel_m_s2 = {-0.140340775, -0.354236007, 9.70329857}, gyro_rad_s = {-0.0150519311, -0.00833241269, -0.00501339044}}, status = {phase = SRNOS_INS_RUNNING, flags = 801, epoch = 1, healthy_imu_mask = 3 '\003', calibrated = false, absolute_heading = false, updated_us = 136255089, cycles = 136004, publications = 73488, dual_cycles = 73488, single_cycles = 0, predicted_cycles = 0, missing_cycles = 16, recoveries = 0, missed_deadlines = 0, max_execution_us = 41, max_period_us = 1056, max_input_skew_us = 76, max_copy_us = 6, heater = {enabled = true, faulted = false, source = 1 '\001', source_selections = 1, target_c = 60, feedback_c = 60.1445312, duty = 0.158347532, thermal_ready = true, overtemperature = false, hardware_fault = false, feedback_missing = false, hot_sensor_mask = 0 '\000', protection_count = 0, protection_recoveries = 0}, sensors = {SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY}}, imu = {{header = {sequence = 135582, valid_fields = 19, acquisition_start_us = 136254112, acquisition_end_us = 136254178, state = SRNOS_SENSOR_READY}, raw_accel = {-238, 380, -10812}, raw_gyro = {5, -5, 14}, raw_temperature = 268, accel_m_s2 = {-0.213682503, -0.341173738, 9.70729065}, gyro_rad_s = {0.00532632228, 0.00532632228, -0.0149137024}, temperature_c = 56.5}, {header = {sequence = 135988, valid_fields = 19, acquisition_start_us = 136254129, acquisition_end_us = 136254235, state = SRNOS_SENSOR_READY}, raw_accel = {307, -56, 8107}, raw_gyro = {18, -29, 4}, raw_temperature = 8997, accel_m_s2 = {-0.0669990331, -0.367298275, 9.69930649}, gyro_rad_s = {-0.0354301855, -0.0219911486, 0.00488692196}, temperature_c = 60.1445312}}, magnetic = {header = {sequence = 12624, valid_fields = 20, acquisition_start_us = 136235444, acquisition_end_us = 136238376, state = SRNOS_SENSOR_READY}, raw_magnetic = {-353, 47, -237}, raw_temperature = 257, magnetic_uT = {7.05000019, 52.9500008, -35.5500031}, temperature_c = 57.125}, pressure = {header = {sequence = 2220, valid_fields = 24, acquisition_start_us = 136246381, acquisition_end_us = 136248381, state = SRNOS_SENSOR_READY}, raw_pressure = 282076, raw_temperature = 146388, pressure_pa = 80532.5078, temperature_c = 58.2035217}}, mcp = {accepted = 54440, completed = 54440, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 14, max_transfer_us = 19, queue_us = {54440, 0, 0, 0, 0, 0}, transfer_us = {54440, 0, 0, 0, 0, 0}}}
+$11 = 0
+$12 = 0x0
+$13 = 0x0
+$14 = {h = {magic = 1330468932, version = 1, size = 180, module_id = 1, instance = 0, seq = 0, flags = 0, last_tick = 0, last_status = 0}, xfer_start = 736718, xfer_done = 736718, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 4, state = 0, hal_state = 0, hal_error = 0, cb_status = 0, current_dev = 0, last_dev = 0, last_cs_port = 0, last_cs_pin = 0, lock_held = 0, lock_owner = 0, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 0, lock_busy = 0, lock_error = 0, lock_release = 0, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0, launch_guard = 0, pending_status = 0, early_complete = 0, deferred_publish = 0, spurious_complete = 0, pending_overwrite = 0, start_conflict = 0, last_hal_ret = 0}
+$15 = {h = {magic = 1330468932, version = 1, size = 148, module_id = 2, instance = 0, seq = 164735, flags = 0, last_tick = 136904, last_status = 2}, xfer_start = 54912, xfer_done = 54911, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 1, state = 1, hal_state = 32, hal_error = 0, current_dev = 604007696, last_dev = 604007696, mem_addr = 103, mem_addr_size = 1, xfer_type = 4 '\004', direct_xfer = 0 '\000', rx_copy_back = 1 '\001', reserved0 = 0 '\000', cb_status = 0, lock_held = 1, lock_owner = 536936096, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 54912, lock_busy = 0, lock_error = 0, lock_release = 54911, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0}
+$16 = {h = {magic = 1330468932, version = 1, size = 60, module_id = 3, instance = 0, seq = 109400, flags = 0, last_tick = 136904, last_status = 0}, xfer_calls = 54700, xfer_ok = 54700, xfer_busy = 0, xfer_timeout = 0, xfer_error = 0, last_ret = 0, last_size = 4, last_index = 0}
+$17 = {prepared = 1, boot_commits = 1, boot_notes = 3, heartbeat_edges = 273, dma_busy = 0, errors = 0, bringup = true, yellow = false}
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8039bb8: matched.
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Continuing.

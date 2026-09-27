@@ -23,13 +23,15 @@ cmake --build build/BringUp -j 8
 | `heap` | heap_5 当前空闲、历史最低空闲、最大连续空闲块及分配统计；不包含 libc arena 或 MSP。 |
 | `tasks` | 任务名、FreeRTOS 优先级、状态和历史最小空闲栈字节数。不是当前 SP 余量，也不能证明极端路径不会溢出。 |
 | `task_snapshot_complete` | 64 个有界槽位是否容纳完整任务列表；失败时不解释为空任务系统。 |
-| `imu`、`internal_imu_age_ms` | 原公共 IMU 快照和按 HAL 时基计算的数据年龄；无快照时年龄为 `UINT32_MAX`。 |
-| `internal_imu_recent` | 内部 IMU online、valid 且数据年龄不超过 100 ms；仅为本例观测阈值，不代表校准、方向或融合正确。 |
+| `imu`、`internal_imu_age_ms` | 正式 INS 一致快照和按 DWT 时基计算的姿态年龄；无姿态时年龄为 `UINT32_MAX`。 |
+| `internal_imu_recent` | 正式 INS 的 VALID 标记及本例观测年龄阈值；仍须看 INS 状态/epoch，不代表已经标定或完成精度验收。 |
 | `logging` | 日志队列/丢弃、USB 配置和流量等累计计数；结合 CDC0 实际输出判断链路。 |
 
 USB 没有枚举或 CDC0 没打开时，仍可通过调试器看快照。CDC1 保持默认 HostLink；本例未声明业务参数，并关闭启动业务参数恢复，因此 `parameter_load_status=OK` 不表示曾成功读取 EEPROM。
 
-示例本身只观测，未添加电机命令、CAN 测试帧、UART 绑定或 EEPROM 写入。SDK 默认固定服务仍会初始化 CAN、共享 SPI、IMU、指示器等；IMU 温控和原有校准/持久化行为仍保留，不能将此固件理解为整板外设静默模式。
+示例本身只观测，未添加电机命令、CAN 测试帧、UART 绑定或 EEPROM 写入。SDK 默认固定服务仍会初始化 CAN、共享 SPI、IMU、指示器等；本例通过冻结的 `sensors.heater_enabled=false` 禁止加热（包括恢复路径）；使用正式 INS，默认参数加载/存储关闭；旧融合和 IMU 校准/持久化入口已删除。原始双 IMU 对比请选择 SensorBringUp，完整姿态验证请选择 INSBringUp。
+
+本例启用 `bringup_indicators=true`：调度前第一灯黄色提交一次、蜂鸣器播放 1/1.5/2 kHz 各 80 ms；调度后原 Indicators 线程每 0.5 秒切换第一灯明灭，完整心跳周期 1 秒，不等待 CAN 或 USB。后续 BringUp 示例沿用这一配置。
 
 任务栈扫描会短暂挂起调度器，并带来测量扰动。本例用于低频资源观察，不用于证明实时性；正式压力测试应使用正常应用和已有计数器，关闭这类全任务栈扫描。它也不能覆盖应用入口到达前的故障，此时仍需断点、Fault retained 记录和 Debug Watch。
 

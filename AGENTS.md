@@ -8,9 +8,11 @@
 
 将原工程分散在 `Frameworks/`、可复用 task 和项目 glue 中的系统能力，逐步整合为 SirinEmbedOS，对应用提供统一 API、硬件资源访问与系统服务。调度 Kernel 基于 FreeRTOS。
 
-当前已建立纯 HAL 的 `Board/OMNICTL2_3.ioc` 基线，并纳入 FreeRTOS 10.6.2 / CMSIS-RTOS2 / heap_5、SRNOS 基础操作/Fault/内存、诊断、CAN/SPI/I2C、固定设备、串口资源与协议、日志/参数/HostLink 和双 CDC USB。源码直接归 SDK 管理，未保留 Framework 嵌套子仓库。系统配置及注册在初始化阶段冻结；主机只可修改明确声明的业务数值。已做主机测试和固件编译链接，未烧录、未验证板端运行。逐模块去向见 `Docs/Migration/README.md`，验证记录见 `Docs/Validation.md`；FatFs、LwIP 尚未接入。每次工作仍先检查实际文件，不将规划或编译成功等同于硬件可用。
+当前已建立纯 HAL 的 `Board/OMNICTL2_3.ioc` 基线，并纳入 FreeRTOS 10.6.2 / CMSIS-RTOS2 / heap_5、SRNOS 基础操作/Fault/内存、诊断、CAN/SPI/I2C、固定设备、串口资源与协议、日志/参数/HostLink 和双 CDC USB。源码直接归 SDK 管理，未保留 Framework 嵌套子仓库。系统配置及注册在初始化阶段冻结；主机只可修改明确声明的业务数值。已做主机测试、固件编译链接和部分板端短测，最新实测范围以验证记录为准。逐模块去向见 `Docs/Migration/README.md`，验证记录见 `Docs/Validation.md`；FatFs、LwIP 尚未接入。每次工作仍先检查实际文件，不将规划或编译成功等同于硬件可用。
 
-参考工程用于查询原实现、硬件绑定、协议、资源配置和运行经验；未经明确要求，不修改参考工程。按本次任务需要读取相关模块，不整包复制旧工程，也不把旧工程历史结构直接当成新架构要求。
+本项目正在迁移 prototype 的 Framework 能力，但主要将原工程作为设计与实现参考，而不是直接搬运代码。两者基于类似的硬件平台，因此原工程的硬件绑定、协议、资源配置和运行经验具有参考价值；具体差异仍以本工程 IOC、实现和已确认硬件资料核对。原工程的架构、目录划分、接口和命名不一定适合 SirinEmbedOS，应按本工程的职责边界与命名规范重新判断，必要时重构或重新实现。
+
+未经明确要求，不修改参考工程。按本次任务需要读取相关模块，不整包复制旧工程，也不把旧工程历史结构直接当成新架构要求。
 
 ## 仓库与目录规划
 
@@ -58,6 +60,8 @@ SirinEmbedOS/
 └── Examples/
     ├── Minimal/               # SDK 自身可构建的最小应用
     ├── BringUp/               # 首次上板的启动、堆、任务栈与 IMU 观测
+    ├── SensorBringUp/         # 2613 原始采样与共享总线，不访问 EEPROM/融合
+    ├── INSBringUp/            # 正式 INS、坐标/融合/温控及遥测观测
     ├── Parameters/            # 显式业务参数及一致快照
     └── PrototypeBindings/     # 通过公开 API 声明原串口用途
 ```
@@ -210,7 +214,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 
 - CAN、板载 IMU 的板级绑定允许直接固化在平台实现中，对外提供稳定、易用的 API。
 - 固定硬件不意味着让应用直接操作 HAL handle；总线访问、异步完成、并发与故障处理由平台统一管理。
-- 原工程已有 router、驱动和算法优先复用，经梳理后合并；先保持行为一致，再进行接口或调度优化。
+- 原工程已有 router、驱动和算法优先作为参考，核对硬件约束和有效行为后，按本工程边界决定复用、重构或重新实现；不为保持旧结构或旧命名而牺牲本工程接口与职责的一致性。
 - 合并模块或仓库，不等于合并线程。调整线程数量、优先级、周期和队列前，先说明调度与资源影响。
 
 ### 可变用途资源，特别是 UART
@@ -231,13 +235,16 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 
 ## 重构与验证规则
 
+- 必要的功能目录必须同时保留 `README.md` 和 `CHANGELOG.md`，例如承担独立能力的 IO、设备、服务或诊断模块目录。以能独立说明职责、接口和验证范围的模块为单位维护，不要求每一层目录或每个私有实现子目录重复建立文档；缺失时在该模块下一次重大修改中补齐。
+- 每次重大修改功能、公共接口、配置合同、架构、调度或资源所有权时，必须在同一次变更中更新受影响模块的 `README.md` 和 `CHANGELOG.md`。`README.md` 描述修改后的当前能力、用法、边界与限制；`CHANGELOG.md` 记录本次变更、验证结果和待验证事项，不能只更新其中一个或仅更新根目录日志。
+- 各级 `CHANGELOG.md` 保持浅层结构：优先使用日期或 `Unreleased` 标题配合平铺条目，必要时增加一层分类；避免多层标题和嵌套列表，不按目录树逐层展开日志。
 - 根目录 `CHANGELOG.md` 记录有意义的工程、接口、配置与架构变更，按日期维护。未发布内容放在 `Unreleased`；没有实际发布时不编造版本号。同步记录验证范围和重要限制，计划中的能力不能记为已实现。
 - 所有交流使用中文。用户要求分析、查看或先不改代码时保持只读。
 - 修改前说明涉及哪些文件、目的，以及是否影响生成边界、公共 API、调度或内存布局。
 - 保留用户已有修改，不回滚无关内容，不自动提交、推送或烧录。
 - 每次迁移一个边界清楚的能力，先追踪原工程调用链、配置来源和依赖，再决定新位置。
 - 旧工程的 Framework 多为 submodule；新工程不必沿用碎片化仓库结构。迁入第三方或共享代码时保留来源、版本与许可信息。
-- 初期优先保持原有依赖版本和行为，不把结构迁移与第三方升级混在一次变更中。
+- 参考或复用原实现时，优先保持已确认适用的硬件时序、协议语义和第三方依赖版本；这不要求保留旧架构、接口或命名。不把结构迁移与第三方升级混在一次变更中；有意改变行为时说明原因并补充相应验证。
 - DMA/cache/MPU、heap、链接段与 Debug Watch 相关工作，先查看参考工程的 `lib_mpu_dcache`、`lib_debug_watch` 及相关链接配置；迁入后以本工程维护的实现为准。
 - 不将 DMA buffer 放入 DMA 不可达内存；保留必要的对齐、非缓存区和 NOLOAD 显式初始化规则。
 - 构建系统由项目维护，避免依赖 CubeMX 扫描目录自动决定 middleware 和系统服务是否参与编译。
@@ -286,3 +293,25 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 源码迁入后的剩余工作与板端验收顺序见 `Docs/Development.md`。`Examples/BringUp` 是可选观测应用，根构建通过 `SIRINEMBEDOS_EXAMPLE=BringUp` 选择；默认仍为 Minimal。其全任务栈扫描会扰动调度，不将观测固件当作实时压力验收结果。
 
 现阶段优先按 `Docs/Validation.md` 进行板端 bring-up，验证启动/异常、内存与缓存、总线、固定设备和协议服务，再由父项目验证真实业务接入。FatFs、LwIP 等尚未迁入的能力按实际需要实施；不因目录规划预建空壳，不把旧工程业务控制任务直接编入 SDK。新增优化继续遵循初始化冻结、单一资源所有权和分层验证。
+
+## 2613 传感器阶段（2026-09-26）
+
+已增加 Sensors 公共 API、冻结配置、LSM/LIS/SPA 驱动与 SensorBringUp。SPI4 使用唯一 High6 分发者、八槽有界复制队列、四 IMU 后一个普通事务的仲裁；同步调用也经此通路。BMI/LSM 默认 1 ms；LIS/SPA 共用 Normal/2 KiB/10 ms 线程，LSM High5/2 KiB。接口、取消与缓冲生命周期见 `Docs/Sensors.md`。
+
+默认运行正式 INS，四颗传感器均采集；BMI/LSM 统一板内坐标后经启动冻结安装旋转进入单一 Mahony 状态。温控由独立 INS High5/3KiB/1ms worker 唯一持有，默认60°C、允许20..75°C，LSM优先/BMI回退，80°C保护及75°C以下5秒恢复。板内变换固定于 Board/Glue/sensor_frames.c，应用只能配置 board_to_robot_wxyz。旧全局 INS、方向预设、校准/存储 worker 和两套温控已删除，没有 legacy 模式。SensorBringUp 以 ins.enabled=false 保留原始采样和统一温控。默认参数加载与 HostLink LOAD/SAVE关闭。FT24C128A 已有独立 SRNOS_EEPROM 阻塞/非阻塞驱动及整片备份恢复板测，参数/INS 存储尚未迁移；旧 24C02 接口仅保留上层编译依赖，禁止用于新器件。I2C4 已复用 High6/3KiB 线程作唯一分发者，四槽中 LIS/SPA 各保留一槽、后台两槽，最多连续四笔周期事务后服务等待后台。EEPROM 读写/校验每笔最多32B，写周期不占总线；LIS/SPA 使用30ms完成信号量等待。整片并发正常短测通过，LIS约88–93Hz、SPA约16Hz，无离线/总线错误；不代表掉电、断线或严格100Hz实时性验收，见 Docs/Validation/I2C-20260928/README.md。服务与遥测合同见 Docs/INS.md、Docs/HostLink.md。
+
+18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；连续窗口、SHA、结束状态均以 `Docs/Validation.md` 最新条目为准。
+
+### BringUp 指示与遥测接入约定
+
+后续所有 BringUp 示例在配置阶段设置 bringup_indicators=true，明确加热用途；当前 BringUp 关闭加热，SensorBringUp 和 INSBringUp 默认60°C。指示器在HAL完成、配置冻结后、RTOS启动前只初始化一次：第一灯黄色只提交一次，三段启动音各80ms；原Indicators线程随后亮0.5秒/灭0.5秒（1Hz），不依赖CAN/USB。不另加LED线程。实际声光须现场观察，不能仅凭计数宣称通过。INSBringUp关闭周期栈扫描；Application/通信不等待INS温稳。姿态消费者检查VALID、序号与epoch，不把系统RUNNING当作INS就绪。
+
+传感器 `imu_observer` 注册冻结，只允许有界复制或通知；不能在 High5/High6 回调打印或等待 USB。可复用 IMUTelemetry 服务为每颗 IMU 分配 64 条静态队列，HostComm 线程编码、FIFO 最多使用八个发送槽；满时丢弃新样本计数。订阅/取消仅为会话行为，不修改底层采样配置。CDC1 数据格式、CLI 和恢复合同见 `Docs/HostLink.md`。CLI 必须显式选择 CDC1，不接管其他程序占用的端口。
+
+## 正式 INS（2026-09-28）
+
+正式默认路径及API见 Docs/INS.md。启动3秒无可用六轴须关PWM并Panic；运行全掉线清VALID并重试，恢复增加epoch并重新观察收敛。Application/HostLink无需等待温稳。健康双路按≤2ms年龄和≤1ms时间差选择，恢复100ms健康+100ms权重渐入。BMI DMA完成通知原BMI任务当周期发布，不恢复延后一周期收取。
+
+低动态波动RMS口径固定为三轴分量整体 sqrt((varX+varY+varZ)/3)，加速度0.03g、角速度0.5°/s；不能为了通过板测跳过低动态/收敛或加入未声明的标定。服务执行不动态分配/打印/等USB，公共快照只做短临界区复制。姿态仅相对航向，用户校准未完成，机器人应用须检查VALID/epoch。
+
+19组主机套件、九个父项目目标和三个BringUp构建通过；最终板端三个10秒窗口姿态约1kHz、双路等权、无协议丢样，LSM反馈约60°C。短测不代表精度/闭环/十分钟长测通过。硬件断线和80°C保护仅主机注入，不能主动过热板子。具体配置、SHA、栈水位和GDB结束状态以Docs/Validation.md最新条目为准。

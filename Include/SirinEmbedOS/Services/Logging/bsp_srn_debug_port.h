@@ -73,6 +73,7 @@ bool SRN_DebugPort_TakeTxComplete(bool *success);
 bool SRN_DebugPort_IsConfigured(void);
 bool SRN_DebugPort_TxBusy(void);
 uint32_t SRN_DebugPort_GetRxOverflowBytes(void);
+uint32_t SRN_DebugPort_GetSessionGeneration(void);
 
 /* Thread-safe whole-buffer TX write. Space shortage rejects the whole block. */
 srn_debug_port_write_status_t SRN_DebugPort_WriteExact(const void *data,

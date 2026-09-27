@@ -60,7 +60,7 @@ def main():
             "-DCMAKE_BUILD_TYPE=Debug", f"-DSIRINEMBEDOS_SOURCE_DIR={SDK}",
             f"-DCMAKE_TOOLCHAIN_FILE={SDK / 'CMake/starm-clang.cmake'}")
         run("cmake", "--build", str(build), "-j", "8")
-        for name in ("RobotFirmware", "ManualFirmware", "PrototypeBindings", "ParameterExample", "BringUpExample", "RawBinding", "AllComponents"):
+        for name in ("RobotFirmware", "ManualFirmware", "PrototypeBindings", "ParameterExample", "BringUpExample", "SensorBringUpExample", "INSBringUpExample", "RawBinding", "AllComponents"):
             check_elf(build / f"{name}.elf")
             run("python3", str(SDK / "Tests/Core/check_foundation_elf.py"), str(build / f"{name}.elf"))
             print(f"PASS: {name}")
@@ -75,7 +75,7 @@ def main():
                                   text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         assert overflow.returncode != 0 and "D1 heap/libc/data overflow" in overflow.stdout
         print("PASS: MSP/libc capacity overrides and rejected arena overflow")
-    print("PASS: vendor hashes, parent project, seven firmware targets, C++/TLS linkage, config overrides, IRQ and heap layout")
+    print("PASS: vendor hashes, parent project, nine firmware targets, C++/TLS linkage, config overrides, IRQ and heap layout")
     print("Build/static checks only; no board execution was performed.")
 
 

@@ -18,8 +18,8 @@
 | `bsp_dwt` | `Diagnostics/Time` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `d90e8047a409` | 无 |
 | `bsp_eth_lan8720a` | `—` | 排除：仅构建占位，本批不迁移网络栈。 | `ddae15578257` | 无 |
 | `bsp_fdcan` | `IO/CAN/Native` | 迁入：固定三路FDCAN由Board绑定，IO持有路由和收发。 | `e5bbc9c8eb41` | 无 |
-| `bsp_i2c` | `IO/I2C` | 迁入：固定I2C4绑定到Board，BDMA缓冲在D3，保留回调worker。 | `4be281de29a4` | 无 |
-| `bsp_spi` | `IO/SPI` | 迁入：固定SPI4绑定到Board，保留共享总线并发与回调worker。 | `9e14264ce8ff` | 无 |
+| `bsp_i2c` | `IO/I2C` | 迁入并修正：固定I2C4、D3 BDMA；按设备完成状态，确认abort及迟到IRQ隔离。 | `4be281de29a4` | 无 |
+| `bsp_spi` | `IO/SPI` | 迁入并重写：SPI4唯一High6分发、8槽复制队列、IMU/普通公平仲裁、确认取消及故障隔离。 | `9e14264ce8ff` | 无 |
 | `bsp_srn_log` | `Services/Logging` | 迁入：普通日志使用USB/SWO/已声明Serial通道，删除强制复位USART1路径。 | `3f25c3722f38` | 无 |
 | `bsp_vt03` | `Services/RemoteControl/VT03` | 拆分：保留协议/流解帧，Serial持有DMA与HAL；RemoteControl统一worker。 | `2237b8cfea59` | 无 |
 | `bsp_ws2812` | `Devices/WS2812` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `8e350616fb6f` | 无 |
@@ -36,7 +36,7 @@
 | `lib_controls` | `Algorithms/Control` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `9918558a4dec` | 无 |
 | `lib_debug_watch` | `Diagnostics/Watch` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `14a265c0ed37` | 无 |
 | `lib_generic_ui` | `Services/Referee/UI` | 拆分：只保留ui_interface协议编码；ui_Main布局留给应用。 | `2f3282d8bfa2` | 无 |
-| `lib_imu` | `Devices/IMU` | 迁入：BMI088/INS/温控/校准，板上EEPROM分区固定，外部IMU默认不绑定。 | `67372a0cad61` | 无 |
+| `lib_imu` | `Devices/IMU` | 拆分并替换：保留BMI驱动、Mahony及独立EKF数学/OMX协议；删除旧全局INS、方向预设、校准存储及温控worker。正式INS与统一温控位于Services/INS，原始采样位于Devices/Sensors。见Docs/INS.md。 | `67372a0cad61` | 无 |
 | `lib_mcp2518fd` | `Devices/MCP2518FD` | 迁入：保留Microchip源码内许可；器件寄存器与CAN路由分开，Board管理引脚。 | `08f0442c4b9a` | 无 |
 | `lib_modbus_rtu` | `IO/RS485/Modbus` | 迁入并适配共享RS485完整请求/应答调度。 | `2bbf0a29d47f` | 无 |
 | `lib_mpu_dcache` | `Core/Memory` | 拆分：公共内存合同在Core/Memory；早期初始化及完整链接布局在Board。 | `96da546834b4` | 无 |
@@ -51,12 +51,12 @@
 | `lib_swerve` | `—` | 排除：底盘业务与机器人配置留在父项目；该目录由prototype父仓库管理。 | `4ae5428c6fb9` | 父仓库有修改，逐文件hash为准 |
 | `lib_uart_router` | `—` | 替换：物理端口/Serial通道/协议/服务拆分；旧路由接口不保留。 | `e97fc233f686` | 无 |
 | `tskptt_exfdcan_router` | `IO/CAN/External` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `42f24a98c2cf` | 无 |
-| `tskptt_host_comm` | `Services/HostLink` | 迁入：启动注册冻结，CDC1传输，耗时存储由命令worker处理。 | `9c426abdad48` | 无 |
+| `tskptt_host_comm` | `Services/HostLink` | 迁入并完善：注册冻结，CDC1会话清理、FIFO遥测和有界处理；SensorBringUp禁用存储。新增双IMU遥测与CLI见Docs/HostLink.md。 | `9c426abdad48` | 无 |
 | `tskptt_hskp` | `Diagnostics/Runtime` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `6af1f6b3bb23` | 无 |
 | `tskptt_imu` | `Devices/IMU/Worker` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `5f074ed34e39` | 无 |
 | `tskptt_log` | `Services/Logging/Worker` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `e2bc6e68dc8c` | 无 |
 | `tskptt_ntfdcan_router` | `IO/CAN/Router` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `44d1eb5ad784` | 无 |
-| `tskptt_param_console` | `Services/Parameters/HostLink` | 迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数。 | `27c1789e28ae` | 无 |
+| `tskptt_param_console` | `Services/Parameters/HostLink` | 迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数；增加启动冻结的LOAD/SAVE权限门控。 | `27c1789e28ae` | 无 |
 | `tskptt_referee` | `Services/Referee/Receiver` | 迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。 | `7bb74524cb52` | 无 |
 | `tskptt_referee_tx` | `Services/Referee/Transmitter` | 合并：发送经Serial队列；兼容的任务函数仅退出，不默认创建冗余TX线程。 | `4951ab2763e7` | 无 |
 | `tskptt_rs485_router` | `IO/RS485` | 重写：固定UART7总线，多个endpoint串行事务、TC完成/应答超时/静默间隔。 | `c8a66ad6af4f` | 无 |

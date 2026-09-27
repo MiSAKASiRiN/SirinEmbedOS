@@ -11,7 +11,7 @@
 B站账号：华南小虎队
 ***************************************/
 
-/*计算旋转矩阵*///大地坐标系 R 转换到机体坐标系 b 的坐标转换矩阵
+/* Hamilton robot/body -> world rotation. Row 2 is world-up in body axes. */
 void RotationMatrix_update(struct MAHONY_FILTER_t *mahony_filter)
 {
     if (mahony_filter == NULL)

@@ -313,6 +313,7 @@ static uint16_t handle_storage(void *user,
     (void)response_cap;
     *response_len = 0u;
     *response_flags = 0u;
+    if (s_config.disable_storage) return SRN_LINK_STATUS_UNSUPPORTED_MESSAGE;
     if (request->payload_len != 0u) {
         return SRN_LINK_STATUS_BAD_LENGTH;
     }

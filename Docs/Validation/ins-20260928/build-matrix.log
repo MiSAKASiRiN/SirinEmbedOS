@@ -1,0 +1,10 @@
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/Debug/SirinEmbedOS.elf
+PASS root Debug
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/Release/SirinEmbedOS.elf
+PASS root Release
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/BringUp/SirinEmbedOS.elf
+PASS BringUp
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/SensorBringUp/SirinEmbedOS.elf
+PASS SensorBringUp
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: Board/build/Debug/sdk/SirinEmbedOS.elf
+PASS Board

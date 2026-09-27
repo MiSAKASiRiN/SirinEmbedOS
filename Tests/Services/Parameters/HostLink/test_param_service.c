@@ -212,6 +212,14 @@ int main(void)
     run_deferred(&link, &fixture, TSKPTT_PARAM_SERVICE_SAVE, 13u, raw);
     run_deferred(&link, &fixture, TSKPTT_PARAM_SERVICE_LOAD, 14u, raw);
 
-    puts("srn param service V2 host tests: PASS");
+    assert(srn_link_init(&link,&link_config)==SRN_LINK_OK);
+    const tskptt_param_service_config_t disabled={.defer=defer,.user=&fixture,.disable_storage=true};
+    assert(TSKPTT_ParamService_Register(&link,&disabled)==SRN_LINK_OK);
+    fixture.deferred_message=0;
+    response=transact(&link,&fixture,TSKPTT_PARAM_SERVICE_SAVE,20,NULL,0,raw);
+    assert(test_load_le16(response.payload)==SRN_LINK_STATUS_UNSUPPORTED_MESSAGE && fixture.deferred_message==0);
+    response=transact(&link,&fixture,TSKPTT_PARAM_SERVICE_LOAD,21,NULL,0,raw);
+    assert(test_load_le16(response.payload)==SRN_LINK_STATUS_UNSUPPORTED_MESSAGE && fixture.deferred_message==0);
+    puts("srn param service V2 host tests: PASS (including disabled storage gate)");
     return 0;
 }

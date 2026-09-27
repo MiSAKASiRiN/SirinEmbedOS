@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "SirinEmbedOS/Kernel/System.h"
@@ -99,8 +100,25 @@ static void test_system_config(void){
  for(unsigned i=0;i<SRNOS_SYSTEM_MAX_THREADS;i++)oversized.threads[i]=(SRNOS_ThreadConfig){"BudgetTest",dummy_task,NULL,32768,24};
  assert(SRNOS_SystemHeapBudget(&oversized)>SRNOS_SystemHeapBudget(&config));
  assert(SRNOS_SystemValidate(&oversized)==SRNOS_SYSTEM_RESOURCE);
+ config.sensors.lsm_enabled=true;config.sensors.lis_enabled=true;config.sensors.spa_enabled=true;
+ uint32_t full_budget=SRNOS_SystemHeapBudget(&config);
+ config.sensors.lsm_enabled=false;assert(full_budget-SRNOS_SystemHeapBudget(&config)==2560);config.sensors.lsm_enabled=true;
+ assert(config.ins.enabled && config.sensors.heater_enabled && config.sensors.heater_target_c==60);
+ assert(!config.load_parameters && !config.host_link_storage_enabled);
+ config.sensors.heater_target_c=75; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_OK);
+ config.sensors.heater_target_c=75.01f; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.sensors.heater_target_c=NAN; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.sensors.heater_target_c=19.9f; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.sensors.heater_target_c=60; config.sensors.bmi_period_ms=2; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.sensors.bmi_period_ms=1;
+ config.ins.board_to_robot_wxyz[0]=0; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.ins.board_to_robot_wxyz[0]=INFINITY; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.ins.board_to_robot_wxyz[0]=2; assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_OK);
+ config.sensors.lsm_period_ms=0;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);config.sensors.lsm_period_ms=1;
+ config.sensors.environment_period_ms=1;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);config.sensors.environment_period_ms=10;
  assert(SRNOS_SystemFreeze(&config)==SRNOS_SYSTEM_OK);config.serial[0].baud_rate=12345;config.threads[0].stack_bytes=4096;
  const SRNOS_SystemConfig *saved=SRNOS_SystemGetConfig();assert(saved&&saved->serial[0].baud_rate==100000&&saved->threads[0].stack_bytes==2048);
+ assert(SRNOS_SystemGetConfig()->ins.board_to_robot_wxyz[0]==1 && SRNOS_SystemGetConfig()->sensors.lsm_enabled);
  assert(SRNOS_SystemFreeze(&config)==SRNOS_SYSTEM_FROZEN&&SRNOS_SystemConfigurationFrozen());
  puts("System defaults, role conflicts, missing ports, thread budgets and freeze isolation: PASS");
 }

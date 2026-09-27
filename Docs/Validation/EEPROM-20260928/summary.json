@@ -1,0 +1,43 @@
+{
+  "test_elf_sha256": "f32a2618671ab636de22fa0da6761790029c28731aca41278cbddfd8f423f920",
+  "passed": 20,
+  "failed": 0,
+  "elapsed_ms": 22141,
+  "async_polls": 7557,
+  "restored": true,
+  "files": {
+    "eeprom-before.bin": {
+      "bytes": 16384,
+      "sha256": "0fbba07a833d4dcfc7024eaf313661a0ba8f80a05c6d29b8801c612e10e60dee"
+    },
+    "eeprom-restored.bin": {
+      "bytes": 16384,
+      "sha256": "0fbba07a833d4dcfc7024eaf313661a0ba8f80a05c6d29b8801c612e10e60dee"
+    },
+    "firmware-before.bin": {
+      "bytes": 1048576,
+      "sha256": "086a7bf9cc3229e189ecd1c386b14d276e188f364b288f71872f35307b0fd74f"
+    }
+  },
+  "limitation": "LIS/SPA sensor glue treats bus BUSY as OFFLINE; continuous EEPROM test triggered this; no I2C transfer errors/timeouts/recoveries. Upper sensor policy not changed.",
+  "firmware_restored_compare": "full 0x08000000..0x08100000 matched",
+  "sensor_recovery_observed": {
+    "LIS": {
+      "state": "READY",
+      "samples": 5847,
+      "recoveries": 1
+    },
+    "SPA": {
+      "state": "READY",
+      "samples": 1027,
+      "recoveries": 1
+    }
+  },
+  "free_heap_bytes": 96056,
+  "source_sha256": {
+    "Source/Devices/EEPROM/ft24c128a.c": "ed92675d6ce738efdfc7331ce31eeed6f623189cd7e06897790d32edf6cee2b5",
+    "Include/SirinEmbedOS/Devices/EEPROM.h": "cee8df97e86dd835d257e364f4910f17053c6e16436dbec2427a10600500a0d2",
+    "Source/IO/I2C/bsp_i2c.c": "4c54ce687b666277b3b4b8786f4f21eb7809137e04ac24a5b67f5dab38bb25c0",
+    "Examples/EEPROMBringUp/app_main.c": "297dde76f6c251b8d1c0917c229278b75c454fbc25675a89597758ee1a03175d"
+  }
+}

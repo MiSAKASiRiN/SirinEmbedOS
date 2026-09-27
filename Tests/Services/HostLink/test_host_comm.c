@@ -285,9 +285,17 @@ static bool source_uptime(void *user,
     return true;
 }
 
+static unsigned ex_polls, ex_configs;
+static void ex_config(void *user,bool enabled,uint32_t period)
+{ (void)user; (void)enabled; (void)period; ++ex_configs; }
+static void ex_poll(void *user,uint32_t now) { (void)user; (void)now; ++ex_polls; }
+
 static srn_link_result_t project_setup(srn_link_t *link, void *user)
 {
     fixture_t *fixture = user;
+    const tskptt_host_comm_telemetry_config_t ex={.stream_id=0x100,.max_sample_size=432,
+        .required_period_us=1000,.policy=SRN_LINK_FIFO,.on_config=ex_config,.poll=ex_poll};
+    assert(TSKPTT_HostComm_RegisterTelemetryEx(&ex)==SRN_LINK_OK);
     assert(!fixture->initialized); /* declarations precede transport start */
     assert(!fixture->rx_started);
     fixture->setup_calls++;
@@ -1063,6 +1071,9 @@ static void test_transport_exec_and_services(void)
     fixture.connected = true;
     fixture.tx_result = SRN_LINK_TX_ACCEPTED;
     TSKPTT_HostComm_TestPollOnce();
+    assert(!fixture.tx_in_use); /* Old queued log was discarded on disconnect. */
+    assert(TSKPTT_HostComm_SubmitLog((const uint8_t *)"new session",11u)==SRN_LINK_OK);
+    TSKPTT_HostComm_TestPollOnce();
     complete_tx(&fixture, false);
 
     fixture.overflow = 17u;
@@ -1120,6 +1131,19 @@ static void test_transport_exec_and_services(void)
     assert(test_load_le16(view.payload) == SRN_LINK_STATUS_OK);
     complete_tx(&fixture, true);
     assert(s_critical_depth == 0u);
+    uint8_t ex_request[7]={0}; test_store_le16(ex_request,0x100);
+    test_store_le32(ex_request+2,500); ex_request[6]=1;
+    frame_len=pack(SRN_COBS_PROT_KIND_REQUEST,4,1,900,ex_request,7,frame);
+    load_rx(&fixture,frame,frame_len,frame_len); TSKPTT_HostComm_TestPollOnce();
+    view=decode_tx(&fixture,raw); assert(test_load_le16(view.payload)==SRN_LINK_STATUS_INVALID_ARGUMENT);
+    assert(ex_configs==0); complete_tx(&fixture,true);
+    test_store_le32(ex_request+2,1000);
+    frame_len=pack(SRN_COBS_PROT_KIND_REQUEST,4,1,901,ex_request,7,frame);
+    load_rx(&fixture,frame,frame_len,frame_len); TSKPTT_HostComm_TestPollOnce();
+    view=decode_tx(&fixture,raw); assert(test_load_le16(view.payload)==SRN_LINK_STATUS_OK);
+    assert(ex_configs==1 && ex_polls>0); complete_tx(&fixture,true);
+    fixture.connected=false; TSKPTT_HostComm_TestPollOnce(); assert(ex_configs==2);
+
 }
 
 int main(void)

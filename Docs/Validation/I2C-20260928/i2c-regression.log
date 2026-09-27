@@ -1,0 +1,1 @@
+I2C dispatcher: reserved slots, fairness, staged buffers, semaphore completion, per-device cancel, queue/active deadlines, abort isolation and tick wrap passed

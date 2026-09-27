@@ -60,11 +60,11 @@ void SRNOS_ApplicationMain()
 }
 ```
 
-`Examples/Minimal` 验证公开启动入口；[BringUp](Examples/BringUp/README.md) 提供首次上板的启动/堆/任务栈/IMU 观测；[Parameters](Examples/Parameters/README.md) 展示显式业务 PID 参数和一致快照；[PrototypeBindings](Examples/PrototypeBindings/README.md) 展示 prototype 的 DR16、VT03、裁判与日志端口映射。选择一个应用入口，可按说明组合串口绑定文件。迁移收尾顺序见 [后续开发清单](Docs/Development.md)。
+`Examples/Minimal` 验证公开启动入口；[BringUp](Examples/BringUp/README.md) 提供首次上板的启动/堆/任务栈/IMU 观测；[SensorBringUp](Examples/SensorBringUp/README.md) 验证 2613 原始传感器与共享总线，关闭融合和 EEPROM，默认使用统一60°C温控，并提供 [CDC1 双 IMU 遥测 CLI](Docs/HostLink.md)；[Parameters](Examples/Parameters/README.md) 展示显式业务 PID 参数和一致快照；[PrototypeBindings](Examples/PrototypeBindings/README.md) 展示 prototype 的 DR16、VT03、裁判与日志端口映射。选择一个应用入口，可按说明组合串口绑定文件。迁移收尾顺序见 [后续开发清单](Docs/Development.md)。
 
 ## 配置与生命周期
 
-启动顺序为专用段/Fault 早期初始化 → 生成的 HAL 初始化 → 应用配置与服务声明 → 全量校验、注册表及系统配置冻结 → `osKernelInitialize()` → 创建系统与应用线程 → 唯一一次 `osKernelStart()`。调度后先尝试加载业务参数，再启动 USB，最后放行应用入口和配置中声明的应用线程。应用入口允许返回，返回时仅退出该线程。
+启动顺序为专用段/Fault 早期初始化 → 生成的 HAL 初始化 → 应用配置与服务声明 → 全量校验、注册表及系统配置冻结 → `osKernelInitialize()` → 创建系统与应用线程 → 唯一一次 `osKernelStart()`。调度后按冻结配置决定是否加载业务参数（默认关闭），再启动 USB，最后放行应用入口和配置中声明的应用线程。应用入口允许返回，返回时仅退出该线程。
 
 CAN、UART、IMU、服务选择、资源预算和绑定均在初始化时冻结。配置 hook 不做阻塞 I/O，不创建线程；新增应用线程通过 `SRNOS_SystemConfig::threads` 声明。`bind_channels` 在内置协议完成声明后用于原始串口、H12H 或 RS485 设备的所有权登记。没有运行时重绑定、端口切换或系统配置重载。
 
@@ -72,7 +72,9 @@ CAN、UART、IMU、服务选择、资源预算和绑定均在初始化时冻结�
 
 Serial 统一拥有 HAL 收发、DMA 缓冲与回调。端口只能被一个 owner 占用；协议、原始接口和日志不可绕过占用管理并发使用同一端口。`GetChannel()` 仅在初始化时返回未占用通道，成功声明后由所有者保留该指针；配置了但未声明 owner 的端口会阻止启动。具体缓冲、超时、线程/ISR 限制以公开接口为准。
 
-参数表用于应用明确声明的业务数值，不用于系统结构配置。`Param<T>` 默认只读；允许主机写入的值必须显式使用 `PARAMS_MUTABLE_BUSINESS` 并声明范围。注册表和访问权限冻结后，业务数值仍可更新；控制循环用 `params_snapshot()` 取得调用者拥有的一致副本。默认启动时尝试从 EEPROM 加载，失败保留现值；可用 `load_parameters=false` 关闭。详见 [服务合同](Source/Services/README.md)。
+参数表用于应用明确声明的业务数值，不用于系统结构配置。`Param<T>` 默认只读；允许主机写入的值必须显式使用 `PARAMS_MUTABLE_BUSINESS` 并声明范围。注册表和访问权限冻结后，业务数值仍可更新；控制循环用 `params_snapshot()` 取得调用者拥有的一致副本。默认 `load_parameters=false`、`host_link_storage_enabled=false`，参数持久化仍依赖旧 24C02，尚未迁移至新器件；业务数值的显式注册/读写仍可使用。详见 [服务合同](Source/Services/README.md)。
+
+2613 的 FT24C128A 已提供独立的 [阻塞/非阻塞器件 API](Source/Devices/EEPROM/README.md)，完成 16 KiB 整片交叉读写、边界和备份恢复板测；使用 `SIRINEMBEDOS_EXAMPLE=EEPROMBringUp` 构建 [专用验证应用](Examples/EEPROMBringUp/README.md)。本轮未迁移参数/INS 上层存储。[I2C4 分发线程](Source/IO/I2C/README.md) 为 LIS/SPA 保留周期槽，EEPROM 读写/校验按 32 B 分段。整片压力下两传感器持续 READY，LIS 约 88–93 Hz、SPA 约 16 Hz，无总线错误或超时；这是正常并发短测，未覆盖掉电/断线，见 [板测记录](Docs/Validation/I2C-20260928/README.md)。
 
 `SRNOS_SystemGetStatus()` 反映启动阶段、原生 CAN 初始化、USB 启动及参数加载结果；`RUNNING` 不是全部设备健康证明。USB 启动成功不等于主机已枚举或打开 CDC，外置 CAN 和 IMU 在各自 worker 中初始化，需要检查对应状态与诊断；应用必须自行决定未就绪时的业务行为。
 
@@ -96,4 +98,8 @@ python3 Tests/Build/check_structure.py
 python3 Tests/Build/check_sdk.py
 ```
 
-构建回归检查父项目七种固件接入（含 BringUp）、94 个公共头、配置覆盖、第三方哈希、链接符号和内存布局；各能力的主机测试位于 `Tests/`。命令、结果与硬件待测项集中在 [验证记录](Docs/Validation.md)。编译、静态检查和主机仿真不替代 USB 枚举、UART DMA/IDLE/错误恢复、CAN 收发、IMU 采样、Cache、Fault 和实际调度验证。
+构建回归检查父项目九种固件接入（含三个 BringUp）、公共头联合编译、配置覆盖、第三方哈希、链接符号和内存布局；当前 19 组能力主机测试位于 `Tests/`。命令、结果与硬件待测项集中在 [验证记录](Docs/Validation.md)。编译、静态检查和主机仿真不替代 USB 枚举、UART DMA/IDLE/错误恢复、CAN 收发、IMU 采样、Cache、Fault 和实际调度验证。
+
+## 正式 INS
+
+默认启用双六轴 Mahony INS 与60°C恒温控制，固定板内旋转、启动冻结的业务安装四元数、多消费者快照和降级状态见 [INS合同](Docs/INS.md)。`SIRINEMBEDOS_EXAMPLE=INSBringUp` 提供无周期栈扫描的观测入口；原始对比用 SensorBringUp。旧单BMI融合/校准/温控路径已删除，默认不自动访问参数存储。

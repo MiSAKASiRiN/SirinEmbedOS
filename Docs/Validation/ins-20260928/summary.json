@@ -1,0 +1,338 @@
+{
+  "flashed_elf": "/tmp/srnos-ins-accepted-20260928.elf",
+  "elf_sha256": "393adbee9f41af5a7d4d1bcd0b4166310cc6006fa5adc706de642562124965ad",
+  "rebuilt_elf": "build/INSBringUpDebug/SirinEmbedOS.elf",
+  "rebuilt_elf_sha256": "2014f8e2d727cfa4548b360ab14b96a57f0e8c5d325f4cac715a5a1d3609d558",
+  "flash_binary_sha256": "ece4b11571cb4130e8444be24af6286d314d6005608a6745b5e265c9de3ea7e0",
+  "flash_binary_matches_rebuilt": true,
+  "config": {
+    "example": "INSBringUp",
+    "build": "Debug",
+    "four_sensors": true,
+    "ins": true,
+    "heater_target_c": 60,
+    "board_to_robot_wxyz": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "storage": false,
+    "stack_scan": false,
+    "rms_definition": "sqrt((varX+varY+varZ)/3)"
+  },
+  "probe": {
+    "serial": 10114514,
+    "tool": "J-Link V8.96",
+    "target": "STM32H723VG",
+    "swd_khz": 4000,
+    "voltage": 3.3
+  },
+  "windows": [
+    {
+      "index": 1,
+      "seconds": 10.00397270800022,
+      "attitude_hz": 1000.000099950035,
+      "received_hz": {
+        "BMI088": 1000.1026884048733,
+        "LSM6DS3": 1000.1026884048733,
+        "INS": 1000.4025692709617,
+        "LIS2MDL": 91.76354502305584,
+        "SPA06": 16.2935270574707
+      },
+      "gaps": {},
+      "duplicates": {},
+      "errors": {}
+    },
+    {
+      "index": 2,
+      "seconds": 10.003727125003934,
+      "attitude_hz": 1000.000099950035,
+      "received_hz": {
+        "BMI088": 999.6274263624587,
+        "LSM6DS3": 1000.1272400756399,
+        "INS": 1000.0272773330037,
+        "LIS2MDL": 91.76579774007371,
+        "SPA06": 16.39388979234432
+      },
+      "gaps": {},
+      "duplicates": {},
+      "errors": {}
+    },
+    {
+      "index": 3,
+      "seconds": 10.002275249993545,
+      "attitude_hz": 999.9999000100091,
+      "received_hz": {
+        "BMI088": 999.772526756495,
+        "LSM6DS3": 999.772526756495,
+        "INS": 1000.1724357671977,
+        "LIS2MDL": 92.57893597765144,
+        "SPA06": 16.29629218613087
+      },
+      "gaps": {},
+      "duplicates": {},
+      "errors": {}
+    }
+  ],
+  "last_status": {
+    "phase": 5,
+    "healthy_mask": 3,
+    "heater_flags": 3,
+    "flags": 801,
+    "epoch": 1,
+    "updated_us": 93231088,
+    "cycles": 92980,
+    "publications": 30464,
+    "dual_cycles": 30464,
+    "single_cycles": 0,
+    "predicted_cycles": 0,
+    "missing_cycles": 16,
+    "recoveries": 0,
+    "missed_deadlines": 0,
+    "max_execution_us": 41,
+    "max_period_us": 1056,
+    "max_copy_us": 6,
+    "heater_source": 1,
+    "hot_mask": 0,
+    "sensor_states": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "target_c": 60.0,
+    "feedback_c": 60.01953125,
+    "duty": 0.17930743098258972,
+    "protection_count": 0,
+    "protection_recoveries": 0,
+    "source_selections": 1,
+    "board_to_robot_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "streams": {
+      "258": {
+        "stream": 258,
+        "enabled": true,
+        "sequence": 30464,
+        "depth": 0,
+        "high_water": 5,
+        "enqueued": 30464,
+        "overflow": 0,
+        "sent": 30464,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 64
+      },
+      "259": {
+        "stream": 259,
+        "enabled": true,
+        "sequence": 8618,
+        "depth": 1,
+        "high_water": 1,
+        "enqueued": 6958,
+        "overflow": 0,
+        "sent": 6957,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 16
+      },
+      "260": {
+        "stream": 260,
+        "enabled": true,
+        "sequence": 1517,
+        "depth": 0,
+        "high_water": 1,
+        "enqueued": 1226,
+        "overflow": 0,
+        "sent": 1226,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 8
+      }
+    }
+  },
+  "raw_sensor_last": {
+    "256": {
+      "sequence": 92557,
+      "state": 2,
+      "valid_fields": 19,
+      "start_us": 93229117,
+      "end_us": 93229183,
+      "raw_accel": [
+        -299,
+        309,
+        -10851
+      ],
+      "raw_gyro": [
+        23,
+        8,
+        -6
+      ],
+      "raw_temperature": 267,
+      "accel_m_s2": [
+        -0.2684498727321625,
+        0.27742812037467957,
+        -9.742305755615234
+      ],
+      "gyro_rad_s": [
+        0.024501081556081772,
+        0.008522115647792816,
+        -0.006391586735844612
+      ],
+      "temperature_c": 56.375
+    },
+    "257": {
+      "sequence": 92962,
+      "state": 2,
+      "valid_fields": 19,
+      "start_us": 93228115,
+      "end_us": 93228162,
+      "raw_accel": [
+        331,
+        -45,
+        8114
+      ],
+      "raw_gyro": [
+        16,
+        -19,
+        -1
+      ],
+      "raw_temperature": 8965,
+      "accel_m_s2": [
+        0.39601215720176697,
+        -0.05383851006627083,
+        9.707681655883789
+      ],
+      "gyro_rad_s": [
+        0.019547687843441963,
+        -0.02321287989616394,
+        -0.0012217304902151227
+      ],
+      "temperature_c": 60.01953125
+    },
+    "259": {
+      "sequence": 8618,
+      "state": 2,
+      "valid_fields": 20,
+      "start_us": 93225448,
+      "end_us": 93228379,
+      "raw_magnetic": [
+        -349,
+        56,
+        -239
+      ],
+      "raw_temperature": 253,
+      "magnetic_uT": [
+        8.40000057220459,
+        52.35000228881836,
+        -35.85000228881836
+      ],
+      "temperature_c": 56.625
+    },
+    "260": {
+      "sequence": 1517,
+      "state": 2,
+      "valid_fields": 24,
+      "start_us": 93198388,
+      "end_us": 93200458,
+      "raw_pressure": 281952,
+      "raw_temperature": 146870,
+      "pressure_pa": 80532.359375,
+      "temperature_c": 57.94242858886719
+    },
+    "258": {
+      "sequence": 30464,
+      "epoch": 1,
+      "flags": 801,
+      "phase": 5,
+      "source_mask": 3,
+      "new_sample_mask": 3,
+      "attitude_us": 93231088,
+      "published_us": 93231101,
+      "input_sequence": [
+        92558,
+        92964
+      ],
+      "input_age_us": [
+        907,
+        855
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "quaternion_wxyz": [
+        0.9996339678764343,
+        -0.026268964633345604,
+        0.006132838316261768,
+        0.0020645232871174812
+      ],
+      "euler_rad": [
+        -0.052521537989377975,
+        0.012369967997074127,
+        0.0038056287448853254
+      ],
+      "gyro_rad_s": [
+        -0.015647796913981438,
+        -0.011889373883605003,
+        -0.0164483655244112
+      ],
+      "accel_m_s2": [
+        -0.14080417156219482,
+        -0.3310573399066925,
+        9.705537796020508
+      ]
+    }
+  },
+  "mcp_after": {
+    "accepted": 54440,
+    "completed": 54440,
+    "errors": 0,
+    "timeouts": 0,
+    "queue_full": 0,
+    "queue_expired": 0,
+    "recoveries": 0,
+    "max_queue_us": 14,
+    "max_transfer_us": 19
+  },
+  "memory": {
+    "d1_reserved_bytes": 300992,
+    "d1_capacity_bytes": 327680,
+    "d2_bytes": 9696,
+    "d3_bytes": 512,
+    "itcm_bytes": 224,
+    "flash_bytes": 250360,
+    "free_heap": 112448,
+    "minimum_heap": 112448
+  },
+  "post_window_status": {
+    "publications": 73488,
+    "dual_cycles": 73488,
+    "single_cycles": 0,
+    "predicted_cycles": 0,
+    "max_execution_us": 41,
+    "max_copy_us": 6,
+    "max_input_skew_us": 76,
+    "fault_active": 0,
+    "cfsr": 0,
+    "hfsr": 0
+  },
+  "end_state": {
+    "mcu": "running",
+    "breakpoints": 0,
+    "gdb_session": "retained",
+    "jlink_session": "retained",
+    "cdc1": "closed, unsubscribed"
+  },
+  "limits": [
+    "Ten-minute run left to user",
+    "No controlled dynamic motion or accuracy calibration",
+    "No real CAN frame pressure",
+    "Overtemperature and sensor-loss recovery tested by host injection only",
+    "Actual light and sound not physically observed"
+  ]
+}

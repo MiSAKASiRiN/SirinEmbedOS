@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #define SRN_LINK_TX_SLOT_COUNT          12u
+#define SRN_LINK_FIFO_SLOT_LIMIT        8u
 #define SRN_LINK_HANDLER_COUNT          24u
 #define SRN_LINK_TX_TOPIC_COUNT         16u
 #define SRN_LINK_REQUEST_CACHE_COUNT    4u
@@ -34,6 +35,12 @@ typedef enum {
     SRN_LINK_QOS_LOG = 3u,
     SRN_LINK_QOS_COUNT = 4u,
 } srn_link_qos_t;
+
+/* Policy is local scheduling metadata; it does not change the V2 wire format. */
+typedef enum { SRN_LINK_LATEST = 0, SRN_LINK_FIFO = 1 } srn_link_policy_t;
+typedef enum { SRN_LINK_DELIVERED, SRN_LINK_FAILED, SRN_LINK_CANCELLED } srn_link_delivery_t;
+/* Task context, short/nonblocking. Called once for accepted FIFO packets. */
+typedef void (*srn_link_delivery_fn)(void *user, uint32_t tag, srn_link_delivery_t result);
 
 typedef enum {
     SRN_LINK_SERVICE_SYSTEM = 0x00u,
@@ -183,6 +190,13 @@ typedef struct {
     uint16_t len;
     uint16_t key;
     uint32_t enqueued_ms;
+    uint32_t order;
+    uint32_t session;
+    uint32_t tag;
+    srn_link_delivery_fn on_delivery;
+    void *delivery_user;
+    uint8_t policy;
+    uint8_t cancelled;
     uint8_t qos;
     uint8_t service;
     uint8_t message;
@@ -235,6 +249,8 @@ typedef struct srn_link {
     srn_link_event_track_t event_track[SRN_LINK_EVENT_TRACK_COUNT];
     uint8_t response_payload[SRN_COBS_PROT_MAX_PAYLOAD];
     srn_link_stats_t stats;
+    uint32_t enqueue_order;
+    uint32_t session;
     int8_t in_flight;
     uint8_t rr_cursor;
     uint8_t q0_burst;
@@ -281,6 +297,14 @@ srn_link_result_t srn_link_send_response(srn_link_t *link,
                                          uint8_t flags,
                                          const uint8_t *body,
                                          size_t body_len);
+
+/* FIFO packets are copied, never replaced/evicted, and share at most 8 slots. */
+srn_link_result_t srn_link_publish_ex(srn_link_t *, uint8_t service, uint8_t message,
+    uint16_t key, uint32_t sequence, const uint8_t *payload, size_t length,
+    srn_link_policy_t policy, srn_link_delivery_fn done, void *user, uint32_t tag);
+size_t srn_link_discard_stream(srn_link_t *, uint8_t service, uint8_t message, uint16_t key);
+/* In-flight memory remains owned by transport until on_tx_complete. */
+void srn_link_reset_session(srn_link_t *);
 
 srn_link_result_t srn_link_service_tx(srn_link_t *link);
 void srn_link_on_tx_complete(srn_link_t *link, bool success);

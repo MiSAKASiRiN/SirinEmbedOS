@@ -18,8 +18,12 @@ omx::params::Param<float> speed_kp("speed.kp", 1.0f, 0.0f, 30.0f,
 
 参数对象及名称必须存活到固件结束，可静态构造或在启动配置阶段创建。`SRNOS_ParametersFreeze()` 关闭注册并检查既有注册失败；它不初始化I2C、也不访问EEPROM。冻结后参数目录和访问权限不变，可写业务数值仍可在约束范围内更新。`Param::Set()` 是应用本地数值操作，HostLink/C写入接口另外执行显式访问检查；不应使用参数对象保存系统结构配置。
 
-标量 `Get/Set`、二进制batch和 `params_snapshot()` 使用短临界区；批量写入先全量验证再应用，snapshot返回调用者拥有的一致副本。HostLink READ也使用同一快照接口。`params_load/save`只在任务上下文调用，持久化LOAD先完整校验，失败保留现值，只应用可写业务值；锁不覆盖EEPROM传输。系统默认在应用线程启动阶段、USB启动前加载EEPROM，`load_parameters=false`可在启动配置中关闭；显式声明的应用线程等待该阶段结束。后续主机存储请求由HostCmd线程执行。原EEPROM格式、布局hash与0x40起始位置保留。
+标量 `Get/Set`、二进制batch和 `params_snapshot()` 使用短临界区；批量写入先全量验证再应用，snapshot返回调用者拥有的一致副本。HostLink READ也使用同一快照接口。`params_load/save`只在任务上下文调用，持久化LOAD先完整校验，失败保留现值，只应用可写业务值；锁不覆盖EEPROM传输。系统默认 `load_parameters=false`，不自动访问尚未适配的新EEPROM；显式启用时在应用线程启动阶段、USB启动前尝试加载，显式声明的应用线程等待该阶段结束。`host_link_storage_enabled=false` 在启动时禁止 HostLink LOAD/SAVE；默认同样关闭；明确启用的主机存储请求由 HostCmd 线程执行。原EEPROM格式、布局hash与0x40起始位置保留。
 
 固定 AL94 双CDC的 class context 使用静态数组，EP0 的 SET_CONFIGURATION / Init 不调用分配器。SDK 的 `usbd_conf.h` 不提供通向 libc 的 `USBD_malloc/free` 别名；增加其他USB class前必须复核中断上下文、存储所有权及资源预算。
 
 验证脚本在 `Tests/Services/`，覆盖原HostLink/codec/参数协议、参数冻结和访问限制、并发batch/snapshot、持久化损坏，以及双CDC回调隔离、DTR/断连/日志队列。USB枚举、PCD时序、实际UART吞吐仍需板端验证。
+
+双 IMU FIFO 遥测使用新增 `RegisterTelemetryEx` 和初始化冻结的样本观察回调，不增加线程。每颗 64 条静态队列、每包最多六条，HostComm 负责编码与发送；CDC1 会话变化清理订阅/数据，USB 尚引用的缓冲延后回收。原遥测注册仍保留最新值。SensorBringUp 关闭周期栈扫描（零水位表示未测量，不表示剩余栈为零）。完整协议、接口合同和 CLI 见 [HostLink.md](../../Docs/HostLink.md)。
+
+正式 INS 默认自动注册五条传感器/姿态遥测流，原始观察回调通过Kernel接入，不让设备驱动依赖通信服务。统一温控、坐标和多读者API见 [INS合同](../../Docs/INS.md)。

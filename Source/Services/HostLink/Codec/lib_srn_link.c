@@ -112,7 +112,7 @@ static int find_coalesce_slot(const srn_link_t *link,
 {
     for (size_t i = 0u; i < SRN_LINK_TX_SLOT_COUNT; ++i) {
         const srn_link_tx_slot_t *slot = &link->slots[i];
-        if ((slot->state == SLOT_QUEUED) &&
+        if ((slot->state == SLOT_QUEUED) && (slot->policy == SRN_LINK_LATEST) &&
             (slot->qos == (uint8_t)qos) && (slot->key == key) &&
             (slot->service == service) && (slot->message == message)) {
             return (int)i;
@@ -121,17 +121,18 @@ static int find_coalesce_slot(const srn_link_t *link,
     return -1;
 }
 
-static int find_oldest_slot(const srn_link_t *link, srn_link_qos_t qos)
+static int find_oldest_slot(const srn_link_t *link, srn_link_qos_t qos, bool evict)
 {
     int found = -1;
     uint32_t oldest_age = 0u;
-    const uint32_t now = link_now_ms(link);
+    const uint32_t now = link->enqueue_order;
     for (size_t i = 0u; i < SRN_LINK_TX_SLOT_COUNT; ++i) {
         const srn_link_tx_slot_t *slot = &link->slots[i];
-        if ((slot->state != SLOT_QUEUED) || (slot->qos != (uint8_t)qos)) {
+        if ((slot->state != SLOT_QUEUED) || (slot->qos != (uint8_t)qos) ||
+            (evict && slot->policy == SRN_LINK_FIFO)) {
             continue;
         }
-        const uint32_t age = now - slot->enqueued_ms;
+        const uint32_t age = now - slot->order;
         if ((found < 0) || (age > oldest_age)) {
             found = (int)i;
             oldest_age = age;
@@ -145,13 +146,19 @@ static int reserve_slot(srn_link_t *link,
                         uint16_t key,
                         uint8_t service,
                         uint8_t message,
-                        bool *replaced)
+                        bool *replaced, srn_link_policy_t policy)
 {
     int slot_index = -1;
     *replaced = false;
     link_lock(link);
-    if ((qos == SRN_LINK_QOS_CONTROL) ||
-        (qos == SRN_LINK_QOS_TELEMETRY)) {
+    if (policy == SRN_LINK_FIFO) {
+        unsigned count = 0;
+        for (size_t i=0; i<SRN_LINK_TX_SLOT_COUNT; ++i)
+            count += link->slots[i].state != SLOT_FREE && link->slots[i].policy == SRN_LINK_FIFO;
+        if (count >= SRN_LINK_FIFO_SLOT_LIMIT) { link_unlock(link); return -1; }
+    }
+    if (policy == SRN_LINK_LATEST && ((qos == SRN_LINK_QOS_CONTROL) ||
+        (qos == SRN_LINK_QOS_TELEMETRY))) {
         slot_index = find_coalesce_slot(link, qos, key, service, message);
         if (slot_index >= 0) {
             link->stats.qos[qos].coalesced++;
@@ -161,24 +168,24 @@ static int reserve_slot(srn_link_t *link,
     if (slot_index < 0) {
         slot_index = find_free_slot(link);
     }
-    if ((slot_index < 0) &&
+    if ((slot_index < 0) && policy == SRN_LINK_LATEST &&
         ((qos == SRN_LINK_QOS_CONTROL) ||
          (qos == SRN_LINK_QOS_TELEMETRY))) {
-        slot_index = find_oldest_slot(link, qos);
+        slot_index = find_oldest_slot(link, qos, true);
         if (slot_index >= 0) {
             link->stats.qos[qos].drop_old++;
             *replaced = true;
         }
     }
-    if ((slot_index < 0) &&
+    if ((slot_index < 0) && policy == SRN_LINK_LATEST &&
         ((qos == SRN_LINK_QOS_CONTROL) ||
          (qos == SRN_LINK_QOS_RELIABLE))) {
-        slot_index = find_oldest_slot(link, SRN_LINK_QOS_LOG);
+        slot_index = find_oldest_slot(link, SRN_LINK_QOS_LOG, true);
         if (slot_index >= 0) {
             link->stats.qos[SRN_LINK_QOS_LOG].drop_old++;
             *replaced = true;
         } else {
-            slot_index = find_oldest_slot(link, SRN_LINK_QOS_TELEMETRY);
+            slot_index = find_oldest_slot(link, SRN_LINK_QOS_TELEMETRY, true);
             if (slot_index >= 0) {
                 link->stats.qos[SRN_LINK_QOS_TELEMETRY].drop_old++;
                 *replaced = true;
@@ -192,11 +199,15 @@ static int reserve_slot(srn_link_t *link,
         return -1;
     }
     link->slots[slot_index].state = SLOT_BUILDING;
+    link->slots[slot_index].policy = (uint8_t)policy;
+    link->slots[slot_index].session = link->session;
+    link->slots[slot_index].cancelled = 0;
+    link->slots[slot_index].on_delivery = NULL;
     link_unlock(link);
     return slot_index;
 }
 
-static void finish_slot(srn_link_t *link,
+static bool finish_slot(srn_link_t *link,
                         int slot_index,
                         srn_link_qos_t qos,
                         uint16_t key,
@@ -208,6 +219,10 @@ static void finish_slot(srn_link_t *link,
 {
     link_lock(link);
     srn_link_tx_slot_t *slot = &link->slots[slot_index];
+    if(slot->session != link->session) {
+        slot->state=SLOT_FREE; slot->on_delivery=NULL;
+        sync_depths(link); link_unlock(link); return false;
+    }
     slot->len = (uint16_t)len;
     slot->key = key;
     slot->qos = (uint8_t)qos;
@@ -215,11 +230,13 @@ static void finish_slot(srn_link_t *link,
     slot->service = service;
     slot->message = message;
     slot->enqueued_ms = link_now_ms(link);
+    slot->order = ++link->enqueue_order;
     slot->state = SLOT_QUEUED;
     link->stats.qos[qos].submitted++;
     (void)replaced;
     sync_depths(link);
     link_unlock(link);
+    return true;
 }
 
 static void cancel_slot(srn_link_t *link, int slot_index)
@@ -241,7 +258,9 @@ static srn_link_result_t queue_protocol(srn_link_t *link,
                                         const uint8_t *payload,
                                         size_t payload_len,
                                         const uint8_t **frame_out,
-                                        size_t *frame_len_out)
+                                        size_t *frame_len_out,
+                                        srn_link_policy_t policy,
+                                        srn_link_delivery_fn done, void *done_user, uint32_t tag)
 {
     if ((link == NULL) || (link->initialized == 0u) ||
         (qos >= SRN_LINK_QOS_COUNT) ||
@@ -251,7 +270,7 @@ static srn_link_result_t queue_protocol(srn_link_t *link,
 
     bool replaced = false;
     const int slot_index = reserve_slot(link, qos, key, service, message,
-                                        &replaced);
+                                        &replaced, policy);
     if (slot_index < 0) {
         return SRN_LINK_ERR_FULL;
     }
@@ -275,8 +294,9 @@ static srn_link_result_t queue_protocol(srn_link_t *link,
     if (frame_len_out != NULL) {
         *frame_len_out = frame_len;
     }
-    finish_slot(link, slot_index, qos, key, kind, service, message,
-                frame_len, replaced);
+    slot->on_delivery = done; slot->delivery_user = done_user; slot->tag = tag;
+    if(!finish_slot(link, slot_index, qos, key, kind, service, message,
+                frame_len, replaced)) return SRN_LINK_ERR_BUSY;
     return SRN_LINK_OK;
 }
 
@@ -286,7 +306,7 @@ static srn_link_result_t queue_encoded_replay(srn_link_t *link,
 {
     bool replaced = false;
     const int slot_index = reserve_slot(link, SRN_LINK_QOS_RELIABLE, 0u,
-                                        0u, 0u, &replaced);
+                                        0u, 0u, &replaced, SRN_LINK_LATEST);
     if (slot_index < 0) {
         return SRN_LINK_ERR_FULL;
     }
@@ -294,12 +314,12 @@ static srn_link_result_t queue_encoded_replay(srn_link_t *link,
         cancel_slot(link, slot_index);
         return SRN_LINK_ERR_PARAM;
     }
-    (void)SRNOS_Memory_Copy(
+    if (!SRNOS_Memory_Copy(
         SRNOS_Memory_MutableBytes(link->slots[slot_index].data,
-                               sizeof(link->slots[slot_index].data)),
-        SRNOS_Memory_Bytes(frame, frame_len));
-    finish_slot(link, slot_index, SRN_LINK_QOS_RELIABLE, 0u,
-                SRN_COBS_PROT_KIND_RESPONSE, 0u, 0u, frame_len, replaced);
+                               SRN_COBS_PROT_FRAME_SLOT_SIZE),
+        SRNOS_Memory_Bytes(frame, frame_len))) { cancel_slot(link,slot_index); return SRN_LINK_ERR_BUFFER; }
+    if(!finish_slot(link, slot_index, SRN_LINK_QOS_RELIABLE, 0u,
+                SRN_COBS_PROT_KIND_RESPONSE, 0u, 0u, frame_len, replaced)) return SRN_LINK_ERR_BUSY;
     return SRN_LINK_OK;
 }
 
@@ -425,7 +445,8 @@ static srn_link_result_t send_response_internal(srn_link_t *link,
     const srn_link_result_t result = queue_protocol(
         link, SRN_LINK_QOS_RELIABLE, 0u,
         SRN_COBS_PROT_KIND_RESPONSE, flags, service, message, sequence,
-        link->response_payload, body_len + 2u, &frame, &frame_len);
+        link->response_payload, body_len + 2u, &frame, &frame_len,
+        SRN_LINK_LATEST, NULL, NULL, 0);
     if ((result == SRN_LINK_OK) && cache) {
         cache_response(link, service, message, sequence, fingerprint,
                        frame, frame_len);
@@ -903,14 +924,16 @@ srn_link_result_t srn_link_register_tx_topic(srn_link_t *link,
     return SRN_LINK_ERR_FULL;
 }
 
-srn_link_result_t srn_link_publish(srn_link_t *link,
+srn_link_result_t srn_link_publish_ex(srn_link_t *link,
                                    uint8_t service,
                                    uint8_t message,
                                    uint16_t key,
                                    uint32_t sequence,
                                    const uint8_t *payload,
-                                   size_t payload_len)
+                                   size_t payload_len, srn_link_policy_t policy,
+                                   srn_link_delivery_fn done, void *user, uint32_t tag)
 {
+    if (policy != SRN_LINK_LATEST && policy != SRN_LINK_FIFO) return SRN_LINK_ERR_PARAM;
     if (link == NULL) {
         return SRN_LINK_ERR_PARAM;
     }
@@ -921,10 +944,46 @@ srn_link_result_t srn_link_publish(srn_link_t *link,
             return queue_protocol(link, (srn_link_qos_t)topic->qos, key,
                                   SRN_COBS_PROT_KIND_EVENT, 0u,
                                   service, message, sequence,
-                                  payload, payload_len, NULL, NULL);
+                                  payload, payload_len, NULL, NULL, policy, done, user, tag);
         }
     }
     return SRN_LINK_ERR_NOT_FOUND;
+}
+
+srn_link_result_t srn_link_publish(srn_link_t *link, uint8_t service, uint8_t message,
+    uint16_t key, uint32_t sequence, const uint8_t *payload, size_t length)
+{
+    return srn_link_publish_ex(link,service,message,key,sequence,payload,length,
+        SRN_LINK_LATEST,NULL,NULL,0);
+}
+static void notify_discarded(srn_link_tx_slot_t *slot)
+{
+    if (slot->on_delivery) slot->on_delivery(slot->delivery_user,slot->tag,SRN_LINK_CANCELLED);
+    slot->on_delivery=NULL;
+}
+size_t srn_link_discard_stream(srn_link_t *link, uint8_t service, uint8_t message, uint16_t key)
+{
+    size_t count=0; link_lock(link);
+    for (unsigned i=0;i<SRN_LINK_TX_SLOT_COUNT;i++) {
+        srn_link_tx_slot_t *s=&link->slots[i];
+        if(s->service!=service || s->message!=message || s->key!=key) continue;
+        if(s->state==SLOT_QUEUED) { notify_discarded(s); s->state=SLOT_FREE; ++count; }
+        else if(s->state==SLOT_IN_FLIGHT) s->cancelled=1;
+    }
+    sync_depths(link); link_unlock(link); return count;
+}
+void srn_link_reset_session(srn_link_t *link)
+{
+    link_lock(link); ++link->session;
+    for(unsigned i=0;i<SRN_LINK_TX_SLOT_COUNT;i++) {
+        srn_link_tx_slot_t *s=&link->slots[i];
+        if(s->state==SLOT_QUEUED) { notify_discarded(s); s->state=SLOT_FREE; }
+        else if(s->state==SLOT_IN_FLIGHT) s->cancelled=1;
+    }
+    memset(link->request_cache,0,sizeof(link->request_cache));
+    memset(link->event_track,0,sizeof(link->event_track));
+    for(unsigned i=0;i<SRN_LINK_CONTROL_CHANNEL_COUNT;i++) link->control[i].pending=0;
+    srn_link_reset_rx(link); sync_depths(link); link_unlock(link);
 }
 
 size_t srn_link_discard_topic(srn_link_t *link,
@@ -944,6 +1003,7 @@ size_t srn_link_discard_topic(srn_link_t *link,
             if (slot->qos < SRN_LINK_QOS_COUNT) {
                 link->stats.qos[slot->qos].drop_old++;
             }
+            notify_discarded(slot);
             slot->state = SLOT_FREE;
             discarded++;
         }
@@ -964,16 +1024,16 @@ srn_link_result_t srn_link_submit_log(srn_link_t *link,
     }
     bool replaced = false;
     const int slot_index = reserve_slot(link, SRN_LINK_QOS_LOG, 0u,
-                                        0u, 0u, &replaced);
+                                        0u, 0u, &replaced, SRN_LINK_LATEST);
     if (slot_index < 0) {
         return SRN_LINK_ERR_FULL;
     }
-    (void)SRNOS_Memory_Copy(
+    if (!SRNOS_Memory_Copy(
         SRNOS_Memory_MutableBytes(link->slots[slot_index].data,
-                               sizeof(link->slots[slot_index].data)),
-        SRNOS_Memory_Bytes(line, len));
-    finish_slot(link, slot_index, SRN_LINK_QOS_LOG, 0u, 0u, 0u, 0u,
-                len, replaced);
+                               SRN_COBS_PROT_FRAME_SLOT_SIZE),
+        SRNOS_Memory_Bytes(line, len))) { cancel_slot(link,slot_index); return SRN_LINK_ERR_BUFFER; }
+    if(!finish_slot(link, slot_index, SRN_LINK_QOS_LOG, 0u, 0u, 0u, 0u,
+                len, replaced)) return SRN_LINK_ERR_BUSY;
     return SRN_LINK_OK;
 }
 
@@ -1008,8 +1068,8 @@ srn_link_result_t srn_link_send_response(srn_link_t *link,
 static int select_tx_slot(srn_link_t *link)
 {
     const uint32_t now = link_now_ms(link);
-    int q0 = find_oldest_slot(link, SRN_LINK_QOS_CONTROL);
-    const int q1 = find_oldest_slot(link, SRN_LINK_QOS_RELIABLE);
+    int q0 = find_oldest_slot(link, SRN_LINK_QOS_CONTROL, false);
+    const int q1 = find_oldest_slot(link, SRN_LINK_QOS_RELIABLE, false);
     if ((q1 >= 0) && ((now - link->slots[q1].enqueued_ms) >= SRN_LINK_Q1_FORCE_MS) &&
         (link->q0_burst != 0u)) {
         return q1;
@@ -1020,7 +1080,7 @@ static int select_tx_slot(srn_link_t *link)
     for (size_t n = 0u; n < sizeof(k_rr_order); ++n) {
         const uint8_t qos = k_rr_order[link->rr_cursor];
         link->rr_cursor = (uint8_t)((link->rr_cursor + 1u) % sizeof(k_rr_order));
-        const int selected = find_oldest_slot(link, (srn_link_qos_t)qos);
+        const int selected = find_oldest_slot(link, (srn_link_qos_t)qos, false);
         if (selected >= 0) {
             return selected;
         }
@@ -1091,7 +1151,13 @@ void srn_link_on_tx_complete(srn_link_t *link, bool success)
     }
     link_lock(link);
     srn_link_tx_slot_t *slot = &link->slots[(size_t)link->in_flight];
-    if (success) {
+    if (slot->on_delivery) {
+        slot->on_delivery(slot->delivery_user,slot->tag,slot->cancelled ? SRN_LINK_CANCELLED :
+                          success ? SRN_LINK_DELIVERED : SRN_LINK_FAILED);
+        slot->on_delivery=NULL;
+    }
+    if (slot->cancelled) { slot->state=SLOT_FREE; }
+    else if (success) {
         link->stats.tx_frames++;
         link->stats.tx_bytes += slot->len;
         link->stats.qos[slot->qos].tx_frames++;

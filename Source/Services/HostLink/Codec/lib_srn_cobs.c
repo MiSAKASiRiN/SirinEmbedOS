@@ -30,6 +30,7 @@ srn_cobs_status_t srn_cobs_init(srn_cobs_ctx_t *ctx,
     ctx->rx_cobs_buf = rx_cobs_buf;
     ctx->rx_cobs_cap = rx_cobs_cap;
     ctx->rx_cobs_len = 0u;
+    ctx->dropping = 0u;
     ctx->rx_raw_buf = rx_raw_buf;
     ctx->rx_raw_cap = rx_raw_cap;
     ctx->stat_frames_ok = 0u;
@@ -45,6 +46,7 @@ void srn_cobs_reset_rx(srn_cobs_ctx_t *ctx)
 {
     if (ctx != NULL) {
         ctx->rx_cobs_len = 0u;
+        ctx->dropping = 0u;
     }
 }
 
@@ -189,6 +191,7 @@ srn_cobs_status_t srn_cobs_feed_bytes(srn_cobs_ctx_t *ctx,
     for (size_t i = 0u; i < len; ++i) {
         const uint8_t b = data[i];
         if (b == (uint8_t)SRN_COBS_DELIM) {
+            if (ctx->dropping) { ctx->dropping=0; ctx->rx_cobs_len=0; continue; }
             if (ctx->rx_cobs_len == 0u) {
                 ctx->stat_empty_delim++;
                 continue;
@@ -209,9 +212,11 @@ srn_cobs_status_t srn_cobs_feed_bytes(srn_cobs_ctx_t *ctx,
             (void)ctx->on_frame(ctx->user, ctx->rx_raw_buf, raw_len);
             ctx->stat_frames_ok++;
         } else {
+            if (ctx->dropping) continue;
             if (ctx->rx_cobs_len >= ctx->rx_cobs_cap) {
                 ctx->rx_cobs_len = 0u;
                 ctx->stat_frames_drop_too_long++;
+                ctx->dropping=1;
                 continue;
             }
             ctx->rx_cobs_buf[ctx->rx_cobs_len++] = b;
@@ -299,6 +304,11 @@ srn_cobs_status_t srn_cobs_stream_feed(srn_cobs_stream_t *stream,
         }
 
         if (b == (uint8_t)SRN_COBS_DELIM) {
+            if(stream->raw_len==0u && !stream->dropping && stream->need_code) {
+                ++stream->stat_empty_frames;
+                stream_start_frame(stream); /* repeated leading delimiters */
+                continue;
+            }
             const bool valid = (stream->dropping == 0u) &&
                                (stream->raw_len != 0u) &&
                                (stream->need_code != 0u) &&

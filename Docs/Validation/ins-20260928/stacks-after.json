@@ -1,0 +1,107 @@
+{
+  "Application": {
+    "minimum_free_bytes": 3288,
+    "priority": 24,
+    "stack_span_bytes": 4092
+  },
+  "BMI": {
+    "minimum_free_bytes": 1572,
+    "priority": 45,
+    "stack_span_bytes": 2044
+  },
+  "CAN1_RX": {
+    "minimum_free_bytes": 400,
+    "priority": 40,
+    "stack_span_bytes": 4092
+  },
+  "CAN1_TX": {
+    "minimum_free_bytes": 3888,
+    "priority": 40,
+    "stack_span_bytes": 4092
+  },
+  "CAN2_RX": {
+    "minimum_free_bytes": 400,
+    "priority": 40,
+    "stack_span_bytes": 4092
+  },
+  "CAN2_TX": {
+    "minimum_free_bytes": 3888,
+    "priority": 40,
+    "stack_span_bytes": 4092
+  },
+  "CAN3_RX": {
+    "minimum_free_bytes": 400,
+    "priority": 40,
+    "stack_span_bytes": 4092
+  },
+  "CAN3_TX": {
+    "minimum_free_bytes": 3888,
+    "priority": 40,
+    "stack_span_bytes": 4092
+  },
+  "CAN4_RX": {
+    "minimum_free_bytes": 3620,
+    "priority": 44,
+    "stack_span_bytes": 4092
+  },
+  "CAN4_TX": {
+    "minimum_free_bytes": 3676,
+    "priority": 44,
+    "stack_span_bytes": 4092
+  },
+  "Environment": {
+    "minimum_free_bytes": 1456,
+    "priority": 24,
+    "stack_span_bytes": 2044
+  },
+  "HostCmd": {
+    "minimum_free_bytes": 1436,
+    "priority": 9,
+    "stack_span_bytes": 2044
+  },
+  "HostComm": {
+    "minimum_free_bytes": 484,
+    "priority": 24,
+    "stack_span_bytes": 2044
+  },
+  "IDLE": {
+    "minimum_free_bytes": 440,
+    "priority": 0,
+    "stack_span_bytes": 508
+  },
+  "INS": {
+    "minimum_free_bytes": 2336,
+    "priority": 45,
+    "stack_span_bytes": 3068
+  },
+  "Indicators": {
+    "minimum_free_bytes": 892,
+    "priority": 8,
+    "stack_span_bytes": 1020
+  },
+  "LSM": {
+    "minimum_free_bytes": 1572,
+    "priority": 45,
+    "stack_span_bytes": 2044
+  },
+  "Logging": {
+    "minimum_free_bytes": 1328,
+    "priority": 8,
+    "stack_span_bytes": 2044
+  },
+  "Tmr Svc": {
+    "minimum_free_bytes": 852,
+    "priority": 2,
+    "stack_span_bytes": 1020
+  },
+  "bsp_i2c_cb": {
+    "minimum_free_bytes": 2908,
+    "priority": 46,
+    "stack_span_bytes": 3068
+  },
+  "bsp_spi_cb": {
+    "minimum_free_bytes": 2640,
+    "priority": 46,
+    "stack_span_bytes": 3068
+  }
+}

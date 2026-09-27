@@ -41,6 +41,7 @@ static byte_ring_t s_rx_ring = {
     0u,
 };
 
+static volatile uint32_t s_session_generation;
 static volatile bool s_tx_busy;
 static volatile bool s_tx_complete_pending;
 static volatile bool s_tx_complete_success;
@@ -178,6 +179,8 @@ bool SRN_DebugPort_TxBusy(void)
 {
     return s_tx_busy;
 }
+
+uint32_t SRN_DebugPort_GetSessionGeneration(void) { return s_session_generation; }
 
 uint32_t SRN_DebugPort_GetRxOverflowBytes(void)
 {
@@ -429,6 +432,7 @@ void SRN_DebugPort_OnUsbTransmitComplete(void)
 
 void SRN_DebugPort_OnUsbDisconnect(void)
 {
+    ++s_session_generation;
     if (s_initialized == 0u) {
         return;
     }
@@ -470,6 +474,12 @@ void SRN_DebugPort_OnUsbControlLineState(uint16_t state)
     const uint8_t was_asserted = s_usb_dtr;
     s_usb_dtr = ((state & 0x0001u) != 0u) ? 1u : 0u;
     if ((was_asserted != 0u) && (s_usb_dtr == 0u)) {
-        SRN_DebugPort_OnUsbDisconnect();
+        /* The class may still reference the in-flight buffer. Only DeInit
+         * (after CloseEP) or actual TX completion can release it. */
+        ++s_session_generation;
+        s_rx_ring.head=s_rx_ring.tail=0;
+        if(xPortIsInsideInterrupt()==pdTRUE) {
+            BaseType_t wake=pdFALSE; notify_service_from_isr(&wake); portYIELD_FROM_ISR(wake);
+        } else notify_service_from_task();
     }
 }

@@ -26,6 +26,7 @@ typedef bool (*tskptt_param_service_defer_fn)(void *user,
 typedef struct {
     tskptt_param_service_defer_fn defer;
     void *user;
+    bool disable_storage;
 } tskptt_param_service_config_t;
 
 srn_link_result_t TSKPTT_ParamService_Register(

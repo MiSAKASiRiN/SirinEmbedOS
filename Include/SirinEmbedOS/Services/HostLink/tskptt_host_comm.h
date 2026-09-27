@@ -63,6 +63,20 @@ typedef void (*tskptt_host_comm_telemetry_config_fn)(void *user,
                                                       bool enabled,
                                                       uint32_t period_us);
 
+/* Registration is frozen before workers start. All callbacks run in HostComm
+ * task context and must be bounded/nonblocking; never perform peripheral I/O. */
+typedef struct {
+    uint16_t stream_id, max_sample_size;
+    uint32_t required_period_us; /* zero: legacy unrestricted period */
+    srn_link_policy_t policy;
+    uint16_t (*validate)(void *user, bool enabled, uint32_t period_us);
+    tskptt_host_comm_telemetry_config_fn on_config;
+    void (*poll)(void *user, uint32_t now_ms);
+    srn_link_delivery_fn on_delivery;
+    void *user;
+} tskptt_host_comm_telemetry_config_t;
+srn_link_result_t TSKPTT_HostComm_RegisterTelemetryEx(const tskptt_host_comm_telemetry_config_t *);
+
 typedef uint16_t (*tskptt_host_comm_deferred_fn)(
     void *user,
     uint8_t service,
@@ -85,6 +99,7 @@ typedef struct {
                                       size_t length);
     bool (*tx_take_complete)(void *user, bool *success);
     bool (*is_connected)(void *user);
+    uint32_t (*session_generation)(void *user); /* optional; detects quick DTR reopen */
 } tskptt_host_comm_transport_t;
 
 typedef struct {
@@ -132,6 +147,7 @@ typedef struct {
     void *project_user;
     uint32_t task_wait_ms;
     uint32_t snapshot_period_ms;
+    bool disable_stack_scan;
 } tskptt_host_comm_config_t;
 
 srn_link_result_t TSKPTT_HostComm_Configure(

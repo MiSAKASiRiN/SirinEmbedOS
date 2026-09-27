@@ -46,9 +46,11 @@ static uint32_t test_now(void *user)
     return ((fixture_t *)user)->now_ms;
 }
 
+static srn_link_t *reset_on_cycles;
 static uint32_t test_cycles(void *user)
 {
     fixture_t *fixture = (fixture_t *)user;
+    if(reset_on_cycles) { srn_link_t *link=reset_on_cycles; reset_on_cycles=NULL; srn_link_reset_session(link); }
     fixture->cycles += 17u;
     return fixture->cycles;
 }
@@ -504,8 +506,71 @@ static void test_qos_snapshot_wire_layout(void)
     srn_link_on_tx_complete(&link, true);
 }
 
+static uint32_t delivered_count, cancelled_count;
+static void delivery(void *user,uint32_t tag,srn_link_delivery_t result)
+{
+    (void)user;
+    if(result==SRN_LINK_DELIVERED) delivered_count+=tag;
+    if(result==SRN_LINK_CANCELLED) cancelled_count+=tag;
+}
+static srn_cobs_status_t count_frame(void *user,const uint8_t *raw,size_t size)
+{ (void)raw; (void)size; ++*(unsigned *)user; return SRN_COBS_OK; }
+static void test_fifo_lifetime_and_copy(void)
+{
+    srn_link_t link; fixture_t f; init_link(&link,&f);
+    assert(srn_link_register_tx_topic(&link,4,2,SRN_LINK_QOS_TELEMETRY)==SRN_LINK_OK);
+    uint8_t payload[72]; memset(payload,0x5a,sizeof(payload));
+    reset_on_cycles=&link;
+    assert(srn_link_publish_ex(&link,4,2,0x100,0,payload,sizeof(payload),SRN_LINK_FIFO,NULL,NULL,0)==SRN_LINK_ERR_BUSY);
+    assert(!srn_link_has_pending_tx(&link));
+    for(unsigned i=0;i<8;i++) assert(srn_link_publish_ex(&link,4,2,0x100,i,payload,sizeof(payload),
+        SRN_LINK_FIFO,delivery,NULL,1)==SRN_LINK_OK);
+    assert(srn_link_publish_ex(&link,4,2,0x100,8,payload,sizeof(payload),SRN_LINK_FIFO,NULL,NULL,0)==SRN_LINK_ERR_FULL);
+    for(unsigned i=0;i<4;i++) assert(srn_link_send_response(&link,0,1,100+i,0,0,NULL,0)==SRN_LINK_OK);
+    assert(srn_link_send_response(&link,0,1,105,0,0,NULL,0)==SRN_LINK_ERR_FULL);
+    unsigned next=0;
+    for(unsigned i=0;i<12;i++) {
+        assert(srn_link_service_tx(&link)==SRN_LINK_OK);
+        uint8_t raw[496]; srn_cobs_prot_view_t v=decode_frame(f.tx,f.tx_len,raw,sizeof(raw));
+        if(v.header.kind==2) { assert(v.header.sequence==next++); assert(memcmp(v.payload,payload,72)==0); }
+        srn_link_on_tx_complete(&link,true);
+    }
+    assert(next==8 && delivered_count==8);
+    assert(srn_link_publish_ex(&link,4,2,0x100,9,payload,72,SRN_LINK_FIFO,delivery,NULL,6)==SRN_LINK_OK);
+    assert(srn_link_service_tx(&link)==SRN_LINK_OK);
+    int flight=link.in_flight; uint8_t saved[512]; memcpy(saved,link.slots[flight].data,512);
+    srn_link_reset_session(&link);
+    assert(link.in_flight==flight && memcmp(saved,link.slots[flight].data,512)==0);
+    assert(srn_link_service_tx(&link)==SRN_LINK_ERR_BUSY);
+    srn_link_on_tx_complete(&link,true); assert(cancelled_count==6);
+    memset(f.tx_storage,0xa7,sizeof(f.tx_storage));
+    const uint8_t line[]="A long log must be copied, including the newline\n";
+    assert(srn_link_submit_log(&link,line,sizeof(line)-1)==SRN_LINK_OK);
+    assert(srn_link_service_tx(&link)==SRN_LINK_OK);
+    assert(f.tx_len==sizeof(line)-1 && memcmp(f.tx,line,sizeof(line)-1)==0);
+    srn_link_on_tx_complete(&link,true);
+    uint8_t request[512]; size_t n=pack_request(SRN_LINK_SYSTEM_HELLO,900,NULL,0,request);
+    const uint8_t delimiters[8]={0};
+    assert(srn_link_feed_rx(&link,delimiters,8)==SRN_LINK_OK);
+    assert(srn_link_feed_rx(&link,request,n)==SRN_LINK_OK);
+    assert(srn_link_service_tx(&link)==SRN_LINK_OK);
+    memcpy(saved,f.tx,f.tx_len); size_t saved_len=f.tx_len; srn_link_on_tx_complete(&link,true);
+    memset(f.tx_storage,0x6b,sizeof(f.tx_storage)); /* force another owner's previous contents */
+    assert(srn_link_feed_rx(&link,request,n)==SRN_LINK_OK);
+    assert(srn_link_service_tx(&link)==SRN_LINK_OK);
+    assert(f.tx_len==saved_len && memcmp(f.tx,saved,saved_len)==0);
+    srn_cobs_ctx_t c; uint8_t encoded[4],raw[8]; unsigned frames=0;
+    assert(srn_cobs_init(&c,encoded,4,raw,8,count_frame,&frames)==SRN_COBS_OK);
+    const uint8_t oversized[]={2,1,2,1,2,1,1,0};
+    assert(srn_cobs_feed_bytes(&c,oversized,sizeof(oversized))==SRN_COBS_OK);
+    assert(frames==0 && c.stat_frames_drop_too_long==1);
+    const uint8_t valid[]={2,0x42,0}; srn_cobs_feed_bytes(&c,valid,sizeof(valid)); assert(frames==1);
+    puts("FIFO order/capacity/reserved replies/lifetime; recycled response/log copy; oversized suffix rejection: PASS");
+}
+
 int main(void)
 {
+    test_fifo_lifetime_and_copy();
     puts("test_crc_and_max_frame"); fflush(stdout);
     test_crc_and_max_frame();
     puts("test_split_stream_and_replay"); fflush(stdout);

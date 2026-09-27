@@ -1,5 +1,6 @@
 #include "SirinEmbedOS/Kernel/Startup.h"
-#include "SirinEmbedOS/Devices/IMU/Worker/tskptt_imu.h"
+#include "SirinEmbedOS/Services/INS.h"
+#include "SirinEmbedOS/Diagnostics/Time/bsp_dwt.h"
 #include "SirinEmbedOS/Services/Logging/bsp_srn_log.h"
 #include <string.h>
 
@@ -28,7 +29,7 @@ typedef struct {
     bool task_snapshot_complete;
     SRNOS_BringUpTask tasks[BRINGUP_MAX_TASKS];
     bool imu_snapshot_available;
-    imu_task_snapshot_t imu;
+    SRNOS_INSSnapshot imu;
     uint32_t internal_imu_age_ms; /* UINT32_MAX when no snapshot is available. */
     bool internal_imu_recent;    /* online && valid && age <= 100 ms; not calibrated proof. */
     srn_log_stats_t logging;
@@ -41,8 +42,10 @@ static TaskStatus_t task_status[BRINGUP_MAX_TASKS];
 void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 {
     /* No business parameter restore in this diagnostic application. Fixed
-     * hardware services (including IMU heating/calibration) keep SDK defaults. */
+     * hardware services retain their defaults except the disabled heater. */
     config->load_parameters = false;
+    config->sensors.heater_enabled = false;
+    config->bringup_indicators = true;
 }
 
 static void capture(void)
@@ -76,14 +79,12 @@ static void capture(void)
     (void)xTaskResumeAll();
 
     memset(&snapshot.imu, 0, sizeof(snapshot.imu));
-    snapshot.imu_snapshot_available = IMU_GetSnapshot(&snapshot.imu);
-    /* The IMU uses HAL milliseconds, not the scheduler's tick epoch. */
+    snapshot.imu_snapshot_available = SRNOS_INSGetSnapshot(&snapshot.imu);
     snapshot.hal_tick_ms = HAL_GetTick();
-    snapshot.internal_imu_age_ms = snapshot.imu_snapshot_available ?
-        snapshot.hal_tick_ms - snapshot.imu.internal.last_update_ms : UINT32_MAX;
-    snapshot.internal_imu_recent = snapshot.imu_snapshot_available &&
-        snapshot.imu.internal.online && snapshot.imu.internal.valid &&
-        snapshot.internal_imu_age_ms <= 100u;
+    const uint64_t now=DWT_GetUptimeUs();
+    snapshot.internal_imu_age_ms=snapshot.imu.attitude.attitude_us && now>=snapshot.imu.attitude.attitude_us?
+        (uint32_t)((now-snapshot.imu.attitude.attitude_us)/1000):UINT32_MAX;
+    snapshot.internal_imu_recent=(snapshot.imu.attitude.flags&SRNOS_INS_VALID)!=0;
     SRN_Log_GetStats(&snapshot.logging);
     ++snapshot.samples;
     srnos_bringup = snapshot;

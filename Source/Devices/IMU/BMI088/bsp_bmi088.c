@@ -3,6 +3,8 @@
 #include "SirinEmbedOS/Diagnostics/Watch/omx_debug_watch.h"
 #include <string.h>
 #include <math.h>
+#include "cmsis_os2.h"
+#include "SirinEmbedOS/Diagnostics/Time/bsp_dwt.h"
 
 /* ==== 灵敏度常量兜底：优先用你原来头文件里的 ===== */
 #ifndef SRN_BMI088_ACCEL_SEN
@@ -37,14 +39,13 @@
 #endif
 
 #define BMI088_SPI_TIMEOUT_MS   (5u)
-#define BMI088_CALIB_SAMPLES    (1024u)
 #define BMI088_SAMPLE_TIMEOUT_MS (5u)
 
 /* ==== SPI 设备 & DMA buffer ===================================== */
 
 static bsp_spi_device_t s_acc_dev;
 static bsp_spi_device_t s_gyro_dev;
-static bsp_spi_bus_id_t s_bus_id = BSP_SPI_BUS_4;
+static uint64_t s_acquisition_start, s_acquisition_end;
 
 #define BMI088_SPI_MAX_XFER   (64u)
 
@@ -53,12 +54,6 @@ static uint8_t s_tx[BMI088_SPI_MAX_XFER];
 static uint8_t s_rx[BMI088_SPI_MAX_XFER];
 
 OMX_DEBUG_WATCH_BSS volatile omx_dbg_bmi088_t g_omx_dbg_bmi088;
-
-/* ==== 零偏 / scale ============================================== */
-
-static float s_gyro_offset[3]  = {0.0f, 0.0f, 0.0f};
-static float s_accel_offset[3] = {0.0f, 0.0f, 0.0f};
-static float s_accel_scale     = 1.0f;
 
 /* ==== 帮助函数 =================================================== */
 
@@ -69,10 +64,11 @@ static inline int16_t bmi088_make_s16(uint8_t lo, uint8_t hi)
 
 static void bmi088_delay_ms(uint32_t ms)
 {
-    HAL_Delay(ms);
+    if (osKernelGetState()==osKernelRunning) osDelay((ms*osKernelGetTickFreq()+999)/1000);
+    else HAL_Delay(ms);
 }
 
-/* ==== SPI helpers: blocking 版本（用于 Init/Calib/Blocking Read） = */
+/* ==== SPI helpers: blocking 版本（用于初始化寄存器） = */
 
 static uint8_t acc_write(uint8_t reg, uint8_t data)
 {
@@ -105,33 +101,6 @@ static uint8_t acc_read1(uint8_t reg, uint8_t *data)
     return 0u;
 }
 
-static uint8_t acc_readN(uint8_t reg, uint8_t *buf, uint8_t len)
-{
-    if ((size_t)(len + 2u) > sizeof(s_tx))
-        return 1u;
-
-    s_tx[0] = reg | 0x80u;
-    s_tx[1] = 0xFFu;
-    for (uint8_t i = 0; i < len; ++i)
-    {
-        s_tx[2 + i] = 0xFFu;
-    }
-
-    if (bsp_spi_transfer_blocking(&s_acc_dev,
-                                  s_tx,
-                                  s_rx,
-                                  (size_t)(len + 2u),
-                                  BMI088_SPI_TIMEOUT_MS) != BSP_SPI_OK)
-    {
-        return 1u;
-    }
-
-    for (uint8_t i = 0; i < len; ++i)
-    {
-        buf[i] = s_rx[2u + i];
-    }
-    return 0u;
-}
 
 static uint8_t gyro_write(uint8_t reg, uint8_t data)
 {
@@ -359,72 +328,11 @@ static uint8_t bmi088_gyro_init(void)
     return BSP_BMI088_OK;
 }
 
-/* ==== 简单零偏校准（blocking，Init 阶段用） =================== */
-
-static void bmi088_simple_calib(void)
-{
-    uint8_t buf[8];
-    int16_t raw;
-    float   accel_sum[3] = {0.f, 0.f, 0.f};
-    float   gyro_sum[3]  = {0.f, 0.f, 0.f};
-
-    for (uint16_t i = 0; i < BMI088_CALIB_SAMPLES; ++i)
-    {
-        (void)acc_readN(BMI088_ACCEL_XOUT_L, buf, 6);
-
-        raw = bmi088_make_s16(buf[0], buf[1]);
-        float ax = raw * SRN_BMI088_ACCEL_SEN;
-        raw = bmi088_make_s16(buf[2], buf[3]);
-        float ay = raw * SRN_BMI088_ACCEL_SEN;
-        raw = bmi088_make_s16(buf[4], buf[5]);
-        float az = raw * SRN_BMI088_ACCEL_SEN;
-
-        accel_sum[0] += ax;
-        accel_sum[1] += ay;
-        accel_sum[2] += az;
-
-        (void)gyro_readN(BMI088_GYRO_CHIP_ID, buf, 8);
-        if (buf[0] == BMI088_GYRO_CHIP_ID_VALUE)
-        {
-            raw = bmi088_make_s16(buf[2], buf[3]);
-            float gx = raw * SRN_BMI088_GYRO_SEN;
-            raw = bmi088_make_s16(buf[4], buf[5]);
-            float gy = raw * SRN_BMI088_GYRO_SEN;
-            raw = bmi088_make_s16(buf[6], buf[7]);
-            float gz = raw * SRN_BMI088_GYRO_SEN;
-
-            gyro_sum[0] += gx;
-            gyro_sum[1] += gy;
-            gyro_sum[2] += gz;
-        }
-
-        bmi088_delay_ms(1);
-    }
-
-    float invN = 1.0f / (float)BMI088_CALIB_SAMPLES;
-
-    float ax_avg = accel_sum[0] * invN;
-    float ay_avg = accel_sum[1] * invN;
-    float az_avg = accel_sum[2] * invN;
-
-    float g_norm = sqrtf(ax_avg * ax_avg + ay_avg * ay_avg + az_avg * az_avg);
-    if (g_norm < 1e-3f)
-        g_norm = 1.0f;
-
-    s_accel_scale = 9.81f / g_norm;
-
-    s_accel_offset[0] = ax_avg * s_accel_scale;
-    s_accel_offset[1] = ay_avg * s_accel_scale;
-    s_accel_offset[2] = 0.0f;
-
-    s_gyro_offset[0] = gyro_sum[0] * invN;
-    s_gyro_offset[1] = gyro_sum[1] * invN;
-    s_gyro_offset[2] = gyro_sum[2] * invN;
-}
-
 /* ==== 异步采样状态机 ============================================ */
 
-/* raw 数据由 SPI ISR 填写，task 只做 float 计算 */
+/* raw 数据由 SPI dispatcher 填写，BMI task 完成 SI 转换 */
+static bsp_bmi088_completion_fn s_completion;
+static void *s_completion_user;
 static volatile int16_t s_raw_acc[3]  = {0};
 static volatile int16_t s_raw_gyro[3] = {0};
 static volatile int16_t s_raw_temp    = 0;
@@ -467,9 +375,9 @@ static void bmi088_dbg_sync(bsp_bmi088_status_t status)
 bsp_bmi088_status_t BSP_BMI088_Init(bsp_spi_bus_id_t bus_id,
                                     GPIO_TypeDef *acc_cs_port,  uint16_t acc_cs_pin,
                                     GPIO_TypeDef *gyro_cs_port, uint16_t gyro_cs_pin,
-                                    uint8_t do_calib)
+                                    bsp_bmi088_completion_fn completion, void *user)
 {
-    s_bus_id = bus_id;
+    s_completion=completion;s_completion_user=user;
     omx_dbg_zero(&g_omx_dbg_bmi088, sizeof(g_omx_dbg_bmi088));
     omx_dbg_init(&g_omx_dbg_bmi088.h,
                  OMX_DBG_MODULE_BMI088,
@@ -489,6 +397,8 @@ bsp_bmi088_status_t BSP_BMI088_Init(bsp_spi_bus_id_t bus_id,
         return BSP_BMI088_ERR_SPI;
     }
 
+    s_acc_dev.imu_priority=1;
+    s_gyro_dev.imu_priority=1;
     uint8_t err;
 
     err = bmi088_accel_init();
@@ -513,21 +423,6 @@ bsp_bmi088_status_t BSP_BMI088_Init(bsp_spi_bus_id_t bus_id,
         return err;
     }
 
-    if (do_calib)
-    {
-        bmi088_simple_calib();
-    }
-    else
-    {
-        s_gyro_offset[0]  = 0.0f;
-        s_gyro_offset[1]  = 0.0f;
-        s_gyro_offset[2]  = 0.0f;
-        s_accel_offset[0] = 0.0f;
-        s_accel_offset[1] = 0.0f;
-        s_accel_offset[2] = 0.0f;
-        s_accel_scale     = 1.0f;
-    }
-
     s_sm_state     = BMI088_SM_IDLE;
     s_sample_ready = 0;
     s_kick_pending = 0u;
@@ -540,66 +435,6 @@ bsp_bmi088_status_t BSP_BMI088_Init(bsp_spi_bus_id_t bus_id,
     bmi088_dbg_sync(BSP_BMI088_OK);
 
     return BSP_BMI088_OK;
-}
-
-/* ==== 公共接口：同步阻塞读取 ==================================== */
-
-void BSP_BMI088_ReadBlocking(bmi088_data_t *out)
-{
-    if (out == NULL)
-        return;
-
-    uint8_t buf[8];
-    int16_t raw;
-
-    /* accel */
-    (void)acc_readN(BMI088_ACCEL_XOUT_L, buf, 6);
-    raw = bmi088_make_s16(buf[0], buf[1]);
-    float ax = raw * SRN_BMI088_ACCEL_SEN * s_accel_scale - s_accel_offset[0];
-
-    raw = bmi088_make_s16(buf[2], buf[3]);
-    float ay = raw * SRN_BMI088_ACCEL_SEN * s_accel_scale - s_accel_offset[1];
-
-    raw = bmi088_make_s16(buf[4], buf[5]);
-    float az = raw * SRN_BMI088_ACCEL_SEN * s_accel_scale - s_accel_offset[2];
-
-    out->accel[0] = ax;
-    out->accel[1] = ay;
-    out->accel[2] = az;
-
-    /* gyro */
-    (void)gyro_readN(BMI088_GYRO_CHIP_ID, buf, 8);
-    if (buf[0] == BMI088_GYRO_CHIP_ID_VALUE)
-    {
-        raw = bmi088_make_s16(buf[2], buf[3]);
-        float gx = raw * SRN_BMI088_GYRO_SEN - s_gyro_offset[0];
-
-        raw = bmi088_make_s16(buf[4], buf[5]);
-        float gy = raw * SRN_BMI088_GYRO_SEN - s_gyro_offset[1];
-
-        raw = bmi088_make_s16(buf[6], buf[7]);
-        float gz = raw * SRN_BMI088_GYRO_SEN - s_gyro_offset[2];
-
-        out->gyro[0] = gx;
-        out->gyro[1] = gy;
-        out->gyro[2] = gz;
-    }
-    else
-    {
-        out->gyro[0] = 0.0f;
-        out->gyro[1] = 0.0f;
-        out->gyro[2] = 0.0f;
-        s_spi_error_count++;
-        s_last_status = BSP_BMI088_ERR_SPI;
-        bmi088_dbg_sync(BSP_BMI088_ERR_SPI);
-    }
-
-    /* temp */
-    (void)acc_readN(BMI088_TEMP_M, buf, 2);
-    raw = (int16_t)(((int16_t)buf[0] << 3) | (buf[1] >> 5));
-    if (raw > 1023)
-        raw -= 2048;
-    out->temperature = (float)raw * BMI088_TEMP_FACTOR + BMI088_TEMP_OFFSET;
 }
 
 /* ==== 公共接口：异步采样 ======================================== */
@@ -635,6 +470,7 @@ bsp_bmi088_status_t BSP_BMI088_BeginSample(void)
 
     s_sample_ready = 0;
     s_kick_pending = 0;
+    s_acquisition_start = DWT_GetUptimeUs();
     s_sample_start_tick = HAL_GetTick();
     s_last_status = BSP_BMI088_BUSY;
     s_sm_state     = BMI088_SM_ACC_READ;
@@ -704,13 +540,13 @@ bsp_bmi088_status_t BSP_BMI088_GetSampleIfReady(bmi088_data_t *out)
     }
 
     /* raw -> float at task context */
-    float ax = (float)s_raw_acc[0] * SRN_BMI088_ACCEL_SEN * s_accel_scale - s_accel_offset[0];
-    float ay = (float)s_raw_acc[1] * SRN_BMI088_ACCEL_SEN * s_accel_scale - s_accel_offset[1];
-    float az = (float)s_raw_acc[2] * SRN_BMI088_ACCEL_SEN * s_accel_scale - s_accel_offset[2];
+    float ax = (float)s_raw_acc[0] * SRN_BMI088_ACCEL_SEN;
+    float ay = (float)s_raw_acc[1] * SRN_BMI088_ACCEL_SEN;
+    float az = (float)s_raw_acc[2] * SRN_BMI088_ACCEL_SEN;
 
-    float gx = (float)s_raw_gyro[0] * SRN_BMI088_GYRO_SEN - s_gyro_offset[0];
-    float gy = (float)s_raw_gyro[1] * SRN_BMI088_GYRO_SEN - s_gyro_offset[1];
-    float gz = (float)s_raw_gyro[2] * SRN_BMI088_GYRO_SEN - s_gyro_offset[2];
+    float gx = (float)s_raw_gyro[0] * SRN_BMI088_GYRO_SEN;
+    float gy = (float)s_raw_gyro[1] * SRN_BMI088_GYRO_SEN;
+    float gz = (float)s_raw_gyro[2] * SRN_BMI088_GYRO_SEN;
 
     float t;
     {
@@ -727,6 +563,10 @@ bsp_bmi088_status_t BSP_BMI088_GetSampleIfReady(bmi088_data_t *out)
     out->gyro[2]  = gz;
 
     out->temperature = t;
+    for(unsigned i=0;i<3;i++) { out->raw_accel[i]=s_raw_acc[i]; out->raw_gyro[i]=s_raw_gyro[i]; }
+    out->raw_temperature=s_raw_temp;
+    out->acquisition_start_us=s_acquisition_start;
+    out->acquisition_end_us=s_acquisition_end;
 
     s_sample_ready = 0;
     bmi088_dbg_sync(BSP_BMI088_OK);
@@ -743,28 +583,10 @@ bsp_bmi088_status_t BSP_BMI088_ResetAsyncState(void)
         return BSP_BMI088_ERR_CONFIG;
     }
 
-    bsp_spi_snapshot_t spi_snapshot;
-    if (bsp_spi_get_snapshot(s_bus_id, &spi_snapshot) == BSP_SPI_OK)
-    {
-        if ((spi_snapshot.state != 0u) &&
-            ((spi_snapshot.current_dev == (uintptr_t)&s_acc_dev) ||
-             (spi_snapshot.current_dev == (uintptr_t)&s_gyro_dev)))
-        {
-            bsp_spi_status_t rec_st = bsp_spi_recover_bus(s_bus_id,
-                                                           BSP_SPI_RECOVER_REASON_BMI088_STALE);
-            if (rec_st == BSP_SPI_BUSY)
-            {
-                bmi088_dbg_sync(BSP_BMI088_BUSY);
-                return BSP_BMI088_BUSY;
-            }
-            if ((rec_st != BSP_SPI_OK) && (rec_st != BSP_SPI_ERROR))
-            {
-                g_omx_dbg_bmi088.config_error_count++;
-                bmi088_dbg_sync(BSP_BMI088_ERR_CONFIG);
-                return BSP_BMI088_ERR_CONFIG;
-            }
-        }
-    }
+    /* Queued and active requests both own s_rx until cancellation is acknowledged. */
+    bsp_spi_status_t acc=bsp_spi_cancel(&s_acc_dev), gyro=bsp_spi_cancel(&s_gyro_dev);
+    if(acc==BSP_SPI_BUSY || gyro==BSP_SPI_BUSY) return BSP_BMI088_BUSY;
+    if(acc!=BSP_SPI_OK || gyro!=BSP_SPI_OK) return BSP_BMI088_ERR_SPI;
 
     s_raw_acc[0] = 0;
     s_raw_acc[1] = 0;
@@ -998,6 +820,7 @@ static void bmi088_spi_cb(bsp_spi_device_t *dev, void *user_ctx, bsp_spi_status_
             raw -= 2048;
 
         s_raw_temp     = raw;
+        s_acquisition_end = DWT_GetUptimeUs();
         s_sample_ready = 1u;
         s_sm_state     = BMI088_SM_IDLE;
         s_kick_pending = 0u;
@@ -1006,6 +829,7 @@ static void bmi088_spi_cb(bsp_spi_device_t *dev, void *user_ctx, bsp_spi_status_
         s_sample_seq++;
         s_last_status = BSP_BMI088_OK;
         bmi088_dbg_sync(BSP_BMI088_OK);
+        if(s_completion) s_completion(s_completion_user);
     }
     break;
 
@@ -1026,27 +850,6 @@ static void bmi088_spi_cb(bsp_spi_device_t *dev, void *user_ctx, bsp_spi_status_
     }
 }
 
-/* ==== 老接口兼容 ================================================ */
-
-void BMI088_read(float gyro[3], float accel[3], float *temperate)
-{
-    bmi088_data_t d;
-    BSP_BMI088_ReadBlocking(&d);
-
-    if (gyro)
-    {
-        gyro[0] = d.gyro[0];
-        gyro[1] = d.gyro[1];
-        gyro[2] = d.gyro[2];
-    }
-    if (accel)
-    {
-        accel[0] = d.accel[0];
-        accel[1] = d.accel[1];
-        accel[2] = d.accel[2];
-    }
-    if (temperate)
-    {
-        *temperate = d.temperature;
-    }
+void BSP_BMI088_GetSPIStatistics(bsp_spi_statistics_t *accel,bsp_spi_statistics_t *gyro) {
+    bsp_spi_get_statistics(&s_acc_dev,accel); bsp_spi_get_statistics(&s_gyro_dev,gyro);
 }

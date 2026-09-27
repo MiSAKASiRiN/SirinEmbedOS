@@ -2,6 +2,7 @@
 #include "SirinEmbedOS/Services/Logging/bsp_srn_log.h"
 #include "SirinEmbedOSConfig.h"
 #include <string.h>
+#include <math.h>
 
 static bool frozen;
 static SRNOS_SystemConfig saved;
@@ -10,6 +11,14 @@ void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *c)
 {
     if (!c) return;
     memset(c, 0, sizeof(*c));
+    c->ins.enabled=true;
+    c->ins.board_to_robot_wxyz[0]=1;
+    c->sensors.lsm_enabled=c->sensors.lis_enabled=c->sensors.spa_enabled=true;
+    c->sensors.heater_enabled=true;
+    c->sensors.heater_target_c=60;
+    c->sensors.bmi_period_ms=1;
+    c->sensors.lsm_period_ms=1;
+    c->sensors.environment_period_ms=10;
     c->remote.primary = RC_SRC_DR16;
     c->remote.secondary = RC_SRC_VT03;
     c->remote.idle_ms = 50;
@@ -18,8 +27,9 @@ void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *c)
     c->logging_enabled = true;
     c->usb_enabled = true;
     c->host_link_enabled = true;
+    c->host_link_storage_enabled = false;
     c->diagnostics_enabled = true;
-    c->load_parameters = true;
+    c->load_parameters = false;
     c->log_backends = SRN_LOG_BACKEND_USB_CDC;
     c->rs485_response_timeout_ms = 100;
     c->application_stack_bytes = SRNOS_APP_STACK_BYTES;
@@ -32,10 +42,14 @@ static bool valid_priority(uint32_t p) { return p >= 1 && p < 40; }
 uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
 {
     if (!c || c->thread_count > SRNOS_SYSTEM_MAX_THREADS || c->serial_count > SRNOS_SYSTEM_MAX_SERIAL) return UINT32_MAX;
-    /* Base: eight CAN workers, IMU, two bus callback workers, indicators,
+    /* Base: eight CAN workers, IMU, two bus dispatch workers, indicators,
      * idle/timer, TCB/TLS and synchronization overhead, plus startup reserve.
      * Optional reserves deliberately exceed current queue/control-block sizes. */
     uint64_t bytes = 64u * 1024u + c->application_stack_bytes + 512u;
+    bytes += 3584u; /* INS/control worker including TCB/TLS. */
+    bytes += 2560u; /* SPI/I2C request completion semaphores and startup reserve. */
+    if (c->sensors.lsm_enabled) bytes += 2560u;
+    if (c->sensors.lis_enabled || c->sensors.spa_enabled) bytes += 2560u;
     if (c->logging_enabled) bytes += 16u * 1024u;
     if (c->host_link_enabled) bytes += 8u * 1024u;
     if (c->diagnostics_enabled) bytes += 5u * 1024u;
@@ -50,6 +64,12 @@ uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
 SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
 {
     if (!c || c->serial_count > SRNOS_SYSTEM_MAX_SERIAL || c->thread_count > SRNOS_SYSTEM_MAX_THREADS ||
+        !isfinite(c->sensors.heater_target_c) || c->sensors.heater_target_c < 20 || c->sensors.heater_target_c > 75 ||
+        (c->ins.enabled && (c->sensors.bmi_period_ms != 1 || (c->sensors.lsm_enabled && c->sensors.lsm_period_ms != 1))) ||
+        (c->sensors.heater_enabled && c->sensors.bmi_period_ms > 5 && (!c->sensors.lsm_enabled || c->sensors.lsm_period_ms > 5)) ||
+        c->sensors.bmi_period_ms < 1 || c->sensors.bmi_period_ms > 100 ||
+        c->sensors.lsm_period_ms < 1 || c->sensors.lsm_period_ms > 100 ||
+        c->sensors.environment_period_ms < 10 || c->sensors.environment_period_ms > 100 ||
         !valid_stack(c->application_stack_bytes) || !valid_priority(c->application_priority) ||
         !c->rs485_response_timeout_ms || c->rs485_response_timeout_ms > 60000 ||
         (c->host_link_enabled && !c->usb_enabled) ||
@@ -59,6 +79,12 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
         c->remote.primary < RC_SRC_DR16 || c->remote.primary > RC_SRC_VT03 ||
         c->remote.secondary < RC_SRC_DR16 || c->remote.secondary > RC_SRC_VT03 ||
         c->remote.primary == c->remote.secondary) return SRNOS_SYSTEM_INVALID;
+    double qnorm=0;
+    for(unsigned i=0;i<4;i++) {
+        if(!isfinite(c->ins.board_to_robot_wxyz[i])) return SRNOS_SYSTEM_INVALID;
+        qnorm+=(double)c->ins.board_to_robot_wxyz[i]*c->ins.board_to_robot_wxyz[i];
+    }
+    if(qnorm<1e-12 || !isfinite(qnorm)) return SRNOS_SYSTEM_INVALID;
     SRNOS_SerialStatus ss = SRNOS_SerialValidate(c->serial, c->serial_count);
     if (ss != SRNOS_SERIAL_OK) return ss == SRNOS_SERIAL_CONFLICT ? SRNOS_SYSTEM_CONFLICT : SRNOS_SYSTEM_INVALID;
     const SRNOS_SerialPortId roles[] = { c->remote.dr16_port, c->remote.vt03_port, c->referee_port,
@@ -90,6 +116,8 @@ SRNOS_SystemResult SRNOS_SystemFreeze(const SRNOS_SystemConfig *c)
     SRNOS_SystemResult result = SRNOS_SystemValidate(c);
     if (result != SRNOS_SYSTEM_OK) return result;
     saved = *c;
+    double norm=0;for(unsigned i=0;i<4;i++) norm+=(double)saved.ins.board_to_robot_wxyz[i]*saved.ins.board_to_robot_wxyz[i];
+    norm=sqrt(norm);for(unsigned i=0;i<4;i++) saved.ins.board_to_robot_wxyz[i]=(float)(saved.ins.board_to_robot_wxyz[i]/norm);
     frozen = true;
     return SRNOS_SYSTEM_OK;
 }

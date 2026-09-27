@@ -4,4 +4,8 @@
 /Board/build/
 cmake-build-*/
 CMakeUserPresets.json
+/captures/
 
+# Python generated caches
+__pycache__/
+*.py[cod]

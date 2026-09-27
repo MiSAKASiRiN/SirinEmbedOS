@@ -1,0 +1,99 @@
+Reading symbols from /tmp/srnos-telemetry-final-20260927.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x3a018 lma 0x80002d0
+Loading section .rodata, size 0x33a0 lma 0x803a2e8
+Loading section .ARM, size 0x10 lma 0x803d688
+Loading section .preinit_array, size 0x4 lma 0x803d698
+Loading section .data, size 0x3c0 lma 0x803d69c
+Loading section .itcm_text, size 0xe0 lma 0x803da60
+Start address 0x0800259c, load size 252728
+Transfer rate: 82268 KB/sec, 25272 bytes/write.
+Resetting target
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x803a2e8: matched.
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+SRNOS_STACK_SCAN_BEGIN /tmp/srnos-telemetry-final-before
+SRNOS_STACK IDLE 0 0x240024a0 0x2400269c
+SRNOS_STACK LSM 45 0x240267c0 0x24026fbc
+SRNOS_STACK IMU 45 0x24025bb0 0x240263ac
+SRNOS_STACK bsp_spi_cb 46 0x200002f0 0x20000eec
+SRNOS_STACK CAN4_TX 44 0x24024ba8 0x24025ba4
+SRNOS_STACK CAN1_TX 40 0x20009948 0x2000a944
+SRNOS_STACK CAN2_TX 40 0x2000ba48 0x2000ca44
+SRNOS_STACK CAN3_TX 40 0x2000db48 0x2000eb44
+SRNOS_STACK HostComm 24 0x20008048 0x20008844
+SRNOS_STACK Indicators 8 0x240263b8 0x240267b4
+SRNOS_STACK Logging 8 0x200067f8 0x20006ff4
+SRNOS_STACK Environment 24 0x24026fc8 0x240277c4
+SRNOS_STACK CAN4_RX 44 0x2000ebc8 0x2000fbc4
+SRNOS_STACK CAN1_RX 40 0x200088c8 0x200098c4
+SRNOS_STACK CAN2_RX 40 0x2000a9c8 0x2000b9c4
+SRNOS_STACK CAN3_RX 40 0x2000cac8 0x2000dac4
+SRNOS_STACK Application 24 0x240277d0 0x240287cc
+SRNOS_STACK bsp_i2c_cb 46 0x20000f70 0x20001b6c
+SRNOS_STACK HostCmd 9 0x200077c8 0x20007fc4
+SRNOS_STACK Tmr Svc 2 0x24002710 0x24002b0c
+SRNOS_STACK_SCAN_END /tmp/srnos-telemetry-final-before
+$149 = {prepared = 1, boot_commits = 1, boot_notes = 3, heartbeat_edges = 196, dma_busy = 0, errors = 0, bringup = true, yellow = true}
+$150 = 0
+$151 = {accepted = 78440, completed = 78440, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 14, max_transfer_us = 18, queue_us = {78440, 0, 0, 0, 0, 0}, transfer_us = {78440, 0, 0, 0, 0, 0}}
+$152 = 0
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+SRNOS_STACK_SCAN_BEGIN /tmp/srnos-telemetry-final-after
+SRNOS_STACK IDLE 0 0x240024a0 0x2400269c
+SRNOS_STACK CAN4_RX 44 0x2000ebc8 0x2000fbc4
+SRNOS_STACK LSM 45 0x240267c0 0x24026fbc
+SRNOS_STACK IMU 45 0x24025bb0 0x240263ac
+SRNOS_STACK bsp_spi_cb 46 0x200002f0 0x20000eec
+SRNOS_STACK CAN4_TX 44 0x24024ba8 0x24025ba4
+SRNOS_STACK CAN1_TX 40 0x20009948 0x2000a944
+SRNOS_STACK CAN2_TX 40 0x2000ba48 0x2000ca44
+SRNOS_STACK CAN3_TX 40 0x2000db48 0x2000eb44
+SRNOS_STACK HostComm 24 0x20008048 0x20008844
+SRNOS_STACK Indicators 8 0x240263b8 0x240267b4
+SRNOS_STACK CAN1_RX 40 0x200088c8 0x200098c4
+SRNOS_STACK CAN2_RX 40 0x2000a9c8 0x2000b9c4
+SRNOS_STACK CAN3_RX 40 0x2000cac8 0x2000dac4
+SRNOS_STACK Logging 8 0x200067f8 0x20006ff4
+SRNOS_STACK Environment 24 0x24026fc8 0x240277c4
+SRNOS_STACK Application 24 0x240277d0 0x240287cc
+SRNOS_STACK bsp_i2c_cb 46 0x20000f70 0x20001b6c
+SRNOS_STACK HostCmd 9 0x200077c8 0x20007fc4
+SRNOS_STACK Tmr Svc 2 0x24002710 0x24002b0c
+SRNOS_STACK_SCAN_END /tmp/srnos-telemetry-final-after
+$153 = {sampling = false, sequence = 266, tick_ms = 265255, uptime_us = 265257445, system = {phase = SRNOS_SYSTEM_RUNNING, native_can_ready = true, usb_ready = true, parameter_load_status = 0}, sensors = {{state = SRNOS_SENSOR_READY, identity = 30 '\036', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 1, initializations = 1, polls = 264584, samples = 264582, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 104, max_period_us = 421002, period_us = {0, 174484, 90098, 0, 0, 1}, last_sample_us = 265256238, last_poll_us = 265257157}, {state = SRNOS_SENSOR_READY, identity = 106 'j', revision = 0 '\000', product = 0 '\000', config_readback = "D\000\000\000\210\214\000", init_attempts = 1, initializations = 1, polls = 265004, samples = 264989, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 73, max_period_us = 1025, period_us = {0, 161474, 103529, 0, 0, 0}, last_sample_us = 265257168, last_poll_us = 265257118}, {state = SRNOS_SENSOR_READY, identity = 64 '@', revision = 0 '\000', product = 0 '\000', config_readback = "\020\000\214\000\000\000\000", init_attempts = 1, initializations = 1, polls = 26500, samples = 24571, not_ready = 1920, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 2957, max_period_us = 10105, period_us = {0, 0, 0, 17458, 9041, 0}, last_sample_us = 265250383, last_poll_us = 265247448}, {state = SRNOS_SENSOR_READY, identity = 17 '\021', revision = 1 '\001', product = 1 '\001', config_readback = "C@\000\307\000\000\000", init_attempts = 1, initializations = 1, polls = 26500, samples = 4324, not_ready = 22165, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 2059, max_period_us = 12006, period_us = {0, 0, 0, 17476, 9023, 0}, last_sample_us = 265232442, last_poll_us = 265250385}}, bmi = {header = {sequence = 264582, valid_fields = 19, acquisition_start_us = 265256158, acquisition_end_us = 265256238, state = SRNOS_SENSOR_READY}, raw_accel = {9820, 3128, 3341}, raw_gyro = {-11, -14, -23}, raw_temperature = 156, accel_m_s2 = {8.81664753, 2.80839849, 2.99963546}, gyro_rad_s = {-0.011717909, -0.0149137024, -0.0245010816}, temperature_c = 42.5}, lsm = {header = {sequence = 264989, valid_fields = 19, acquisition_start_us = 265257120, acquisition_end_us = 265257168, state = SRNOS_SENSOR_READY}, raw_accel = {2360, 7504, -2505}, raw_gyro = {12, -37, -15}, raw_temperature = 5171, accel_m_s2 = {2.82353067, 8.97787094, -2.99701047}, gyro_rad_s = {0.0146607663, -0.0452040285, -0.0183259565}, temperature_c = 45.1992188}, magnetic = {header = {sequence = 24571, valid_fields = 20, acquisition_start_us = 265247450, acquisition_end_us = 265250383, state = SRNOS_SENSOR_READY}, raw_magnetic = {190, -158, 87}, raw_temperature = 138, magnetic_uT = {28.5000019, -23.7000008, 13.0500002}, temperature_c = 42.25}, pressure = {header = {sequence = 4324, valid_fields = 24, acquisition_start_us = 265230386, acquisition_end_us = 265232442, state = SRNOS_SENSOR_READY}, raw_pressure = 302798, raw_temperature = 171918, pressure_pa = 80322.0078, temperature_c = 44.3742523}, spi = {state = 0, hal_state = 1, hal_error = 0, lock_held = 0, lock_owner = 0, current_dev = 0, current_len = 0, last_status = 0, last_tick = 265255, recover_count = 0, cb_queued = 0, cb_queue_overflow = 0, launch_guard = 0, pending_status = 0, early_complete = 0, deferred_publish = 0, spurious_complete = 0, pending_overwrite = 0, start_conflict = 0, last_hal_ret = 0}, bmi_acc_spi = {accepted = 529179, completed = 529179, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 31, max_transfer_us = 19, queue_us = {529178, 1, 0, 0, 0, 0}, transfer_us = {529179, 0, 0, 0, 0, 0}}, bmi_gyro_spi = {accepted = 264596, completed = 264596, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 19, max_transfer_us = 23, queue_us = {264596, 0, 0, 0, 0, 0}, transfer_us = {264596, 0, 0, 0, 0, 0}}, mcp_spi = {accepted = 106040, completed = 106040, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 14, max_transfer_us = 18, queue_us = {106040, 0, 0, 0, 0, 0}, transfer_us = {106040, 0, 0, 0, 0, 0}}, lsm_spi = {accepted = 529993, completed = 529993, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 25, max_transfer_us = 28, queue_us = {529993, 0, 0, 0, 0, 0}, transfer_us = {529992, 1, 0, 0, 0, 0}}, window_samples = {11000, 11000, 1019, 180}, window_polls = {11000, 11000, 1100, 1100}, window_us = 10999998, free_heap = 115648, minimum_heap = 115648}
+$154 = 265640
+$155 = {h = {magic = 1330468932, version = 1, size = 180, module_id = 1, instance = 0, seq = 0, flags = 0, last_tick = 0, last_status = 0}, xfer_start = 1431880, xfer_done = 1431880, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 4, state = 0, hal_state = 0, hal_error = 0, cb_status = 0, current_dev = 0, last_dev = 0, last_cs_port = 0, last_cs_pin = 0, lock_held = 0, lock_owner = 0, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 0, lock_busy = 0, lock_error = 0, lock_release = 0, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0, launch_guard = 0, pending_status = 0, early_complete = 0, deferred_publish = 0, spurious_complete = 0, pending_overwrite = 0, start_conflict = 0, last_hal_ret = 0}
+$156 = {h = {magic = 1330468932, version = 1, size = 148, module_id = 2, instance = 0, seq = 319887, flags = 0, last_tick = 265639, last_status = 0}, xfer_start = 106629, xfer_done = 106629, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 1, state = 1, hal_state = 32, hal_error = 0, current_dev = 604008852, last_dev = 604008852, mem_addr = 8, mem_addr_size = 1, xfer_type = 4 '\004', direct_xfer = 0 '\000', rx_copy_back = 1 '\001', reserved0 = 0 '\000', cb_status = 0, lock_held = 0, lock_owner = 0, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 106629, lock_busy = 0, lock_error = 0, lock_release = 106629, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0}
+$157 = {h = {magic = 1330468932, version = 1, size = 60, module_id = 3, instance = 0, seq = 212384, flags = 0, last_tick = 265635, last_status = 0}, xfer_calls = 106192, xfer_ok = 106192, xfer_busy = 0, xfer_timeout = 0, xfer_error = 0, last_ret = 0, last_size = 4, last_index = 0}
+$158 = 0
+$159 = 0x0
+$160 = 0x0
+$161 = {prepared = 1, boot_commits = 1, boot_notes = 3, heartbeat_edges = 265, dma_busy = 0, errors = 0, bringup = true, yellow = false}
+$162 = 0
+$163 = 0 '\000'
+$164 = {h = {magic = 1330468932, version = 1, size = 412, module_id = 16, instance = 0, seq = 5308, flags = 0, last_tick = 265556, last_status = 0}, started = 1, usb_configured = 0, rx_frames = 25, rx_bytes = 545, tx_frames = 12676, tx_bytes = 4467570, cobs_errors = 0, crc_errors = 0, length_errors = 0, version_errors = 0, flags_errors = 0, kind_errors = 0, unknown_service = 0, unknown_message = 0, rx_overflow = 0, sequence_gap = 0, sequence_duplicate = 0, sequence_out_of_order = 0, request_replay = 0, request_conflict = 0, transport_busy = 0, transport_errors = 0, transport_disconnects = 2, processing_cycles_total = 130146069, processing_cycles_max = 13737, transport_connected = 0, comm_stack_high_water = 0, worker_stack_high_water = 0, deferred_depth = 0, deferred_high_water = 0, source_registered = 0, source_active = 0, source_total_rate_hz = 0, source_batches = 0, source_records = 0, source_read_failures = 0, source_publish_failures = 0, source_missed_periods = 0, source_cycles_total = 0, source_cycles_max = 0, qos = {{rx_frames = 0, rx_bytes = 0, tx_frames = 0, tx_bytes = 0, submitted = 0, sent = 0, rejected = 0, drop_new = 0, drop_old = 0, coalesced = 0, queue_depth = 0, queue_high_water = 0, last_wait_ms = 0, max_wait_ms = 0}, {rx_frames = 25, rx_bytes = 470, tx_frames = 25, tx_bytes = 1815, submitted = 25, sent = 25, rejected = 0, drop_new = 0, drop_old = 0, coalesced = 0, queue_depth = 0, queue_high_water = 1, last_wait_ms = 0, max_wait_ms = 0}, {rx_frames = 0, rx_bytes = 0, tx_frames = 12651, tx_bytes = 4465755, submitted = 12652, sent = 12651, rejected = 0, drop_new = 0, drop_old = 0, coalesced = 0, queue_depth = 0, queue_high_water = 2, last_wait_ms = 0, max_wait_ms = 1}, {rx_frames = 0, rx_bytes = 0, tx_frames = 0, tx_bytes = 0, submitted = 0, sent = 0, rejected = 0, drop_new = 0, drop_old = 0, coalesced = 0, queue_depth = 0, queue_high_water = 0, last_wait_ms = 0, max_wait_ms = 0}}}
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08037bd8 in memset ()
+$165 = {prepared = 1, boot_commits = 1, boot_notes = 3, heartbeat_edges = 160, dma_busy = 0, errors = 0, bringup = true, yellow = true}
+$166 = {phase = SRNOS_SYSTEM_RUNNING, native_can_ready = true, usb_ready = true, parameter_load_status = 0}
+$167 = SRNOS_SENSOR_READY
+$168 = SRNOS_SENSOR_READY
+$169 = {accepted = 64040, completed = 64040, queue_full = 0, queue_expired = 0, errors = 0, timeouts = 0, recoveries = 0, max_queue_us = 14, max_transfer_us = 18, queue_us = {64040, 0, 0, 0, 0, 0}, transfer_us = {64040, 0, 0, 0, 0, 0}}
+$170 = 0
+$171 = 0x0
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Continuing.

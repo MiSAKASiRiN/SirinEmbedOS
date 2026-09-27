@@ -1,3 +1,4 @@
+#include "SirinEmbedOS/Devices/Sensors.h"
 /* Compile public headers together as an external SDK consumer. */
 #include "SirinEmbedOS/Algorithms/Control/control_extensions.hpp"
 #include "SirinEmbedOS/Algorithms/Control/pid.hpp"
@@ -27,17 +28,12 @@
 #include "SirinEmbedOS/Core/SirinOS.hpp"
 #include "SirinEmbedOS/Devices/Buzzer/bsp_buzzer.h"
 #include "SirinEmbedOS/Devices/EEPROM/lib_24c02.h"
+#include "SirinEmbedOS/Devices/EEPROM.h"
 #include "SirinEmbedOS/Devices/EEPROM/lib_24c02_bl.h"
 #include "SirinEmbedOS/Devices/H12H/lib_serial_servo_h12h.h"
 #include "SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088.h"
 #include "SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088_reg.h"
-#include "SirinEmbedOS/Devices/IMU/Worker/tskptt_imu.h"
-#include "SirinEmbedOS/Devices/IMU/imu_temp_controller.hpp"
 #include "SirinEmbedOS/Devices/IMU/lib_adp_omximu.h"
-#include "SirinEmbedOS/Devices/IMU/lib_imu.h"
-#include "SirinEmbedOS/Devices/IMU/lib_imu_orientation.h"
-#include "SirinEmbedOS/Devices/IMU/lib_imu_project_config.h"
-#include "SirinEmbedOS/Devices/IMU/lib_ins.h"
 #include "SirinEmbedOS/Devices/IMU/mahony_filter.h"
 #include "SirinEmbedOS/Devices/IMU/quaternion_ekf.hpp"
 #include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_api.h"
@@ -75,6 +71,7 @@
 #include "SirinEmbedOS/Services/HostLink/Codec/lib_srn_cobs_prot.h"
 #include "SirinEmbedOS/Services/HostLink/Codec/lib_srn_link.h"
 #include "SirinEmbedOS/Services/HostLink/tskptt_host_comm.h"
+#include "SirinEmbedOS/Services/HostLink/IMUTelemetry.h"
 #include "SirinEmbedOS/Services/Logging/Worker/tskptt_log.h"
 #include "SirinEmbedOS/Services/Logging/bsp_srn_debug_port.h"
 #include "SirinEmbedOS/Services/Logging/bsp_srn_log.h"
@@ -94,3 +91,6 @@
 #include "SirinEmbedOS/Services/RemoteControl/lib_remote_control.h"
 #include "SirinEmbedOS/Services/Services.h"
 
+#include "SirinEmbedOS/Services/INS.h"
+
+#include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"

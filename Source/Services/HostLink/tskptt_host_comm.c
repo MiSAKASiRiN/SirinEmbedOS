@@ -59,6 +59,7 @@ typedef enum {
 } work_kind_t;
 
 typedef struct {
+    uint32_t session;
     uint8_t kind;
     uint8_t service;
     uint8_t message;
@@ -72,6 +73,7 @@ typedef struct {
 } work_item_t;
 
 typedef struct {
+    uint32_t session;
     uint8_t service;
     uint8_t message;
     uint8_t flags;
@@ -94,7 +96,7 @@ typedef struct {
     uint8_t enabled;
     uint16_t stream_id;
     uint16_t max_sample_size;
-    uint16_t reserved;
+    tskptt_host_comm_telemetry_config_t extended;
     uint32_t period_us;
     tskptt_host_comm_telemetry_config_fn on_config;
     void *user;
@@ -154,6 +156,8 @@ static uint8_t s_transport_connected;
 static uint8_t s_configured;
 static uint8_t s_link_ready;
 static uint8_t s_started;
+static uint32_t s_session, s_transport_generation;
+static unsigned s_poll_cursor;
 
 static uint32_t link_now_ms(void *user)
 {
@@ -755,8 +759,10 @@ static void poll_telemetry_sources(uint32_t now_ms)
     }
 }
 
-static srn_link_result_t enqueue_work(const work_item_t *work)
+static srn_link_result_t enqueue_work(const work_item_t *input)
 {
+    work_item_t item=*input; item.session=s_session;
+    const work_item_t *work=&item;
     if ((s_work_queue == NULL) ||
         (osMessageQueuePut(s_work_queue, work, 0u, 0u) != osOK)) {
         return SRN_LINK_ERR_FULL;
@@ -834,6 +840,13 @@ static uint16_t handle_subscribe(void *user,
     if (entry == NULL) {
         return SRN_LINK_STATUS_NOT_FOUND;
     }
+    if (request->payload[6] > 1u || (enabled && entry->extended.required_period_us &&
+        period_us != entry->extended.required_period_us)) return SRN_LINK_STATUS_INVALID_ARGUMENT;
+    if(entry->extended.validate) {
+        uint16_t result=entry->extended.validate(entry->user,enabled,period_us);
+        if(result!=SRN_LINK_STATUS_OK) return result;
+    }
+    (void)srn_link_discard_stream(&s_link,SRN_LINK_SERVICE_TELEMETRY,TELEMETRY_MESSAGE_SAMPLE,stream_id);
     entry->enabled = enabled ? 1u : 0u;
     entry->period_us = period_us;
     if (entry->on_config != NULL) {
@@ -955,9 +968,9 @@ static void publish_snapshot(void)
     srn_link_get_stats(&s_link, &snapshot.link);
     snapshot.sources = s_source_stats;
     snapshot.comm_stack_high_water_words =
-        (s_comm_task != NULL) ? uxTaskGetStackHighWaterMark(s_comm_task) : 0u;
+        (!s_config.disable_stack_scan && s_comm_task != NULL) ? uxTaskGetStackHighWaterMark(s_comm_task) : 0u;
     snapshot.worker_stack_high_water_words =
-        (s_worker_task != NULL) ? uxTaskGetStackHighWaterMark(s_worker_task) : 0u;
+        (!s_config.disable_stack_scan && s_worker_task != NULL) ? uxTaskGetStackHighWaterMark(s_worker_task) : 0u;
     snapshot.deferred_depth = (s_work_queue != NULL) ?
         osMessageQueueGetCount(s_work_queue) : 0u;
     snapshot.deferred_high_water = s_deferred_high_water;
@@ -969,9 +982,13 @@ static void poll_once(void)
 {
     const bool connected =
         s_config.transport.is_connected(s_config.transport.user);
-    if ((s_transport_connected != 0u) && !connected) {
+    uint32_t generation=s_config.transport.session_generation ?
+        s_config.transport.session_generation(s_config.transport.user) : s_transport_generation;
+    if (((s_transport_connected != 0u) && !connected) || generation!=s_transport_generation) {
         clear_all_telemetry_subscriptions();
+        srn_link_reset_session(&s_link); ++s_session;
     }
+    s_transport_generation=generation;
     s_transport_connected = connected ? 1u : 0u;
     srn_link_set_transport_connected(&s_link, connected);
     bool tx_success = false;
@@ -979,6 +996,11 @@ static void poll_once(void)
                                                &tx_success)) {
         srn_link_on_tx_complete(&s_link, tx_success);
     }
+    const uint32_t rx_overflow =
+        s_config.transport.rx_overflow_bytes(s_config.transport.user);
+    srn_link_record_rx_overflow(&s_link, rx_overflow - s_last_rx_overflow);
+    if(rx_overflow != s_last_rx_overflow) srn_link_reset_rx(&s_link);
+    s_last_rx_overflow = rx_overflow;
     for (;;) {
         const size_t count = s_config.transport.rx_read(
             s_config.transport.user,
@@ -989,14 +1011,11 @@ static void poll_once(void)
         }
         (void)srn_link_feed_rx(&s_link, s_config.rx_drain_buffer, count);
     }
-    const uint32_t rx_overflow =
-        s_config.transport.rx_overflow_bytes(s_config.transport.user);
-    srn_link_record_rx_overflow(&s_link, rx_overflow - s_last_rx_overflow);
-    s_last_rx_overflow = rx_overflow;
 
     completion_t completion;
     while (osMessageQueueGet(s_completion_queue,
                              &completion, NULL, 0u) == osOK) {
+        if(completion.session!=s_session) continue;
         if (srn_link_send_response(&s_link,
                                    completion.service,
                                    completion.message,
@@ -1013,6 +1032,13 @@ static void poll_once(void)
     if (connected) {
         (void)srn_link_service_tx(&s_link);
         poll_telemetry_sources(link_now_ms(NULL));
+        /* At most one bounded pump per registered stream per iteration. */
+        for(unsigned n=0;n<HOST_COMM_TELEMETRY_COUNT;n++) {
+            telemetry_entry_t *e=&s_telemetry[(s_poll_cursor+n)%HOST_COMM_TELEMETRY_COUNT];
+            if(e->used && e->enabled && e->extended.poll) e->extended.poll(e->user,link_now_ms(NULL));
+        }
+        s_poll_cursor=(s_poll_cursor+1)%HOST_COMM_TELEMETRY_COUNT;
+        (void)srn_link_service_tx(&s_link);
     } else {
         s_source_last_poll_ms = link_now_ms(NULL);
     }
@@ -1033,8 +1059,10 @@ static bool worker_once(uint32_t timeout)
     if (osMessageQueueGet(s_work_queue, &work, NULL, timeout) != osOK) {
         return false;
     }
+    if(work.session!=s_session) return true;
     completion_t completion;
     memset(&completion, 0, sizeof(completion));
+    completion.session=work.session;
     completion.service = work.service;
     completion.message = work.message;
     completion.sequence = work.sequence;
@@ -1184,36 +1212,25 @@ srn_link_result_t TSKPTT_HostComm_RegisterExec(
     return SRN_LINK_ERR_FULL;
 }
 
-srn_link_result_t TSKPTT_HostComm_RegisterTelemetry(
-    uint16_t stream_id,
-    uint16_t max_sample_size,
-    tskptt_host_comm_telemetry_config_fn on_config,
-    void *user)
+srn_link_result_t TSKPTT_HostComm_RegisterTelemetryEx(const tskptt_host_comm_telemetry_config_t *c)
 {
-    if (s_started) return SRN_LINK_ERR_BUSY;
-    if ((s_configured == 0u) || (max_sample_size == 0u) ||
-        (max_sample_size > (SRN_COBS_PROT_MAX_PAYLOAD - 14u))) {
-        return SRN_LINK_ERR_PARAM;
+    if(s_started) return SRN_LINK_ERR_BUSY;
+    if(!s_configured || !c || !c->max_sample_size || c->max_sample_size>SRN_COBS_PROT_MAX_PAYLOAD-14u ||
+       (c->policy!=SRN_LINK_LATEST && c->policy!=SRN_LINK_FIFO)) return SRN_LINK_ERR_PARAM;
+    if(find_telemetry(c->stream_id)) return SRN_LINK_ERR_PARAM;
+    for(unsigned i=0;i<HOST_COMM_TELEMETRY_COUNT;i++) if(!s_telemetry[i].used) {
+        s_telemetry[i]=(telemetry_entry_t){.used=1,.stream_id=c->stream_id,
+            .max_sample_size=c->max_sample_size,.extended=*c,.on_config=c->on_config,.user=c->user};
+        return SRN_LINK_OK;
     }
-    HOST_ENTER_CRITICAL();
-    for (size_t i = 0u; i < HOST_COMM_TELEMETRY_COUNT; ++i) {
-        if ((s_telemetry[i].used != 0u) &&
-            (s_telemetry[i].stream_id == stream_id)) {
-            HOST_EXIT_CRITICAL();
-            return SRN_LINK_ERR_PARAM;
-        }
-        if (s_telemetry[i].used == 0u) {
-            s_telemetry[i].used = 1u;
-            s_telemetry[i].stream_id = stream_id;
-            s_telemetry[i].max_sample_size = max_sample_size;
-            s_telemetry[i].on_config = on_config;
-            s_telemetry[i].user = user;
-            HOST_EXIT_CRITICAL();
-            return SRN_LINK_OK;
-        }
-    }
-    HOST_EXIT_CRITICAL();
     return SRN_LINK_ERR_FULL;
+}
+srn_link_result_t TSKPTT_HostComm_RegisterTelemetry(uint16_t id,uint16_t size,
+    tskptt_host_comm_telemetry_config_fn callback,void *user)
+{
+    const tskptt_host_comm_telemetry_config_t c={.stream_id=id,.max_sample_size=size,
+        .on_config=callback,.user=user,.policy=SRN_LINK_LATEST};
+    return TSKPTT_HostComm_RegisterTelemetryEx(&c);
 }
 
 srn_link_result_t TSKPTT_HostComm_RegisterTelemetrySource(
@@ -1356,9 +1373,10 @@ srn_link_result_t TSKPTT_HostComm_PublishTelemetry(
     (void)SRNOS_Memory_Copy(SRNOS_Memory_MutableBytes(&payload[14],
                                                  sizeof(payload) - 14u),
                          SRNOS_Memory_Bytes(samples, samples_len));
-    return srn_link_publish(&s_link, SRN_LINK_SERVICE_TELEMETRY,
+    return srn_link_publish_ex(&s_link, SRN_LINK_SERVICE_TELEMETRY,
                             TELEMETRY_MESSAGE_SAMPLE, stream_id,
-                            sample_sequence, payload, samples_len + 14u);
+                            sample_sequence, payload, samples_len + 14u,
+                            entry->extended.policy,entry->extended.on_delivery,entry->user,sample_count);
 }
 
 srn_link_result_t TSKPTT_HostComm_TakeControl(uint16_t channel,

@@ -1,0 +1,392 @@
+{
+  "date": "2026-09-28",
+  "final_elapsed_ms": 32864,
+  "passed": 20,
+  "failed": 0,
+  "restored": true,
+  "phase_names": [
+    "unused",
+    "idle",
+    "blocking_write",
+    "async_read",
+    "async_write",
+    "blocking_read",
+    "boundaries",
+    "restore_write",
+    "restore_read"
+  ],
+  "first": [
+    {
+      "LIS": {
+        "observations": 0,
+        "not_ready": 0,
+        "samples": 0,
+        "max_gap_us": 0,
+        "first_us": 0,
+        "last_us": 0,
+        "rate_hz": null
+      },
+      "SPA": {
+        "observations": 0,
+        "not_ready": 0,
+        "samples": 0,
+        "max_gap_us": 0,
+        "first_us": 0,
+        "last_us": 0,
+        "rate_hz": null
+      }
+    },
+    {
+      "LIS": {
+        "observations": 3000,
+        "not_ready": 0,
+        "samples": 289,
+        "max_gap_us": 20002,
+        "first_us": 27799287,
+        "last_us": 30799291,
+        "rate_hz": 95.99987200017067
+      },
+      "SPA": {
+        "observations": 3000,
+        "not_ready": 0,
+        "samples": 50,
+        "max_gap_us": 70004,
+        "first_us": 27750581,
+        "last_us": 30750586,
+        "rate_hz": 16.33330611115648
+      }
+    },
+    {
+      "LIS": {
+        "observations": 5632,
+        "not_ready": 0,
+        "samples": 258,
+        "max_gap_us": 28911,
+        "first_us": 30799291,
+        "last_us": 36424284,
+        "rate_hz": 45.6889457462436
+      },
+      "SPA": {
+        "observations": 5632,
+        "not_ready": 0,
+        "samples": 93,
+        "max_gap_us": 66768,
+        "first_us": 30750586,
+        "last_us": 36381573,
+        "rate_hz": 16.33816593787199
+      }
+    },
+    {
+      "LIS": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 245,
+        "max_gap_us": 20001,
+        "first_us": 36424284,
+        "last_us": 38999402,
+        "rate_hz": 94.75293947694824
+      },
+      "SPA": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 43,
+        "max_gap_us": 70007,
+        "first_us": 36381573,
+        "last_us": 38960694,
+        "rate_hz": 16.284617898888808
+      }
+    },
+    {
+      "LIS": {
+        "observations": 5631,
+        "not_ready": 0,
+        "samples": 259,
+        "max_gap_us": 28988,
+        "first_us": 38999402,
+        "last_us": 44614358,
+        "rate_hz": 45.948712688042434
+      },
+      "SPA": {
+        "observations": 5631,
+        "not_ready": 0,
+        "samples": 93,
+        "max_gap_us": 66833,
+        "first_us": 38960694,
+        "last_us": 44600589,
+        "rate_hz": 16.31236042514976
+      }
+    },
+    {
+      "LIS": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 243,
+        "max_gap_us": 22439,
+        "first_us": 44614358,
+        "last_us": 47196285,
+        "rate_hz": 93.72844391030421
+      },
+      "SPA": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 43,
+        "max_gap_us": 70008,
+        "first_us": 44600589,
+        "last_us": 47167584,
+        "rate_hz": 16.36154336101161
+      }
+    },
+    {
+      "LIS": {
+        "observations": 472,
+        "not_ready": 0,
+        "samples": 37,
+        "max_gap_us": 22058,
+        "first_us": 47196285,
+        "last_us": 47668294,
+        "rate_hz": 76.26973214493792
+      },
+      "SPA": {
+        "observations": 472,
+        "not_ready": 0,
+        "samples": 9,
+        "max_gap_us": 78328,
+        "first_us": 47167584,
+        "last_us": 47655586,
+        "rate_hz": 16.393375436985913
+      }
+    },
+    {
+      "LIS": {
+        "observations": 5631,
+        "not_ready": 0,
+        "samples": 258,
+        "max_gap_us": 22363,
+        "first_us": 47668294,
+        "last_us": 53290278,
+        "rate_hz": 45.713399397792664
+      },
+      "SPA": {
+        "observations": 5631,
+        "not_ready": 0,
+        "samples": 92,
+        "max_gap_us": 69996,
+        "first_us": 47655586,
+        "last_us": 53247570,
+        "rate_hz": 16.273294058065975
+      }
+    },
+    {
+      "LIS": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 246,
+        "max_gap_us": 20002,
+        "first_us": 53290278,
+        "last_us": 55865402,
+        "rate_hz": 95.14104951839212
+      },
+      "SPA": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 44,
+        "max_gap_us": 71188,
+        "first_us": 53247570,
+        "last_us": 55866701,
+        "rate_hz": 16.41765913961539
+      }
+    }
+  ],
+  "final": [
+    {
+      "LIS": {
+        "observations": 0,
+        "not_ready": 0,
+        "samples": 0,
+        "max_gap_us": 0,
+        "first_us": 0,
+        "last_us": 0,
+        "rate_hz": null
+      },
+      "SPA": {
+        "observations": 0,
+        "not_ready": 0,
+        "samples": 0,
+        "max_gap_us": 0,
+        "first_us": 0,
+        "last_us": 0,
+        "rate_hz": null
+      }
+    },
+    {
+      "LIS": {
+        "observations": 3000,
+        "not_ready": 0,
+        "samples": 288,
+        "max_gap_us": 20002,
+        "first_us": 32649297,
+        "last_us": 35649301,
+        "rate_hz": 95.66653911128118
+      },
+      "SPA": {
+        "observations": 3000,
+        "not_ready": 0,
+        "samples": 50,
+        "max_gap_us": 71295,
+        "first_us": 32640592,
+        "last_us": 35650596,
+        "rate_hz": 16.279048134155303
+      }
+    },
+    {
+      "LIS": {
+        "observations": 8192,
+        "not_ready": 0,
+        "samples": 729,
+        "max_gap_us": 20001,
+        "first_us": 35649301,
+        "last_us": 43839304,
+        "rate_hz": 88.88885632886826
+      },
+      "SPA": {
+        "observations": 8192,
+        "not_ready": 0,
+        "samples": 134,
+        "max_gap_us": 75998,
+        "first_us": 35650596,
+        "last_us": 43806599,
+        "rate_hz": 16.307007243621662
+      }
+    },
+    {
+      "LIS": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 239,
+        "max_gap_us": 20003,
+        "first_us": 43839304,
+        "last_us": 46404294,
+        "rate_hz": 92.78788611261642
+      },
+      "SPA": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 43,
+        "max_gap_us": 70000,
+        "first_us": 43806599,
+        "last_us": 46375593,
+        "rate_hz": 16.34881202525191
+      }
+    },
+    {
+      "LIS": {
+        "observations": 8191,
+        "not_ready": 0,
+        "samples": 730,
+        "max_gap_us": 20001,
+        "first_us": 46414581,
+        "last_us": 54600302,
+        "rate_hz": 89.05751857411217
+      },
+      "SPA": {
+        "observations": 8191,
+        "not_ready": 0,
+        "samples": 135,
+        "max_gap_us": 73987,
+        "first_us": 46375593,
+        "last_us": 54581596,
+        "rate_hz": 16.329509019189977
+      }
+    },
+    {
+      "LIS": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 240,
+        "max_gap_us": 20001,
+        "first_us": 54600302,
+        "last_us": 57166293,
+        "rate_hz": 93.14140228862844
+      },
+      "SPA": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 43,
+        "max_gap_us": 74995,
+        "first_us": 54581596,
+        "last_us": 57157592,
+        "rate_hz": 16.304373143436557
+      }
+    },
+    {
+      "LIS": {
+        "observations": 592,
+        "not_ready": 0,
+        "samples": 59,
+        "max_gap_us": 19885,
+        "first_us": 57166293,
+        "last_us": 57760301,
+        "rate_hz": 97.64178260225451
+      },
+      "SPA": {
+        "observations": 592,
+        "not_ready": 0,
+        "samples": 10,
+        "max_gap_us": 71297,
+        "first_us": 57157592,
+        "last_us": 57715594,
+        "rate_hz": 16.128974448120257
+      }
+    },
+    {
+      "LIS": {
+        "observations": 8191,
+        "not_ready": 0,
+        "samples": 721,
+        "max_gap_us": 25003,
+        "first_us": 57760301,
+        "last_us": 65950303,
+        "rate_hz": 87.91206644393982
+      },
+      "SPA": {
+        "observations": 8191,
+        "not_ready": 0,
+        "samples": 135,
+        "max_gap_us": 75002,
+        "first_us": 57715594,
+        "last_us": 65923323,
+        "rate_hz": 16.326075093366264
+      }
+    },
+    {
+      "LIS": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 239,
+        "max_gap_us": 20002,
+        "first_us": 65950303,
+        "last_us": 68515306,
+        "rate_hz": 92.78741584317835
+      },
+      "SPA": {
+        "observations": 2566,
+        "not_ready": 0,
+        "samples": 43,
+        "max_gap_us": 70002,
+        "first_us": 65923323,
+        "last_us": 68496604,
+        "rate_hz": 16.321575451728748
+      }
+    }
+  ],
+  "eeprom_sha256": {
+    "eeprom-before.bin": "0fbba07a833d4dcfc7024eaf313661a0ba8f80a05c6d29b8801c612e10e60dee",
+    "eeprom-before-final.bin": "0fbba07a833d4dcfc7024eaf313661a0ba8f80a05c6d29b8801c612e10e60dee",
+    "eeprom-restored-first.bin": "0fbba07a833d4dcfc7024eaf313661a0ba8f80a05c6d29b8801c612e10e60dee",
+    "eeprom-restored-final.bin": "0fbba07a833d4dcfc7024eaf313661a0ba8f80a05c6d29b8801c612e10e60dee"
+  },
+  "elf_sha256": {
+    "I2CBringUp": "45a5edad6bf0012c65534ceaf3d77d97efec0aa5a56fff0adddf2368bc1b1fcf",
+    "I2CBringUpRelease": "20fd9648365ba584705f968c2918f9618617a8f2e3242246d83db872efcf92b4"
+  }
+}

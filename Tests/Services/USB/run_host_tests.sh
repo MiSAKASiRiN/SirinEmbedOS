@@ -10,3 +10,7 @@ for PAIR in "omx_usb_cdc_log_transport test_log_transport" "omx_usbd_cdc_acm_if 
     "$ROOT/Source/Services/USB/$1.c" "$ROOT/Tests/Services/USB/$2.c" -o "$OUT/$2"
   "$OUT/$2"
 done
+"${CC:-cc}" -std=c11 -Wall -Wextra -Werror -fsanitize=undefined \
+ -I"$ROOT/Tests/Services/USB/transport_stubs" -I"$ROOT/Include" \
+ "$ROOT/Source/Services/Logging/bsp_srn_debug_port.c" "$ROOT/Tests/Services/USB/test_debug_port.c" -o "$OUT/test_debug_port"
+"$OUT/test_debug_port"

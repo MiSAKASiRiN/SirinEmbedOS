@@ -20,187 +20,218 @@
           "source": "Frameworks/SirinOS/Inc/SirinOS/Array.hpp",
           "source_sha256": "61fdf9f9f80b13df0fc0ca68f640b77deebbd58cceda92d4872ccc3ce61fe9b7",
           "destination": "Include/SirinEmbedOS/Core/Array.hpp",
-          "destination_sha256": "b6ef24b750b01c5ec231530ea7a6190898bfb3558f6cb6c2af9f577610850575"
+          "destination_sha256": "b6ef24b750b01c5ec231530ea7a6190898bfb3558f6cb6c2af9f577610850575",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/Bounds.hpp",
           "source_sha256": "528c198de9bc5cabff22b933678379028acc04c7ed39c631f3958a5ce3d4d28b",
           "destination": "Include/SirinEmbedOS/Core/Bounds.hpp",
-          "destination_sha256": "bf55e57b12c1a08d13b073a9f120ef1fad2413f09e76b801e9314fde0bde8d19"
+          "destination_sha256": "bf55e57b12c1a08d13b073a9f120ef1fad2413f09e76b801e9314fde0bde8d19",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Array.h",
           "source_sha256": "62a3d7841bb93e7c4e1991897430517b816b670088fbd9ebb3d71a62ec9094c7",
           "destination": "Include/SirinEmbedOS/Core/C/Array.h",
-          "destination_sha256": "a765a22837387507982228dc2e77d77d95919dc3e8be21ed5bb3b1a6085adc26"
+          "destination_sha256": "a765a22837387507982228dc2e77d77d95919dc3e8be21ed5bb3b1a6085adc26",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Bounds.h",
           "source_sha256": "a648949cfd6d2992e2a13404b8d1a45ec78f768a2f85425fae3bd5d559d84115",
           "destination": "Include/SirinEmbedOS/Core/C/Bounds.h",
-          "destination_sha256": "1a354f335671d867f47c6aea3931d480ed04deb2dc9bdfed60447a06488066a6"
+          "destination_sha256": "1a354f335671d867f47c6aea3931d480ed04deb2dc9bdfed60447a06488066a6",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Endian.h",
           "source_sha256": "f03e917b5852761a648fab9fbe115d36c7ebeffded1c4a7092946d2ecffec754",
           "destination": "Include/SirinEmbedOS/Core/C/Endian.h",
-          "destination_sha256": "3739348644943e95d0c4494b486a26f0a2bc643c6004e9f72c13b618566740c8"
+          "destination_sha256": "3739348644943e95d0c4494b486a26f0a2bc643c6004e9f72c13b618566740c8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Fault.h",
           "source_sha256": "453a9310736e23e9ceca2b707cd8501434c252c8557cfe7529e6afabdce37d5c",
           "destination": "Include/SirinEmbedOS/Core/C/Fault.h",
-          "destination_sha256": "175b7e42076f3531d114ac5ae58fdf79a1100d958df3c489158b2af8f070d069"
+          "destination_sha256": "175b7e42076f3531d114ac5ae58fdf79a1100d958df3c489158b2af8f070d069",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Memory.h",
           "source_sha256": "8f1f5635903e2db70a1c89027ff7799372b9fdae802c5532ced7b6d2fa787b9f",
           "destination": "Include/SirinEmbedOS/Core/C/Memory.h",
-          "destination_sha256": "fe146d5636700035db19b289ae1f506474f210f401a3332da40c507d3b1034e8"
+          "destination_sha256": "fe146d5636700035db19b289ae1f506474f210f401a3332da40c507d3b1034e8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Numeric.h",
           "source_sha256": "22de23555a67a9bd7fd31eaf9262405ca984de7ce69168f1848ecdd2e8521d75",
           "destination": "Include/SirinEmbedOS/Core/C/Numeric.h",
-          "destination_sha256": "8298625906b84c5f9c82b61db9b5922c3208cef2cd1d7173cc81a18eba7e03b8"
+          "destination_sha256": "8298625906b84c5f9c82b61db9b5922c3208cef2cd1d7173cc81a18eba7e03b8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Platform.h",
           "source_sha256": "2be8792f06f0b66876b85a9c142acea35b7cd4bb46c8d027487c0e81233875bd",
           "destination": "Include/SirinEmbedOS/Core/C/Platform.h",
-          "destination_sha256": "47b6e9e8eff7b69ca794a9f6047d1cab65430881bc610c82f9aa87e8039f1b76"
+          "destination_sha256": "47b6e9e8eff7b69ca794a9f6047d1cab65430881bc610c82f9aa87e8039f1b76",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/SirinOS.h",
           "source_sha256": "4b3054727f3c72abf4b3798eb5181247b2d0497a54e2ea8390f38c906394e65e",
           "destination": "Include/SirinEmbedOS/Core/C/SirinOS.h",
-          "destination_sha256": "4893cbd57398d3b5964b8e7ec79c604b1d0c1605a7e7bee01537569222d4de21"
+          "destination_sha256": "4893cbd57398d3b5964b8e7ec79c604b1d0c1605a7e7bee01537569222d4de21",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/C/Version.h",
           "source_sha256": "a08cd20502e9c3fbc6efc47a0e095914ea34036e30ea8d12976a06bac420c603",
           "destination": "Include/SirinEmbedOS/Core/C/Version.h",
-          "destination_sha256": "a08cd20502e9c3fbc6efc47a0e095914ea34036e30ea8d12976a06bac420c603"
+          "destination_sha256": "a08cd20502e9c3fbc6efc47a0e095914ea34036e30ea8d12976a06bac420c603",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/Endian.hpp",
           "source_sha256": "215183db1d0367ca57255a5c159e0475b2043df51a168a62e8554a5fc3e9be60",
           "destination": "Include/SirinEmbedOS/Core/Endian.hpp",
-          "destination_sha256": "a6d64242b8d656bd88ecbf006bf779c7d377d760e1565c4086cdfa2d011fadc8"
+          "destination_sha256": "a6d64242b8d656bd88ecbf006bf779c7d377d760e1565c4086cdfa2d011fadc8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/Fault.hpp",
           "source_sha256": "668317972ab5aed58eb36582372ed8c3844f208fd49c681de388b3368cbaa404",
           "destination": "Include/SirinEmbedOS/Core/Fault.hpp",
-          "destination_sha256": "b87dadefc4c0dbc86a47cf6ccca8676a66d9e56d2e46beca0687b1014c0481f9"
+          "destination_sha256": "b87dadefc4c0dbc86a47cf6ccca8676a66d9e56d2e46beca0687b1014c0481f9",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/Memory.hpp",
           "source_sha256": "0bbe8e5a80d44158b7d81c6f330033f69e18565b435f5e19b3039ce90768ff9e",
           "destination": "Include/SirinEmbedOS/Core/Memory.hpp",
-          "destination_sha256": "236dd693b60d01e88ef10acfb1fa8659c555158285abf87bb115fae0fbbfe5a9"
+          "destination_sha256": "236dd693b60d01e88ef10acfb1fa8659c555158285abf87bb115fae0fbbfe5a9",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/Numeric.hpp",
           "source_sha256": "a0a95e8c1150fcbb6c46510085737b782bed912d3cdb5d3f752282bb7e74ba72",
           "destination": "Include/SirinEmbedOS/Core/Numeric.hpp",
-          "destination_sha256": "095031b95725f840d169034496877a308169b7b784ad92cf392f3e69a5263fb8"
+          "destination_sha256": "095031b95725f840d169034496877a308169b7b784ad92cf392f3e69a5263fb8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/Platform.hpp",
           "source_sha256": "49dadf8a5d4be903933d3b23df0455d38c84f7fbe0c6f50c1267a2a42a46c5b2",
           "destination": "Include/SirinEmbedOS/Core/Platform.hpp",
-          "destination_sha256": "b620e11de5a233f2bab4411e2b82955073deeafe4bab82dac97edde70bb4cddb"
+          "destination_sha256": "b620e11de5a233f2bab4411e2b82955073deeafe4bab82dac97edde70bb4cddb",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/SirinOS.h",
           "source_sha256": "961aa09e737208d69641918dc65a5aa60133d9f88227d2cde08beb04b74e4a7c",
           "destination": "Include/SirinEmbedOS/Core/SirinOS.h",
-          "destination_sha256": "8d3d79a6ce3d36ae3ae77481c0522c6b6eb70a5045733e8ee11278d9c4576ee7"
+          "destination_sha256": "8d3d79a6ce3d36ae3ae77481c0522c6b6eb70a5045733e8ee11278d9c4576ee7",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Inc/SirinOS/SirinOS.hpp",
           "source_sha256": "624856c5a82942425e484740d504c0d4b02dd5566ba55f94cbac0b19624b2abb",
           "destination": "Include/SirinEmbedOS/Core/SirinOS.hpp",
-          "destination_sha256": "7f995af45dd66d662e6fe0045dce3ebec270de275139f32d9d57359303ae5481"
+          "destination_sha256": "7f995af45dd66d662e6fe0045dce3ebec270de275139f32d9d57359303ae5481",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Ports/STM32H7/Inc/SirinOS/STM32H7Fault.h",
           "source_sha256": "2a442073c3354c15a7e530b1657b667662e076e57bed9fdaa3f06a796ede3665",
           "destination": "Board/Glue/STM32H7Fault.h",
-          "destination_sha256": "0bbfad593cbb8b53ec209b84f7a5aeec54fb1eadf250a695d24d513ae9edd53b"
+          "destination_sha256": "0bbfad593cbb8b53ec209b84f7a5aeec54fb1eadf250a695d24d513ae9edd53b",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Ports/STM32H7/Linker/sirinos_noinit.ld",
           "source_sha256": "d6f895fe50953b60a6867d78c9376f2e4209c92117ab890560416168fa59e4b6",
           "destination": "Board/Linker/SirinEmbedOS.ld",
-          "destination_sha256": "67bb3e8bd75ecbec386b8d900d53f986bb40342c9d06f8fca5373d5e9d80a0af"
+          "destination_sha256": "67bb3e8bd75ecbec386b8d900d53f986bb40342c9d06f8fca5373d5e9d80a0af",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Ports/STM32H7/Src/Platform.c",
           "source_sha256": "4a211e44e7a6f4c6bca713764f0bac873ff249211ae0ba993fe57d776605c305",
           "destination": "Board/Glue/Platform.c",
-          "destination_sha256": "98925e576ea51502c5c833a5fb94127fc234f07cdd9335e9c24216a0744e1615"
+          "destination_sha256": "98925e576ea51502c5c833a5fb94127fc234f07cdd9335e9c24216a0744e1615",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Src/Fault/Fault.c",
           "source_sha256": "d5478b1243e28d152d818cb82b412a2922e5c4e7737058ee3434583252e40aee",
           "destination": "Source/Core/Fault/Fault.c",
-          "destination_sha256": "72306e5bfe3de0b7f6ba4f133ddeac989b47ca7b7f8ca5de50b84c58c54b682f"
+          "destination_sha256": "72306e5bfe3de0b7f6ba4f133ddeac989b47ca7b7f8ca5de50b84c58c54b682f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/platform_stubs.c",
           "source_sha256": "df180b422db31c51d185178aa3104208861f6c6bdb3b6c4cb02d2c8cb6d9b793",
           "destination": "Tests/Core/platform_stubs.c",
-          "destination_sha256": "1eb1e6dec58d6ac34c7727148c62fce097c594f27e4907836438a91990ee19e2"
+          "destination_sha256": "1eb1e6dec58d6ac34c7727148c62fce097c594f27e4907836438a91990ee19e2",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/pointer_must_fail.c",
           "source_sha256": "396f8a5918e30098a3ce15af0aea6b4752db9980f62753457a1edfd758a05f24",
           "destination": "Tests/Core/pointer_must_fail.c",
-          "destination_sha256": "159bff3665597df54cd18dbd9b7b0879a991811bf879c78564791682d2ccfc62"
+          "destination_sha256": "159bff3665597df54cd18dbd9b7b0879a991811bf879c78564791682d2ccfc62",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/run_host_tests.sh",
           "source_sha256": "ff8ce429c88c998d6f3ad8b5028d64a82ca425ad12e722c0f333ef773d23bb9a",
           "destination": "Tests/Core/run_host_tests.sh",
-          "destination_sha256": "a739ac521fd2cb2e1a5c652bd0d6edfb428735146e22a3bd4c3dc4cb1eb228a7"
+          "destination_sha256": "a739ac521fd2cb2e1a5c652bd0d6edfb428735146e22a3bd4c3dc4cb1eb228a7",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/test_core.c",
           "source_sha256": "0f0ed64e35c396e5a6b835a10fd775bf81c7df44c9d65e429b35b2c88db4bf1c",
           "destination": "Tests/Core/test_core.c",
-          "destination_sha256": "6fef9dd308779187c45eed44bd76407dcf3eec2340e3360e0e09c44c0618f5b6"
+          "destination_sha256": "6fef9dd308779187c45eed44bd76407dcf3eec2340e3360e0e09c44c0618f5b6",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/test_core.cpp",
           "source_sha256": "f329518873af8696d5e873c21e4e4fad0bd54e043bf389a0e04d61ca6872c18b",
           "destination": "Tests/Core/test_core.cpp",
-          "destination_sha256": "3b7fba60e586d0deac2c4e9ee209a7934f763561b24898eda2057a0fd53bc8ed"
+          "destination_sha256": "3b7fba60e586d0deac2c4e9ee209a7934f763561b24898eda2057a0fd53bc8ed",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/test_decode_panic.py",
           "source_sha256": "29d88eeec7c694ed4cf70b589f72508b18965baf1d79976ce7a01f4d67d59a70",
           "destination": "Tests/Core/test_decode_panic.py",
-          "destination_sha256": "f5a13bb551354040619dd035083e1c2fa231c1d0f4b5db9664bf8d66d6af95d9"
+          "destination_sha256": "f5a13bb551354040619dd035083e1c2fa231c1d0f4b5db9664bf8d66d6af95d9",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/test_fault.c",
           "source_sha256": "bde6010d9cedaf29e5f7b4f943712f5f2dab6e27d696dde3379767f6ad487e86",
           "destination": "Tests/Core/test_fault.c",
-          "destination_sha256": "edad54951b27a72bb7032025b683447b9d966f4e922a7989c0429f55e7600934"
+          "destination_sha256": "edad54951b27a72bb7032025b683447b9d966f4e922a7989c0429f55e7600934",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tests/test_span_fault.cpp",
           "source_sha256": "a7612b826e75d80b8078e8f90114a9d7cd344f98673b5bdd410008dd2b7ba692",
           "destination": "Tests/Core/test_span_fault.cpp",
-          "destination_sha256": "f671fa91fad2f4d670d61e0d0776ea4979678ced6565eded3d40b53615163f35"
+          "destination_sha256": "f671fa91fad2f4d670d61e0d0776ea4979678ced6565eded3d40b53615163f35",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/SirinOS/Tools/decode_panic.py",
           "source_sha256": "61c086173a19e8473a7c7f2322414f0effc29fd477a959c3f7a309a6b9c162f6",
           "destination": "Tools/Core/decode_panic.py",
-          "destination_sha256": "61c086173a19e8473a7c7f2322414f0effc29fd477a959c3f7a309a6b9c162f6"
+          "destination_sha256": "61c086173a19e8473a7c7f2322414f0effc29fd477a959c3f7a309a6b9c162f6",
+          "disposition": "present"
         }
       ]
     },
@@ -221,19 +252,22 @@
           "source": "Frameworks/bsp_bmi088/Inc/bsp_bmi088.h",
           "source_sha256": "22cb59b334d492498474fc172435bf334b86d303e757d1eadff52a633c467d2c",
           "destination": "Include/SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088.h",
-          "destination_sha256": "73c9a093937ca5f9da31a27f76b2d438123c9495df4f01101b794b62cbb6d23c"
+          "destination_sha256": "5edf856e1e8362657c5eda1c5d8b9bc3fb2e93f93d5b9c8cd5291bc7674ae978",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_bmi088/Inc/bsp_bmi088_reg.h",
           "source_sha256": "cb896e1a6535bee6f78c2f1f7942d7c61a6d42d7922bea50a15cb02b9d784a87",
           "destination": "Include/SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088_reg.h",
-          "destination_sha256": "cb896e1a6535bee6f78c2f1f7942d7c61a6d42d7922bea50a15cb02b9d784a87"
+          "destination_sha256": "cb896e1a6535bee6f78c2f1f7942d7c61a6d42d7922bea50a15cb02b9d784a87",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_bmi088/Src/bsp_bmi088.c",
           "source_sha256": "101fa7ebb298c8fdc5cb8649653844955369a123a1c3676372507143be1b5fc9",
           "destination": "Source/Devices/IMU/BMI088/bsp_bmi088.c",
-          "destination_sha256": "998c5dc7231f3003816b4133767d8b6138f560478afaab78d61f9e97aa98dd28"
+          "destination_sha256": "728d0575c3249922524466cf6bca196cb4b59c48463e10a051972d04abbba54b",
+          "disposition": "present"
         }
       ]
     },
@@ -254,13 +288,15 @@
           "source": "Frameworks/bsp_buzzer/Inc/bsp_buzzer.h",
           "source_sha256": "6e969bce69def407cc5aa7b47d423f6605ae770aef5148e03cb0c7eef2b19d31",
           "destination": "Include/SirinEmbedOS/Devices/Buzzer/bsp_buzzer.h",
-          "destination_sha256": "6e969bce69def407cc5aa7b47d423f6605ae770aef5148e03cb0c7eef2b19d31"
+          "destination_sha256": "6e969bce69def407cc5aa7b47d423f6605ae770aef5148e03cb0c7eef2b19d31",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_buzzer/Src/bsp_buzzer.c",
           "source_sha256": "2129a38552f3654318d6cfbae264f5a77392964522c0d9e1830b1cc98cec529b",
           "destination": "Source/Devices/Buzzer/bsp_buzzer.c",
-          "destination_sha256": "0096544c37e90c351d43ff835abcd37ad8b035def8a4912717bc33875befffec"
+          "destination_sha256": "0096544c37e90c351d43ff835abcd37ad8b035def8a4912717bc33875befffec",
+          "disposition": "present"
         }
       ]
     },
@@ -281,13 +317,15 @@
           "source": "Frameworks/bsp_dr16/Inc/bsp_dr16.h",
           "source_sha256": "2abb0d2b5355d6226717af8198b35facdbfe9d14ec8e86a7c5f84bf808864dc5",
           "destination": "Include/SirinEmbedOS/Services/RemoteControl/DR16/bsp_dr16.h",
-          "destination_sha256": "27381d3d581eb8b9fd471b85e2ca35f65cc6a0bee1cbd03534be5b05aaed894f"
+          "destination_sha256": "27381d3d581eb8b9fd471b85e2ca35f65cc6a0bee1cbd03534be5b05aaed894f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_dr16/Src/bsp_dr16.c",
           "source_sha256": "d44a4ca2d332dd1d9fbc564ca76b8412f5ba17d419ca1a15491a447cb1162695",
           "destination": "Source/Services/RemoteControl/DR16/bsp_dr16.c",
-          "destination_sha256": "2006d2953aaeefc37885f63017248408a8b6022d5e2b4617e947e6ca101034d2"
+          "destination_sha256": "2006d2953aaeefc37885f63017248408a8b6022d5e2b4617e947e6ca101034d2",
+          "disposition": "present"
         }
       ]
     },
@@ -308,13 +346,15 @@
           "source": "Frameworks/bsp_dwt/Inc/bsp_dwt.h",
           "source_sha256": "e12863685612f6124441268b27fe3b7b0ba2bc45a5d251057ae08c858b86975d",
           "destination": "Include/SirinEmbedOS/Diagnostics/Time/bsp_dwt.h",
-          "destination_sha256": "e12863685612f6124441268b27fe3b7b0ba2bc45a5d251057ae08c858b86975d"
+          "destination_sha256": "e12863685612f6124441268b27fe3b7b0ba2bc45a5d251057ae08c858b86975d",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_dwt/Src/bsp_dwt.c",
           "source_sha256": "dd4e1b82771f7c99b7cf075cb9cc1ff3a65277e2fe95ef56b2dc678d82704898",
           "destination": "Source/Diagnostics/Time/bsp_dwt.c",
-          "destination_sha256": "83ad551587e95edda1c0b32257ffa7f6625c3a877ed9b6e388c0937e71e32248"
+          "destination_sha256": "83ad551587e95edda1c0b32257ffa7f6625c3a877ed9b6e388c0937e71e32248",
+          "disposition": "present"
         }
       ]
     },
@@ -349,13 +389,15 @@
           "source": "Frameworks/bsp_fdcan/Inc/bsp_fdcan.h",
           "source_sha256": "106a2d272b6e2ce6db20cc3e947101a87ff22c2c30571863c0590249b348bc4b",
           "destination": "Include/SirinEmbedOS/IO/CAN/Native/bsp_fdcan.h",
-          "destination_sha256": "106a2d272b6e2ce6db20cc3e947101a87ff22c2c30571863c0590249b348bc4b"
+          "destination_sha256": "106a2d272b6e2ce6db20cc3e947101a87ff22c2c30571863c0590249b348bc4b",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_fdcan/Src/bsp_fdcan.c",
           "source_sha256": "327508d2ba9c14074f47df71eec58e7d7c176ad04c84c50c43e7251e981978b5",
           "destination": "Source/IO/CAN/Native/bsp_fdcan.c",
-          "destination_sha256": "ef6ab941c032fd990c8f981d546e961f00504e78cce2eb6ab75f588336e337a3"
+          "destination_sha256": "ef6ab941c032fd990c8f981d546e961f00504e78cce2eb6ab75f588336e337a3",
+          "disposition": "present"
         }
       ]
     },
@@ -366,7 +408,7 @@
       "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_i2c",
       "status": "",
       "commit_scope": "Framework repository",
-      "result": "迁入：固定I2C4绑定到Board，BDMA缓冲在D3，保留回调worker。",
+      "result": "迁入并修正：固定I2C4、D3 BDMA；按设备完成状态，确认abort及迟到IRQ隔离。",
       "source_file_count": 4,
       "license_files": [],
       "source_notice_files": [],
@@ -376,13 +418,15 @@
           "source": "Frameworks/bsp_i2c/Inc/bsp_i2c.h",
           "source_sha256": "f88556bba09a8c79b49757df36f2b8f972e6e4f5e03535f1f872315b8a4a7106",
           "destination": "Include/SirinEmbedOS/IO/I2C/bsp_i2c.h",
-          "destination_sha256": "ecf9b67cd1dfc8d8790fb306be9924bbd92e6c4396d8a81dd8347f8e578d5574"
+          "destination_sha256": "c5d27fb68d76b4c47e05cf62fd4c5eafc55d336b12d8cce73c8dd61019b0170c",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_i2c/Src/bsp_i2c.c",
           "source_sha256": "5234e3e44e7428e1711b2b2e1adf787ec1a9e68ff5d71123a5ac4bef587adde7",
           "destination": "Source/IO/I2C/bsp_i2c.c",
-          "destination_sha256": "66f85357fa3d9687cd578ddb0e460be400f16b98fde20de90e90f171f8c3e958"
+          "destination_sha256": "55075c75c4bd1434ac7de53d8f343a7fe0e717a8efe32af74e74de01e9d9801b",
+          "disposition": "present"
         }
       ]
     },
@@ -393,7 +437,7 @@
       "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_spi",
       "status": "",
       "commit_scope": "Framework repository",
-      "result": "迁入：固定SPI4绑定到Board，保留共享总线并发与回调worker。",
+      "result": "迁入并重写：SPI4唯一High6分发、8槽复制队列、IMU/普通公平仲裁、确认取消及故障隔离。",
       "source_file_count": 4,
       "license_files": [],
       "source_notice_files": [],
@@ -403,13 +447,15 @@
           "source": "Frameworks/bsp_spi/Inc/bsp_spi.h",
           "source_sha256": "768f358136edfee1f0bae39158dfa108d1aadc4d2be25045886eae5ffc77f9ad",
           "destination": "Include/SirinEmbedOS/IO/SPI/bsp_spi.h",
-          "destination_sha256": "a74d3efef9227a84f9f2b48992bc5bec5da4dde49e929f6542cf8f5c08c35d35"
+          "destination_sha256": "d5a016635f97e4c4b48d1f93423100e991ea5e459742646627bf395d6a7b9bf4",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_spi/Src/bsp_spi.c",
           "source_sha256": "e40b8ad6b8b0663805e05e5e439b9833a7fb2eb1077f142f2546711f6dfc0900",
           "destination": "Source/IO/SPI/bsp_spi.c",
-          "destination_sha256": "cb4f5309a896b8cd3ab4ecd0208c994f09055c3ca5e31eb341a0f4164df3af9d"
+          "destination_sha256": "367792889cb3fd470b87d2ef6c6d79ccc2f807bd56b0e4a70d5d4103d7041e2a",
+          "disposition": "present"
         }
       ]
     },
@@ -430,25 +476,29 @@
           "source": "Frameworks/bsp_srn_log/Inc/bsp_srn_debug_port.h",
           "source_sha256": "7626def304ceaee0286b5f365c57f78dfe01cc8a47334b561fb49d242b591187",
           "destination": "Include/SirinEmbedOS/Services/Logging/bsp_srn_debug_port.h",
-          "destination_sha256": "7626def304ceaee0286b5f365c57f78dfe01cc8a47334b561fb49d242b591187"
+          "destination_sha256": "2cf9cf1d72aac3a0da9fe837dc835d3d1ef1507e85f374558f68a5e54ad9450d",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_srn_log/Inc/bsp_srn_log.h",
           "source_sha256": "3e944279b2a699cb38b20b4bfae95fb35770226987a61e8b59f81acec9ea6fab",
           "destination": "Include/SirinEmbedOS/Services/Logging/bsp_srn_log.h",
-          "destination_sha256": "d0e2f5b9684806e64ee59d363eadb51360b0b3935b6d7888a911863efb073a58"
+          "destination_sha256": "d0e2f5b9684806e64ee59d363eadb51360b0b3935b6d7888a911863efb073a58",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_srn_log/Src/bsp_srn_debug_port.c",
           "source_sha256": "de462796d850af6a299d334acd7202f037a87102df8f56e6339ef646239a35d3",
           "destination": "Source/Services/Logging/bsp_srn_debug_port.c",
-          "destination_sha256": "4517ceba40caa1c7916b3ca92f9d521ae1a3e07b833898a5d4291b69126bdeb9"
+          "destination_sha256": "7bddaad55bfa7da287754dfe702a8976b57ae76f857cee6c1a9809380dc50fc8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_srn_log/Src/bsp_srn_log.c",
           "source_sha256": "6205a784d685e76b92cc01058a49b977f868b8869d412ad7f402045079cfedbc",
           "destination": "Source/Services/Logging/bsp_srn_log.c",
-          "destination_sha256": "76e2a859123c51c0efe5e49c825c796c6af407b2b9a977ef5e3c66c50f39eb0b"
+          "destination_sha256": "76e2a859123c51c0efe5e49c825c796c6af407b2b9a977ef5e3c66c50f39eb0b",
+          "disposition": "present"
         }
       ]
     },
@@ -469,13 +519,15 @@
           "source": "Frameworks/bsp_vt03/Inc/bsp_vt03.h",
           "source_sha256": "92b250bbfc0ce6c902989fa420bb9d53b25d000512ac3d93204131cc5f6fe9c9",
           "destination": "Include/SirinEmbedOS/Services/RemoteControl/VT03/bsp_vt03.h",
-          "destination_sha256": "ae39082858deb145cb63637de86a085be7bb5e248012a9cc0c1c539629a00eed"
+          "destination_sha256": "ae39082858deb145cb63637de86a085be7bb5e248012a9cc0c1c539629a00eed",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_vt03/Src/bsp_vt03.c",
           "source_sha256": "b16068e5c9388874f93faaf81900df79ca7dafefd6ab6942e49eabf422157a85",
           "destination": "Source/Services/RemoteControl/VT03/bsp_vt03.c",
-          "destination_sha256": "2f254db315c3c3245da44ca7db60ae022057693c07101c2397f50a93e57100ba"
+          "destination_sha256": "2f254db315c3c3245da44ca7db60ae022057693c07101c2397f50a93e57100ba",
+          "disposition": "present"
         }
       ]
     },
@@ -496,25 +548,29 @@
           "source": "Frameworks/bsp_ws2812/Inc/bsp_ws2812.h",
           "source_sha256": "f180503cf144275cefdc21d721491babdf3e6f1811ce02710063c37186b6ccdc",
           "destination": "Include/SirinEmbedOS/Devices/WS2812/bsp_ws2812.h",
-          "destination_sha256": "f180503cf144275cefdc21d721491babdf3e6f1811ce02710063c37186b6ccdc"
+          "destination_sha256": "f180503cf144275cefdc21d721491babdf3e6f1811ce02710063c37186b6ccdc",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_ws2812/Inc/ws2812_critical.h",
           "source_sha256": "ded96b999ae60cea0aa4ffe52fda480b73d062571fb322dbdc46d4d3b3e3ee9c",
           "destination": "Include/SirinEmbedOS/Devices/WS2812/ws2812_critical.h",
-          "destination_sha256": "ded96b999ae60cea0aa4ffe52fda480b73d062571fb322dbdc46d4d3b3e3ee9c"
+          "destination_sha256": "ded96b999ae60cea0aa4ffe52fda480b73d062571fb322dbdc46d4d3b3e3ee9c",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_ws2812/Src/bsp_ws2812.c",
           "source_sha256": "4065857952f2b0e8e3c04399155e3392d08ec1793c913bc02b4477a654f60e17",
           "destination": "Source/Devices/WS2812/bsp_ws2812.c",
-          "destination_sha256": "14027bbea764e409d387f943c9cef2a1e9a8e4a048ec88accf9f43a2afdd267e"
+          "destination_sha256": "14027bbea764e409d387f943c9cef2a1e9a8e4a048ec88accf9f43a2afdd267e",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/bsp_ws2812/Src/ws2812_critical.c",
           "source_sha256": "84f4a7194e94cf7125f5ad1ee8d06ef94e0f515b2367c4a5a67d66dce8555ef7",
           "destination": "Source/Devices/WS2812/ws2812_critical.c",
-          "destination_sha256": "b2b1fe3c53d9652cb29e3169c6a845d003e893323196f07a937be4e6cea2d86c"
+          "destination_sha256": "b2b1fe3c53d9652cb29e3169c6a845d003e893323196f07a937be4e6cea2d86c",
+          "disposition": "present"
         }
       ]
     },
@@ -535,25 +591,29 @@
           "source": "Frameworks/lib_24c02/Inc/lib_24c02.h",
           "source_sha256": "608c71543aea62a3934f42e34faa3e16c51b2ef5192cb49f8154e4598c1844bc",
           "destination": "Include/SirinEmbedOS/Devices/EEPROM/lib_24c02.h",
-          "destination_sha256": "f8506c6a2345bf723a1ccacfda29da17737c924075d51972ff8980e682da04ef"
+          "destination_sha256": "f8506c6a2345bf723a1ccacfda29da17737c924075d51972ff8980e682da04ef",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_24c02/Inc/lib_24c02_bl.h",
           "source_sha256": "bcd0886b5a9470cab426051efa3dc51d363330e9012414afe5e61cdac8c5567d",
           "destination": "Include/SirinEmbedOS/Devices/EEPROM/lib_24c02_bl.h",
-          "destination_sha256": "3d88424596c0dfbf306ac88f8a5b743ce56bb76b0880ca89247993868ac02920"
+          "destination_sha256": "3d88424596c0dfbf306ac88f8a5b743ce56bb76b0880ca89247993868ac02920",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_24c02/Src/lib_24c02.c",
           "source_sha256": "f98203b461606f82e0da491044a9074d62c918c906d3b715921972ba96aa2b56",
           "destination": "Source/Devices/EEPROM/lib_24c02.c",
-          "destination_sha256": "6b58e57d46c0babafd11b19178eaac8c6358071906f44e50d7c473f0a3f766f3"
+          "destination_sha256": "6b58e57d46c0babafd11b19178eaac8c6358071906f44e50d7c473f0a3f766f3",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_24c02/Src/lib_24c02_bl.c",
           "source_sha256": "91e91cbed30e284f6c382f3c28fa45b1c39cf3070719d1812f1a275936f637ff",
           "destination": "Source/Devices/EEPROM/lib_24c02_bl.c",
-          "destination_sha256": "ec26500c2eae898de8b53055b4a9678cab224c8c85b4d2a03788b1d4208629a5"
+          "destination_sha256": "ec26500c2eae898de8b53055b4a9678cab224c8c85b4d2a03788b1d4208629a5",
+          "disposition": "present"
         }
       ]
     },
@@ -574,13 +634,15 @@
           "source": "Frameworks/lib_adp_dji_c610/Inc/lib_adp_dji_c610.h",
           "source_sha256": "1b9f712cc861272c2c7748d1a005a0e74ea7bdf076e59e19938ae9bb232c0885",
           "destination": "Include/SirinEmbedOS/Devices/Motors/C610/lib_adp_dji_c610.h",
-          "destination_sha256": "4767b14723be304a3c21c518e0687eb567f2b1ce36a80090a0e323dae710fe6a"
+          "destination_sha256": "4767b14723be304a3c21c518e0687eb567f2b1ce36a80090a0e323dae710fe6a",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_dji_c610/Src/lib_adp_dji_c610.cpp",
           "source_sha256": "02aa7a0323bab048f1429e2a4725e16730d9b75b3a9d6ed200d15019422cdfee",
           "destination": "Source/Devices/Motors/C610/lib_adp_dji_c610.cpp",
-          "destination_sha256": "80219f1cda8f09c304e8570aac1cc5366643ad5c20d4caed4d437ad02b7c7fa5"
+          "destination_sha256": "80219f1cda8f09c304e8570aac1cc5366643ad5c20d4caed4d437ad02b7c7fa5",
+          "disposition": "present"
         }
       ]
     },
@@ -601,13 +663,15 @@
           "source": "Frameworks/lib_adp_dji_c620/Inc/lib_adp_dji_c620.h",
           "source_sha256": "caa7fd8ccdbb076783387a6efebb1fd31e78c77b0ad4e7e97d5e02bfda2194d0",
           "destination": "Include/SirinEmbedOS/Devices/Motors/C620/lib_adp_dji_c620.h",
-          "destination_sha256": "f1e38bf8270f3f3b796fe7382b5405a2417fdcffdb23811a326cff4c5964f158"
+          "destination_sha256": "f1e38bf8270f3f3b796fe7382b5405a2417fdcffdb23811a326cff4c5964f158",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_dji_c620/Src/lib_adp_dji_c620.cpp",
           "source_sha256": "3477dc3ef64433ff0e83a59b5e71e2a1b6201f24fdfe17fe7ff3438401f7d8a9",
           "destination": "Source/Devices/Motors/C620/lib_adp_dji_c620.cpp",
-          "destination_sha256": "03a467afc93571eb9a53844960ea119deb3d8dca627801d23a3cc2676ff5203b"
+          "destination_sha256": "03a467afc93571eb9a53844960ea119deb3d8dca627801d23a3cc2676ff5203b",
+          "disposition": "present"
         }
       ]
     },
@@ -628,13 +692,15 @@
           "source": "Frameworks/lib_adp_dji_gm6020/Inc/lib_adp_dji_gm6020.h",
           "source_sha256": "d99f0f0709173fd78d9d9c5a06bafa4f365f84e743786e3dcc267c6539b8ae08",
           "destination": "Include/SirinEmbedOS/Devices/Motors/GM6020/lib_adp_dji_gm6020.h",
-          "destination_sha256": "1d0f3e2f6bfb6073e6fe24cdaff773f10d3d4867b0374f4702bc391089b80795"
+          "destination_sha256": "1d0f3e2f6bfb6073e6fe24cdaff773f10d3d4867b0374f4702bc391089b80795",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_dji_gm6020/Src/lib_adp_dji_gm6020.cpp",
           "source_sha256": "768a35f4b00e051dc443598f58cd63d9750a56692a8c14247a3591fc25f2f0c5",
           "destination": "Source/Devices/Motors/GM6020/lib_adp_dji_gm6020.cpp",
-          "destination_sha256": "c5117503a6776976eedc07666c5a951849af9c19e712367dd7dcc729347479a2"
+          "destination_sha256": "c5117503a6776976eedc07666c5a951849af9c19e712367dd7dcc729347479a2",
+          "disposition": "present"
         }
       ]
     },
@@ -655,13 +721,15 @@
           "source": "Frameworks/lib_adp_dm_4310/Inc/lib_adp_dm_4310.h",
           "source_sha256": "e5850391bcf505d2eec2d07d7646ae503f8aeee161171225296074fcc7d25413",
           "destination": "Include/SirinEmbedOS/Devices/Motors/DM4310/lib_adp_dm_4310.h",
-          "destination_sha256": "f5a867dfb9509d998ea35340cbda9ec484f65c118af7affdf9a9f7f3cc341b2d"
+          "destination_sha256": "f5a867dfb9509d998ea35340cbda9ec484f65c118af7affdf9a9f7f3cc341b2d",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_dm_4310/Src/lib_adp_dm_4310.cpp",
           "source_sha256": "f64a7ba2a49cb531e2ef0390e8c5c61ee0fe7938fe6664f5579a4f19922690a6",
           "destination": "Source/Devices/Motors/DM4310/lib_adp_dm_4310.cpp",
-          "destination_sha256": "f646b8f955a8c33f2c3ec79b78a67f369bc0199f01a0a9ce02c8feb0700c4fd8"
+          "destination_sha256": "f646b8f955a8c33f2c3ec79b78a67f369bc0199f01a0a9ce02c8feb0700c4fd8",
+          "disposition": "present"
         }
       ]
     },
@@ -682,13 +750,15 @@
           "source": "Frameworks/lib_adp_dm_4340/Inc/lib_adp_dm_4340.h",
           "source_sha256": "3a81802a5943c2afd09f627a0cea16678e57e98d31280d9b2f159cef271e5d16",
           "destination": "Include/SirinEmbedOS/Devices/Motors/DM4340/lib_adp_dm_4340.h",
-          "destination_sha256": "2c77932c5916f8739b0669312ec1482e9dcae61ae79d8dafdbd45ccb3f47236c"
+          "destination_sha256": "2c77932c5916f8739b0669312ec1482e9dcae61ae79d8dafdbd45ccb3f47236c",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_dm_4340/Src/lib_adp_dm_4340.cpp",
           "source_sha256": "4dc113c9bd68eef34056eba27fd372bac1e2b2801d2374222a47c67deb9d3e8c",
           "destination": "Source/Devices/Motors/DM4340/lib_adp_dm_4340.cpp",
-          "destination_sha256": "ac0d16da3b7573925371508f9fb97893532cc9ec5457fea86305fde625bc3774"
+          "destination_sha256": "ac0d16da3b7573925371508f9fb97893532cc9ec5457fea86305fde625bc3774",
+          "disposition": "present"
         }
       ]
     },
@@ -709,13 +779,15 @@
           "source": "Frameworks/lib_adp_lk_mg8016e/Inc/lib_adp_lk_mg8016e.h",
           "source_sha256": "08d68ca60449b2e8a89f4218dfdc3e27a0cad0d6238b6dc1f521267df4bf6639",
           "destination": "Include/SirinEmbedOS/Devices/Motors/LK8016E/lib_adp_lk_mg8016e.h",
-          "destination_sha256": "e7bc32e92a8382202bc4cf4d9048c719e3310bc6ed1ec073243ebfed7770e1f6"
+          "destination_sha256": "e7bc32e92a8382202bc4cf4d9048c719e3310bc6ed1ec073243ebfed7770e1f6",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_lk_mg8016e/Src/lib_adp_lk_mg8016e.cpp",
           "source_sha256": "5bd892668a5d8012a5f9e0b13afd5dac9ba123d6aaca9fcd33ec39f55654b221",
           "destination": "Source/Devices/Motors/LK8016E/lib_adp_lk_mg8016e.cpp",
-          "destination_sha256": "bee5ba5ccfc64b8ec6ad03533ed3b44cf09516aaa5835d67e8ef64660cee111d"
+          "destination_sha256": "bee5ba5ccfc64b8ec6ad03533ed3b44cf09516aaa5835d67e8ef64660cee111d",
+          "disposition": "present"
         }
       ]
     },
@@ -736,13 +808,15 @@
           "source": "Frameworks/lib_adp_navision/Inc/lib_adp_navision.h",
           "source_sha256": "a1e3ffdb3c4d474ebd0f1daae3b7687569cd8bf2430730ccd301c30ad3caaeb1",
           "destination": "Include/SirinEmbedOS/Devices/NaviVision/lib_adp_navision.h",
-          "destination_sha256": "dfd4d0ddaf0ca9e0fb2edf5c6fe65ac9c295c2ae7f4efe924baaa8b3371eb514"
+          "destination_sha256": "dfd4d0ddaf0ca9e0fb2edf5c6fe65ac9c295c2ae7f4efe924baaa8b3371eb514",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_navision/Src/lib_adp_navision.cpp",
           "source_sha256": "f0cfa9aea6df2446c47be658d78b477923b2d1c6151fbdb788081bfc3669c7b1",
           "destination": "Source/Devices/NaviVision/lib_adp_navision.cpp",
-          "destination_sha256": "92d8d8cadbb15cfeea0c58d95ff2e94b74d8ef8a4a4edc6ee0fe7b0ca01aa930"
+          "destination_sha256": "92d8d8cadbb15cfeea0c58d95ff2e94b74d8ef8a4a4edc6ee0fe7b0ca01aa930",
+          "disposition": "present"
         }
       ]
     },
@@ -763,13 +837,15 @@
           "source": "Frameworks/lib_adp_supcap/Inc/lib_adp_supcap.h",
           "source_sha256": "a566952eebcc1f9f26c33582c190190d0dc9ec824f3763c4cac480ee7df20934",
           "destination": "Include/SirinEmbedOS/Devices/Supercapacitor/lib_adp_supcap.h",
-          "destination_sha256": "0d6bd871f6140d21a0b53f52e62e12b58136e2434ced3710936b66833842134e"
+          "destination_sha256": "0d6bd871f6140d21a0b53f52e62e12b58136e2434ced3710936b66833842134e",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_adp_supcap/Src/lib_adp_supcap.cpp",
           "source_sha256": "b099b3c1782c5c521b83a4111d105791710b91a1a3d4b2585d3390143e8f683c",
           "destination": "Source/Devices/Supercapacitor/lib_adp_supcap.cpp",
-          "destination_sha256": "741561ec07dcbd4c758b15e29f6fd9e9e61fd876dcfdaad7d80142e5d9366f3a"
+          "destination_sha256": "741561ec07dcbd4c758b15e29f6fd9e9e61fd876dcfdaad7d80142e5d9366f3a",
+          "disposition": "present"
         }
       ]
     },
@@ -790,49 +866,57 @@
           "source": "Frameworks/lib_algos/Inc/angle.hpp",
           "source_sha256": "41aa3cc6bb57601ab2a03b8ea30e72db46f5ba9059ebd777c1e133f93f47d0f6",
           "destination": "Include/SirinEmbedOS/Algorithms/Math/angle.hpp",
-          "destination_sha256": "41aa3cc6bb57601ab2a03b8ea30e72db46f5ba9059ebd777c1e133f93f47d0f6"
+          "destination_sha256": "41aa3cc6bb57601ab2a03b8ea30e72db46f5ba9059ebd777c1e133f93f47d0f6",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Inc/kalman_filter.hpp",
           "source_sha256": "7593ffeb8e98e2b1c19fe99d53454291aa4f19ed81ba21ef01be83f0a3d9f081",
           "destination": "Include/SirinEmbedOS/Algorithms/Math/kalman_filter.hpp",
-          "destination_sha256": "7593ffeb8e98e2b1c19fe99d53454291aa4f19ed81ba21ef01be83f0a3d9f081"
+          "destination_sha256": "7593ffeb8e98e2b1c19fe99d53454291aa4f19ed81ba21ef01be83f0a3d9f081",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Inc/ols.hpp",
           "source_sha256": "ef463582fe81316c6b28340cd47131ab3071400169d34074d648d9a5f3dbe072",
           "destination": "Include/SirinEmbedOS/Algorithms/Math/ols.hpp",
-          "destination_sha256": "ef463582fe81316c6b28340cd47131ab3071400169d34074d648d9a5f3dbe072"
+          "destination_sha256": "ef463582fe81316c6b28340cd47131ab3071400169d34074d648d9a5f3dbe072",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Inc/signal.hpp",
           "source_sha256": "828156e1c2655ae69737e0027e061ae88cc78d179f210225814de8be51fbb085",
           "destination": "Include/SirinEmbedOS/Algorithms/Math/signal.hpp",
-          "destination_sha256": "cd8be418912a5ab8a2730918f16f3870037e536c073f399566aa5b7a85ec5c32"
+          "destination_sha256": "cd8be418912a5ab8a2730918f16f3870037e536c073f399566aa5b7a85ec5c32",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Src/cmsis_matrix_backend.c",
           "source_sha256": "529e4b664b2fda94467dfb814949317fffa66f9ef34989c013adb1a162985180",
           "destination": "Source/Algorithms/Math/cmsis_matrix_backend.c",
-          "destination_sha256": "f53bf1b10771235f74e9c19f27cb91bcf08916462e78e727bceebdc2a0338e39"
+          "destination_sha256": "f53bf1b10771235f74e9c19f27cb91bcf08916462e78e727bceebdc2a0338e39",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Tests/arm_math.h",
           "source_sha256": "563de81f011d0edda779c1decb4490f9948d13415adf5524590759e5681a7d18",
           "destination": "ThirdParty/CMSISDSP/Include/arm_math.h",
-          "destination_sha256": "fd2d5cea2e3a8550635c51850f554f60c5a2c225d904bd565799050a89379866"
+          "destination_sha256": "fd2d5cea2e3a8550635c51850f554f60c5a2c225d904bd565799050a89379866",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Tests/run_host_tests.sh",
           "source_sha256": "683f9afc4cd46cc29c92b753627829fc9a58137c2b8d8b2120f2e9c7a5f3a9aa",
           "destination": "Tests/Algorithms/Math/run_host_tests.sh",
-          "destination_sha256": "0e6e7d3a73c6c44c4070cffd9220b64c4dc4bd96afea5d0cae6987a958afed5c"
+          "destination_sha256": "0e6e7d3a73c6c44c4070cffd9220b64c4dc4bd96afea5d0cae6987a958afed5c",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_algos/Tests/test_algos.cpp",
           "source_sha256": "604b975556196714481c677b753ea8aad84c55e9dc364c991f3ba8602c37552e",
           "destination": "Tests/Algorithms/Math/test_algos.cpp",
-          "destination_sha256": "cd220bfe85e21c2c22fca5716738bd9b7ece352f8a390a24e0ec9495ed8f3417"
+          "destination_sha256": "cd220bfe85e21c2c22fca5716738bd9b7ece352f8a390a24e0ec9495ed8f3417",
+          "disposition": "present"
         }
       ]
     },
@@ -853,37 +937,43 @@
           "source": "Frameworks/lib_controls/Inc/control_extensions.hpp",
           "source_sha256": "a1d8be5000061680878398507b0a3187d75649b63c7085e8667781d84eefcdc9",
           "destination": "Include/SirinEmbedOS/Algorithms/Control/control_extensions.hpp",
-          "destination_sha256": "2848ddfc9b83926ed6b38931487e668abbb9205ad9ec7b3ddf745f2775b549bd"
+          "destination_sha256": "2848ddfc9b83926ed6b38931487e668abbb9205ad9ec7b3ddf745f2775b549bd",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_controls/Inc/pid.hpp",
           "source_sha256": "717ee56acc09287db9d09d6a8c90453f1c0cda1ba73f81bc34305ece2dda6753",
           "destination": "Include/SirinEmbedOS/Algorithms/Control/pid.hpp",
-          "destination_sha256": "8aba80839870ae2dabfcd18a162b54d2c76b71fc08bb7ddd8fef5462df95d146"
+          "destination_sha256": "8aba80839870ae2dabfcd18a162b54d2c76b71fc08bb7ddd8fef5462df95d146",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_controls/Src/control_extensions.cpp",
           "source_sha256": "ba0352e3eb5d8b136e23e1d49c3d26498b16719a9deb77e1286f4039ad62d097",
           "destination": "Source/Algorithms/Control/control_extensions.cpp",
-          "destination_sha256": "453e679b464826a73d5d9269e250dc8397284dca0ce46dc9e4301ed6f4674e97"
+          "destination_sha256": "453e679b464826a73d5d9269e250dc8397284dca0ce46dc9e4301ed6f4674e97",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_controls/Src/pid.cpp",
           "source_sha256": "f32f6c20f30ad455beb0f6ed8a06efcf92fefe401e2bf098117d32b85a47b0a9",
           "destination": "Source/Algorithms/Control/pid.cpp",
-          "destination_sha256": "448d846f3ccd3d7a1ab5a15fac96318fd94e0661bc141adb15e10d0b1919f553"
+          "destination_sha256": "448d846f3ccd3d7a1ab5a15fac96318fd94e0661bc141adb15e10d0b1919f553",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_controls/Tests/run_host_tests.sh",
           "source_sha256": "9395d1c53883d7be25b7f3b9eaf98b2902aa21adc3b4fc85335ab2574205b8d2",
           "destination": "Tests/Algorithms/Control/run_host_tests.sh",
-          "destination_sha256": "2d926ec2bce59848859395ad090933e5176f61381962dfbd8ea3cadb8e5e357f"
+          "destination_sha256": "2d926ec2bce59848859395ad090933e5176f61381962dfbd8ea3cadb8e5e357f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_controls/Tests/test_pid.cpp",
           "source_sha256": "62f3a4fed764942ed8fc663cd61f4abf33ba90263da65e197792fb79180edf8a",
           "destination": "Tests/Algorithms/Control/test_pid.cpp",
-          "destination_sha256": "9615c8982f4e6741a423f210fb814a68396d7937f6f9cc8c478125792b9deab2"
+          "destination_sha256": "9615c8982f4e6741a423f210fb814a68396d7937f6f9cc8c478125792b9deab2",
+          "disposition": "present"
         }
       ]
     },
@@ -904,13 +994,15 @@
           "source": "Frameworks/lib_debug_watch/Inc/omx_debug_watch.h",
           "source_sha256": "6e0a13946261b00685fc347c5c1e7210311de1d0070e63ce96270c76da8c2ef6",
           "destination": "Include/SirinEmbedOS/Diagnostics/Watch/omx_debug_watch.h",
-          "destination_sha256": "ddfcfb8d8af5361e9bee8b8fae8274087e2bc63974d2f4d6968f14f27b8435a2"
+          "destination_sha256": "ddfcfb8d8af5361e9bee8b8fae8274087e2bc63974d2f4d6968f14f27b8435a2",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_debug_watch/Src/omx_debug_watch.c",
           "source_sha256": "f0b1405afc1f76f426e7ac1e20b268b0da343a372fe5f5adff9752db7808cd14",
           "destination": "Source/Diagnostics/Watch/omx_debug_watch.c",
-          "destination_sha256": "d26c9600a1374730060f42ad2612304c853204a12784e609a1990359af8dc429"
+          "destination_sha256": "d26c9600a1374730060f42ad2612304c853204a12784e609a1990359af8dc429",
+          "disposition": "present"
         }
       ]
     },
@@ -931,25 +1023,29 @@
           "source": "Frameworks/lib_generic_ui/Inc/ui.h",
           "source_sha256": "874393f7c236e9c818383872ed82555ee0d44bd503b6aafcbf5743119530d099",
           "destination": "Include/SirinEmbedOS/Services/Referee/UI/ui.h",
-          "destination_sha256": "5a9b2e5f20a9bd3a065e2d3bbf10fed3236a3f92b9bac46100d344d97284d162"
+          "destination_sha256": "5a9b2e5f20a9bd3a065e2d3bbf10fed3236a3f92b9bac46100d344d97284d162",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_generic_ui/Inc/ui_interface.h",
           "source_sha256": "950ad4ceb40128c9f258d64f7048a927331f6b36036b2147a9acbf30dd72b8e1",
           "destination": "Include/SirinEmbedOS/Services/Referee/UI/ui_interface.h",
-          "destination_sha256": "0f4fa25c4bfaf5cd0b5835bddf1f431fb938f6f69d1e1d5fdbb8eec524f231ca"
+          "destination_sha256": "0f4fa25c4bfaf5cd0b5835bddf1f431fb938f6f69d1e1d5fdbb8eec524f231ca",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_generic_ui/Inc/ui_types.h",
           "source_sha256": "282f75b23c01c9c9cffa5d61d97a79eacd3c78c746ec2c9b5e578344605d6762",
           "destination": "Include/SirinEmbedOS/Services/Referee/UI/ui_types.h",
-          "destination_sha256": "282f75b23c01c9c9cffa5d61d97a79eacd3c78c746ec2c9b5e578344605d6762"
+          "destination_sha256": "282f75b23c01c9c9cffa5d61d97a79eacd3c78c746ec2c9b5e578344605d6762",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_generic_ui/Src/ui_interface.c",
           "source_sha256": "43dbeef4f8852493bf8411de5e5df6b517604c5b83530df00e410ac1e06d8512",
           "destination": "Source/Services/Referee/UI/ui_interface.c",
-          "destination_sha256": "8025d0d4aacee3e03154d6284bece5f42996acc3377c84bdeac50fe549dfd3d2"
+          "destination_sha256": "8025d0d4aacee3e03154d6284bece5f42996acc3377c84bdeac50fe549dfd3d2",
+          "disposition": "present"
         }
       ]
     },
@@ -960,7 +1056,7 @@
       "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_imu",
       "status": "",
       "commit_scope": "Framework repository",
-      "result": "迁入：BMI088/INS/温控/校准，板上EEPROM分区固定，外部IMU默认不绑定。",
+      "result": "拆分并替换：保留BMI驱动、Mahony及独立EKF数学/OMX协议；删除旧全局INS、方向预设、校准存储及温控worker。正式INS与统一温控位于Services/INS，原始采样位于Devices/Sensors。见Docs/INS.md。",
       "source_file_count": 25,
       "license_files": [],
       "source_notice_files": [],
@@ -970,139 +1066,162 @@
           "source": "Frameworks/lib_imu/Inc/imu_temp_controller.hpp",
           "source_sha256": "ea61704219a1b2dc96e3a778df0fc922a20ed51cf083e8a524c58e751230cdab",
           "destination": "Include/SirinEmbedOS/Devices/IMU/imu_temp_controller.hpp",
-          "destination_sha256": "e2921b3a88eb537d524e9828145db63615b232b01d6995d27f602e4b040e46b0"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Inc/lib_adp_omximu.h",
           "source_sha256": "11ea94c1778f2bc481812f192cb0efbb7992af9695a99d836f8dbf597e6ceadf",
           "destination": "Include/SirinEmbedOS/Devices/IMU/lib_adp_omximu.h",
-          "destination_sha256": "dead52d4389ca6fcfc9078aadfc44191e6ef4677b1ea13481f3c97a5c62ebe56"
+          "destination_sha256": "dead52d4389ca6fcfc9078aadfc44191e6ef4677b1ea13481f3c97a5c62ebe56",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Inc/lib_imu.h",
           "source_sha256": "80f7b292a0478a8d975b23afa0d35590e413aa56d93408be79ad770b69d510a2",
           "destination": "Include/SirinEmbedOS/Devices/IMU/lib_imu.h",
-          "destination_sha256": "80f7b292a0478a8d975b23afa0d35590e413aa56d93408be79ad770b69d510a2"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Inc/lib_imu_orientation.h",
           "source_sha256": "9b34e4865fd550f85c96037b4e0529b9fb46ddd65d31806f4e92a6dd9adf31e5",
           "destination": "Include/SirinEmbedOS/Devices/IMU/lib_imu_orientation.h",
-          "destination_sha256": "9b34e4865fd550f85c96037b4e0529b9fb46ddd65d31806f4e92a6dd9adf31e5"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Inc/lib_imu_project_config.h",
           "source_sha256": "27ea4d47d6de970eeb16d3e341c4d4dd904000beb6947c5fc9221fb5784489c3",
           "destination": "Include/SirinEmbedOS/Devices/IMU/lib_imu_project_config.h",
-          "destination_sha256": "f437487a9e754620165af82040c7b364094ded5c918570926aa0023f8d02031c"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Inc/lib_ins.h",
           "source_sha256": "f80d6bd2022a2f90318783b775b70d17924ec23be9dc28f161cc8795375a6560",
           "destination": "Include/SirinEmbedOS/Devices/IMU/lib_ins.h",
-          "destination_sha256": "89ea2c86a894e9a0bd805a95e5a9f77099ab300a2cdcbb74dbd99c44a353e1e5"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Inc/mahony_filter.h",
           "source_sha256": "bce8ae377db1f8af01382575d5141b8038eef4057de1427d380cec71ebcbcf25",
           "destination": "Include/SirinEmbedOS/Devices/IMU/mahony_filter.h",
-          "destination_sha256": "bce8ae377db1f8af01382575d5141b8038eef4057de1427d380cec71ebcbcf25"
+          "destination_sha256": "bce8ae377db1f8af01382575d5141b8038eef4057de1427d380cec71ebcbcf25",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Inc/quaternion_ekf.hpp",
           "source_sha256": "c18986f2c7bab8a4644c09121efd64f7c375de7c9e0c9af916ff8c293622a050",
           "destination": "Include/SirinEmbedOS/Devices/IMU/quaternion_ekf.hpp",
-          "destination_sha256": "504299c95a1463e66445181b22ab96a4859570d7e18630bbf1dd5319aab8b3b7"
+          "destination_sha256": "504299c95a1463e66445181b22ab96a4859570d7e18630bbf1dd5319aab8b3b7",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Src/imu_temp_controller.cpp",
           "source_sha256": "7b34f07cdcb82149dd49a32a2348e47f1eb8cb90eb7f9422cb7523355ce07767",
           "destination": "Source/Devices/IMU/imu_temp_controller.cpp",
-          "destination_sha256": "c4d68a5096dd3c71ed429e26ab508cb5bf1c19660a46a85f2a71f9a628a4e173"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Src/lib_adp_omximu.cpp",
           "source_sha256": "fb17049d6c35c688e0c926001cc6f4c3373fe0b797ff0c97e0345eee32678ccb",
           "destination": "Source/Devices/IMU/lib_adp_omximu.cpp",
-          "destination_sha256": "d4b83cf3d7be3f3f5ab8cdc008b16673fc68645ba546f9e178abdd4c91a9f92a"
+          "destination_sha256": "d4b83cf3d7be3f3f5ab8cdc008b16673fc68645ba546f9e178abdd4c91a9f92a",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Src/lib_imu.cpp",
           "source_sha256": "72fb7f63a83b30dcef5e5c9d0b61f00774815c88f44a545b66431716c058d510",
           "destination": "Source/Devices/IMU/lib_imu.cpp",
-          "destination_sha256": "9875400b0aa5a6e14fb5935031a3ae6250086e9693cb37f34fdb7e0e3194f959"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Src/lib_imu_orientation.c",
           "source_sha256": "55f4be4887cd9f196044f9ab2b5d4b25028fc616c06f6dc5138b7b2ce6896e3b",
           "destination": "Source/Devices/IMU/lib_imu_orientation.c",
-          "destination_sha256": "044ee7390df7e1ad30f14ef700079e28f0c101e966347496e9143bfa13407bcf"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Src/lib_ins.c",
           "source_sha256": "d913e15f8e547ec4ddb26382fa47114e78ba6ff9de8d2b1b7e482bb5b121512d",
           "destination": "Source/Devices/IMU/lib_ins.c",
-          "destination_sha256": "738e4133e1fc952684a77b5b861b8a896f8461318f9ab09283fac7e732fab12e"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Src/mahony_filter.c",
           "source_sha256": "7b30885d2eb51b80bb0db58b1a728f24bf6680c30bb9bbf129bd03a7cc907dba",
           "destination": "Source/Devices/IMU/mahony_filter.c",
-          "destination_sha256": "ec83ab8131220cff2348e2dc6c874d27039f66d29c2c44ab350ab83996183335"
+          "destination_sha256": "fae8b4e53a0aef330e5af5ba7e67aa057439df8a702d735f5641dd0c6f6a0a44",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Src/quaternion_ekf.cpp",
           "source_sha256": "62058a2a623e38bd21c3dd57edc71095320b353641afbf052f011170d9a9d0db",
           "destination": "Source/Devices/IMU/quaternion_ekf.cpp",
-          "destination_sha256": "c21a743ebe3a12018e97f5505df307832d73842634dc0cebe6927bc384af4377"
+          "destination_sha256": "c21a743ebe3a12018e97f5505df307832d73842634dc0cebe6927bc384af4377",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Tests/run_host_tests.sh",
           "source_sha256": "d790c67415808de1629b12deebc11063b72b90ffd294fb14c903bc3cb2818603",
           "destination": "Tests/Devices/IMU/run_host_tests.sh",
-          "destination_sha256": "2782316c08b88f94778a2a55f202dc416714dc41d204107936fec1d8877f27a9"
+          "destination_sha256": "4d2f81161586695747ace831af26331214be08192d6ea010a9be671d07538c70",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Tests/stubs/CONF_IMU_Task.h",
           "source_sha256": "9a7384f88e9351ecac5d426e706f35e8644903ba250ceeb41263a174bb1fc1c2",
           "destination": "Tests/Devices/IMU/stubs/CONF_IMU_Task.h",
-          "destination_sha256": "9a7384f88e9351ecac5d426e706f35e8644903ba250ceeb41263a174bb1fc1c2"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Tests/stubs/arm_math.h",
           "source_sha256": "8c105e3fb08fa728e82c45258321603c3e85b7187ec52992d4867367966785a2",
           "destination": "Tests/Devices/IMU/stubs/arm_math.h",
-          "destination_sha256": "8c105e3fb08fa728e82c45258321603c3e85b7187ec52992d4867367966785a2"
+          "destination_sha256": "8c105e3fb08fa728e82c45258321603c3e85b7187ec52992d4867367966785a2",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Tests/stubs/stm32h7xx.h",
           "source_sha256": "248b682975cb8b433de8658f6b4bebce8dafd08f9b89088f92d7079a11fe8aa2",
           "destination": "Tests/Devices/IMU/stubs/stm32h7xx.h",
-          "destination_sha256": "248b682975cb8b433de8658f6b4bebce8dafd08f9b89088f92d7079a11fe8aa2"
+          "destination_sha256": "248b682975cb8b433de8658f6b4bebce8dafd08f9b89088f92d7079a11fe8aa2",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Tests/stubs/tim.h",
           "source_sha256": "6d56c956448393a3dd5c2466c02bc6e4687d803f4d28ab4e6df93fc4c5aeb1b0",
           "destination": "Tests/Devices/IMU/stubs/tim.h",
-          "destination_sha256": "6d56c956448393a3dd5c2466c02bc6e4687d803f4d28ab4e6df93fc4c5aeb1b0"
+          "destination_sha256": "6d56c956448393a3dd5c2466c02bc6e4687d803f4d28ab4e6df93fc4c5aeb1b0",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Tests/test_imu_components.cpp",
           "source_sha256": "f19a58362e82ca196bb8e5c94c4bf0449b79ff50346c1fcc52cf9fd9f10227bc",
           "destination": "Tests/Devices/IMU/test_imu_components.cpp",
-          "destination_sha256": "4ccad21e79a07d59357fe46c770737741ba439cc35b42c0f8b334dbaf0e1a7c0"
+          "destination_sha256": "bcc2cca02bdba693637bdf696436296c0b219cfe153ecb02d5d4f2bc749c9682",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_imu/Tests/test_imu_orientation.c",
           "source_sha256": "6837ddaded520229ac48ba6f10c2abb78c66a804abfdb74e3fb45da2a3e10636",
           "destination": "Tests/Devices/IMU/test_imu_orientation.c",
-          "destination_sha256": "a8d4cec7a77b0f24446a2e895e3d6a8079fc4fd5e93a01f375aea277123f7e8b"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/lib_imu/Tests/test_ins_attitude.c",
           "source_sha256": "fb819f4ed979b076c072935ed0ade2b7a8759aaa1fddb825c0ceecbf3dfbb197",
           "destination": "Tests/Devices/IMU/test_ins_attitude.c",
-          "destination_sha256": "86d5498e4547bda310c1165c2962eba9f492730fafdcfa509c72312eca02404e"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         }
       ]
     },
@@ -1128,37 +1247,43 @@
           "source": "Frameworks/lib_mcp2518fd/Inc/drv_canfdspi_api.h",
           "source_sha256": "15d7c026ff22295e30c868b960bab924ef8eea3afda93b3820c732055e8653c5",
           "destination": "Include/SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_api.h",
-          "destination_sha256": "0cd70dbf31b2bb2efe73fd924532debf9b615db554446bbd1f45b0f681596ac1"
+          "destination_sha256": "0cd70dbf31b2bb2efe73fd924532debf9b615db554446bbd1f45b0f681596ac1",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mcp2518fd/Inc/drv_canfdspi_defines.h",
           "source_sha256": "4ef0d6f93be40ed97ac708735399deebdc1001d20da5e3a335616922db1b4281",
           "destination": "Include/SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_defines.h",
-          "destination_sha256": "4ef0d6f93be40ed97ac708735399deebdc1001d20da5e3a335616922db1b4281"
+          "destination_sha256": "4ef0d6f93be40ed97ac708735399deebdc1001d20da5e3a335616922db1b4281",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mcp2518fd/Inc/drv_canfdspi_register.h",
           "source_sha256": "626f262071242ba36b98f0b6b182117acb223b7bfcb9c6ea3413a902e1f430a0",
           "destination": "Include/SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_register.h",
-          "destination_sha256": "5bf7f97b4342f4ab2767a19f2c0bcf67889755ba40bc6c1602a89d8d3790cf92"
+          "destination_sha256": "5bf7f97b4342f4ab2767a19f2c0bcf67889755ba40bc6c1602a89d8d3790cf92",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mcp2518fd/Inc/drv_spi.h",
           "source_sha256": "4f261f90dc8682603de82d5edef33c1b38c9b40a29727594bea04903596176b0",
           "destination": "Include/SirinEmbedOS/Devices/MCP2518FD/drv_spi.h",
-          "destination_sha256": "e8fffdce90d8e2827fc256ac382a921b7a0b8098b435338a1a32761bf29d1315"
+          "destination_sha256": "ea8d81bfafeaa50bf412da96009fb37ac2cce1d69f716613f3557f78b87c0a44",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mcp2518fd/Src/drv_canfdspi_api.c",
           "source_sha256": "5f65cd7460b3307e4ce1e0c8c234c3dedcc483454c1e92b91be9744787934322",
           "destination": "Source/Devices/MCP2518FD/drv_canfdspi_api.c",
-          "destination_sha256": "ebdd24dc3ee29c9099971c3b9be746c282ae7b71c7448c5ff0880415cb767796"
+          "destination_sha256": "ebdd24dc3ee29c9099971c3b9be746c282ae7b71c7448c5ff0880415cb767796",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mcp2518fd/Src/drv_spi.c",
           "source_sha256": "1ab2569b762e9cf43a6d701038ec45507ccc89e9bc6037cdb08af5403d9e59b4",
           "destination": "Source/Devices/MCP2518FD/drv_spi.c",
-          "destination_sha256": "01459b0747516e366120f92f863d6f93505bc509b5970914728ae63d0f708199"
+          "destination_sha256": "64fd912882f9d1ac733c070874ebe31004765c3e6d33252928435c486ebdaaaf",
+          "disposition": "present"
         }
       ]
     },
@@ -1179,13 +1304,15 @@
           "source": "Frameworks/lib_modbus_rtu/Inc/lib_modbus_rtu.h",
           "source_sha256": "c1728336949e7a9841dcea9789c71592758eb362bfb20f880e40068f3a9cffde",
           "destination": "Include/SirinEmbedOS/IO/RS485/Modbus/lib_modbus_rtu.h",
-          "destination_sha256": "c363dc04731cc7d2e6841bc9a189b2874d107474d56ee663dbb42fdcd4e9344f"
+          "destination_sha256": "c363dc04731cc7d2e6841bc9a189b2874d107474d56ee663dbb42fdcd4e9344f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_modbus_rtu/Src/lib_modbus_rtu.cpp",
           "source_sha256": "0bcaa46570d9298f67c8d250bbb2d3036f36d0fc307a49899240cbb2176ab53b",
           "destination": "Source/IO/RS485/Modbus/lib_modbus_rtu.cpp",
-          "destination_sha256": "7d119bc4d7ce809f3b4a4a726d2aea8ea78b38abe09cb02866b9d22d717e5248"
+          "destination_sha256": "7d119bc4d7ce809f3b4a4a726d2aea8ea78b38abe09cb02866b9d22d717e5248",
+          "disposition": "present"
         }
       ]
     },
@@ -1206,19 +1333,22 @@
           "source": "Frameworks/lib_mpu_dcache/Inc/mem_sections.h",
           "source_sha256": "3bd643ada86e9be5ee18d39e107a9eaa3c47c8208caf98c20d21f2f5c1634718",
           "destination": "Include/SirinEmbedOS/Core/Memory/mem_sections.h",
-          "destination_sha256": "fc9928e6bb0f37c4d1ae65e9fb75b2f9b1aa24077ca2670e780194433ac82025"
+          "destination_sha256": "fc9928e6bb0f37c4d1ae65e9fb75b2f9b1aa24077ca2670e780194433ac82025",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mpu_dcache/Lnk/dma_nc.ld",
           "source_sha256": "1b8292bbe00ebc26cbc0f182e9d8a53725dcfd4258727eb041c48c9956b85123",
           "destination": "Board/Linker/SirinEmbedOS.ld",
-          "destination_sha256": "67bb3e8bd75ecbec386b8d900d53f986bb40342c9d06f8fca5373d5e9d80a0af"
+          "destination_sha256": "67bb3e8bd75ecbec386b8d900d53f986bb40342c9d06f8fca5373d5e9d80a0af",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_mpu_dcache/Src/mem_sections.c",
           "source_sha256": "5f939a243ff61ce9e3048e34b66b70cc610fa3aa054f21d4cc62c13731328af4",
           "destination": "Source/Core/Memory/mem_sections.c",
-          "destination_sha256": "8bc1fff2ec58b1a8eea2849179b29758bb1e220026000ca6856c88c8b1c3afeb"
+          "destination_sha256": "8bc1fff2ec58b1a8eea2849179b29758bb1e220026000ca6856c88c8b1c3afeb",
+          "disposition": "present"
         }
       ]
     },
@@ -1239,37 +1369,43 @@
           "source": "Frameworks/lib_params/Inc/lib_params.h",
           "source_sha256": "c8bf93898869b587c25102fee5c66ab2b41d9ec8513c11a94aae0ebf5b828160",
           "destination": "Include/SirinEmbedOS/Services/Parameters/lib_params.h",
-          "destination_sha256": "dbdcb0f82c6d67092a013ad3f5e709c013a96b3f0a24ae1df80314e8ec5169e9"
+          "destination_sha256": "dbdcb0f82c6d67092a013ad3f5e709c013a96b3f0a24ae1df80314e8ec5169e9",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_params/Inc/lib_params.hpp",
           "source_sha256": "853f077c8387f50cd10cef7d96065eb097575262c173e21ed3eef279d4849283",
           "destination": "Include/SirinEmbedOS/Services/Parameters/lib_params.hpp",
-          "destination_sha256": "1536f695177fbfbce28c9e509d1df44e802de9e12a662e171c45c200f1d830b1"
+          "destination_sha256": "1536f695177fbfbce28c9e509d1df44e802de9e12a662e171c45c200f1d830b1",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_params/Src/lib_params.cpp",
           "source_sha256": "a7a75c919c5f42e24f43e99459cbd84ff60e4535ebcb67748220840c753028ea",
           "destination": "Source/Services/Parameters/lib_params.cpp",
-          "destination_sha256": "dcff9af12994aa2982c0257087bf8be1f4fd923c16f7dda482f8bb2a23fb0cd4"
+          "destination_sha256": "dcff9af12994aa2982c0257087bf8be1f4fd923c16f7dda482f8bb2a23fb0cd4",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_params/Src/lib_params_binary.cpp",
           "source_sha256": "e93ecfea9ce483fde592668add081daa850f861e1246270a1c5f0e042293f92f",
           "destination": "Source/Services/Parameters/lib_params_binary.cpp",
-          "destination_sha256": "c722f1c96253632ae4019aa01b0d6c0b42ec7feb72681a2bbc3a1033ebbdd2ce"
+          "destination_sha256": "c722f1c96253632ae4019aa01b0d6c0b42ec7feb72681a2bbc3a1033ebbdd2ce",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_params/Tests/run_host_tests.sh",
           "source_sha256": "df168e04417d1452270372dc0228ff86189d07785ade043e93da2d0f8d75c829",
           "destination": "Tests/Services/Parameters/run_host_tests.sh",
-          "destination_sha256": "1d55a810436ee1168b8ceb6f39abe9ddc57b8905a2fdb4bcfeffdc88a7af2a34"
+          "destination_sha256": "1d55a810436ee1168b8ceb6f39abe9ddc57b8905a2fdb4bcfeffdc88a7af2a34",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_params/Tests/test_unaligned_binary.cpp",
           "source_sha256": "714f3722296e94ecf44a460d46201020efb5ec7f1ebe88b52f4b1d920e31433b",
           "destination": "Tests/Services/Parameters/test_unaligned_binary.cpp",
-          "destination_sha256": "056261e6a13c70f9e107102b2a3f2767c55218a5916825bf89d01c8498f0f795"
+          "destination_sha256": "056261e6a13c70f9e107102b2a3f2767c55218a5916825bf89d01c8498f0f795",
+          "disposition": "present"
         }
       ]
     },
@@ -1290,13 +1426,15 @@
           "source": "Frameworks/lib_power_control/Inc/lib_power_control.h",
           "source_sha256": "e51ec8f7ad840bde6727b7c01f5b0dbf7b0101d65cf10e32034e2290e49ba111",
           "destination": "Include/SirinEmbedOS/Algorithms/Power/lib_power_control.h",
-          "destination_sha256": "f4f587629fb1c50a57222be6b2b0a0ab3324bcbd4ed7f0346bb9ec8975f5ef7f"
+          "destination_sha256": "f4f587629fb1c50a57222be6b2b0a0ab3324bcbd4ed7f0346bb9ec8975f5ef7f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_power_control/Src/lib_power_control.cpp",
           "source_sha256": "2800d9eeadcbac5fb328da25b8cea59af39a776fd202bbb6d9be4fad3011eda6",
           "destination": "Source/Algorithms/Power/lib_power_control.cpp",
-          "destination_sha256": "68c4360f0a8dd90545714db43d137eecfd9fd66f13c7f68a4fdd07b43ecf3b41"
+          "destination_sha256": "68c4360f0a8dd90545714db43d137eecfd9fd66f13c7f68a4fdd07b43ecf3b41",
+          "disposition": "present"
         }
       ]
     },
@@ -1317,13 +1455,15 @@
           "source": "Frameworks/lib_referee/Inc/referee.h",
           "source_sha256": "62c44633a7aed6eb945d9792b087bcaec1d9013e030a6859366ad98422898713",
           "destination": "Include/SirinEmbedOS/Services/Referee/referee.h",
-          "destination_sha256": "92ff1237ce2a7a5064c897a025c053babb683e0591af5ace466b9411b55041ed"
+          "destination_sha256": "92ff1237ce2a7a5064c897a025c053babb683e0591af5ace466b9411b55041ed",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_referee/Src/referee.c",
           "source_sha256": "8dbe42d696d20887974c8c08ec35f532bc8f5234bc2bf8ab1bb2e16011a2f196",
           "destination": "Source/Services/Referee/referee.c",
-          "destination_sha256": "2284c65cd540f4a7e90415912309e7b0c6cd099d8e6c00449df73a701f185708"
+          "destination_sha256": "2284c65cd540f4a7e90415912309e7b0c6cd099d8e6c00449df73a701f185708",
+          "disposition": "present"
         }
       ]
     },
@@ -1344,13 +1484,15 @@
           "source": "Frameworks/lib_remote_control/Inc/lib_remote_control.h",
           "source_sha256": "39c94cd8b98fb006b5af8bade8f413af27746f9edd91a25f68718e61f474d563",
           "destination": "Include/SirinEmbedOS/Services/RemoteControl/lib_remote_control.h",
-          "destination_sha256": "39c94cd8b98fb006b5af8bade8f413af27746f9edd91a25f68718e61f474d563"
+          "destination_sha256": "39c94cd8b98fb006b5af8bade8f413af27746f9edd91a25f68718e61f474d563",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_remote_control/Src/lib_remote_control.c",
           "source_sha256": "59228a7ab9488b8f0dc33da559f97cc692713960daa739c511c85c922ed4118f",
           "destination": "Source/Services/RemoteControl/lib_remote_control.c",
-          "destination_sha256": "f7cd60920b15fb675cddecd6f0385eb50ebe2399daa378df177fe2b1cdc85bcf"
+          "destination_sha256": "f7cd60920b15fb675cddecd6f0385eb50ebe2399daa378df177fe2b1cdc85bcf",
+          "disposition": "present"
         }
       ]
     },
@@ -1371,13 +1513,15 @@
           "source": "Frameworks/lib_rs485_lc_tl42r/Inc/lib_rs485_lc_tl42r.h",
           "source_sha256": "76fa50ff03689cb13ce0fadc404d04219d7c1ed095149ee60d51067988ff123c",
           "destination": "Include/SirinEmbedOS/Devices/TL42R/lib_rs485_lc_tl42r.h",
-          "destination_sha256": "2263093b6cfbd8c626b69ebc1193c4c764c48d9a7f6a94370f8666d7842ce833"
+          "destination_sha256": "2263093b6cfbd8c626b69ebc1193c4c764c48d9a7f6a94370f8666d7842ce833",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_rs485_lc_tl42r/Src/lib_rs485_lc_tl42r.cpp",
           "source_sha256": "7a7924487ad5f4afcd09e47a9ee0656833fb19c40ed9fd842312ec2951cb6aaf",
           "destination": "Source/Devices/TL42R/lib_rs485_lc_tl42r.cpp",
-          "destination_sha256": "c442d322342be0f0e7e36d29800d5300b0b8135cb4d8f19344a4082623bbd48c"
+          "destination_sha256": "c442d322342be0f0e7e36d29800d5300b0b8135cb4d8f19344a4082623bbd48c",
+          "disposition": "present"
         }
       ]
     },
@@ -1398,13 +1542,15 @@
           "source": "Frameworks/lib_serial_servo_h12h/Inc/lib_serial_servo_h12h.h",
           "source_sha256": "a1339b6f622b152d3eb41720573bc230c922e99e451c7c7e19e00e75ddc6985f",
           "destination": "Include/SirinEmbedOS/Devices/H12H/lib_serial_servo_h12h.h",
-          "destination_sha256": "7abc92f43784d07c23e3c280d7aa34fc824064381503170c6a1d7ac98c022ea7"
+          "destination_sha256": "7abc92f43784d07c23e3c280d7aa34fc824064381503170c6a1d7ac98c022ea7",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_serial_servo_h12h/Src/lib_serial_servo_h12h.c",
           "source_sha256": "e420c906f07f75f9ab929417aceb57a09fccb63af1b0aacaa94b97be84af9af7",
           "destination": "Source/Devices/H12H/lib_serial_servo_h12h.c",
-          "destination_sha256": "3b4a58a68095840271a8f094bd8f6bfea1cfe0ce768484a2141336e48968a1dc"
+          "destination_sha256": "3b4a58a68095840271a8f094bd8f6bfea1cfe0ce768484a2141336e48968a1dc",
+          "disposition": "present"
         }
       ]
     },
@@ -1439,49 +1585,57 @@
           "source": "Frameworks/lib_srn_cobs/Inc/lib_srn_cobs.h",
           "source_sha256": "130e8995ee048cd61542f5aac9ae6a3bb082c05c0583c6e9b4d7cb17f60d6ffb",
           "destination": "Include/SirinEmbedOS/Services/HostLink/Codec/lib_srn_cobs.h",
-          "destination_sha256": "130e8995ee048cd61542f5aac9ae6a3bb082c05c0583c6e9b4d7cb17f60d6ffb"
+          "destination_sha256": "9aa32ea67a3a26f22ea1a587e5287fcd84e0a84a145ec30c7e3748f998b33257",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Inc/lib_srn_cobs_prot.h",
           "source_sha256": "136a9a1f055cb8f89d9416571c53a18f37bac130f8c465e3e11cb369e9e86bf9",
           "destination": "Include/SirinEmbedOS/Services/HostLink/Codec/lib_srn_cobs_prot.h",
-          "destination_sha256": "7a6f5d12af7f0b314b1c24b3f209a5eadc4e7a9b751e70f8030431112341984f"
+          "destination_sha256": "7a6f5d12af7f0b314b1c24b3f209a5eadc4e7a9b751e70f8030431112341984f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Inc/lib_srn_link.h",
           "source_sha256": "c3d00863718500141b5ffc9bd16585d7aab1957eccc4819896feb0650a0e9aa4",
           "destination": "Include/SirinEmbedOS/Services/HostLink/Codec/lib_srn_link.h",
-          "destination_sha256": "b3186e6ab392f2e496e5e99c9b9de6f40642cdccc19ee8a0d6f4733e9c464ed0"
+          "destination_sha256": "eef95fa7b7515ca0a9694a648b17ea9069c8358611a5d8ff433b9aab3636301e",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Src/lib_srn_cobs.c",
           "source_sha256": "1e86daf721da3acb2358de5f0f3cb2bd7b2411f1dad2e6ec95261ed44b2937e5",
           "destination": "Source/Services/HostLink/Codec/lib_srn_cobs.c",
-          "destination_sha256": "21136c0d22be55a3e6b958030c728d20f89228a3d7b2ced4c3957546f0778d0b"
+          "destination_sha256": "7ab331b285a3e3bcddc24e7c5f29c2ec7aa189f97e4237229f2a8378ef471093",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Src/lib_srn_cobs_prot.c",
           "source_sha256": "333c2c92a85dea3eb4935562b94ea6bb58623571a86efaa6bf4dccd062ce1bcd",
           "destination": "Source/Services/HostLink/Codec/lib_srn_cobs_prot.c",
-          "destination_sha256": "0ab0da77d795f79f3e28031bc9b17ca85f4c8481245dc2d935d9f948a1e6749d"
+          "destination_sha256": "0ab0da77d795f79f3e28031bc9b17ca85f4c8481245dc2d935d9f948a1e6749d",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Src/lib_srn_link.c",
           "source_sha256": "21c9d5534ffd97dc73eeec06224ab2861f680490f4aa90f59db0dbe43118de97",
           "destination": "Source/Services/HostLink/Codec/lib_srn_link.c",
-          "destination_sha256": "f2d1dc240b5755c0f925e6c9dbba6af24ba6f9d2cb3a3e72c194506c3ba1ed64"
+          "destination_sha256": "5fbe5769e9e3fb988f43acc7c9bc65598382b8919fb375fa6b8a00be64be1984",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Tests/run_host_tests.sh",
           "source_sha256": "0474a489da1a3d33d78b82ea9c7d5376d9b79034a4b74cad0c5fd5d2aaa6cc01",
           "destination": "Tests/Services/HostLink/Codec/run_host_tests.sh",
-          "destination_sha256": "34c4067ceee436b10d382601cd1171207850840205dc9bc19cbdb42a33efea2b"
+          "destination_sha256": "34c4067ceee436b10d382601cd1171207850840205dc9bc19cbdb42a33efea2b",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/lib_srn_cobs/Tests/test_srn_link.c",
           "source_sha256": "64506b9c4c264307e613c6c8593bc26e1e73152becb1f689c6cee65d3e3c8c13",
           "destination": "Tests/Services/HostLink/Codec/test_srn_link.c",
-          "destination_sha256": "f6a930c915a619d329de3574bca24158287b18dc32649a69bb666f432a347e05"
+          "destination_sha256": "a9541cb2b06b16b58713b2ce23cd0715ae1b1446d76231d21d85e91f72fc59eb",
+          "disposition": "present"
         }
       ]
     },
@@ -1530,31 +1684,36 @@
           "source": "Frameworks/tskptt_exfdcan_router/Inc/EXFDCAN_Router.h",
           "source_sha256": "b61f9be95a48c3cfd16b4b3a9acaafbb9bd197a324d33ebadf2e5c259880abd3",
           "destination": "Include/SirinEmbedOS/IO/CAN/External/EXFDCAN_Router.h",
-          "destination_sha256": "dc824093a24d3763f565bc0d73abf86e477fd8998e56874aee69f21fea5cd27c"
+          "destination_sha256": "dc824093a24d3763f565bc0d73abf86e477fd8998e56874aee69f21fea5cd27c",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_exfdcan_router/Inc/EXFDCAN_Router_Internal.h",
           "source_sha256": "dbf1ed71fde7ba8b0cfbc4b007584c0e1507e7f8e80c095f1cefe60453020257",
           "destination": "Source/IO/CAN/External/EXFDCAN_Router_Internal.h",
-          "destination_sha256": "dcb570bce460357112810cade365e83225f4464e642e8117bf5ad44543f2e776"
+          "destination_sha256": "dcb570bce460357112810cade365e83225f4464e642e8117bf5ad44543f2e776",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_exfdcan_router/Src/tskptt_exfdcan_device.cpp",
           "source_sha256": "041dd9611a6625b7f824c600e0a3363852e824e8a71e43c51350e6529ccb5e00",
           "destination": "Source/IO/CAN/External/tskptt_exfdcan_device.cpp",
-          "destination_sha256": "7b93291d78ec43f444c1ed872c2713b47f11251570febc786b7069adb7315221"
+          "destination_sha256": "7b93291d78ec43f444c1ed872c2713b47f11251570febc786b7069adb7315221",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_exfdcan_router/Src/tskptt_exfdcan_rx_router.cpp",
           "source_sha256": "0872f4cfc7de3d3c5cdf42ec16a2e36500b55c5d2152e44c4ef055ef1e40455c",
           "destination": "Source/IO/CAN/External/tskptt_exfdcan_rx_router.cpp",
-          "destination_sha256": "ca66063d480e2ffd881ef95c2fcf4e7c6cbe13ee3007ee72a63a51c9f6768247"
+          "destination_sha256": "ca66063d480e2ffd881ef95c2fcf4e7c6cbe13ee3007ee72a63a51c9f6768247",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_exfdcan_router/Src/tskptt_exfdcan_tx_router.cpp",
           "source_sha256": "ec0ffe3cc03b643eda16308d07625c1657e8b02760ecbc750fcaf12bc676ee34",
           "destination": "Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp",
-          "destination_sha256": "ac134ff953ddf9a7ff6e1370fc8011596e7ff2d29e4aa43a08e026365f082faf"
+          "destination_sha256": "ac134ff953ddf9a7ff6e1370fc8011596e7ff2d29e4aa43a08e026365f082faf",
+          "disposition": "present"
         }
       ]
     },
@@ -1565,7 +1724,7 @@
       "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_host_comm",
       "status": "",
       "commit_scope": "Framework repository",
-      "result": "迁入：启动注册冻结，CDC1传输，耗时存储由命令worker处理。",
+      "result": "迁入并完善：注册冻结，CDC1会话清理、FIFO遥测和有界处理；SensorBringUp禁用存储。新增双IMU遥测与CLI见Docs/HostLink.md。",
       "source_file_count": 9,
       "license_files": [],
       "source_notice_files": [],
@@ -1575,43 +1734,50 @@
           "source": "Frameworks/tskptt_host_comm/Inc/tskptt_host_comm.h",
           "source_sha256": "7c990f6df64498764bd391e3aa123e91051e84d433600a374e2a725574f83166",
           "destination": "Include/SirinEmbedOS/Services/HostLink/tskptt_host_comm.h",
-          "destination_sha256": "ec3ee4395164d64df271afded2576b006207e03a4e647e47ecb4466aa74ab2d1"
+          "destination_sha256": "c59209fccc160a06f041ee03f88c9becc08304cd0be1bf21c6568c3b0b32e35a",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_host_comm/Src/tskptt_host_comm.c",
           "source_sha256": "4fe0b80310ae827513b7fb1c63e0a970c7252b1a6df29a047d131ba978ed3e22",
           "destination": "Source/Services/HostLink/tskptt_host_comm.c",
-          "destination_sha256": "8e8be953fb2c65ce5bab501a75254dcc8119ff7cbf2ead93e6a49b1d2d4fe5a9"
+          "destination_sha256": "c75d7e247adcb0d7fe48a253420b6e5a6d99cd091bf56d809102320a9b5d64a3",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_host_comm/Tests/Fakes/FreeRTOS.h",
           "source_sha256": "5e987c5243aa161d1727e712ca910fd5d82c77b602b281bc025ffb15c579b558",
           "destination": "Tests/Services/HostLink/Fakes/FreeRTOS.h",
-          "destination_sha256": "5e987c5243aa161d1727e712ca910fd5d82c77b602b281bc025ffb15c579b558"
+          "destination_sha256": "5e987c5243aa161d1727e712ca910fd5d82c77b602b281bc025ffb15c579b558",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_host_comm/Tests/Fakes/cmsis_os2.h",
           "source_sha256": "c9c8583891f3f5a08aa3ebaa2585b6ca10f77b72b3b57a8349f272a3f4919b30",
           "destination": "Tests/Services/HostLink/Fakes/cmsis_os2.h",
-          "destination_sha256": "c9c8583891f3f5a08aa3ebaa2585b6ca10f77b72b3b57a8349f272a3f4919b30"
+          "destination_sha256": "c9c8583891f3f5a08aa3ebaa2585b6ca10f77b72b3b57a8349f272a3f4919b30",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_host_comm/Tests/Fakes/task.h",
           "source_sha256": "54d7ed1e7a99ff7d5b77d91ae2252936b829ff10afb287f8859abd168d427efd",
           "destination": "Tests/Services/HostLink/Fakes/task.h",
-          "destination_sha256": "54d7ed1e7a99ff7d5b77d91ae2252936b829ff10afb287f8859abd168d427efd"
+          "destination_sha256": "54d7ed1e7a99ff7d5b77d91ae2252936b829ff10afb287f8859abd168d427efd",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_host_comm/Tests/run_host_tests.sh",
           "source_sha256": "4b241a397f352564620181eefe5d89b538890f040395f452a54bc9a87f438305",
           "destination": "Tests/Services/HostLink/run_host_tests.sh",
-          "destination_sha256": "6fd93ebc56aad1e88b1ff56b5a900fcb4a74989f6339e23d5571c7f8c053b75a"
+          "destination_sha256": "6fd93ebc56aad1e88b1ff56b5a900fcb4a74989f6339e23d5571c7f8c053b75a",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_host_comm/Tests/test_host_comm.c",
           "source_sha256": "317ca5f36a9783746e865f67f4120889e9fd35f44988ae558631fc8294a0e52a",
           "destination": "Tests/Services/HostLink/test_host_comm.c",
-          "destination_sha256": "45ea1dbeebf0b09a6b4fb7fc30692ba01f1a92722515455e1bd90b2accfe07f0"
+          "destination_sha256": "24bf9b9680cf7873c73b611004a9627bf9ec8caed2924e7de12c342b1044d509",
+          "disposition": "present"
         }
       ]
     },
@@ -1632,31 +1798,36 @@
           "source": "Frameworks/tskptt_hskp/Inc/tskptt_hskp.h",
           "source_sha256": "3726ff5b185f37177e35da2c586381fe7d4fddfd42084fe46a28da56e1adce7d",
           "destination": "Include/SirinEmbedOS/Diagnostics/Runtime/tskptt_hskp.h",
-          "destination_sha256": "3726ff5b185f37177e35da2c586381fe7d4fddfd42084fe46a28da56e1adce7d"
+          "destination_sha256": "3726ff5b185f37177e35da2c586381fe7d4fddfd42084fe46a28da56e1adce7d",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_hskp/Inc/tskptt_hskp_wire.h",
           "source_sha256": "0d73801d5dc31842fc8c984bf9e86ac836402cdd54f071292cff3232e62643b6",
           "destination": "Include/SirinEmbedOS/Diagnostics/Runtime/tskptt_hskp_wire.h",
-          "destination_sha256": "0d73801d5dc31842fc8c984bf9e86ac836402cdd54f071292cff3232e62643b6"
+          "destination_sha256": "0d73801d5dc31842fc8c984bf9e86ac836402cdd54f071292cff3232e62643b6",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_hskp/Src/tskptt_hskp.c",
           "source_sha256": "1743ac7d7976132e84fd1ef5db47fe7cef3d16b325906d967e68ec30cff32ed9",
           "destination": "Source/Diagnostics/Runtime/tskptt_hskp.c",
-          "destination_sha256": "3d08a4917b52793a517fbccd1ebccf6d6f0e0ba0922c890e0b32cac7d1181c4e"
+          "destination_sha256": "3d08a4917b52793a517fbccd1ebccf6d6f0e0ba0922c890e0b32cac7d1181c4e",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_hskp/Src/tskptt_hskp_internal.h",
           "source_sha256": "dd28ddd1d256928521ea8c6151679c0ed465bf7a3d92c4233b887f5ef9453b01",
           "destination": "Source/Diagnostics/Runtime/tskptt_hskp_internal.h",
-          "destination_sha256": "9cf79d68eb2f2738dac4cc6660857f93c1f4ff12a843dd7684ff0c8220094d0e"
+          "destination_sha256": "9cf79d68eb2f2738dac4cc6660857f93c1f4ff12a843dd7684ff0c8220094d0e",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_hskp/Src/tskptt_hskp_trace.c",
           "source_sha256": "ec4c0abd333458984e0fb0625e3b20535c60ffde46c429524d9ca82735c17575",
           "destination": "Source/Diagnostics/Runtime/tskptt_hskp_trace.c",
-          "destination_sha256": "efe3965c42e43ccdd9e6222d4ef6f968bf79d0cb1a5642c585d83ccc4d894281"
+          "destination_sha256": "efe3965c42e43ccdd9e6222d4ef6f968bf79d0cb1a5642c585d83ccc4d894281",
+          "disposition": "present"
         }
       ]
     },
@@ -1677,43 +1848,50 @@
           "source": "Frameworks/tskptt_imu/Inc/tskptt_imu.h",
           "source_sha256": "44a2647316552a1bb62e5b78843eeac163632aa37467d24356bd7429f43b4438",
           "destination": "Include/SirinEmbedOS/Devices/IMU/Worker/tskptt_imu.h",
-          "destination_sha256": "8cd0997944ae532110c8f129034a0b59bb271cb5fc965cc0b522483b6e0e9fc1"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/tskptt_imu/Src/tskptt_imu.c",
           "source_sha256": "1d1b64629f7377948c87584e281eb5cc8937aee5aa375be404743f3c2d254585",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu.c",
-          "destination_sha256": "52973ea1d269211486ea362ca9bdc16adc6731e6413e0f6967720c2c3967456a"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/tskptt_imu/Src/tskptt_imu_debug.c",
           "source_sha256": "8bac6c0ad0c503d2386db9dae3992816ad4482a539e8c8c5d13993ced77521b3",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu_debug.c",
-          "destination_sha256": "8bac6c0ad0c503d2386db9dae3992816ad4482a539e8c8c5d13993ced77521b3"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/tskptt_imu/Src/tskptt_imu_dt.c",
           "source_sha256": "25f5b11f3e121e6400367587bb933047dfffd5a1a4e59722ed1bbebe4175f52e",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu_dt.c",
-          "destination_sha256": "ef9653026bca768ee3e50948befa208987925f683e914c53160616d26b61e863"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/tskptt_imu/Src/tskptt_imu_internal.h",
           "source_sha256": "f9c0d0b186aee9880b1bf5ed00710c9867ea7764ac4bc45e31147ca2389d1e63",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu_internal.h",
-          "destination_sha256": "364a1b3f678152f80936a428ac358bcabe8a7be0320aab8f7d8c967cc613f013"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/tskptt_imu/Src/tskptt_imu_recovery.c",
           "source_sha256": "2d5f6dfcd39688ff850a76b4b7e5735f75a516d0e6c5a99df9ca557a24ae45e4",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu_recovery.c",
-          "destination_sha256": "4fa304c797cb03284bfe0a4aa824dd748f3770ab2faf6c4e009fd1436fdde59a"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         },
         {
           "source": "Frameworks/tskptt_imu/Src/tskptt_imu_snapshot.c",
           "source_sha256": "cd16dba41f07772bee0c7c285fa9cdc430e9622bc4d5f8ad357c5abe25185037",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu_snapshot.c",
-          "destination_sha256": "cd16dba41f07772bee0c7c285fa9cdc430e9622bc4d5f8ad357c5abe25185037"
+          "destination_sha256": null,
+          "disposition": "removed or superseded; see module result"
         }
       ]
     },
@@ -1734,13 +1912,15 @@
           "source": "Frameworks/tskptt_log/Inc/tskptt_log.h",
           "source_sha256": "b8c38ebbd014f5990095e13fe0e6903c79e8bc4db1eae1b83a402595ca19bd37",
           "destination": "Include/SirinEmbedOS/Services/Logging/Worker/tskptt_log.h",
-          "destination_sha256": "dd3515c66fb0340a8e90bc2d2f6de9c80a499a74bb8b272d0c3120ff02e2f38f"
+          "destination_sha256": "dd3515c66fb0340a8e90bc2d2f6de9c80a499a74bb8b272d0c3120ff02e2f38f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_log/Src/tskptt_log.c",
           "source_sha256": "54bbbd3c022e22e157a3d8bfa3e8fbc16602b21321bef23b47b9e82a4384380c",
           "destination": "Source/Services/Logging/Worker/tskptt_log.c",
-          "destination_sha256": "2fb6bfe4831e699900753644ec4b09e9ad6dd8b7db865cd23d710d4fbdbf1593"
+          "destination_sha256": "2fb6bfe4831e699900753644ec4b09e9ad6dd8b7db865cd23d710d4fbdbf1593",
+          "disposition": "present"
         }
       ]
     },
@@ -1761,79 +1941,92 @@
           "source": "Frameworks/tskptt_ntfdcan_router/Inc/NTFDCAN_Router.h",
           "source_sha256": "e80f0607a031dc66e2f53089154261339bb9e1d0b972a6539d5906b514fd0e7e",
           "destination": "Include/SirinEmbedOS/IO/CAN/Router/NTFDCAN_Router.h",
-          "destination_sha256": "57f8abfaea343da3ce28bcb489b564e43aed5456eb0b5f366312091b0cd1f5c5"
+          "destination_sha256": "57f8abfaea343da3ce28bcb489b564e43aed5456eb0b5f366312091b0cd1f5c5",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Src/can_router_collections.hpp",
           "source_sha256": "ce34bb704c1c544429be9a22e1c3eb89d19ce19d2e3ab519d5034f1403b9e64e",
           "destination": "Source/IO/CAN/Router/can_router_collections.hpp",
-          "destination_sha256": "e43dc8bfb3f3dd3ca4fb5dd98a622b1a94612f2c39bb9bf843f94eee2063bac5"
+          "destination_sha256": "e43dc8bfb3f3dd3ca4fb5dd98a622b1a94612f2c39bb9bf843f94eee2063bac5",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Src/can_router_core.cpp",
           "source_sha256": "6f8e0f9141985d0cfe508ac64f14e2a01a6195ad7ceef6d3008e71314deaa693",
           "destination": "Source/IO/CAN/Router/can_router_core.cpp",
-          "destination_sha256": "9405b4d896ccf106d0ed9395c03d0f00485f56c7fb1f888cb252b6bf8c0699f8"
+          "destination_sha256": "9405b4d896ccf106d0ed9395c03d0f00485f56c7fb1f888cb252b6bf8c0699f8",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Src/can_router_core_internal.h",
           "source_sha256": "273ac3a15bf6aebcb7cda9d600133bda3d1b59af85f21fa62801fce522480c11",
           "destination": "Source/IO/CAN/Router/can_router_core_internal.h",
-          "destination_sha256": "d2dc3da7e755892fb7c73f0bdaf1d0646e5aeed0db5444a3e5ed54f2285cf2b0"
+          "destination_sha256": "d2dc3da7e755892fb7c73f0bdaf1d0646e5aeed0db5444a3e5ed54f2285cf2b0",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Src/ntfdcan_backend_internal.h",
           "source_sha256": "81e61e6e2d7dda9dbaa5311b0c74a9495297935a370a437410ab93263818ce54",
           "destination": "Source/IO/CAN/Router/ntfdcan_backend_internal.h",
-          "destination_sha256": "81e61e6e2d7dda9dbaa5311b0c74a9495297935a370a437410ab93263818ce54"
+          "destination_sha256": "81e61e6e2d7dda9dbaa5311b0c74a9495297935a370a437410ab93263818ce54",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Src/tskptt_ntfdcan_rx_router.cpp",
           "source_sha256": "fd70c82005a0f9e8cf68ba0da055ebf850837b32cd47e2559bfc3f703ec86e52",
           "destination": "Source/IO/CAN/Router/tskptt_ntfdcan_rx_router.cpp",
-          "destination_sha256": "26ff213668256fa1c14773855b172ca65165f682c31f48b103b6629b631937eb"
+          "destination_sha256": "26ff213668256fa1c14773855b172ca65165f682c31f48b103b6629b631937eb",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Src/tskptt_ntfdcan_tx_router.cpp",
           "source_sha256": "3c07445371e0ea05fba45ee00e44c971ad74fa5ff438472724b23812badafb04",
           "destination": "Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp",
-          "destination_sha256": "a79cba2f4003d2559b7e0ce99ecc6966bec9e3832b408dd398743ad480707e70"
+          "destination_sha256": "a79cba2f4003d2559b7e0ce99ecc6966bec9e3832b408dd398743ad480707e70",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Tests/can_router_core_host_test.cpp",
           "source_sha256": "64615f3fd9e3ab70b2419ad10457c4e053ce5eda67263a37a220138787263287",
           "destination": "Tests/IO/CAN/Router/can_router_core_host_test.cpp",
-          "destination_sha256": "b104aa040f848336090dc3c40b1bf47991a921b6e688a23d8451369128230c87"
+          "destination_sha256": "b104aa040f848336090dc3c40b1bf47991a921b6e688a23d8451369128230c87",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Tests/run_host_tests.sh",
           "source_sha256": "d4f27ced9bb29e4ec1645fb69522cf1b5d009cbcba3a2bb03107e99885a9541c",
           "destination": "Tests/IO/CAN/Router/run_host_tests.sh",
-          "destination_sha256": "922c5801a32baac2889aef3624732aa785e99a14913075d6c90526d6bee2e87c"
+          "destination_sha256": "922c5801a32baac2889aef3624732aa785e99a14913075d6c90526d6bee2e87c",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Tests/stubs/FreeRTOS.h",
           "source_sha256": "74476c10732e2d694a1b474840453308a6927a43fa1265622629b7c1fa60141a",
           "destination": "Tests/IO/CAN/Router/stubs/FreeRTOS.h",
-          "destination_sha256": "74476c10732e2d694a1b474840453308a6927a43fa1265622629b7c1fa60141a"
+          "destination_sha256": "74476c10732e2d694a1b474840453308a6927a43fa1265622629b7c1fa60141a",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Tests/stubs/cmsis_os2.h",
           "source_sha256": "5c176e36a83c8c005c7a8bb9fed54dbefb071ab4c707160ffb17d75135c9942f",
           "destination": "Tests/IO/CAN/Router/stubs/cmsis_os2.h",
-          "destination_sha256": "5c176e36a83c8c005c7a8bb9fed54dbefb071ab4c707160ffb17d75135c9942f"
+          "destination_sha256": "5c176e36a83c8c005c7a8bb9fed54dbefb071ab4c707160ffb17d75135c9942f",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Tests/stubs/stm32h7xx_hal.h",
           "source_sha256": "98dbf2c8f4e55d72d1ac136b3d664b486e839308c1428541d6a3e7d48d29a467",
           "destination": "Tests/IO/CAN/Router/stubs/stm32h7xx_hal.h",
-          "destination_sha256": "98dbf2c8f4e55d72d1ac136b3d664b486e839308c1428541d6a3e7d48d29a467"
+          "destination_sha256": "98dbf2c8f4e55d72d1ac136b3d664b486e839308c1428541d6a3e7d48d29a467",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_ntfdcan_router/Tests/stubs/task.h",
           "source_sha256": "7fa75094c8f9bd561d8498b990accd2c2f05f57942165eeca9362b52eff23fa4",
           "destination": "Tests/IO/CAN/Router/stubs/task.h",
-          "destination_sha256": "7fa75094c8f9bd561d8498b990accd2c2f05f57942165eeca9362b52eff23fa4"
+          "destination_sha256": "7fa75094c8f9bd561d8498b990accd2c2f05f57942165eeca9362b52eff23fa4",
+          "disposition": "present"
         }
       ]
     },
@@ -1844,7 +2037,7 @@
       "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_param_console",
       "status": "",
       "commit_scope": "Framework repository",
-      "result": "迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数。",
+      "result": "迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数；增加启动冻结的LOAD/SAVE权限门控。",
       "source_file_count": 7,
       "license_files": [],
       "source_notice_files": [],
@@ -1854,31 +2047,36 @@
           "source": "Frameworks/tskptt_param_console/Inc/tskptt_param_console.h",
           "source_sha256": "d8eaab8368710dfa3dc84358fafccd0cdbff0cfca357a5bdbfb7747362690401",
           "destination": "Include/SirinEmbedOS/Services/Parameters/HostLink/tskptt_param_console.h",
-          "destination_sha256": "565ad3928b17b8c7c485d1e7c6a294c95f40454a563b929cc41c1eda84ac5097"
+          "destination_sha256": "dea5a717ca476e46ccd6cc4d1af5669dc51b0d2126de03a0b45fb50602f8096d",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_param_console/Src/tskptt_param_console.c",
           "source_sha256": "ff55fdc448d34a740b56f66a8e0a780fdf64914e6e3473253f49d79764218419",
           "destination": "Source/Services/Parameters/HostLink/tskptt_param_console.c",
-          "destination_sha256": "c0a85a4ce755de214e0223100327d4bec431853c5679684debdca8d40636655a"
+          "destination_sha256": "1d5145f4726951c9a8f57a42592f9c707b32811259ed4fd415b0cda45b51d9eb",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_param_console/Tests/mock_lib_params.c",
           "source_sha256": "2676e6b98531e425aebd4b9be728380cf0204127cbc1b3de62bb353f27e80bb1",
           "destination": "Tests/Services/Parameters/HostLink/mock_lib_params.c",
-          "destination_sha256": "76f54b6f76b8b40fda92c6af0fa1231b762972e83d5eb6bb26fcfe1d813e0e20"
+          "destination_sha256": "76f54b6f76b8b40fda92c6af0fa1231b762972e83d5eb6bb26fcfe1d813e0e20",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_param_console/Tests/run_host_tests.sh",
           "source_sha256": "2ceb507c6fc696e221cf2eabc5c9eaab7cdb0b4d52feb2d4b3418198f020f584",
           "destination": "Tests/Services/Parameters/HostLink/run_host_tests.sh",
-          "destination_sha256": "a4accec5a772bd023d6bae385069af5e7c8d6c1d097a4ec5e9a146b6bb4d8dbd"
+          "destination_sha256": "a4accec5a772bd023d6bae385069af5e7c8d6c1d097a4ec5e9a146b6bb4d8dbd",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_param_console/Tests/test_param_service.c",
           "source_sha256": "cb08314e24cca6ac7b3a4d4cbbd77f71a06cb933c0f1af72e8a82fad9e34554c",
           "destination": "Tests/Services/Parameters/HostLink/test_param_service.c",
-          "destination_sha256": "3ebb3e45b30c3f3aa3c9e23aeafbb002b4df9a0e4cb6f10d17a0ba96c3c34682"
+          "destination_sha256": "4f873373ed9a7404109126e97715eb0b541b455d13d3ff724a12d82048fddff1",
+          "disposition": "present"
         }
       ]
     },
@@ -1899,13 +2097,15 @@
           "source": "Frameworks/tskptt_referee/Inc/tskptt_referee.h",
           "source_sha256": "46fd98a330222672a34c29920d079f4ab10f02e05194c44ca76e15d6838f9d51",
           "destination": "Include/SirinEmbedOS/Services/Referee/Receiver/tskptt_referee.h",
-          "destination_sha256": "e2ade4175e01a91317aa7d50b4a343e11b7598956a965fd935fe0c7756455cbb"
+          "destination_sha256": "e2ade4175e01a91317aa7d50b4a343e11b7598956a965fd935fe0c7756455cbb",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_referee/Src/tskptt_referee.cpp",
           "source_sha256": "e797528c4b22b61ff5a1a7fa94ad0932286808bd98d7264b4f3dc21b815a6e0d",
           "destination": "Source/Services/Referee/Receiver/tskptt_referee.cpp",
-          "destination_sha256": "c7a8f602c32b46b240cc3290db23e6bd48af28ba3cb1e0a53c37670be250b89b"
+          "destination_sha256": "c7a8f602c32b46b240cc3290db23e6bd48af28ba3cb1e0a53c37670be250b89b",
+          "disposition": "present"
         }
       ]
     },
@@ -1926,13 +2126,15 @@
           "source": "Frameworks/tskptt_referee_tx/Inc/tskptt_referee_tx.h",
           "source_sha256": "dd878a9033b39e64864352adec5812102a91f25c909320bc00f62f880890ddce",
           "destination": "Include/SirinEmbedOS/Services/Referee/Transmitter/tskptt_referee_tx.h",
-          "destination_sha256": "c1f7cd1e7ba3bcc21860b46e70ad3a7678544a1f71cee21c15af6c81da352f88"
+          "destination_sha256": "c1f7cd1e7ba3bcc21860b46e70ad3a7678544a1f71cee21c15af6c81da352f88",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_referee_tx/Src/tskptt_referee_tx.c",
           "source_sha256": "865baa9d6929a899fe9f21199f4f2df2238e0f81019b7c8c3dbaeb87715fd09c",
           "destination": "Source/Services/Referee/Transmitter/tskptt_referee_tx.c",
-          "destination_sha256": "cf0052f556bc1c7598d17dbb55c5abda8c3865377d192edb0e04c42b006469a9"
+          "destination_sha256": "cf0052f556bc1c7598d17dbb55c5abda8c3865377d192edb0e04c42b006469a9",
+          "disposition": "present"
         }
       ]
     },
@@ -1953,13 +2155,15 @@
           "source": "Frameworks/tskptt_rs485_router/Inc/RS485_Router.h",
           "source_sha256": "e696d415cb8751c2478e428d669e4c6116ffc8927f83fe89145c371db0c50310",
           "destination": "Include/SirinEmbedOS/IO/RS485/RS485_Router.h",
-          "destination_sha256": "28c73eae832c6b4b8161e13e8e19c0fa4f46664bdca2d422f6fa30d6605ef7ae"
+          "destination_sha256": "28c73eae832c6b4b8161e13e8e19c0fa4f46664bdca2d422f6fa30d6605ef7ae",
+          "disposition": "present"
         },
         {
           "source": "Frameworks/tskptt_rs485_router/Src/tskptt_rs485_router.cpp",
           "source_sha256": "f387cab7932171087c73699439ced249c21767a29cc4b069eeef956a9ef635d3",
           "destination": "Source/IO/RS485/tskptt_rs485_router.cpp",
-          "destination_sha256": "15bd68506caa246dc76334060d9ccd4dd3a9df6600b6124388227adb0ef91e2d"
+          "destination_sha256": "15bd68506caa246dc76334060d9ccd4dd3a9df6600b6124388227adb0ef91e2d",
+          "disposition": "present"
         }
       ]
     }

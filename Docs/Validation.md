@@ -133,3 +133,178 @@ DTCM中RTOS heap为65,536 B、热数据为41,568 B、顶部MSP为8,192 B。链�
 结论：本轮持续观察及一次软件复位均未复现旧启动屏障断言。暂停、断点和 BringUp 栈扫描会扰动时序；未完成实时负载、CAN/UART/USB 压力或整板验收，软件复位也不替代断电上电。
 
 结束时已删除本次唯一新增的 KernelFailure 硬件断点，断点列表为空，执行 continue 让 MCU 继续运行。GDB/J-Link 会话保留并继续占用探针；未 detach 或关闭服务器。日志为 `/tmp/srnos-barrier-live-20260926.log`，后续会话活动可能继续追加。
+
+
+## 2613 传感器与 SPI4 调度（2026-09-26）
+
+实现与接口见 [Sensors.md](Sensors.md)，运行入口见 [SensorBringUp](../Examples/SensorBringUp/README.md)。本轮经用户授权编译、烧录并复用唯一 ARM GDB/J-Link 会话；没有主动发送外部 CAN 测试帧，没有访问新 EEPROM，也未改 ADC/PHY 或生成代码。验证目标是电气可达性、驱动和局部共享总线运行；LSM 尚未达到可达性验收。
+
+### 主机和固件
+
+- 原 13 组加 SPI、I²C、Sensors，共 16 组主机套件通过。SPI 覆盖两 IMU/持续普通事务、公平性、槽位上限、CS 唯一性、TX 复制、RX 生命周期、取消/回调所有权、队列/活动超时及迟到回调；I²C 覆盖设备完成归属、7 位地址、确认 abort 及失败隔离。
+- Sensors 覆盖 ID/版本拒绝、初始化超时、未就绪、大小端/符号/单位、系数补偿、失效/恢复、快照过期及 BMI 每周期发布与发起。RAW worker 测试不链接融合、加热、校准、EEPROM 符号。
+- 根 Minimal Debug/Release、Board 独立 Debug、SensorBringUp Debug/Release、父项目八种目标通过；95 个公共头、MSP/libc 覆盖与越界拒绝、第三方哈希、异常向量/TLS/内存检查通过。
+- 结构检查：327 个源/头/工具合同、28 个唯一 HAL callback、49 个迁移模块、显式源码覆盖及无嵌套 Git 元数据。
+- 最终 SensorBringUp Debug ELF 的 SPI 队列位于 D1（bus=0x240072d8），SPI RX/TX staging 为 0x300000c0/0x300002c0、各 512 B；I²C TX/RX staging 为 0x38000000/0x38000100、各 256 B。D2/BDMA 可达性及对齐已加入 ELF 回归。D1 使用 277,824 B/320 KiB，D2 9,952 B，D3 512 B，ITCM 224 B；DTCM 显示 100% 包含 heap/MSP 预留，不等于运行期耗尽。
+
+主机日志 `/tmp/srnos-final-host-tests.log`，父项目日志 `/tmp/srnos-sensor-parent-final.log`。最终 ELF 备份 `/tmp/srnos-sensors-final-20260926.elf`，SHA-256：
+
+`82db9321fb8f9d65e36f47e28345d1a52088dba3a6a93af2ece501abb3485be9`
+
+### LSM 软件排查
+
+LIS2MDL WHO_AM_I=0x40，SPA06 ID=0x11（产品 1/版本 1）；BMI/MCP 在相同 SPI4 正常推进。LSM WHO_AM_I 始终为 0x00，已分别测试 mode 0、按手册的 mode 3 及正确 SCK 空闲电平，并临时降低 SPI 时钟至 625 kHz，仍无有效 ID。临时启用 PE5 MISO 内部上拉后，读取变为 0xFF。
+
+这支持“选中 LSM 时没有有效器件驱动 MISO”的判断，不能区分未焊接、未供电、焊接/布线或 CS/SDO 连接问题。用户表示不确定器件装配情况。最终复位恢复正常 MISO 配置和 10 MHz，驱动保持 OFFLINE，每秒重读 ID；未对未知器件盲写初始化寄存器。下一步需要结合实物检查供电、PD5/CS、PE5/SDO 和器件装配；软件尚不能证明具体硬件故障位置。
+
+### 测量方法与限制
+
+最终镜像烧录后先采集完整 RAM 快照与任务栈，再持续运行至少 10 分钟；窗口中不暂停、不进行全任务栈扫描。GDB 的 KernelFailure、LIB_INS_Init、IMU_CalibStorage_Init、params_load 硬件断点用于确认没有进入这些路径。栈统计在窗口前后暂停，由主机导出 RAM 并计算填充水位，不在目标调用函数。
+
+状态和计数来自每秒发布且 sampling=false 的快照及暂停后读取的总线计数；两者时刻有小幅差异，不混算完成率。样本率使用固件完整 10 秒窗口，最大周期包含启动过程，不能把最大值当稳态周期。USB 仅验证启动状态，未确认 CDC 枚举/日志到主机；RAM 快照是本轮主要观测渠道。
+
+### 连续窗口结果
+
+前后 HAL tick 为 41,579 / 664,995 ms，连续运行约 623.4 秒；完整发布快照 tick 为 41,014 / 664,015 ms，sequence 为 42 / 665，均 sampling=false。窗口期间未触发上述断点；Fault active、CFSR、HFSR 均为零。最终板上 `.isr_vector`、`.text` 与上述独立 ELF 备份 matched。
+
+| 器件 | ID / 状态 | 窗口前后有效样本计数 | 末次 10 秒样本率 | 末次轮询率 |
+|---|---|---:|---:|---:|
+| BMI088 | 0x1E / READY | 40,582 → 663,582 | 1000 Hz | 1000 Hz |
+| LSM6DS3TR-C | 0x00 / OFFLINE | 0 → 0 | 0 Hz | 1000 Hz |
+| LIS2MDL | 0x40 / READY | 3,792 → 63,152 | 93.0 Hz | 100 Hz |
+| SPA06-003 | 0x11 / READY | 668 → 10,839 | 16.4 Hz | 100 Hz |
+
+末次窗口时长 10,000,000 µs，样本数 10000/0/930/164，轮询数 10000/10000/1000/1000。LIS 在这段较长窗口的平均更新率约 95.28 Hz，实测不等于标称 100 Hz；SPA 平均约 16.33 Hz。BMI 完成率达到本轮 ≥990 Hz 目标，但 LSM 未识别，**双 IMU 的板端目标未通过**。
+
+SPI 完整快照中 ACC/GYRO/MCP/LSM 接纳与完成分别为 1,327,179 / 663,596 / 265,640 / 664，均逐项相等；队列满、排队过期、传输错误、超时及恢复均为零。最大排队时间 20/6/15/6 µs，最大传输时间 19/19/18/12 µs。暂停时实时 SPI start=done=2,260,412；MCP calls=ok=266,032。I²C start=270,354、done=270,353，暂停恰在一笔磁场读取中；错误/超时/恢复均零，单笔在途不解释为泄漏。
+
+BMI 最大采集耗时 85 µs。LSM 的 664 次驱动 errors 对应 664 次无效 ID 探测，不是 SPI DMA 错误；离线重试未阻止其他设备。有效设备均只有一次初始化，没有恢复或采样超期。
+
+末次 BMI 加速度约 [-1.068, 0.049, -9.683] m/s²，模长约 9.74 m/s²；磁场 [-21.15, -35.10, -15.00] µT；压力 84,188.6 Pa、温度 53.92°C。数值有限并持续变化，但没有外部温压参考和受控转动，不能据此宣称绝对精度、安装方向、角速度响应或校准通过。
+
+heap 当前/历史最低空闲均保持 121,872 B。18 个任务的填充栈水位前后相同：IMU 1,396 B、LSM 1,572 B、Environment 1,456 B、SPI dispatcher 2,816 B、I²C callback 2,908 B、MCP RX/TX 3,620/3,676 B。片内 CAN RX 仍各 412 B，真实帧压力下需优先复核，不能把无负载余量当作满负载保证。
+
+检查工具还修复了一项取证问题：`starm-objcopy --dump-section` 未指定输出 ELF 时会重写输入容器。现显式写入临时目录；独立烧录 ELF 的 SHA 保持不变，构建产物七个 Flash 段与它完全相同。后续使用独立备份核对板上镜像，不依赖被旧检查工具重写后的整个文件 SHA。
+
+### 软件复位与结束状态
+
+连续窗口后执行一次 `monitor reset`。约 57 秒后重新暂停：HAL tick=57,437，完整快照 tick=57,014、sequence=58、sampling=false、RUNNING。BMI/LIS/SPA 为 READY，累计样本 56,582/5,292/930；LSM OFFLINE、58 次探测、无样本。末次 10 秒有效率为 BMI 1000 Hz、LIS 92.4 Hz、SPA 16.4 Hz。SPI start=done=194,107，I²C start=done=23,092，MCP calls=ok=23,008，错误/超时/恢复、Fault active/CFSR/HFSR 均零，heap 余量保持 121,872 B。SPI CFG1=0x20070007，恢复正式 10 MHz 配置。
+
+复位期间未命中 KernelFailure、融合初始化、IMU 校准存储初始化或参数加载断点。该证据结合 RAW 分支和主机测试证明本验证配置绕过这些路径；没有把未访问 EEPROM 解释为新 EEPROM 驱动已适配。
+
+本次四个断点（13–16）已删除，列表为空，执行 continue 后 **MCU 运行中**。GDB/J-Link 保留并继续独占探针，未 detach/关闭服务器。完整开发调试日志 `/tmp/srnos-sensors-2613-20260926.log` 包含多次中间固件；归档的 [最终固件会话](Validation/2613-20260926/final-session.txt)、[计数与配置](Validation/2613-20260926/summary.json)、[窗口前栈余量](Validation/2613-20260926/stacks-before.json)、[窗口后栈余量](Validation/2613-20260926/stacks-after.json) 仅对应最终镜像。原始 RAM 转储在 `/tmp/srnos-sensors-final-{before,after}-{dtcm,d1}.bin`。
+
+本阶段软件实现和可运行器件的局部验证已完成；**LSM 识别、配置及持续采样、双 IMU 1 kHz 板端验收仍未通过**，需硬件可达后继续。实际 CAN 帧压力、断线/abort 故障恢复、USB 枚举、传感器轴向/精度/受控响应仍未测。不扩大为整板验收，也没有自动提交、推送或操作 prototype。
+
+
+## 2026-09-27：HostLink 双 IMU 遥测与 BringUp 指示短测
+
+本条覆盖较早的 LSM OFFLINE 结论。最终配置为 SensorBringUp：BMI RAW、LSM/LIS/SPA 开启；BMI/LSM 1 ms；融合、用户校准、加热、参数加载、HostLink LOAD/SAVE 和周期栈扫描关闭；MCP 只被动运行。用户要求十分钟自行执行，本轮改为短测，**未完成十分钟稳定性验收**。
+
+### 固件、主机测试与构建
+
+- 最终烧录 ELF：`build/SensorBringUp/SirinEmbedOS.elf`，取证副本 `/tmp/srnos-telemetry-final-20260927.elf`；SHA256 `2574a80f1c9e501db5520fc2867078048c7710fc3d1df618c62fec7d8ca83d4e`。使用 J-Link V8.96、探针 10114514、SWD 4 MHz、STM32H723VG、目标约 3.30 V；向量表及 .text 与该 ELF 匹配。
+- 18 组主机套件通过，增加/扩展 COBS 坏帧与超长恢复、槽位复用后的响应重发、FIFO 次序/容量/命令余量、发送复制与会话 epoch、DTR 下降仍持有 TX buffer、endpoint 关闭取消、订阅周期校验、storage gate、观察回调、64 样本队列、状态/编码与 CLI 黄金向量、启动音/黄色提交/心跳边沿。
+- 根 Minimal Debug/Release、BringUp Debug、SensorBringUp Debug/Release、Board Debug、父项目八个固件目标（含全部组件、C++ 公共头/TLS）及容量/第三方哈希/IRQ/heap 检查通过；结构检查 345 个源码/头/工具、28 个唯一 HAL callbacks、49 项迁移来源通过。
+- SensorBringUp：FLASH 252736 B；D1 289696/327680 B（88.41%）、D2 9952 B、D3 512 B、ITCM 224 B。两颗 IMU 队列与编码缓冲在 D1，DMA/BDMA staging 仍在 D2/D3；不新增线程、不更改 heap/MSP/libc 分区。基础 ELF 内存/TLS/异常向量另经静态脚本检查。
+
+### 实板短测
+
+CDC1 `/dev/cu.usbmodem355C343932333`，CLI Python 3 + pyserial。握手后未订阅期间无样本事件；订阅后记录如下，数据来自不暂停调试器的窗口：
+
+| 窗口 | 时长 s | BMI 采集/s | BMI 接收/s | LSM 采集/s | LSM 接收/s |
+|---|---:|---:|---:|---:|---:|
+| 正常 1 | 10.0040 | 1000.001 | 1000.001 | 1000.001 | 999.601 |
+| 正常 2 | 10.0032 | 999.984 | 1000.084 | 999.984 | 999.684 |
+| 软件复位后 | 10.0047 | 999.928 | 999.928 | 999.928 | 1000.028 |
+
+正常窗口均无序号缺口/重复、CRC/COBS 错误、设备 overflow/failed。包边界与状态查询使窗口接收数和采集数可相差几条，不是丢样。所有 XYZ 原始值、物理值、原始温度及 °C 均已解码；例如 BMI 约 42°C、LSM 约 45°C，仅表示读到有限数据，不代表完成精度验证。
+
+- 暂停主机读取 3 秒后恢复正常，无协议错误。这次由主机缓冲吸收，设备 overflow 仍为 0，**没有触发实板满队列**；满队列丢新、计数与恢复由主机注入测试覆盖。
+- 取消订阅后缓存深度为 0、样本事件停止；DTR 下降/上升后 HELLO 成功，订阅已清除，没有旧会话样本，重新订阅恢复约 1 kHz。主动清理的尾部样本计入 discarded。软件复位重新打开 CDC1，HELLO/订阅与正常窗口均通过。
+- 短测前后 MCP 完成事务从 78440 到 106040，queue_full/expired/errors/timeouts/recoveries 均 0；SPI/I²C 无传输错误，Fault active/CFSR/HFSR 均 0。四颗器件 READY；LSM ID 0x6A、LIS 0x40、SPA 0x11。
+- `srnos_indicators` 记录 prepared=1、boot_commits=1、boot_notes=3、errors=0，heartbeat_edges 随时间增长；软件复位后重新出现同样的一次性启动计数。TIM3 CCER=0，加热控制器 ready=0。实际灯色、亮度和声音无人机旁确认，不记为感官验收通过。
+- 窗口前后暂停、导出 RAM 在主机计算栈水位，不在采样窗口内执行全任务扫描。HostComm 最小空闲栈从 1492 B 到 560 B；HostCmd 1436 B、IMU 1396 B、LSM 1572 B、Indicators 884 B，free_heap/minimum_heap 均 115648 B。CAN1/2/3 RX 最小余量仍约 408 B，为既有待压力验证项；本轮没有提高负载或修改这些栈预算。
+
+证据保存在 [telemetry-20260927](Validation/telemetry-20260927/)：`short-check.jsonl`、`reset-cli.log`、`gdb-final.log`、前后栈水位和主机测试记录。完整本地 GDB 日志 `/tmp/srnos-telemetry-gdb-20260927.log` 包含先前试版，不能混用其镜像和计数。
+
+结束状态：MCU **运行**，无断点，GDB/J-Link 会话保留占用探针；CLI 已取消订阅并关闭 CDC1，可由用户运行 [CLI 长测](HostLink.md)。没有提交或推送。十分钟稳定性、真正 USB 满队列实板实验、USB 拔插、普通 BringUp legacy 故障恢复的实板加热门控、实际声光及满负载 CAN 仍未完成。新功能的短测通过不等同于整板验收。
+
+## 2026-09-27：RAW BMI 60°C 加热与易读 CLI
+
+- SensorBringUp 显式设置冻结配置 `raw_heater_target_c=60`；默认 RAW 仍为 0（关闭），legacy `heater_enabled` 行为不变。原始采样不经过融合、用户校准和 EEPROM。BMI 新鲜温度驱动已有 PWM/PID，无新增线程；超过 10 ms 无温度、时间倒退/重复、非有限温度或达到 70°C 锁存关闭，PWM 启动失败也锁存故障。
+- Sensors（含 RAW heater）、IMU、Serial/SystemConfig、IMUTelemetry/CLI 主机套件通过。覆盖显式启用、1 kHz feed、过期/无效/超温锁存、配置范围、温度与旧值显示。SensorBringUp Debug/Release、Minimal Debug 构建通过；foundation ELF 检查通过。D1 Debug 289728 B，D2 9952 B，D3 512 B；未修改 IOC、DMA 布局或第三方版本。
+- 本机 J-Link V8.96，探针 10114514，SWD 4000 kHz、3.30 V。旧服务连接已失效，第一次下载无法校验；关闭旧服务后重建唯一服务并重新下载，`.isr_vector` / `.text` 均匹配。固件 `/tmp/srnos-heater60-20260927.elf`，SHA256 `9da115c769506450c92f5fbf61cc6f8abf8a398c58a5d3ced0df83f06466f4a3`。
+- 15 秒 monitor 与 5 秒 capture 均完成，CLI 默认显示双温度/接收率/缺序/设备溢出，capture 保存格式不变。短采集 `/tmp/srnos-heater60-capture-20260927`：BMI 4996、LSM 4995 正式样本；按设备时间分别 1000.0006、1000.0002 Hz，无缺序、重复、无效、时间回退、协议错误或设备溢出/发送失败。正式窗口边界外样本另按 stopping 分类，不将行数差异当作丢包。
+- 5 秒窗口 BMI 温度 59.625–60.125°C，LSM 63.21875–63.8984375°C。GDB 一次快照：目标 60°C，controller Stable，enabled=true、fault_latched=false，BMI 当前 60°C，TIM3 CCR4/ARR=6000/10000。只证明短时加热起效，不宣称长期温稳或 PID 调优完成；两芯片温度不相等。
+- 证据日志 `/tmp/srnos-heater60-gdb-20260927.log`、`/tmp/srnos-heater60-monitor.log`、`/tmp/srnos-heater60-capture.log`。取证后已软件复位并继续运行；无断点，保留 GDB/J-Link 唯一会话，CDC1 由 CLI 正常取消订阅并释放。任务内温度失效保护不能覆盖调试暂停/CPU 停顿；测量时勿暂停 MCU。十分钟采集仍由用户执行。
+
+## 2026-09-27：LSM 优先温控与连续 PI
+
+- RAW 温控优先读取健康、新鲜的 LSM 快照；无效/离线/过期回退 BMI。BMI 正常时，LSM 恢复连续健康100 ms才切回。固定恢复策略不开放运行时改绑；同一60°C目标应用于实际来源，无人为温差换算。切换清积分、PWM归零后按斜率缓升。两路都失效后锁存关闭；任一有效来源达到70°C也关断。BMI阻塞重初始化前先暂停输出。
+- RAW控制采用位置式连续PI：Kp40、Ki2、Kd0，输出500、积分350，升/降斜率25单位/秒，即5个百分点/秒。取消旧RAW的全功率预热及越过目标立即清积分；legacy模式保持原有策略。新增公开只读 `SRNOS_SensorGetHeaterStatus` 一致快照，CDC0每秒记录实际来源、温度、目标、占空比、故障。
+- Sensors/RAW heater、IMU温控、Serial/SystemConfig、IMUTelemetry/CLI套件通过。覆盖回退/恢复防抖、源切换归零、非反馈源超温、两路失效、初始化暂停、连续PI斜率/跨目标不清积分；并覆盖SPI高优先级回调在温度快照复制中发布时不误判未来样本。SensorBringUp Debug/Release与Minimal Debug构建、foundation ELF检查通过，无IOC/调度线程/DMA布局变更。
+- 初版30秒实板验证（SHA `b0a1e21efc1c197b8791f2ecc18a378354a27f68a280af6a3fe1d6bd9da84c4f`）：两路正式29972条，按设备时间BMI999.99993、LSM1000.00000 Hz；无缺序、重复、无效、协议错误或设备溢出/发送失败。CDC0持续 `src=LSM target=60.0 fault=0`，功率平滑变化；短窗口LSM尚约58.6–59°C，未证明最终稳态或6.2秒振荡消失。数据 `/tmp/srnos-lsm-heater-smoke-20260927`，日志 `/tmp/srnos-lsm-heater-cdc0.log`。
+- 最终版本补强状态快照原子发布及快照读取时间边界后重新构建/烧录，ELF `/tmp/srnos-lsm-heater-final2-20260927.elf`，SHA256 `7ad66e160e895b0eac3a012fd749ac29720c3115099eb91d68e68ca25dcadcaf`。J-Link V8.96，探针10114514，SWD4000；向量表/代码段均校验匹配，下载日志 `/tmp/srnos-lsm-heater-gdb-20260927.log`。最终短时来源日志 `/tmp/srnos-lsm-heater-final2-cdc0.log`。
+- 最终MCU复位后运行，无新增断点，GDB/J-Link保留单一会话，CDC端口由脚本退出释放。真实拔除LSM的故障注入未做，回退逻辑由主机测试验证；长期温度纹波/热响应及LSM低频变化改善仍需后续采集。未自动提交或推送。
+
+## 2026-09-28：正式 INS、统一温控与五流遥测
+
+正式服务取代旧单 BMI 融合、方向预设、旧温控、用户校准/IMU存储 worker；不提供旧模式选择。默认四颗传感器采样，固定板内旋转后经冻结的板到机器人四元数进入一个 Mahony 状态；磁力计/气压计只发布测量。默认60°C加热，LSM反馈优先/BMI回退。参数加载与HostLink LOAD/SAVE默认关闭。本轮没有适配EEPROM、执行用户标定、生成CubeMX代码、提交或推送。
+
+### 主机注入与构建
+
+- 19组主机套件通过。新增/扩展固定三组旋转与右手性、六面静置、业务安装旋转、变dt整圈运动与四元数符号、加速度权重、双/单路和恢复渐入、时间差选择、重复/预测/超期、3秒启动失败、60秒温稳降级、低动态/收敛、统一PI/全功率衔接、80°C保护与75°C下5秒恢复、触发器件离线禁止解除、LSM反馈恢复延时、温度/六轴无效关断及硬故障。
+- 实际快照实现以IRQ边界模拟mutex，1个发布者与4个读者并发验证无撕裂、独立读取与超时失效。此为主机并发模型，不冒充实机ISR压力。
+- 原双IMU协议与CSV回归通过；新增姿态/磁场/气压的C/Python共享黄金向量、订阅后新数据、固定容量/溢出、背压/清理/完成计数、状态和CLI解码测试。原HostComm会话/取消/断连/缓冲生命周期仍由既有套件覆盖。
+- 根Minimal Debug/Release、BringUp Debug、SensorBringUp Debug、INSBringUp Debug/Release、Board Debug构建通过；父项目九个固件目标、完整公共头、C++/TLS、容量覆盖/拒绝溢出、第三方哈希和链接布局检查通过。345个源码/头/工具合同、28个唯一HAL callback、49项迁移来源通过。
+- INSBringUp Debug：FLASH 250360 B；D1总保留300992/327680 B，D2 9696 B、D3 512 B、ITCM 224 B。未移动DMA/BDMA或heap/MSP/libc分区；新增INS High5/3KiB worker和静态遥测缓存计入预算。
+
+### 实板过程与修正
+
+工具 J-Link V8.96 + ARM GDB，探针10114514、STM32H723VG、SWD4MHz、3.30V。操作前没有其他GDB/J-Link会话占用。向量表与代码段在下载后及窗口结束均与取证ELF匹配。
+
+初版低动态使用三轴残差向量范数RMS：实板合成角速度约0.65..0.69°/s，超过0.5°/s而正确停在观测。已明确采用**三轴分量整体 RMS `sqrt((varX+varY+varZ)/3)`**，约0.39°/s；仍保持0.5°/s门限，无输入滤波、无自动零偏、无跳过收敛。该口径已写入合同和回归测试。
+
+初版BMI到下一周期才发布，造成双路时间差经常超过1ms，虽姿态1kHz但大量单路。修正为DMA完成通知原BMI任务，当周期取样发布；不增加线程、不在SPI回调中阻塞。最终两路最大时间差76µs，测量窗内全部双路等权。早期结果保留在 `preliminary-skew-check.jsonl`，不混入最终验收。
+
+最终烧录ELF `/tmp/srnos-ins-accepted-20260928.elf`，SHA256 `393adbee9f41af5a7d4d1bcd0b4166310cc6006fa5adc706de642562124965ad`。随后只清除未使用的BMI校准宏/变量和更新注释，重编ELF的调试信息变化；两份完整Flash二进制逐字节一致，SHA256均 `ece4b11571cb4130e8444be24af6286d314d6005608a6745b5e265c9de3ea7e0`。取证副本未被覆盖，两份ELF SHA保存在 [summary.json](Validation/ins-20260928/summary.json)。
+
+采集前先读取栈水位，再执行一次软件复位。复位后在新会话验证未订阅无样本、温稳等待60秒超时后低动态观测/收敛，再进入有效发布；之后温度到60°C附近并满足连续5秒温稳。始终保留温稳等待曾超时标志，达到温稳后THERMAL_PENDING清除。Application/通信在INS未就绪时已可使用。
+
+### 三个不暂停的10秒窗口
+
+五条流同时订阅：原始BMI/LSM、姿态、磁场、气压。姿态计算率用设备微秒及publications差分，主机接收率用主机单调窗口；包边界/状态查询可造成少量窗口计数偏移。
+
+| 窗口 | 姿态计算 Hz | 姿态接收 Hz | BMI接收 Hz | LSM接收 Hz | 磁场接收 Hz | 气压接收 Hz |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 | 1000.000 | 1000.403 | 1000.103 | 1000.103 | 91.764 | 16.294 |
+| 2 | 1000.000 | 1000.027 | 999.627 | 1000.127 | 91.766 | 16.394 |
+| 3 | 1000.000 | 1000.172 | 999.773 | 999.773 | 92.579 | 16.296 |
+
+全部序号缺口、重复、CRC/COBS错误、设备overflow/failed为0；双路权重均0.5，窗口内无单路或预测。LIS实际更新率不等于标称100Hz，没有补帧。取消后不再收到样本且缓存清空；DTR下降/上升清理订阅，HELLO及重新订阅姿态后1秒收到1000条，无协议错误。原始CSV兼容由主机测试确认，本次未重新执行十分钟保存采集。
+
+窗口后完整调试副本：姿态累计73488次、双路73488、单路/预测0；最大服务执行41µs（含有界遥测复制）、快照临界区最大6µs、最大周期1056µs、missed_deadlines=0；四颗传感器READY。板静置数据在转换后两个加速度Z均正，约9.7m/s²；只验证此静置符号，不宣称实板六面或受控三轴动态已经完成。
+
+末次温度LSM60.14°C、BMI56.5°C，反馈为LSM、目标60°C、温稳true、PWM约15.8%，无过温/硬故障。MCP完成54440次、SPI start/done=736718/736718，错误/超时/恢复均0；I²C有一笔在途，错误/超时/恢复均0。Fault active/CFSR/HFSR均0。MCP没有主动发送外部CAN测试帧，不能据此宣称实际CAN负载压力通过。
+
+自由/历史最低heap均112448 B。后测栈填充余量：INS2336 B、BMI1572 B、LSM1572 B、SPI dispatcher2640 B、Environment1456 B、HostComm484 B、HostCmd1436 B、Application3288 B。CAN1..3 RX约400 B，沿用的CAN栈及HostComm在更大真实负载/自定义handler下仍需复核。窗口内没有全任务栈扫描，前后数据见归档JSON；前测之后执行了软件复位，前后不是同一次运行的累计水位。
+
+指示器prepared=1、boot_commits=1、boot_notes=3、heartbeat_edges=273、errors=0；实际声音、灯色和亮度没有现场感官确认。80°C/掉线/硬故障恢复由主机注入覆盖，未把实板加热到保护温度，也未物理断开传感器。
+
+### 证据与结束状态
+
+证据目录 [ins-20260928](Validation/ins-20260928/) 保存主机套件/构建结果、全部窗口/启动状态、最终易读CLI输出、GDB会话、前后栈水位、配置和固件SHA。GDB日志包含中间镜像，最终证据以SHA和summary指定范围为准。
+
+结束时MCU**运行**、断点列表为空；GDB/J-Link保留并占用探针，CDC1已取消订阅并关闭。恢复运行后的易读CLI再次显示双路等权、约1kHz和60°C温稳。十分钟长测由用户执行；实板单路断开/恢复、动态精度、用户校准、磁航向、实际CAN压力、硬件热保护和完整机器人控制闭环均不在本次通过范围。
+
+
+## 2026-09-28 FT24C128A 器件驱动与整片备份恢复
+
+独立 `SRNOS_EEPROM*` 阻塞/非阻塞状态机已完成：16 KiB、两字节地址、分页写和读回校验、分段读、超时/设备级取消。20 组主机套件及专用 Debug/Release 构建通过；板端 20 项检查通过，16 KiB 恢复数据与外部备份逐字节一致，测试前完整 Flash 已恢复并验证一致。详细 SHA、资源和会话结束状态见 [EEPROM 验证记录](Validation/EEPROM-20260928/README.md)。
+
+参数/HostLink/INS 存储尚未迁移。密集 EEPROM 访问触发现有 LIS/SPA 将 I2C BUSY 判作 OFFLINE 的上层策略，结束后恢复 READY；本轮未修改这一耦合逻辑，不能宣称共享服务实时性已通过。
+
+## 2026-09-28 I2C4 周期传感器与后台 EEPROM 调度
+
+实现周期保留槽、后台有界队列和防饥饿分发，FT24C128A 读写/校验均最多 32 B，LIS/SPA 使用 30 ms 完成信号量等待。20 组主机套件、九个父项目构建与专用 Debug/Release 均通过。最终连续 32.864 秒板测 20 项检查通过、整片恢复一致；LIS 约88–93 Hz、SPA约16 Hz，全阶段 READY，无总线错误/超时/恢复。测试前完整原始 Flash 已恢复并全区比对，MCU 运行原固件；GDB/J-Link 仍连接、无新增断点。具体取舍、时序统计、SHA 与未测边界见 [完整记录](Validation/I2C-20260928/README.md)。

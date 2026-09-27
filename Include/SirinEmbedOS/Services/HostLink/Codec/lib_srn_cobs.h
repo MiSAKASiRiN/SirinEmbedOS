@@ -30,6 +30,7 @@ typedef struct {
     uint8_t *rx_cobs_buf;
     size_t rx_cobs_cap;
     size_t rx_cobs_len;
+    uint8_t dropping;
 
     uint8_t *rx_raw_buf;
     size_t rx_raw_cap;

@@ -16,6 +16,8 @@ sirinos_add_firmware(PrototypeBindings "${SIRINEMBEDOS_SOURCE_DIR}/Examples/Mini
     "${SIRINEMBEDOS_SOURCE_DIR}/Examples/PrototypeBindings/bindings.c")
 sirinos_add_firmware(ParameterExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/Parameters/app_main.cpp")
 sirinos_add_firmware(BringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/BringUp/app_main.c")
+sirinos_add_firmware(SensorBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/SensorBringUp/app_main.c")
+sirinos_add_firmware(INSBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/INSBringUp/app_main.c")
 sirinos_add_firmware(RawBinding app.cpp raw_binding.cpp)
 sirinos_add_firmware(AllComponents app.cpp api_surface.cpp)
 target_link_options(AllComponents PRIVATE "LINKER:--no-gc-sections")

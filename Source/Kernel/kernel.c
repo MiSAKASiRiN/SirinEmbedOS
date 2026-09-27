@@ -11,15 +11,41 @@
 #include "SirinEmbedOS/IO/CAN/Router/NTFDCAN_Router.h"
 #include "SirinEmbedOS/IO/CAN/External/EXFDCAN_Router.h"
 #include "SirinEmbedOS/IO/RS485/RS485_Router.h"
-#include "SirinEmbedOS/Devices/IMU/Worker/tskptt_imu.h"
+#include "../Services/INS/ins_internal.h"
+#include "SirinEmbedOS/Services/HostLink/IMUTelemetry.h"
+#include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cmsis_os2.h"
 
+extern void SRNOS_SensorsPrepare(const SRNOS_SensorConfig *);
+extern void SRNOS_BMIWorker(void *);
+extern void SRNOS_LSMWorker(void *);
+extern void SRNOS_EnvironmentWorker(void *);
 extern SRNOS_SystemResult SRNOS_SystemFreeze(const SRNOS_SystemConfig *);
-extern bool SRNOS_BoardIndicatorsPrepare(void);
+extern bool SRNOS_BoardIndicatorsPrepare(bool bringup);
 extern void SRNOS_BoardIndicatorsWorker(void *);
 extern void SRNOS_CAN_PrepareResources(void);
+static SRNOS_IMUSampleObserver app_imu_observer;
+static void *app_imu_user;
+static void observe_imu(SRNOS_SensorId id,const SRNOS_IMUSample *sample,void *user) {
+    (void)user;SRNOS_IMUTelemetryObserve(id,sample,NULL);
+    if(app_imu_observer&&app_imu_observer!=SRNOS_IMUTelemetryObserve) app_imu_observer(id,sample,app_imu_user);
+}
+static bool ins_link_enabled;
+static SRNOS_HostLinkSetupFn app_host_setup;
+static void *app_host_user;
+static srn_link_result_t setup_host(srn_link_t *link,void *user) {
+    (void)user;srn_link_result_t r=SRN_LINK_OK;
+    if(ins_link_enabled) {
+        r=SRNOS_IMUTelemetryRegister(link,NULL);
+        if(r==SRN_LINK_OK)r=SRNOS_INSTelemetryRegister(link,NULL);
+    }
+    if(r==SRN_LINK_OK&&app_host_setup && (!ins_link_enabled ||
+        (app_host_setup!=SRNOS_IMUTelemetryRegister&&app_host_setup!=SRNOS_INSTelemetryRegister)))
+        r=app_host_setup(link,app_host_user);
+    return r;
+}
 static SRNOS_SystemStatus status;
 static osEventFlagsId_t application_ready;
 __attribute__((weak)) void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config) { (void)config; }
@@ -36,7 +62,6 @@ static void application_thread(void *argument)
 {
     (void)argument;
     const SRNOS_SystemConfig *c = SRNOS_SystemGetConfig();
-    configASSERT(SRNOS_BoardIndicatorsPrepare());
     status.native_can_ready = bsp_fdcan_init_all() && bsp_fdcan_start_all();
     configASSERT((osEventFlagsSet(application_ready, 2u) & osFlagsError) == 0u);
     status.parameter_load_status = c->load_parameters ? (int)params_load() : (int)PARAMS_STATUS_OK;
@@ -75,8 +100,9 @@ static const system_thread_t system_threads[] = {
     {"CAN3_TX",Start_CAN_TxRouter,(void *)3,4096,osPriorityHigh,true},
     {"CAN4_RX",Start_EXFDCAN_RxRouter,NULL,4096,osPriorityHigh4,false},
     {"CAN4_TX",Start_EXFDCAN_TxRouter,NULL,4096,osPriorityHigh4,false},
-    {"IMU",TSKPTT_IMU_Task,NULL,2048,osPriorityHigh5,false},
-    {"Indicators",SRNOS_BoardIndicatorsWorker,NULL,1024,osPriorityLow,true},
+    {"BMI",SRNOS_BMIWorker,NULL,2048,osPriorityHigh5,false},
+    {"INS",SRNOS_INSWorker,NULL,3072,osPriorityHigh5,false},
+    {"Indicators",SRNOS_BoardIndicatorsWorker,NULL,1024,osPriorityLow,false},
 };
 static void system_thread_entry(void *arg)
 {
@@ -104,18 +130,23 @@ void SRNOS_KernelStart(void)
     if (draft.logging_enabled) {
         configASSERT(SRNOS_LoggingPrepare(draft.log_backends, SRNOS_SerialGetChannel(draft.log_port)));
     }
+    ins_link_enabled=draft.ins.enabled;app_host_setup=draft.host_link_setup;app_host_user=draft.host_link_user;
     if (draft.host_link_enabled) {
-        configASSERT(SRNOS_HostLinkPrepare(draft.usb_enabled, draft.host_link_setup, draft.host_link_user));
+        configASSERT(SRNOS_HostLinkPrepareEx(draft.usb_enabled, draft.host_link_storage_enabled, draft.diagnostics_enabled, setup_host, NULL));
     }
     if (draft.bind_channels) configASSERT(draft.bind_channels(draft.bind_channels_user));
-    configASSERT(SRNOS_IMU_Prepare());
+    app_imu_observer=draft.sensors.imu_observer;app_imu_user=draft.sensors.imu_observer_user;
+    draft.sensors.imu_observer=observe_imu;draft.sensors.imu_observer_user=NULL;
+    SRNOS_SensorsPrepare(&draft.sensors);
     configASSERT(SRNOS_DiagnosticsPrepare(draft.diagnostics_enabled));
     configASSERT(SRNOS_ParametersFreeze() == PARAMS_STATUS_OK);
     SRNOS_CAN_FreezeConfiguration();
     configASSERT(SRNOS_SystemFreeze(&draft) == SRNOS_SYSTEM_OK);
     status.phase = SRNOS_SYSTEM_CONFIG_FROZEN;
     const SRNOS_SystemConfig *c = SRNOS_SystemGetConfig();
+    SRNOS_INSPrepare(&c->ins);
 
+    configASSERT(SRNOS_BoardIndicatorsPrepare(c->bringup_indicators));
     configASSERT(osKernelInitialize() == osOK);
     application_ready = osEventFlagsNew(NULL);
     configASSERT(application_ready != NULL);
@@ -135,6 +166,8 @@ void SRNOS_KernelStart(void)
         const system_thread_t *t=&system_threads[i];
         make_thread(t->name, system_thread_entry, (void *)t, t->stack, t->priority);
     }
+    if(c->sensors.lsm_enabled) make_thread("LSM", SRNOS_LSMWorker, NULL, 2048, osPriorityHigh5);
+    if(c->sensors.lis_enabled || c->sensors.spa_enabled) make_thread("Environment", SRNOS_EnvironmentWorker, NULL, 2048, osPriorityNormal);
     for (size_t i=0; i<c->thread_count; ++i) {
         const SRNOS_ThreadConfig *t = &c->threads[i];
         make_thread(t->name, configured_application_thread, (void *)t, t->stack_bytes, (osPriority_t)t->priority);

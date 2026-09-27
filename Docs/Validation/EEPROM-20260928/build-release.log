@@ -1,0 +1,1595 @@
+[1/180] Building C object CMakeFiles/sirinos_components.dir/Source/Diagnostics/Watch/omx_debug_watch.c.obj
+[2/180] Building C object CMakeFiles/sirinos_components.dir/Source/Core/Memory/mem_sections.c.obj
+/Users/sirin/CLionProjects/SirinEmbedOS/Source/Core/Memory/mem_sections.c:32:29: warning: array comparison always evaluates to true [-Wtautological-compare]
+   32 |     if (__itcm_text_start__ != __itcm_text_load_start__) {
+      |                             ^
+1 warning generated.
+[3/180] Building C object CMakeFiles/sirinos_components.dir/Source/Algorithms/Math/cmsis_matrix_backend.c.obj
+[4/180] Building C object CMakeFiles/sirinos_components.dir/Source/Core/Fault/Fault.c.obj
+[5/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Algorithms/Power/lib_power_control.cpp.obj
+[6/180] Building C object CMakeFiles/sirinos_components.dir/Source/Diagnostics/Runtime/Trace.c.obj
+[7/180] Building C object CMakeFiles/sirinos_components.dir/Source/Diagnostics/Runtime/Startup.c.obj
+[8/180] Building C object CMakeFiles/sirinos_components.dir/Source/Diagnostics/Runtime/tskptt_hskp_trace.c.obj
+[9/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/fault_handlers.c.obj
+[10/180] Building C object CMakeFiles/sirinos_components.dir/Source/Diagnostics/Time/bsp_dwt.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Diagnostics/Time/bsp_dwt.c:18:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[11/180] Building C object CMakeFiles/sirinos_components.dir/Source/Diagnostics/Runtime/tskptt_hskp.c.obj
+[12/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/memory_early.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/memory_early.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[13/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/Sensors/sensor_codec.c.obj
+[14/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/libc_memory.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/libc_memory.c:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[15/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/Platform.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/Platform.c:11:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[16/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/Sensors/sensor_registers.c.obj
+[17/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/sensor_frames.c.obj
+[18/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/libc_locks.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/libc_locks.c:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[19/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/sensors_board.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/sensors_board.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/sensors_board.h:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[20/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/Sensors/sensors.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/Sensors/sensors.c:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/sensors_board.h:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[21/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/ins_board.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/ins_board.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/tim.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[22/180] Building C object CMakeFiles/sirinos_components.dir/Source/IO/SPI/bsp_spi.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/SPI/bsp_spi.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[23/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Algorithms/Control/pid.cpp.obj
+[24/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Algorithms/Control/control_extensions.cpp.obj
+[25/180] Building C object CMakeFiles/sirinos_components.dir/Source/IO/I2C/bsp_i2c.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/I2C/bsp_i2c.c:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/I2C/bsp_i2c.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[26/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/CAN/External/tskptt_exfdcan_device.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/tskptt_exfdcan_device.cpp:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/EXFDCAN_Router_Internal.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[27/180] Building C object CMakeFiles/sirinos_components.dir/Source/IO/CAN/Native/bsp_fdcan.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Native/bsp_fdcan.c:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/CAN/Native/bsp_fdcan.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[28/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/CAN/External/tskptt_exfdcan_rx_router.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/tskptt_exfdcan_rx_router.cpp:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/EXFDCAN_Router_Internal.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[29/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/EXFDCAN_Router_Internal.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+/Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp:65:64: warning: address of array 'frame->data' will always evaluate to 'true' [-Wpointer-bool-conversion]
+   65 |     if (!exfdcan_channel_to_dev(ch, &dev) || !frame || !frame->data)
+      |                                                        ~~~~~~~~^~~~
+2 warnings generated.
+[30/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/IMU/lib_adp_omximu.cpp.obj
+[31/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/IMU/mahony_filter.c.obj
+[32/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/CAN/Native/bsp_fdcan.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+/Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp:15:24: warning: unused function 'enter_critical' [-Wunused-function]
+   15 | static inline uint32_t enter_critical(void)
+      |                        ^~~~~~~~~~~~~~
+/Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp:22:20: warning: unused function 'exit_critical' [-Wunused-function]
+   22 | static inline void exit_critical(uint32_t ps)
+      |                    ^~~~~~~~~~~~~
+3 warnings generated.
+[33/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/CAN/Router/tskptt_ntfdcan_rx_router.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Router/tskptt_ntfdcan_rx_router.cpp:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/CAN/Native/bsp_fdcan.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[34/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/IMU/BMI088/bsp_bmi088.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/IMU/BMI088/bsp_bmi088.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[35/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/EEPROM/lib_24c02.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/EEPROM/lib_24c02.c:5:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/EEPROM/lib_24c02.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/I2C/bsp_i2c.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[36/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/EEPROM/lib_24c02_bl.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/EEPROM/lib_24c02_bl.c:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/EEPROM/lib_24c02_bl.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/I2C/bsp_i2c.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[37/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/EEPROM/ft24c128a.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/EEPROM/ft24c128a.c:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/I2C/bsp_i2c.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[38/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/MCP2518FD/drv_spi.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/MCP2518FD/drv_spi.c:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/MCP2518FD/drv_spi.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[39/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/CAN/Router/can_router_core.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/Router/can_router_core.cpp:6:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[40/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Motors/C610/lib_adp_dji_c610.cpp.obj
+[41/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Motors/C620/lib_adp_dji_c620.cpp.obj
+[42/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Motors/DM4310/lib_adp_dm_4310.cpp.obj
+[43/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/MCP2518FD/drv_canfdspi_api.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/MCP2518FD/drv_canfdspi_api.c:50:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[44/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Motors/DM4340/lib_adp_dm_4340.cpp.obj
+[45/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Motors/GM6020/lib_adp_dji_gm6020.cpp.obj
+[46/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Motors/LK8016E/lib_adp_lk_mg8016e.cpp.obj
+[47/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/Buzzer/bsp_buzzer.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/Buzzer/bsp_buzzer.c:5:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/Buzzer/bsp_buzzer.h:6:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[48/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/WS2812/bsp_ws2812.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/WS2812/bsp_ws2812.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/WS2812/bsp_ws2812.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[49/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/IMU/quaternion_ekf.cpp.obj
+[50/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/NaviVision/lib_adp_navision.cpp.obj
+[51/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/Supercapacitor/lib_adp_supcap.cpp.obj
+[52/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/WS2812/ws2812_critical.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/WS2812/ws2812_critical.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/WS2812/ws2812_critical.h:10:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[53/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/indicators.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/indicators.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Devices/WS2812/bsp_ws2812.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[54/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/fixed_buses.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/fixed_buses.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/fixed_buses.h:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[55/180] Building C object CMakeFiles/sirinos_components.dir/Source/Devices/H12H/lib_serial_servo_h12h.c.obj
+[56/180] Building CXX object CMakeFiles/sirinos_components.dir/Board/Glue/fixed_resources.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/fixed_resources.cpp:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/fixed_resources.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/IO/CAN/External/EXFDCAN_Router_Internal.h:9:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[57/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/RS485/Modbus/lib_modbus_rtu.cpp.obj
+[58/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/serial_ports.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/serial_ports.c:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/usart.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[59/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Services/Referee/Receiver/tskptt_referee.cpp.obj
+[60/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Referee/Transmitter/tskptt_referee_tx.c.obj
+[61/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Referee/UI/ui_interface.c.obj
+[62/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Referee/startup.c.obj
+[63/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/IO/RS485/tskptt_rs485_router.cpp.obj
+[64/180] Building C object CMakeFiles/sirinos_components.dir/Source/IO/Serial/serial.c.obj
+[65/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Devices/TL42R/lib_rs485_lc_tl42r.cpp.obj
+/Users/sirin/CLionProjects/SirinEmbedOS/Source/Devices/TL42R/lib_rs485_lc_tl42r.cpp:529:12: warning: unused function 'lc_tl42r_write_block' [-Wunused-function]
+  529 | static int lc_tl42r_write_block(lc_tl42r_device_t *dev,
+      |            ^~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+[66/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/RemoteControl/DR16/bsp_dr16.c.obj
+[67/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/RemoteControl/remote_worker.c.obj
+[68/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/RemoteControl/VT03/bsp_vt03.c.obj
+[69/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Referee/referee.c.obj
+[70/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/INS/ins_core.c.obj
+[71/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/RemoteControl/lib_remote_control.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/RemoteControl/lib_remote_control.c:10:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[72/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/INS/ins_service.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/INS/ins_service.c:10:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[73/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/INS/ins_snapshot.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/INS/ins_snapshot.c:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[74/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/ins_telemetry.c.obj
+[75/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Logging/bsp_srn_log.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Logging/bsp_srn_log.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_log.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+/Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Logging/bsp_srn_log.c:314:13: warning: unused function 'srn_swo_write_line' [-Wunused-function]
+  314 | static bool srn_swo_write_line(const char* line, size_t len)
+      |             ^~~~~~~~~~~~~~~~~~
+2 warnings generated.
+[76/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Logging/Worker/tskptt_log.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Logging/Worker/tskptt_log.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/Worker/tskptt_log.h:5:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_log.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[77/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Logging/bsp_srn_debug_port.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Logging/bsp_srn_debug_port.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_debug_port.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[78/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/imu_telemetry.c.obj
+[79/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Logging/logging_service.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Logging/logging_service.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/Worker/tskptt_log.h:5:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_log.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[80/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/Codec/lib_srn_cobs_prot.c.obj
+[81/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/host_link_service.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/HostLink/host_link_service.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_debug_port.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[82/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/Codec/lib_srn_cobs.c.obj
+[83/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Services/Parameters/lib_params_binary.cpp.obj
+[84/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/Parameters/HostLink/tskptt_param_console.c.obj
+[85/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Services/INS/ins_heater.cpp.obj
+[86/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/USB/omx_usb_cdc_channels.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/omx_usb_cdc_channels.c:5:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[87/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/tskptt_host_comm.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/HostLink/tskptt_host_comm.c:11:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[88/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/HostLink/Codec/lib_srn_link.c.obj
+[89/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Services/Parameters/parameter_lock.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Parameters/parameter_lock.cpp:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[90/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/USB/omx_usb_cdc_log_transport.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/omx_usb_cdc_log_transport.c:6:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_log.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[91/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/USB/usb_boot_replay.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usb_boot_replay.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[92/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/USB/omx_usbd_cdc_acm_if.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/omx_usbd_cdc_acm_if.c:1:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_cdc_acm_if.h:31:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Class/CDC_ACM/Inc/usbd_cdc_acm.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_ioreq.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[93/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/USB/usb_service.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usb_service.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_core.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[94/180] Building CXX object CMakeFiles/sirinos_components.dir/Source/Services/Parameters/lib_params.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Parameters/lib_params.cpp:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_debug_port.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[95/180] Building C object CMakeFiles/sirinos_components.dir/Source/Services/USB/usbd_desc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_desc.c:23:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_core.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[96/180] Building C object CMakeFiles/sirinos_components.dir/Board/Glue/usb_device_board.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/usb_device_board.c:23:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[97/180] Building C object CMakeFiles/sirinos_components.dir/ThirdParty/USBDevice/Core/Src/usbd_core.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Src/usbd_core.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_core.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[98/180] Building C object CMakeFiles/sirinos_components.dir/ThirdParty/USBDevice/Core/Src/usbd_ctlreq.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Src/usbd_ctlreq.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_ctlreq.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[99/180] Building C object CMakeFiles/sirinos_components.dir/ThirdParty/USBDevice/Core/Src/usbd_ioreq.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Src/usbd_ioreq.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_ioreq.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[100/180] Building C object CMakeFiles/sirinos_components.dir/srnos_usb/usbd_composite.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/build/EEPROMBringUp-Release/srnos_usb/usbd_composite.c:39:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Class/COMPOSITE/Inc/usbd_composite.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_ioreq.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[101/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/gpio.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/gpio.c:22:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/gpio.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[102/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/main.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/main.c:20:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[103/180] Building C object CMakeFiles/sirinos_components.dir/srnos_usb/usbd_cdc_acm.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/build/EEPROMBringUp-Release/srnos_usb/usbd_cdc_acm.c:59:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Class/CDC_ACM/Inc/usbd_cdc_acm.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_ioreq.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/USBDevice/Core/Inc/usbd_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/USB/usbd_conf.h:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[104/180] Building C object CMakeFiles/SirinEmbedOS.dir/Examples/EEPROMBringUp/app_main.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Examples/EEPROMBringUp/app_main.c:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/I2C/bsp_i2c.h:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[105/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/adc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/adc.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/adc.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[106/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/bdma.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/bdma.c:22:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/bdma.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[107/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/cordic.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/cordic.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/cordic.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[108/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/crc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/crc.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/crc.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[109/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/dma.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/dma.c:22:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/dma.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[110/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/fmac.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/fmac.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/fmac.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[111/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/eth.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/eth.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/eth.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[112/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/fdcan.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/fdcan.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/fdcan.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[113/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/i2c.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/i2c.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/i2c.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[114/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/octospi.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/octospi.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/octospi.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[115/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/sdmmc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/sdmmc.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/sdmmc.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[116/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/spi.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/spi.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/spi.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[117/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/usb_otg.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/usb_otg.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/usb_otg.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[118/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/tim.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/tim.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/tim.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[119/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/stm32h7xx_it.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/stm32h7xx_it.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[120/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/usart.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/usart.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/usart.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[121/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/syscalls.c.obj
+[122/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/stm32h7xx_hal_msp.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/stm32h7xx_hal_msp.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/main.h:30:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[123/180] Building C object Board/CMakeFiles/sirinos_board.dir/Core/Src/stm32h7xx_hal_timebase_tim.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/stm32h7xx_hal_timebase_tim.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[124/180] Building ASM object Board/CMakeFiles/sirinos_board.dir/startup_stm32h723xx.s.obj
+[125/180] Building C object Board/CMakeFiles/sirinos_board.dir/Glue/kernel_board.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Glue/kernel_board.c:4:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[126/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32h7xx.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Core/Src/system_stm32h7xx.c:52:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[127/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c:82:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[128/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c:67:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[129/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c:87:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[130/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc_ex.c:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[131/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c:85:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[132/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc.c:298:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[133/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c:23:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[134/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c:88:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[135/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c:107:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[136/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c:187:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[137/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c:51:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[138/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c:146:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[139/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c:153:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[140/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c:150:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[141/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c:95:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[142/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c:51:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[143/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c:36:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[144/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c:82:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[145/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c:120:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[146/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_crc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_crc.c:46:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[147/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cordic.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cordic.c:139:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[148/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_crc_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_crc_ex.c:33:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[149/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth_ex.c:21:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[150/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_delayblock.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_delayblock.c:51:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[151/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fmac.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fmac.c:212:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[152/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c:323:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[153/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c:154:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[154/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth.c:179:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[155/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c:183:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[156/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_ospi.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_ospi.c:269:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[157/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd_ex.c:36:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[158/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mmc.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mmc.c:303:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[159/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mmc_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mmc_ex.c:37:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[160/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c:25:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[161/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd.c:253:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[162/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c:44:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[163/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.c:24:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[164/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.c:58:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[165/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c:136:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[166/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/kernel.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Kernel/kernel.c:8:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/IO/SPI/bsp_spi.h:7:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[167/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c:42:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[168/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/hooks.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Kernel/hooks.c:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[169/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/list.c.obj
+[170/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/system_config.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Kernel/system_config.c:2:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Include/SirinEmbedOS/Services/Logging/bsp_srn_log.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[171/180] Building C object Board/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c:162:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[172/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c.obj
+[173/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/timers.c.obj
+[174/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/event_groups.c.obj
+[175/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/queue.c.obj
+[176/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/tasks.c.obj
+[177/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/portable/MemMang/heap_5.c.obj
+[178/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/stream_buffer.c.obj
+[179/180] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/__/__/ThirdParty/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c:31:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/CMSIS_RTOS_V2/freertos_os2.h:31:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[180/180] Linking C executable SirinEmbedOS.elf
+Memory region         Used Size  Region Size  %age Used
+         DTCMRAM:        128 KB       128 KB    100.00%
+          RAM_D1:      316672 B       320 KB     96.64%
+          RAM_D2:         10 KB        32 KB     31.25%
+          RAM_D3:         512 B        16 KB      3.12%
+         ITCMRAM:         192 B        64 KB      0.29%
+           FLASH:      177752 B         1 MB     16.95%

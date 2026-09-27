@@ -198,3 +198,7 @@ int8_t DRV_SPI_TransferData(CANFDSPI_MODULE_ID index,
         drv_spi_yield();
     }
 }
+
+void DRV_SPI_GetStatistics(CANFDSPI_MODULE_ID index, bsp_spi_statistics_t *out) {
+    if(index<DRV_SPI_MAX_DEVICES) bsp_spi_get_statistics(&s_slots[index].dev,out);
+}

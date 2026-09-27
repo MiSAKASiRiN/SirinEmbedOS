@@ -6,7 +6,6 @@
 
 #include <stdint.h>
 #include "SirinEmbedOS/IO/SPI/bsp_spi.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,6 +22,7 @@ extern "C" {
 typedef uint8_t CANFDSPI_MODULE_ID;
 #endif
 
+void DRV_SPI_GetStatistics(CANFDSPI_MODULE_ID index, bsp_spi_statistics_t *out);
 int8_t DRV_SPI_AttachDevice(CANFDSPI_MODULE_ID index,
                             bsp_spi_bus_id_t bus_id,
                             GPIO_TypeDef *cs_port,

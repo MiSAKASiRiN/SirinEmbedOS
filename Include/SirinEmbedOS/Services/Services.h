@@ -13,6 +13,7 @@ typedef tskptt_host_comm_project_setup_fn SRNOS_HostLinkSetupFn;
 bool SRNOS_LoggingPrepare(uint32_t backend_mask, SRNOS_SerialChannel *uart_channel);
 bool SRNOS_LoggingStart(void);
 bool SRNOS_HostLinkPrepare(bool enable_usb, SRNOS_HostLinkSetupFn setup, void *user);
+bool SRNOS_HostLinkPrepareEx(bool enable_usb, bool storage, bool stack_scan, SRNOS_HostLinkSetupFn setup, void *user);
 bool SRNOS_HostLinkStart(void);
 /* Called from the SDK startup thread after HAL PCD initialization. */
 bool SRNOS_USBStart(void);

@@ -28,12 +28,18 @@ file(WRITE "${_srnos_usb_build}/usbd_cdc_acm.c" "${_srnos_cdc}")
 set_source_files_properties("${_srnos_usb_build}/usbd_composite.c" PROPERTIES
   COMPILE_OPTIONS "-include;${_srnos_usb_glue}/omx_usb_composite_memcpy.h")
 set(SRNOS_SERVICES_SOURCES
+  "${CMAKE_CURRENT_LIST_DIR}/INS/ins_core.c"
+  "${CMAKE_CURRENT_LIST_DIR}/INS/ins_service.c"
+  "${CMAKE_CURRENT_LIST_DIR}/INS/ins_snapshot.c"
+  "${CMAKE_CURRENT_LIST_DIR}/INS/ins_heater.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/ins_telemetry.c"
   "${CMAKE_CURRENT_LIST_DIR}/Logging/bsp_srn_log.c"
   "${CMAKE_CURRENT_LIST_DIR}/Logging/bsp_srn_debug_port.c"
   "${CMAKE_CURRENT_LIST_DIR}/Logging/Worker/tskptt_log.c"
   "${CMAKE_CURRENT_LIST_DIR}/Logging/logging_service.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/tskptt_host_comm.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/host_link_service.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/imu_telemetry.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/lib_srn_cobs.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/lib_srn_cobs_prot.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/lib_srn_link.c"
@@ -54,6 +60,7 @@ set(SRNOS_SERVICES_SOURCES
   "${_srnos_usb_build}/usbd_composite.c"
   "${_srnos_usb_build}/usbd_cdc_acm.c")
 set(SRNOS_SERVICES_PRIVATE_INCLUDES
+  "${CMAKE_CURRENT_LIST_DIR}/INS"
   "${_srnos_usb_glue}"
   "${_srnos_usb}/Core/Inc"
   "${_srnos_usb}/Class/COMPOSITE/Inc"

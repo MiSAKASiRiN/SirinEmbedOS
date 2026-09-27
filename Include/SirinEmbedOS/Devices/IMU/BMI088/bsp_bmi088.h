@@ -17,6 +17,8 @@ extern "C" {
     {
         float gyro[3];        /* deg/s */
         float accel[3];       /* m/s^2 */
+        int16_t raw_accel[3], raw_gyro[3], raw_temperature;
+        uint64_t acquisition_start_us, acquisition_end_us;
         float temperature;    /* deg C */
     } bmi088_data_t;
 
@@ -50,18 +52,16 @@ extern "C" {
         uint32_t             spi_error_count;
     } bsp_bmi088_health_t;
 
+    /* Completion runs in SPI dispatcher task: only notify, never block. */
+    typedef void (*bsp_bmi088_completion_fn)(void *user);
+
     /**
-     * @brief  初始化 BMI088（阻塞，内部用 SPI blocking + 可选简易校准）
+     * @brief 初始化 BMI088（阻塞寄存器配置，无用户校准）
      */
     bsp_bmi088_status_t BSP_BMI088_Init(bsp_spi_bus_id_t bus_id,
                                         GPIO_TypeDef *acc_cs_port,  uint16_t acc_cs_pin,
                                         GPIO_TypeDef *gyro_cs_port, uint16_t gyro_cs_pin,
-                                        uint8_t do_calib);
-
-    /**
-     * @brief 同步阻塞读一帧数据（供调试、blocking 场景使用）
-     */
-    void BSP_BMI088_ReadBlocking(bmi088_data_t *out);
+                                        bsp_bmi088_completion_fn completion, void *user);
 
     /**
      * @brief 异步开始一次完整采样（acc+gyro+temp）
@@ -80,19 +80,13 @@ extern "C" {
     bsp_bmi088_status_t BSP_BMI088_GetSampleIfReady(bmi088_data_t *out);
 
     /**
-     * @brief 仅重置 BMI088 异步采样的软件状态机
-     *
-     * 不会触发 SPI abort，不会重配共享总线，只在 SPI 总线空闲时
-     * 清除本模块的异步采样状态，供上层协作式恢复使用。
+     * @brief 经共享SPI所有者取消本器件请求，确认结束后重置软件状态。
+     * BUSY表示仍持有缓冲，须等待下一周期重试；不私自重配共享总线。
      */
     bsp_bmi088_status_t BSP_BMI088_ResetAsyncState(void);
 
+    void BSP_BMI088_GetSPIStatistics(bsp_spi_statistics_t *accel, bsp_spi_statistics_t *gyro);
     void BSP_BMI088_GetHealth(bsp_bmi088_health_t *out);
-
-    /**
-     * @brief 老接口兼容：阻塞读一帧
-     */
-    void BMI088_read(float gyro[3], float accel[3], float *temperate);
 
 #ifdef __cplusplus
 }
