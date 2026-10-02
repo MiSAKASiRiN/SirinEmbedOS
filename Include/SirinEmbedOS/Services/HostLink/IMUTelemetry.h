@@ -1,6 +1,6 @@
 #pragma once
 #include "SirinEmbedOS/Devices/Sensors.h"
-#include "SirinEmbedOS/Services/HostLink/tskptt_host_comm.h"
+#include "SirinEmbedOS/Services/HostLink/HostLink.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,7 +11,7 @@ extern "C" {
 #define SRNOS_IMU_TELEMETRY_STATUS_MESSAGE 0x08u
 /* Use as host_link_setup and sensors.imu_observer respectively. Both bindings
  * are declared before freeze. Storage: two static 64-sample queues in D1. */
-srn_link_result_t SRNOS_IMUTelemetryRegister(srn_link_t *link, void *user);
+SRNOS_HostLinkResult SRNOS_IMUTelemetryRegister(SRNOS_HostLinkRegistration *link, void *user);
 void SRNOS_IMUTelemetryObserve(SRNOS_SensorId, const SRNOS_IMUSample *, void *user);
 bool SRNOS_IMUTelemetryEncode(const SRNOS_IMUSample *, uint8_t *out, size_t capacity);
 #ifdef __cplusplus

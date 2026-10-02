@@ -1,0 +1,4 @@
+SRNOS_Params unaligned binary test: PASS
+Persistent C/C++ registry, snapshots, stable IDs, defaults, generations and storage races: PASS
+Parameters definition checks: PASS
+Parameters bounded capacity: PASS

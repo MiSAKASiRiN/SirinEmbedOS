@@ -11,3 +11,12 @@ function(sirinos_add_firmware target)
     set_property(TARGET ${target} APPEND PROPERTY ADDITIONAL_CLEAN_FILES
             "${CMAKE_CURRENT_BINARY_DIR}/${target}.map")
 endfunction()
+
+# SDK validation only. Keep native-kernel test code in a separate translation
+# unit/target so application source files never inherit internal include paths.
+function(_srnos_attach_kernel_test_adapter target source)
+    set(_adapter "${target}_kernel_test_adapter")
+    add_library(${_adapter} OBJECT "${source}")
+    target_link_libraries(${_adapter} PRIVATE sirinos_build_internal)
+    target_sources(${target} PRIVATE $<TARGET_OBJECTS:${_adapter}>)
+endfunction()

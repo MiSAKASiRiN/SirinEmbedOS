@@ -1,0 +1,4 @@
+INS: frames, startup, warmup, fusion, freshness, failover/recovery, six poses and heater protection passed
+INS snapshot: one publisher/four consumers, coherent independent copies and stale invalidation passed
+IMU calibration: validation, serialized persistence, independent failure, startup deadline/wrap, next-boot activation passed
+Static IMU: arbitrary pose, bias, preserved accel, next boot, motion/variance/temperature, stale/NaN/fault, starvation, wrap, lease and partial save passed

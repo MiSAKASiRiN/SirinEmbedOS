@@ -4,8 +4,48 @@
 
 ## Unreleased
 
+- 2026-09-29：以释放 RAM 为目标，将 CAN Router 上下文和 Debug Watch 迁入 ITCM；新增 SRNOS_ITCM_BSS、64 位清零/复制及容量/对齐检查。Release 释放 D1 59904 B、D2 2848 B，ITCM 余 2528 B；heap、线程、DMA/BDMA、协议和 EEPROM 不变。25 套主机、父项目与 Debug/Release 通过；板端启动/软件复位/监测结果见 [记录](Docs/Validation/ITCM-20260929/README.md)，CAN 未短接不做外部吞吐。
+
+- 2026-09-29：按实测提高静态校准陀螺/加速度峰值/温漂拒绝阈值，新增噪声接受及运动拒绝回归；INS/HostLink、结构、Debug/Release通过。两次实板双IMU保存成功，复位加载revision2，保留新固件及EEPROM；不改变遥测，见 [复测](Docs/Validation/StaticThreshold-20260929/README.md)。
+
+- 2026-09-29：完成首次持久化/静态校准板测，参数保存及复位加载、SAVE期间WRITE隔离、CRC与EEPROM恢复通过；静态判定噪声阈值不适配，校准未通过，8路1kHz变量实收约7284标量/s。新增仅EEPROMBringUp的显式主机备份恢复入口，未调整生产算法；最终Minimal Release运行且释放探针。证据见 [板测记录](Docs/Validation/PersistenceBoard-20260929/README.md)。
+
+- 2026-09-29：整理当前文档入口：新增 Docs/README.md 导航和 Docs/Storage.md 持久化总览；补齐 COBS/CRC 帧样例、消息表、CONFIG 01–0A 与 SOURCE V1/V2，澄清记录/参数身份、默认加载和示例开关。同步模块、工具及迁移说明，保留历史板测；只改文档/索引，协议与固件行为不变。 已检查 20 篇文档的 186 个本地链接/锚点、COBS/CRC 样例与字段长度，现有 Codec、参数协议、Storage/EEPROM 主机测试和结构检查通过；未重新编译或烧录固件。
+
+
+- 2026-09-29：实现上位机手动静态 IMU 陀螺零偏校准（任意静止姿态），保留有效加速度校正，约 5 s 观察及异常拒绝后保存单份 EEPROM，新值下次启动生效。新增 CONFIG 0x09/0x0A、完整错误/部分保存状态，复用 HostCmd，无新增线程或动态工作区；验证范围见 `Docs/Validation/StaticIMU-20260929/README.md`，未烧录或实板验证。
+
+
+- 2026-09-28：实现FT24C128A单份CRC32身份/校准/业务参数存储，父项目Persistent与只读Telemetry声明，稳定ID升级及generation/dirty；移除旧24C02依赖。启动2秒加载期间温控继续，校准下次启动应用、无效明确降级；SOURCE V2因08/09已占用改用10–14。无新增生产线程，固定工作区计入map；25套主机、90公共头/156编译单元及闭包、十个父项目固件、结构/命名/第三方哈希和Debug/Release通过。D1剩余约13.7KiB，未缩减线程资源；本轮不烧录，板端掉电/高频组合负载待验证，见 [记录](Docs/Validation/Persistence-20260928/README.md)。
+
+- 2026-09-28：CAN1/CAN3 外接吞吐板测发现并修复 weak 声明导致 RX/TX 通知空实现，增加最终 ELF 强符号回归。完整 INS 负载下合计 6000/8000 帧/s 各 10 秒全部交付，整板 CPU 76.77%/95.21%；过载出现提交背压。24 V/0.091 A 单点 ADC 均值 24.641 V/0.08986 A，电压偏高待核对。23 套主机、父项目矩阵、Debug/Release 通过，恢复正常固件并释放探针；见 [实测记录](Docs/Validation/CAN13-ADC-20260928/README.md)。
+
+- 2026-09-28：按授权完成当前 SRNOS 固件板测，恢复并保留 Minimal Release，释放探针后完成一分钟五流采集。四次完整生命周期窗口零失败，统计增量约 0.99 个百分点、Monitor 约 0.0492%、最长监测临界区 2 µs；ADC 软件注入及 CDC 背压/DTR 重连通过。温稳反复退出、统计余量小列为优化线索，实际 CAN/串口/仪表精度仍待验收。证据见 [SRNOS 板测](Docs/Validation/SRNOSBoard-20260928/README.md)，更新根接入状态与底层开发清单。
+- 板测工程将原生内核/ADC 适配独立为 OBJECT 目标，父应用保持公共 include 隔离。未修改生产运行逻辑、生成边界、线程预算或内存布局。
+
+- 本轮最终验证：23 套主机回归、87 个公共头/151 单元及闭包、十个父项目固件、13 条应用编译命令隔离、110 个 SDK 对象符号、Debug/Release 和结构/第三方哈希通过。SPI/I2C/Serial 统一 SRNOS_NO_WAIT/WAIT_FOREVER，同步消费者保证在途 buffer 生命周期；板端性能待测，未自动烧录。
+
+- 2026-09-28：完成自维护模块 SRNOS 命名及公共依赖隔离。删除旧 API/头路径/兼容入口，HostLink 注册上下文不透明，Logging 取消无效 timeout 参数，SPI 设备与 HAL/供应商/worker 接口私有，矩阵改用 SDK 类型。Platform 完整链接能力保留，应用编译不再得到 RTOS/CMSIS/HAL/Board/Source include；源码破坏性迁移见 [指南](Docs/SDKMigration.md)。
+- HostComm/SPI/I2C/Serial/Indicators 按事件及截止时间等待；HostComm RX 每轮最多 1024 B，CAN RX 最多 32 帧并公平续跑，CAN RX/TX、HostComm/HostCmd、Indicators/Monitor 保持分离。HostLink 活动请求 10 项与 4 项/2 秒重放缓存分离，固定持有一份待发送结果，交付回调锁外执行；长命令与断连不重复执行业务。
+- SPI/I2C 使用预留—复制—发布槽生命周期，修复复制期间取消确认；Serial 总期限覆盖锁竞争，日志运行期耗尽不退化为直接输出，IMU/INS 遥测改逐条短快照。保持线协议、EEPROM 格式、采样频率、硬件时序、线程优先级和默认栈。静态 D1 同步/事务状态及最终构建资源见 [验证记录](Docs/Validation/SRNOSBoundary-20260928/README.md)。本轮没有烧录，开销与真实负载验收待完成。
+
+- 2026-09-28：补齐父项目线程建立与管理文档：两种创建路径、句柄/参数所有权、初始化状态、协作回收、延时/通知/同步及原生 API 迁移；同步根 README、Kernel、Minimal、开发约定与 AGENTS。仅文档变更，未改变运行行为或烧录。 文档中根 C++17 / Kernel C11 示例语法及本地链接检查通过。
+
+- 2026-09-28：完成托管任务/SystemMonitor 板端验证；修复 ADC BDMA READY/EN 停止确认、主机 SAMPLE 消息号；优化循环统计热点并新增生命周期/CPU 对照/CDC/ADC 注入板测。结果及边界见 Docs/Validation/ManagedTasksBoard-20260928。
+
+- 2026-09-28：父项目线程合同从 entry 切换为 init/step/cleanup；增加不透明生命周期句柄、协作停止/删除、时间/同步接口及默认 32 KiB 有界池。全部 SDK worker 接入统一外层循环并以 SRNOS_ 命名，保持优先级/栈及私有等待；增加低干扰循环统计、0x0003 遥测和 JSONL，容量 8→12。旧 entry 不兼容；生成代码和第三方内核未改动。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。
+
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。22组主机、Debug/Release、九个父项目构建及结构检查通过；见Docs/Validation/SystemMonitor-20260928，未烧录/板测。
+
+
+- 2026-09-28：板级支撑整理为 Support/System、IO、Devices、USB；指示器策略归服务，USB 准备和 MCP 默认配置收拢，蜂鸣器/WS2812 固定硬件宏私有化。保留生成边界及现有时序/调度/内存合同；21 组主机、九个父项目目标、Minimal/Board/EEPROMBringUp 构建通过，未生成/烧录/板测。详见 Docs/Validation/BoardSupport-20260928/README.md。
+
 ### 2026-09-28
 
+- 新增 `Board/generate.py` 系统调用入口，动态定位当前 checkout 的 IOC 绝对路径，经 CubeMX `-q` 生成；自动保留 Board 快照、日志和内容变化清单，核对生成成功及三处 I2C 时序。AGENTS.md 固化生成流程与相对路径报错经验；不自动构建或烧录。
+- 按用户要求用 STM32CubeMX 6.18.1 `-q` 脚本执行 `project generate`，生成成功；与生成前快照相比，仅 `Board/Core/Src/i2c.c` 的 TIMING 从旧值更新为 `0x10C7182D`，所有 USER CODE 和其余 Board 文件保持一致。新增 Board 生成说明，时序检查覆盖 IOC/生成代码/Glue 三者一致；验证见 `Docs/Validation/CubeMX-20260928/README.md`，本轮未烧录。
+- 用户要求的全仓库基线已提交为 `ebef330`，随后将 I2C4 提升至 400 kHz Fast mode：IOC 与 Glue 时序同步，生成文件仅 USER CODE 接入，启动检查固定 PLL3R/滤波配置，未执行 CubeMX generate。
+- 保留原队列、期限及 EEPROM 32 B 分段；Debug/Release、20 组主机套件、九个父项目构建和时序检查通过。21 项板测通过，数字 SCL 约 370 kHz，整片写含校验 5.12 秒/读 1.03 秒，压力下 LIS约97–99 Hz/SPA约16 Hz，无总线错误或超时。验证应用新增显式保留数据命令，测试后 EEPROM 与固件未恢复，MCU 继续运行；模拟边沿、掉电/断线未验收。详见 `Docs/Validation/I2C400-20260928/README.md`。
 - I2C4 原回调线程改为 High6/3 KiB 唯一分发者：LIS/SPA 保留槽、后台两槽、周期优先与后台防饥饿、64 B 事务上限、排队/活动期限、完成信号量及按请求取消。启动同步预算增加 512 B，未增加生产线程或改变 IOC/MPU/链接段。
 - FT24C128A 读/写/校验统一最多 32 B，保留 64 B 页边界；LIS/SPA 改用 30 ms 排队完成等待。20 组主机套件、九个父项目构建及 Debug/Release 通过；32.864 秒整片并发板测 20 项通过并恢复，LIS约88–93 Hz/SPA约16 Hz，无离线或总线错误。模块 README/CHANGELOG 已同步，详见 `Docs/Validation/I2C-20260928/README.md`。
 
@@ -98,7 +138,7 @@
 - 整合三路原生 CAN、外置 CAN、SPI/I2C、IMU/EEPROM、板级指示器和诊断。默认集成硬件访问能力，不自动执行电机使能或业务运动。FatFs、LwIP 未迁入。
 - Serial 成为 UART 的唯一 HAL/DMA/回调所有者，协议服务和原始通道通过初始化声明获得独占资源；普通 UART 默认未绑定。DR16、VT03、裁判、H12H、日志按通道拆分，UART7 保持固定 RS485 总线。端口参数、owner 和缓冲预算冻结，错误恢复不改变用途。
 - 正常日志改用 Serial/USB sink，不再复位 USART1 或调用 Emergency。调度前日志仅捕获到有界 RAM 启动缓冲，避免触发 FreeRTOS 尚未就绪的临界区；stdio 明确提供正常输出和失败返回策略。
-- 参数注册表初始化后冻结，默认只读，只有显式 `PARAMS_MUTABLE_BUSINESS` 的业务值可远程写入；系统结构配置不进入主机可写表。新增受锁保护的标量和一致快照、先校验后原子应用的批量写入。持久化加载完整验证后仅更新可写业务值，失败保留当前值；默认启动加载先于 USB 接收主机命令。
+- 参数注册表初始化后冻结，默认只读，只有显式 `SRNOS_PARAMETERS_MUTABLE_BUSINESS` 的业务值可远程写入；系统结构配置不进入主机可写表。新增受锁保护的标量和一致快照、先校验后原子应用的批量写入。持久化加载完整验证后仅更新可写业务值，失败保留当前值；默认启动加载先于 USB 接收主机命令。
 - 迁入固定 AL94 USB Composite **1.0.3** 的 Core/COMPOSITE/CDC_ACM，CDC0 用于日志、CDC1 用于 HostLink；保留 vendor 原文、许可和哈希，原 descriptor 补丁由构建目录派生。SDK glue 补齐 PA11/PA12，复用生成的 PCD。CDC class 使用静态存储，移除未使用的 libc 分配别名，不增加其他 USB class。
 - Fault 向量、retained record、HSKP/Debug Watch 和 MPU/Cache 专用段接入 SDK；基础 API 更名不改变 Fault v2 二进制布局。默认紧急输出只保留 RAM 记录，可在初始化时显式预留；不自动占用串口。
 - 最终链接采用 `Board/Linker/SirinEmbedOS.ld`，普通 data/TLS/BSS 放 D1，DTCM 保留热数据、RTOS heap 和 MSP；加入 D2 DMA/Watch/retained、D3 BDMA、ITCM 复制和独立 libc arena。Picolibc 静态递归锁接入 FreeRTOS，IRQ 不允许动态分配；生成基线文件保留原位置。

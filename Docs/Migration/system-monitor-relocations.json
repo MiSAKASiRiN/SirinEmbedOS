@@ -1,0 +1,21 @@
+{
+  "Include/SirinEmbedOS/Diagnostics/Runtime/tskptt_hskp.h": [
+    "Include/SirinEmbedOS/Services/SystemMonitor.h",
+    "Source/Diagnostics/Runtime/runtime_internal.h"
+  ],
+  "Include/SirinEmbedOS/Diagnostics/Runtime/tskptt_hskp_wire.h": [
+    "Include/SirinEmbedOS/Services/HostLink/SystemMonitorTelemetry.h"
+  ],
+  "Source/Diagnostics/Runtime/tskptt_hskp.c": [
+    "Source/Services/SystemMonitor/monitor_core.c",
+    "Source/Services/SystemMonitor/monitor_service.c",
+    "Source/Services/SystemMonitor/monitor_snapshot.c",
+    "Source/Services/HostLink/system_monitor_telemetry.c"
+  ],
+  "Source/Diagnostics/Runtime/tskptt_hskp_internal.h": [
+    "Source/Diagnostics/Runtime/runtime_internal.h"
+  ],
+  "Source/Diagnostics/Runtime/tskptt_hskp_trace.c": [
+    "Source/Diagnostics/Runtime/runtime_trace.c"
+  ]
+}

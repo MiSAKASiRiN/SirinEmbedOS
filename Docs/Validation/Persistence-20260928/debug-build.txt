@@ -1,0 +1,21 @@
+[1/2] Building CXX object CMakeFiles/sirinos_components.dir/Source/Services/Parameters/Parameters.cpp.obj
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Parameters/Parameters.cpp:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Source/Services/Logging/debug_port_internal.h:3:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Core/Inc/stm32h7xx_hal_conf.h:246:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:27:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:29:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:164:
+In file included from /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h:230:
+/Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:88:49: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+   88 |   extern void ExitRun0Mode(void) __attribute__((optimize("Os")));
+      |                                                 ^~~~~~~~~~~~~~
+1 warning generated.
+[2/2] Linking C executable SirinEmbedOS.elf
+Memory region         Used Size  Region Size  %age Used
+         DTCMRAM:        128 KB       128 KB    100.00%
+          RAM_D1:      313568 B       320 KB     95.69%
+          RAM_D2:        9696 B        32 KB     29.59%
+          RAM_D3:         544 B        16 KB      3.32%
+         ITCMRAM:         224 B        64 KB      0.34%
+           FLASH:      276456 B         1 MB     26.36%

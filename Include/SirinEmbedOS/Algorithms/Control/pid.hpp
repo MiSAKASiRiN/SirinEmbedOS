@@ -1,9 +1,9 @@
-#ifndef OMX_LIB_CONTROLS_PID_HPP
-#define OMX_LIB_CONTROLS_PID_HPP
+#ifndef SRNOS_CONTROL_PID_HPP
+#define SRNOS_CONTROL_PID_HPP
 
 #include "SirinEmbedOS/Algorithms/Math/signal.hpp"
 
-namespace omx::control {
+namespace SRNOS::Control {
 
 enum class PidForm {
     Positional,
@@ -112,11 +112,11 @@ private:
     float integral_ {0.0f};
     float controller_output_ {0.0f};
     float tracked_output_ {0.0f};
-    algo::FirstOrderLowPass derivative_filter_ {};
-    algo::FirstOrderLowPass output_filter_ {};
-    algo::SlewRateLimiter slew_limiter_ {};
+    SRNOS::Math::FirstOrderLowPass derivative_filter_ {};
+    SRNOS::Math::FirstOrderLowPass output_filter_ {};
+    SRNOS::Math::SlewRateLimiter slew_limiter_ {};
 };
 
-} // namespace omx::control
+} // namespace SRNOS::Control
 
 #endif

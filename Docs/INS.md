@@ -1,6 +1,6 @@
 # INS 服务合同
 
-INS 是 SDK 默认服务，默认采集 BMI088、LSM6DS3、LIS2MDL、SPA06。两个六轴共同驱动一个 Mahony 状态；磁力计与气压计仅发布测量，不参与航向/高度解算。用户校准、自动零偏标定、EEPROM、速度/位置积分尚未实现。温补在本阶段仅指恒温加热。
+INS 是 SDK 默认服务，默认采集 BMI088、LSM6DS3、LIS2MDL、SPA06。两个六轴共同驱动一个 Mahony 状态；磁力计与气压计仅发布测量，不参与航向/高度解算。已支持用户提供的双 IMU 校准值保存、启动加载与校正；已支持手动触发的任意姿态静止陀螺零偏校准；六面/加速度标定和速度/位置积分尚未实现。温补在本阶段仅指恒温加热。
 
 旧 `lib_imu/lib_ins` 全局状态、方向预设、旧融合 worker、校准/持久化及两套温控已删除；没有旧服务选择接口。独立的 quaternion EKF 数学组件和外置 OMX IMU CAN 协议适配保留，它们不参与本服务。
 
@@ -35,7 +35,7 @@ void controller_cycle(void) {
 
 ## 坐标和单位
 
-板体系与机器人系均为右手 X 前、Y 左、Z 上。水平静止时物理重力为 −Z，加速度计比力为 +Z。固定板内旋转在私有 `Board/Glue/sensor_frames.c` 中实现，应用没有覆盖入口：
+板体系与机器人系均为右手 X 前、Y 左、Z 上。水平静止时物理重力为 −Z，加速度计比力为 +Z。固定板内旋转在私有 `Board/Support/Devices/sensor_frames.c` 中实现，应用没有覆盖入口：
 
 | 器件 | 传感器到板体系 |
 |---|---|
@@ -47,7 +47,7 @@ void controller_cycle(void) {
 
 姿态为 Hamilton `[w,x,y,z]`、机器人到世界的主动旋转；世界 Z 向上，初始 yaw=0，仅为相对航向。欧拉角 `[roll,pitch,yaw]` 使用 `Rz(yaw) Ry(pitch) Rx(roll)`，单位 rad；pitch 接近 ±π/2 时欧拉角有奇异性，控制优先使用四元数。四元数在连续运行期间选择与前一发布点积为正的符号；全部六轴失效后重新建立航向会增加 epoch。
 
-加速度单位 m/s²，包含重力对应的比力；角速度 rad/s，磁场 µT，压力 Pa，温度 °C。采集时间是 DWT 主控事务起止时间，不是芯片内部精确采样时间。未实施用户校准，`UNCALIBRATED` 和 `RELATIVE_HEADING` 始终明确报告。
+加速度单位 m/s²，包含重力对应的比力；角速度 rad/s，磁场 µT，压力 Pa，温度 °C。采集时间是 DWT 主控事务起止时间，不是芯片内部精确采样时间。有效校准记录在启动后应用；参与融合的任一源无有效记录时报告 `UNCALIBRATED`，`RELATIVE_HEADING` 始终保留。gyro-only 校准记录有效不表示完成加速度多姿态标定。
 
 ## 输入、调度和启动
 
@@ -90,8 +90,10 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_telemetry.py \
 
 端口为此前本机 CDC1，执行前核对。加上 `bmi lsm` 可同时订阅原始流；`--json` 输出每秒完整机器可读状态和每十秒采集/接收速率。未就绪时无姿态事件，状态查询仍报告进度。INS 默认自动注册五条流，应用的 HostLink setup 与样本观察回调仍可附加。
 
-INSBringUp 使用正常 API，每秒日志和调试快照，无周期全任务栈扫描，启动音与黄色第一灯 1 Hz 心跳保留。BringUp 关闭加热并观测正式 INS；SensorBringUp 关闭融合而保持统一温控。所有默认路径禁用参数自动加载和 HostLink LOAD/SAVE；EEPROM 驱动尚未适配。
+INSBringUp 使用正常 API，每秒日志和调试快照，无周期全任务栈扫描，启动音与黄色第一灯 1 Hz 心跳保留。BringUp 关闭加热并观测正式 INS；SensorBringUp 关闭融合而保持统一温控。SDK 默认启用持久化加载与业务参数 SAVE/LOAD；这些观测示例可显式关闭业务参数加载，但 IMU 校准仍由独立 Storage 启动路径加载。校准失败继续采样和融合并标记 UNCALIBRATED/DEGRADED。
 
 逐样本保存可用 `imu_capture.py --port CDC1_PATH --streams bmi lsm ins mag pressure --warmup 120 --duration 600 --output captures/ins-static-01`；监视器终端摘要不等于完整数据。模块分工、接入示例及采集说明见 [INS README](../Source/Services/INS/README.md)，模块变更见 [INS CHANGELOG](../Source/Services/INS/CHANGELOG.md)。
 
 协议、缓存与 CLI 见 [HostLink](HostLink.md)，分层验证与板测限制见 [Validation](Validation.md)。
+
+手动校准命令、拒绝条件、保存与下次启动合同见 [INS 静态校准](../Source/Services/INS/README.md#手动静态校准)。不会在融合循环中自动学习零偏。

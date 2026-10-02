@@ -1,5 +1,5 @@
-#ifndef SIRINOS_ENDIAN_HPP
-#define SIRINOS_ENDIAN_HPP
+#ifndef SRNOS_ENDIAN_HPP
+#define SRNOS_ENDIAN_HPP
 
 #include <cstddef>
 #include <cstdint>

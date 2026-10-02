@@ -1,9 +1,9 @@
-#ifndef OMX_LIB_ALGOS_ANGLE_HPP
-#define OMX_LIB_ALGOS_ANGLE_HPP
+#ifndef SRNOS_MATH_ANGLE_HPP
+#define SRNOS_MATH_ANGLE_HPP
 
 #include <cmath>
 
-namespace algo {
+namespace SRNOS::Math {
 
 constexpr float kPi = 3.14159265358979323846f;
 constexpr float kTwoPi = 2.0f * kPi;
@@ -38,6 +38,6 @@ inline float shortestAngularDistance(float from,
     return wrapPeriodic(to - from, period);
 }
 
-} // namespace algo
+} // namespace SRNOS::Math
 
 #endif

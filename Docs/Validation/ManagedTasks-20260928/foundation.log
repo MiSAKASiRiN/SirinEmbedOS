@@ -1,0 +1,3 @@
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/ManagedTasks-Debug/SirinEmbedOS.elf
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/ManagedTasks-Release/SirinEmbedOS.elf
+PASS: foundation memory, TLS, libc arena, retained sections and exception vectors: build/ManagedTasks-EEPROM/SirinEmbedOS.elf

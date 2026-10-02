@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "SirinEmbedOS/Kernel/Thread.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,7 +40,9 @@ SRNOS_SerialChannel *SRNOS_SerialGetChannel(SRNOS_SerialPortId);
 const SRNOS_SerialConfig *SRNOS_SerialGetConfig(const SRNOS_SerialChannel *);
 /* One protocol/service owner per channel, claimed during configuration only. */
 SRNOS_SerialStatus SRNOS_SerialClaim(SRNOS_SerialChannel *, const void *owner);
-/* All I/O is task-only. Timeouts in ms; 0 polls, UINT32_MAX waits indefinitely.
+/* All I/O is task-only. Timeouts in ms; SRNOS_NO_WAIT polls immediately,
+ * SRNOS_WAIT_FOREVER removes the caller's waiting deadline.
+ * Finite waits are <= INT32_MAX; one timeout includes lock and operation.
  * Read copies up to capacity; Write copies the whole packet or accepts nothing.
  * Flush waits for UART TC, not DMA completion; a prior TX error is reported. */
 SRNOS_SerialStatus SRNOS_SerialRead(SRNOS_SerialChannel *, void *, size_t, size_t *, uint32_t);
@@ -59,7 +62,9 @@ typedef struct {
  * A timeout before TX completion schedules abort/drain; new sends return STATE
  * until cleanup completes. A timeout cannot undo bytes already on the wire.
  * No matcher: collect until silence (minimum 2 ms scheduling granularity).
- * silence_us also enforces a minimum bus-idle interval before transmission. */
+ * silence_us also enforces a minimum bus-idle interval before transmission.
+ * queue_timeout_ms covers lock, prior TX drain, silence, enqueue and this TX TC;
+ * response_timeout_ms begins after TC. Both use the same finite-wait limit. */
 SRNOS_SerialStatus SRNOS_SerialTransceive(SRNOS_SerialChannel *, const SRNOS_SerialTransaction *, size_t *);
 SRNOS_SerialStatus SRNOS_SerialGetStats(SRNOS_SerialChannel *, SRNOS_SerialStats *);
 #ifdef __cplusplus

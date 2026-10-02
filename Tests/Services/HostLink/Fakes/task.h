@@ -1,5 +1,5 @@
-#ifndef TEST_TASK_H
-#define TEST_TASK_H
+#ifndef SRNOS_TEST_HOST_LINK_TASK_H
+#define SRNOS_TEST_HOST_LINK_TASK_H
 
 #include "FreeRTOS.h"
 
@@ -15,4 +15,4 @@ BaseType_t xTaskNotifyWait(uint32_t clear_on_entry,
                            TickType_t timeout);
 void xTaskNotifyGive(TaskHandle_t task);
 
-#endif /* TEST_TASK_H */
+#endif /* SRNOS_TEST_HOST_LINK_TASK_H */

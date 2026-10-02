@@ -1,5 +1,5 @@
-#ifndef OMX_LIB_CONTROLS_EXTENSIONS_HPP
-#define OMX_LIB_CONTROLS_EXTENSIONS_HPP
+#ifndef SRNOS_CONTROL_EXTENSIONS_HPP
+#define SRNOS_CONTROL_EXTENSIONS_HPP
 
 #include <array>
 
@@ -7,7 +7,7 @@
 #include "SirinEmbedOS/Algorithms/Control/pid.hpp"
 #include "SirinEmbedOS/Algorithms/Math/signal.hpp"
 
-namespace omx::control {
+namespace SRNOS::Control {
 
 struct FuzzySchedulerConfig {
     PidGains base_gains {};
@@ -63,9 +63,9 @@ public:
 
 private:
     FeedforwardConfig config_ {};
-    algo::OlsWindow<5> reference_history_ {};
-    algo::OlsWindow<5> derivative_history_ {};
-    algo::FirstOrderLowPass derivative_filter_ {};
+    SRNOS::Math::OlsWindow<5> reference_history_ {};
+    SRNOS::Math::OlsWindow<5> derivative_history_ {};
+    SRNOS::Math::FirstOrderLowPass derivative_filter_ {};
     bool configured_ {false};
 };
 
@@ -85,9 +85,9 @@ public:
 
 private:
     LinearDisturbanceObserverConfig config_ {};
-    algo::OlsWindow<5> measurement_history_ {};
-    algo::OlsWindow<5> derivative_history_ {};
-    algo::FirstOrderLowPass output_filter_ {};
+    SRNOS::Math::OlsWindow<5> measurement_history_ {};
+    SRNOS::Math::OlsWindow<5> derivative_history_ {};
+    SRNOS::Math::FirstOrderLowPass output_filter_ {};
     bool configured_ {false};
 };
 
@@ -115,6 +115,6 @@ private:
     bool configured_ {false};
 };
 
-} // namespace omx::control
+} // namespace SRNOS::Control
 
 #endif

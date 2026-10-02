@@ -1,0 +1,3 @@
+PASS: startup barriers accept combined readiness, reject missing bits/errors, retain wait-all/no-clear
+PASS: real managed lifecycle, copied descriptors, init/step failure, cooperative stop, timeout, joins, generation reuse, pool exhaustion, sync ownership and ISR boundaries
+PASS: cycle wall duration, actual window, signed jitter, release lateness, misses/skips, event validity, generation and counter wrap

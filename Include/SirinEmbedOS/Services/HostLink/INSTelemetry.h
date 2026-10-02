@@ -1,6 +1,6 @@
 #pragma once
 #include "SirinEmbedOS/Services/INS.h"
-#include "SirinEmbedOS/Services/HostLink/tskptt_host_comm.h"
+#include "SirinEmbedOS/Services/HostLink/HostLink.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,7 +11,7 @@ extern "C" {
 #define SRNOS_INS_ATTITUDE_RECORD_BYTES 108u
 #define SRNOS_INS_MAGNETIC_RECORD_BYTES 52u
 #define SRNOS_INS_PRESSURE_RECORD_BYTES 44u
-srn_link_result_t SRNOS_INSTelemetryRegister(srn_link_t *,void *);
+SRNOS_HostLinkResult SRNOS_INSTelemetryRegister(SRNOS_HostLinkRegistration *,void *);
 /* INS worker only: bounded copies, never encoding or transport I/O. */
 void SRNOS_INSTelemetryObserve(const SRNOS_INSSnapshot *);
 /* Portable wire encoders; capacity includes one record only. */

@@ -18,6 +18,9 @@ sirinos_add_firmware(ParameterExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/Param
 sirinos_add_firmware(BringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/BringUp/app_main.c")
 sirinos_add_firmware(SensorBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/SensorBringUp/app_main.c")
 sirinos_add_firmware(INSBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/INSBringUp/app_main.c")
+sirinos_add_firmware(EEPROMBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/EEPROMBringUp/app_main.c")
+_srnos_attach_kernel_test_adapter(EEPROMBringUpExample
+    "${SIRINEMBEDOS_SOURCE_DIR}/Examples/EEPROMBringUp/kernel_test_adapter.c")
 sirinos_add_firmware(RawBinding app.cpp raw_binding.cpp)
 sirinos_add_firmware(AllComponents app.cpp api_surface.cpp)
 target_link_options(AllComponents PRIVATE "LINKER:--no-gc-sections")

@@ -20,8 +20,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CONF__H__
-#define __USBD_CONF__H__
+#ifndef SRNOS_USB_DEVICE_CONFIG_H
+#define SRNOS_USB_DEVICE_CONFIG_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -30,7 +30,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
 #include <string.h>
-#include "main.h"
+#include "stm32h7xx_hal.h"
 
 /* USER CODE BEGIN INCLUDE */
 
@@ -79,8 +79,8 @@
 
 /****************************************/
 /* #define for FS and HS identification */
-#define DEVICE_FS 		0
-#define DEVICE_HS 		1
+#define SRNOS_USB_SPEED_FS 		0
+#define SRNOS_USB_SPEED_HS 		1
 
 /**
   * @}
@@ -167,6 +167,6 @@
 }
 #endif
 
-#endif /* __USBD_CONF__H__ */
+#endif /* SRNOS_USB_DEVICE_CONFIG_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

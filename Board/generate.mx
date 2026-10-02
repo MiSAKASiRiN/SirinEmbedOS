@@ -1,0 +1,5 @@
+# generate.mx
+config load /Users/sirin/CLionProjects/SirinEmbedOS/Board/OMNICTL2_3.ioc
+project generate
+exit
+

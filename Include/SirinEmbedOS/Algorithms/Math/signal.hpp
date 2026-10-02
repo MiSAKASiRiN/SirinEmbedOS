@@ -1,12 +1,12 @@
-#ifndef OMX_LIB_ALGOS_SIGNAL_HPP
-#define OMX_LIB_ALGOS_SIGNAL_HPP
+#ifndef SRNOS_MATH_SIGNAL_HPP
+#define SRNOS_MATH_SIGNAL_HPP
 
 #include <algorithm>
 #include <cmath>
 
 #include "SirinEmbedOS/Algorithms/Math/angle.hpp"
 
-namespace algo {
+namespace SRNOS::Math {
 
 class FirstOrderLowPass {
 public:
@@ -113,6 +113,6 @@ private:
     float width_ {0.0f};
 };
 
-} // namespace algo
+} // namespace SRNOS::Math
 
 #endif

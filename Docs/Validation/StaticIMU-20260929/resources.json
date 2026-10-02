@@ -1,0 +1,66 @@
+{
+  "Debug": {
+    "example": "Minimal",
+    "elf_sha256": "632cdbfd4cb93e359f54400b3d7918f48586c2190fbcc445433b87e406792989",
+    "regions_used_bytes": {
+      "DTCMRAM": 131072,
+      "RAM_D1": 314208,
+      "RAM_D2": 9696,
+      "RAM_D3": 544,
+      "ITCMRAM": 224,
+      "FLASH": 280808
+    },
+    "d1_remaining_bytes": 13472,
+    "new_accumulator_bytes": 560,
+    "new_status_bytes": 64,
+    "new_job_counter_bytes": 4,
+    "new_protocol_permission_bytes": 1,
+    "stack_frames_bytes_not_call_chain_bound": {
+      "SRNOS_IMUCalibrationGetStaticStatus": 24,
+      "SRNOS_IMUCalibrationRunStatic": 104,
+      "finish": 32,
+      "thermal_health": 48,
+      "observe": 224,
+      "SRNOS_IMUCalibrationProtocolRegister": 32,
+      "command": 112,
+      "status": 96,
+      "run": 120,
+      "encode": 64
+    },
+    "heap_reserved_bytes": 196608,
+    "rtos_free_runtime": "not measured"
+  },
+  "Release": {
+    "example": "Minimal",
+    "elf_sha256": "44d517cda0405be7ee90150c9c4cd7e08e45089987c9b28ecdd2bd2507189764",
+    "regions_used_bytes": {
+      "DTCMRAM": 131072,
+      "RAM_D1": 314240,
+      "RAM_D2": 9696,
+      "RAM_D3": 544,
+      "ITCMRAM": 192,
+      "FLASH": 200528
+    },
+    "d1_remaining_bytes": 13440,
+    "new_accumulator_bytes": 560,
+    "new_status_bytes": 64,
+    "new_job_counter_bytes": 4,
+    "new_protocol_permission_bytes": 1,
+    "stack_frames_bytes_not_call_chain_bound": {
+      "SRNOS_IMUCalibrationGetStaticStatus": 16,
+      "SRNOS_IMUCalibrationRunStatic": 72,
+      "remaining": 16,
+      "finish": 16,
+      "thermal_health": 48,
+      "observe": 200,
+      "SRNOS_IMUCalibrationProtocolRegister": 32,
+      "command": 96,
+      "status": 88,
+      "run": 88,
+      "encode": 56,
+      "SRNOS_Endian_StoreLE32": 0
+    },
+    "heap_reserved_bytes": 196608,
+    "rtos_free_runtime": "not measured"
+  }
+}

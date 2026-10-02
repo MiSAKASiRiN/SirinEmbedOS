@@ -9,7 +9,7 @@ static int kernel;
 static uintptr_t owner;
 static bool stalled, nack, protected_write, quarantine, locked;
 static unsigned busy_attempts;
-static struct { bsp_i2c_device_t *dev; uint16_t addr; uint8_t *rx; size_t len; } active;
+static struct { SRNOS_I2CDevice *dev; uint16_t addr; uint8_t *rx; size_t len; } active;
 
 uint32_t HAL_GetTick(void) { return tick; }
 uint32_t __get_PRIMASK(void) { return irq; }
@@ -24,38 +24,48 @@ static void advance(void) {
     if (!active.dev || stalled) return;
     if (!nack) {
         if (active.rx) memcpy(active.rx,chip+active.addr,active.len);
-        else if (!protected_write) memcpy(chip+active.addr,tx_copy,active.len);
+        else if (!protected_write) {
+#ifdef SRNOS_EEPROM_TEST_WRITE
+            SRNOS_EEPROM_TEST_WRITE(chip+active.addr,tx_copy,active.len);
+#else
+            memcpy(chip+active.addr,tx_copy,active.len);
+#endif
+        }
     }
-    active.dev->completed_status=nack?BSP_I2C_ERROR:BSP_I2C_OK;
+    active.dev->completed_status=nack?SRNOS_I2C_ERROR:SRNOS_I2C_OK;
     active.dev->pending=0; active.dev=NULL;
 }
-void osDelay(uint32_t ticks) { assert(ticks==1); ++delay_calls; advance(); }
-bsp_i2c_status_t bsp_i2c_device_init(bsp_i2c_device_t *dev,bsp_i2c_bus_id_t bus,uint16_t addr) {
-    assert(bus==0 && addr==0x50); memset(dev,0,sizeof(*dev)); return BSP_I2C_OK;
+void osDelay(uint32_t ticks) { assert(ticks==1); ++delay_calls; advance();
+#ifdef SRNOS_EEPROM_TEST_DELAY
+    SRNOS_EEPROM_TEST_DELAY();
+#endif
 }
-static bsp_i2c_status_t start(bsp_i2c_device_t *dev,uint16_t addr,uint16_t width,
+SRNOS_I2CStatus SRNOS_I2CDeviceInit(SRNOS_I2CDevice *dev,SRNOS_I2CBusId bus,uint16_t addr) {
+    assert(bus==0 && addr==0x50); memset(dev,0,sizeof(*dev)); return SRNOS_I2C_OK;
+}
+static SRNOS_I2CStatus start(SRNOS_I2CDevice *dev,uint16_t addr,uint16_t width,
                               uint8_t *rx,const uint8_t *tx,size_t len) {
     assert(width==2 && len && len<=32 && (size_t)addr+len<=sizeof(chip));
-    if(quarantine) return BSP_I2C_ERROR;
-    if(locked || busy_attempts) { if(busy_attempts) --busy_attempts; return BSP_I2C_BUSY; }
+    if(quarantine) return SRNOS_I2C_ERROR;
+    if(locked || busy_attempts) { if(busy_attempts) --busy_attempts; return SRNOS_I2C_BUSY; }
     assert(!active.dev);
     if(tx) { assert(addr/64==(addr+len-1)/64); memcpy(tx_copy,tx,len); ++writes; }
     ++transfers; active.dev=dev; active.addr=addr; active.rx=rx; active.len=len;
-    dev->pending=1;dev->completed_status=BSP_I2C_BUSY;
-    return BSP_I2C_OK;
+    dev->pending=1;dev->completed_status=SRNOS_I2C_BUSY;
+    return SRNOS_I2C_OK;
 }
-bsp_i2c_status_t bsp_i2c_mem_read(bsp_i2c_device_t *dev,uint16_t addr,uint16_t width,
-                                  uint8_t *out,size_t len,bsp_i2c_callback_t cb,void *ctx) {
+SRNOS_I2CStatus SRNOS_I2CMemRead(SRNOS_I2CDevice *dev,uint16_t addr,uint16_t width,
+                                  uint8_t *out,size_t len,SRNOS_I2CCallback cb,void *ctx) {
     assert(!cb && !ctx); return start(dev,addr,width,out,NULL,len);
 }
-bsp_i2c_status_t bsp_i2c_mem_write(bsp_i2c_device_t *dev,uint16_t addr,uint16_t width,
-                                   const uint8_t *in,size_t len,bsp_i2c_callback_t cb,void *ctx) {
+SRNOS_I2CStatus SRNOS_I2CMemWrite(SRNOS_I2CDevice *dev,uint16_t addr,uint16_t width,
+                                   const uint8_t *in,size_t len,SRNOS_I2CCallback cb,void *ctx) {
     assert(!cb && !ctx); return start(dev,addr,width,NULL,in,len);
 }
-bsp_i2c_status_t bsp_i2c_cancel_device(bsp_i2c_device_t *dev,uint32_t reason) {
+SRNOS_I2CStatus SRNOS_I2CCancelDevice(SRNOS_I2CDevice *dev,uint32_t reason) {
     assert(reason==1 || reason==255); assert(active.dev==dev); ++cancels;
-    active.dev=NULL; dev->pending=0; dev->completed_status=BSP_I2C_ERROR;
-    return quarantine?BSP_I2C_ERROR:BSP_I2C_OK;
+    active.dev=NULL; dev->pending=0; dev->completed_status=SRNOS_I2C_ERROR;
+    return quarantine?SRNOS_I2C_ERROR:SRNOS_I2C_OK;
 }
 static void reset(void) {
     memset(&s,0,sizeof(s)); memset(&active,0,sizeof(active));
@@ -126,4 +136,5 @@ int main(void) {
     irq=0;basepri=5;assert(SRNOS_EEPROMRead(0,output,1,20)==SRNOS_EEPROM_CONTEXT_ERROR);
     basepri=0;kernel=0;assert(SRNOS_EEPROMRead(0,output,1,20)==SRNOS_EEPROM_CONTEXT_ERROR);
     puts("FT24C128A: full 16KiB, page split, 16-bit addressing, readback, async ownership, bounds, NACK, timeout/cancel/quarantine and tick wrap passed");
+    return 0;
 }

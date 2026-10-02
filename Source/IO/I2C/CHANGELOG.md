@@ -1,10 +1,22 @@
 # Changelog
 
-## Unreleased · 2026-09-28
+## Unreleased
 
-- 为 EEPROM 取消/超时增加 `bsp_i2c_cancel_device`；设备归属检查与恢复占用在同一个临界区完成，避免中止其他设备事务。
+- 公开等待接口使用 SDK 毫秒和 `SRNOS_NO_WAIT` / `SRNOS_WAIT_FOREVER`。WaitComplete(0) 立即查询，BUSY 保留在途 buffer；无限等待仍受内部硬件期限保护。DeviceReady(0) 不提交，提交阶段耗尽总预算时显式取消确认。零等待/无限等待/硬件超时及旧 24C02 阻塞消费者的所有权回归通过；未板测。
+
+- 2026-09-28：公开 API 统一 `SRNOS_*` 与 SDK 地址宽度枚举，HAL/RTOS 启动入口移入私有头，删除 Direct 入口；父项目无需 HAL、FreeRTOS 或 CMSIS 头。
+- 提交增加短临界区保留槽、保护范围外复制；修复保留阶段取消提前返回的问题，忙查询包含尚在复制的请求。总线恢复保持仅针对入口观察到的活动事务，不取消保留/排队事务。
+- 分发等待改为通知或最近排队/活动截止点，空闲无限等待；四槽、公平策略、High6 / 3 KiB、400 kHz 时序和 staging 布局保留。实际分发器主机回归通过，新增保护外复制抢占、保留阶段公开取消、截止点与通知竞争；本轮未板测。
+
+- 2026-09-28：SRNOS_I2C4 由统一框架调用单轮分发；保留完成就绪立即处理、活动时 1 tick/空闲无限等待。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。
+
+- 板级 I2C4 handle、空闲检查与固定时序位于 Board/Support/IO；保留 400 kHz TIMING 与现有调度。 本次主机及构建验证见 Docs/Validation/BoardSupport-20260928/README.md；未板测。 · 2026-09-28
+
+- 为 EEPROM 取消/超时增加 `SRNOS_I2CCancelDevice`；设备归属检查与恢复占用在同一个临界区完成，避免中止其他设备事务。
 - wait_complete 的超时恢复改用设备级取消；保留已有总线级恢复接口、abort 确认和失败隔离语义。
 - 新增并通过取消非活动设备不影响其他设备、活动设备取消的主机回归；未改变 DMA 段、容量或回调线程配置。
 - 回调线程改为唯一 I2C4 分发者；四槽静态队列按 LIS/SPA 保留槽与后台分级，最多四个周期事务后服务一个等待后台事务。
 - 所有传输入队并限制 64 B，移除原始总线锁入口；direct 入口同样复制。增加信号量等待、排队/活动期限及 TIMEOUT/CANCELLED 状态。
 - 排队取消不 abort 其他设备；活动取消确认停止，失败隔离。增加分流统计及实际调度器主机回归。板端记录见 Docs/Validation/I2C-20260928。
+- 固定 I2C4 提升至 400 kHz Fast mode，保留队列/期限与 32 B EEPROM 分段作同工况对照；时序与测试记录见 Board/Glue 和 Docs/Validation/I2C400-20260928。
+- Fast-mode 板测 LIS 约97–99 Hz、SPA约16 Hz，始终 READY；后台最长传输 909 µs、周期最长排队 894 µs，零错误/超时。数字线频约370 kHz，模拟边沿及异常电气工况未测。

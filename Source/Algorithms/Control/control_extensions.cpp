@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace omx::control {
+namespace SRNOS::Control {
 namespace {
 
 constexpr std::array<float, 49> kKpRules {{
@@ -265,4 +265,4 @@ TrackingDifferentiatorResult TrackingDifferentiator::step(float input,
     return result_;
 }
 
-} // namespace omx::control
+} // namespace SRNOS::Control

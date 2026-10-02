@@ -16,8 +16,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __AL94__I_CUBE_USBD_COMPOSITE_CONF__H__
-#define __AL94__I_CUBE_USBD_COMPOSITE_CONF__H__
+#ifndef SRNOS_USB_COMPOSITE_CONFIG_H
+#define SRNOS_USB_COMPOSITE_CONFIG_H
 
 #ifdef __cplusplus
  extern "C" {

@@ -21,6 +21,7 @@
 #include "i2c.h"
 
 /* USER CODE BEGIN 0 */
+#include "IO/i2c_timing.h"
 
 /* USER CODE END 0 */
 
@@ -40,7 +41,7 @@ void MX_I2C4_Init(void)
 
   /* USER CODE END I2C4_Init 1 */
   hi2c4.Instance = I2C4;
-  hi2c4.Init.Timing = 0x107075B0;
+  hi2c4.Init.Timing = 0x10C7182D;
   hi2c4.Init.OwnAddress1 = 0;
   hi2c4.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c4.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -67,6 +68,10 @@ void MX_I2C4_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C4_Init 2 */
+  if (!SRNOS_BoardI2CApplyTiming(&hi2c4))
+  {
+    Error_Handler();
+  }
 
   /* USER CODE END I2C4_Init 2 */
 

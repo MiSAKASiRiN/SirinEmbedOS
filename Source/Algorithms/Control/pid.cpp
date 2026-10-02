@@ -5,7 +5,7 @@
 
 #include "SirinEmbedOS/Algorithms/Math/angle.hpp"
 
-namespace omx::control {
+namespace SRNOS::Control {
 namespace {
 
 bool finite(float value) noexcept
@@ -110,7 +110,7 @@ float Pid::errorFor(float setpoint, float measurement) const noexcept
 {
     const float linear_error = setpoint - measurement;
     const float error = config_.error_period > 0.0f
-                            ? algo::wrapPeriodic(linear_error, config_.error_period)
+                            ? SRNOS::Math::wrapPeriodic(linear_error, config_.error_period)
                             : linear_error;
     return std::fabs(error) <= config_.error_deadband ? 0.0f : error;
 }
@@ -119,7 +119,7 @@ float Pid::difference(float current, float previous) const noexcept
 {
     const float delta = current - previous;
     return config_.error_period > 0.0f
-               ? algo::wrapPeriodic(delta, config_.error_period)
+               ? SRNOS::Math::wrapPeriodic(delta, config_.error_period)
                : delta;
 }
 
@@ -314,4 +314,4 @@ PidResult Pid::step(const PidInput& input) noexcept
     return last_result_;
 }
 
-} // namespace omx::control
+} // namespace SRNOS::Control

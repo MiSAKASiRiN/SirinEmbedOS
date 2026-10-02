@@ -5,7 +5,7 @@
 
 #include "SirinEmbedOS/Algorithms/Math/angle.hpp"
 
-namespace omx::imu {
+namespace SRNOS::IMU {
 namespace {
 
 constexpr std::size_t kStateDimension = 7U;
@@ -65,7 +65,7 @@ void QuaternionEkf::reset(const std::array<float, 4>& quaternion) noexcept
     if (!normalizeQuaternion(normalized)) {
         normalized = {{1.0f, 0.0f, 0.0f, 0.0f}};
     }
-    algo::KalmanFilter<7, 0, 3>::StateVector state {};
+    SRNOS::Math::KalmanFilter<7, 0, 3>::StateVector state {};
     std::copy(normalized.begin(), normalized.end(), state.begin());
     filter_.reset(state);
     filter_.transition().fill(0.0f);
@@ -153,7 +153,7 @@ QuaternionEkfResult QuaternionEkf::update(float gx,
         process_noise[at(index, index)] =
             config_.gyro_bias_process_noise * dt_s;
     }
-    if (filter_.predict() != algo::KalmanStatus::Ok) {
+    if (filter_.predict() != SRNOS::Math::KalmanStatus::Ok) {
         updateResult(QuaternionEkfStatus::MatrixError);
         return result_;
     }
@@ -225,12 +225,12 @@ QuaternionEkfResult QuaternionEkf::update(float gx,
                                       filter_.state()[column];
         }
     }
-    algo::KalmanFilter<7, 0, 3>::MeasurementVector pseudo_measurement {};
+    SRNOS::Math::KalmanFilter<7, 0, 3>::MeasurementVector pseudo_measurement {};
     for (std::size_t index = 0U; index < 3U; ++index) {
         pseudo_measurement[index] = acceleration[index] - predicted_gravity[index] +
                                     linear_projection[index];
     }
-    if (filter_.update(pseudo_measurement) != algo::KalmanStatus::Ok) {
+    if (filter_.update(pseudo_measurement) != SRNOS::Math::KalmanStatus::Ok) {
         updateResult(QuaternionEkfStatus::MatrixError);
         return result_;
     }
@@ -257,7 +257,7 @@ void QuaternionEkf::updateResult(QuaternionEkfStatus status) noexcept
     const float q1 = state[1];
     const float q2 = state[2];
     const float q3 = state[3];
-    constexpr float radians_to_degrees = 180.0f / algo::kPi;
+    constexpr float radians_to_degrees = 180.0f / SRNOS::Math::kPi;
     result_.roll_deg = std::atan2(2.0f * (q0 * q1 + q2 * q3),
                                   1.0f - 2.0f * (q1 * q1 + q2 * q2)) *
                        radians_to_degrees;
@@ -282,4 +282,4 @@ void QuaternionEkf::updateResult(QuaternionEkfStatus status) noexcept
     ++result_.update_count;
 }
 
-} // namespace omx::imu
+} // namespace SRNOS::IMU

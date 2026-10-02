@@ -20,3 +20,10 @@ osStatus_t osMessageQueueGet(osMessageQueueId_t,void *,uint8_t *,uint32_t);
 osThreadId_t osThreadNew(void (*)(void*),void *,const osThreadAttr_t *);
 uint32_t osThreadFlagsSet(osThreadId_t,uint32_t);uint32_t osThreadFlagsWait(uint32_t,uint32_t,uint32_t);
 osStatus_t osDelay(uint32_t);
+
+typedef void *osSemaphoreId_t;
+typedef struct {const char *name;uint32_t attr_bits;void *cb_mem;uint32_t cb_size;} osSemaphoreAttr_t;
+osSemaphoreId_t osSemaphoreNew(uint32_t,uint32_t,const osSemaphoreAttr_t *);
+osStatus_t osSemaphoreAcquire(osSemaphoreId_t,uint32_t);
+osStatus_t osSemaphoreRelease(osSemaphoreId_t);
+uint32_t osMessageQueueGetCount(osMessageQueueId_t);

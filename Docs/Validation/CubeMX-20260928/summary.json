@@ -1,0 +1,28 @@
+{
+  "version": "6.18.1",
+  "exit_code": 0,
+  "script": "Board/generate.mx",
+  "script_sha256": "ebce481b93dd21fe0fdf780629de176f35290dbf2cfdaf1f09738d3c34b5f4e1",
+  "changed_files": [
+    "Board/Core/Src/i2c.c"
+  ],
+  "before_i2c_sha256": "27007878b7464466eb829352d56006c7ab522832df49cfc9d9c08a315e852a64",
+  "after_i2c_sha256": "553a9d0d85dea348c7c338676456130383aa90bdc82a1cc1e81ab3b6311e323f",
+  "before_timing": "0x107075B0",
+  "after_timing": "0x10C7182D",
+  "board_snapshot": "/var/folders/6f/lfkcjyv121nbnn57y_w8zkgw0000gn/T/srnos-mx-before-20260928-g786w827",
+  "board_flashed": false,
+  "builds": {
+    "Debug": {
+      "example": "Minimal",
+      "path": "build/MXGenerateDebug/SirinEmbedOS.elf",
+      "sha256": "be6b592d0b6c33fecd7eb5d9442af5c543f80c72c33db96e6e2da6f6b5fe2680"
+    },
+    "Release": {
+      "example": "Minimal",
+      "path": "build/MXGenerateRelease/SirinEmbedOS.elf",
+      "sha256": "b06d982f6093aa2079ce61c4755b3289c3c4e5976ffcfc195963e2b1ae3b52b4"
+    }
+  },
+  "sdk_check_passed": true
+}

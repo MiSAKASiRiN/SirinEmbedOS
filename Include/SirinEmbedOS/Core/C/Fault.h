@@ -1,12 +1,12 @@
-#ifndef SIRINOS_C_FAULT_H
-#define SIRINOS_C_FAULT_H
+#ifndef SRNOS_C_FAULT_H
+#define SRNOS_C_FAULT_H
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-#ifdef SIRINEMBEDOS_CONFIG_HEADER
-#include SIRINEMBEDOS_CONFIG_HEADER
+#ifdef SRNOS_CONFIG_HEADER
+#include SRNOS_CONFIG_HEADER
 #endif
 
 #ifdef __cplusplus

@@ -1,0 +1,45 @@
+{
+  "bmi088.csv": {
+    "minimum_c": 57.0,
+    "mean_c": 57.335802736621055,
+    "maximum_c": 57.625,
+    "stddev_c": 0.1380611730540211,
+    "within_target_fraction": 0.0,
+    "max_contiguous_within_target_us": 0
+  },
+  "lsm6ds3.csv": {
+    "minimum_c": 59.89453125,
+    "mean_c": 60.27594149472509,
+    "maximum_c": 60.72265625,
+    "stddev_c": 0.17420107772381338,
+    "within_target_fraction": 0.4351594140097665,
+    "max_contiguous_within_target_us": 13694921
+  },
+  "ins": {
+    "phases": {
+      "6": 51305,
+      "5": 8696
+    },
+    "flags": {
+      "817": 51305,
+      "801": 8696
+    },
+    "phase_transitions": [
+      {
+        "attitude_us": 64908747,
+        "phase": 6,
+        "flags": 817
+      },
+      {
+        "attitude_us": 80541747,
+        "phase": 5,
+        "flags": 801
+      },
+      {
+        "attitude_us": 89237747,
+        "phase": 6,
+        "flags": 817
+      }
+    ]
+  }
+}

@@ -1,5 +1,5 @@
-#ifndef SIRINOS_BOUNDS_HPP
-#define SIRINOS_BOUNDS_HPP
+#ifndef SRNOS_BOUNDS_HPP
+#define SRNOS_BOUNDS_HPP
 
 #include <cstddef>
 

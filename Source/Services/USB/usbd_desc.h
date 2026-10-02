@@ -19,8 +19,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_DESC__C__
-#define __USBD_DESC__C__
+#ifndef SRNOS_USB_DESCRIPTORS_H
+#define SRNOS_USB_DESCRIPTORS_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -46,11 +46,11 @@
   * @brief Constants.
   * @{
   */
-#define         DEVICE_ID1          (UID_BASE)
-#define         DEVICE_ID2          (UID_BASE + 0x4)
-#define         DEVICE_ID3          (UID_BASE + 0x8)
+#define         SRNOS_USB_DEVICE_ID1          (UID_BASE)
+#define         SRNOS_USB_DEVICE_ID2          (UID_BASE + 0x4)
+#define         SRNOS_USB_DEVICE_ID3          (UID_BASE + 0x8)
 
-#define  USB_SIZ_STRING_SERIAL       0x1A
+#define  SRNOS_USB_SIZ_STRING_SERIAL       0x1A
 
 /* USER CODE BEGIN EXPORTED_CONSTANTS */
 
@@ -105,7 +105,7 @@
   */
 
 /** Descriptor for the Usb device. */
-extern USBD_DescriptorsTypeDef USBD_Desc;
+extern USBD_DescriptorsTypeDef SRNOS_USBDescriptors;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
 
@@ -140,6 +140,6 @@ extern USBD_DescriptorsTypeDef USBD_Desc;
 }
 #endif
 
-#endif /* __USBD_DESC__C__ */
+#endif /* SRNOS_USB_DESCRIPTORS_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

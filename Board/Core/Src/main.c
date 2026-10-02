@@ -35,7 +35,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "sirinos_board.h"
+#include "System/board_startup.h"
 
 /* USER CODE END Includes */
 

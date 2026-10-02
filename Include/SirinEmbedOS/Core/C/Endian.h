@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_ENDIAN_H
-#define SIRINOS_C_ENDIAN_H
+#ifndef SRNOS_C_ENDIAN_H
+#define SRNOS_C_ENDIAN_H
 
 #include <stdbool.h>
 #include <stddef.h>

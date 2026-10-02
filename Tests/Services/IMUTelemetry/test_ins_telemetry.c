@@ -5,21 +5,21 @@
 #include <string.h>
 static unsigned depth,config_count,publications;
 static uint64_t now=100000;
-static tskptt_host_comm_telemetry_config_t configs[3];
-static srn_link_handler_fn handler;
+static SRNOS_HostLinkTelemetryConfig configs[3];
+static SRNOS_HostLinkHandlerFn handler;
 static SRNOS_SystemConfig system_config;
 static SRNOS_INSStatus ins_status;
-static srn_link_result_t send_result=SRN_LINK_OK;
+static SRNOS_HostLinkResult send_result=SRNOS_HOST_LINK_OK;
 void test_task_enter_critical(void){++depth;}
 void test_task_exit_critical(void){assert(depth);--depth;}
-uint64_t DWT_GetUptimeUs(void){return now;}
+uint64_t SRNOS_TimeGetUptimeUs(void){return now;}
 bool SRNOS_INSGetStatus(SRNOS_INSStatus *s){*s=ins_status;return true;}
 const SRNOS_SystemConfig *SRNOS_SystemGetConfig(void){return &system_config;}
-srn_link_result_t TSKPTT_HostComm_RegisterTelemetryEx(const tskptt_host_comm_telemetry_config_t *c)
-{assert(config_count<3);configs[config_count++]=*c;return SRN_LINK_OK;}
-srn_link_result_t srn_link_register_handler(srn_link_t *l,uint8_t s,uint8_t m,uint8_t k,srn_link_qos_t q,srn_link_handler_fn fn,void *u)
-{(void)l;(void)k;(void)q;(void)u;assert(s==4&&m==9);handler=fn;return SRN_LINK_OK;}
-srn_link_result_t TSKPTT_HostComm_PublishTelemetry(uint16_t id,uint32_t seq,uint32_t time,uint16_t period,uint8_t count,const uint8_t *data,size_t n)
+SRNOS_HostLinkResult SRNOS_HostLinkRegisterTelemetryEx(const SRNOS_HostLinkTelemetryConfig *c)
+{assert(config_count<3);configs[config_count++]=*c;return SRNOS_HOST_LINK_OK;}
+SRNOS_HostLinkResult SRNOS_HostLinkRegisterHandler(SRNOS_HostLinkRegistration *l,uint8_t s,uint8_t m,uint8_t k,SRNOS_HostLinkQos q,SRNOS_HostLinkHandlerFn fn,void *u)
+{(void)l;(void)k;(void)q;(void)u;assert(s==4&&m==9);handler=fn;return SRNOS_HOST_LINK_OK;}
+SRNOS_HostLinkResult SRNOS_HostLinkPublishTelemetry(uint16_t id,uint32_t seq,uint32_t time,uint16_t period,uint8_t count,const uint8_t *data,size_t n)
 {assert(id>=0x102&&id<=0x104&&seq&&time&&period&&count&&data&&n<=432&&!depth);++publications;return send_result;}
 #include "../../../../Source/Services/HostLink/ins_telemetry.c"
 static void golden(const char *directory,const char *name,const uint8_t *bytes,unsigned n){
@@ -44,7 +44,7 @@ int main(int argc,char **argv){
  assert(SRNOS_INSEncodePressure(&snap.pressure,bytes,44));golden(argv[1],"golden_pressure.hex",bytes,44);
  assert(!SRNOS_INSEncodeAttitude(&snap.attitude,SRNOS_INS_RUNNING,bytes,107));
  assert(SRNOS_INSTelemetryRegister(NULL,NULL)==0&&config_count==3);
- assert(SRNOS_INSTelemetryRegister(NULL,NULL)==SRN_LINK_ERR_BUSY);
+ assert(SRNOS_INSTelemetryRegister(NULL,NULL)==SRNOS_HOST_LINK_ERR_BUSY);
  assert(configs[0].required_period_us==1000&&configs[1].required_period_us==10000&&configs[2].required_period_us==62500);
  SRNOS_INSTelemetryObserve(&snap);assert(!streams[0].enqueued);
  for(unsigned i=0;i<3;i++)configs[i].on_config(configs[i].user,true,configs[i].required_period_us);
@@ -57,11 +57,11 @@ int main(int argc,char **argv){
  assert(streams[0].enqueued==64&&streams[0].overflow==1);
  assert(streams[1].enqueued==16&&streams[1].overflow==49);
  assert(streams[2].enqueued==8&&streams[2].overflow==57);
- send_result=SRN_LINK_ERR_FULL;configs[0].poll(configs[0].user,100);assert(streams[0].tail==0);
- send_result=SRN_LINK_OK;
+ send_result=SRNOS_HOST_LINK_ERR_FULL;configs[0].poll(configs[0].user,100);assert(streams[0].tail==0);
+ send_result=SRNOS_HOST_LINK_OK;
  for(unsigned i=0;i<3;i++){configs[i].poll(configs[i].user,100);assert(streams[i].tail>0);}
  assert(streams[0].tail==4&&streams[1].tail==8&&streams[2].tail==8);
- configs[0].on_delivery(configs[0].user,4,SRN_LINK_FAILED);assert(streams[0].failed==4);
+ configs[0].on_delivery(configs[0].user,4,SRNOS_HOST_LINK_FAILED);assert(streams[0].failed==4);
  for(unsigned i=0;i<3;i++){configs[i].on_config(configs[i].user,false,0);assert(streams[i].tail==streams[i].head);}
  assert(streams[0].discarded==60);
  configs[0].on_config(configs[0].user,true,1000);
@@ -71,7 +71,7 @@ int main(int argc,char **argv){
  configs[0].poll(configs[0].user,100);assert(before==publications);
  now+=4000;configs[0].poll(configs[0].user,104);assert(publications==before+1);
  ins_status.phase=SRNOS_INS_RUNNING;ins_status.heater.source=-1;
- uint8_t flags;size_t len;srn_cobs_prot_view_t req={0};
+ uint8_t flags;size_t len;SRNOS_ProtocolView req={0};
  assert(handler(NULL,&req,bytes,sizeof(bytes),&len,&flags)==0&&len==256&&bytes[64]==255);
  assert(!depth);puts("INS telemetry: golden records, new-only streams, overflow, fair batches, lifecycle and status passed");
 }

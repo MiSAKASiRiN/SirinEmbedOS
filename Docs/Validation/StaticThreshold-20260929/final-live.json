@@ -1,0 +1,83 @@
+{
+  "hello": "0204e0013f0000000c040f00",
+  "ins": {
+    "phase": 5,
+    "healthy_mask": 3,
+    "heater_flags": 3,
+    "flags": 545,
+    "epoch": 1,
+    "updated_us": 267119208,
+    "cycles": 267108,
+    "publications": 204582,
+    "dual_cycles": 204582,
+    "single_cycles": 0,
+    "predicted_cycles": 0,
+    "missing_cycles": 0,
+    "recoveries": 0,
+    "missed_deadlines": 0,
+    "max_execution_us": 33,
+    "max_period_us": 1025,
+    "max_copy_us": 5,
+    "heater_source": 1,
+    "hot_mask": 0,
+    "sensor_states": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "target_c": 60.0,
+    "feedback_c": 60.015625,
+    "duty": 0.23690471053123474,
+    "protection_count": 0,
+    "protection_recoveries": 0,
+    "source_selections": 1,
+    "board_to_robot_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "streams": {
+      "258": {
+        "stream": 258,
+        "enabled": false,
+        "sequence": 204582,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 64
+      },
+      "259": {
+        "stream": 259,
+        "enabled": false,
+        "sequence": 26340,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 16
+      },
+      "260": {
+        "stream": 260,
+        "enabled": false,
+        "sequence": 4360,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 8
+      }
+    }
+  }
+}

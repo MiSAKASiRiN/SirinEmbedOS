@@ -5,7 +5,7 @@
 #include "SirinEmbedOS/Algorithms/Control/control_extensions.hpp"
 #include "SirinEmbedOS/Algorithms/Control/pid.hpp"
 
-using namespace omx::control;
+using namespace SRNOS::Control;
 
 namespace {
 

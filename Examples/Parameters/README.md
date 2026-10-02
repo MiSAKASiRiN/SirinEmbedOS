@@ -1,7 +1,15 @@
-# 业务参数示例
+# 持久化业务参数与只读遥测示例
 
-把 `app_main.cpp` 作为父项目固件的应用源文件，替代 `Examples/Minimal/app_main.c`，链接 `SirinEmbedOS::Platform` 即可。
+父项目把 `app_main.cpp` 作为应用源文件，链接 `SirinEmbedOS::Platform`。仅包含 SDK 公共头，不需要 FreeRTOS/CMSIS/HAL。
 
-启动前静态注册三个有上下界且显式 `PARAMS_MUTABLE_BUSINESS` 的PID增益；SDK冻结注册表后，通过USB CDC1 HostLink CONFIG服务读取/写入这些数值。默认关闭EEPROM自动加载，可显式SAVE/LOAD。系统架构配置没有进入参数表，主机不能用此服务改变UART用途、CAN模式、IMU选择或服务启用状态。
+示例声明三个 `SRNOS::Parameters::Persistent<float>` PID 增益：稳定 ID 分别为 0x1001/0x1002/0x1003，均有默认值、最小/最大值；配置 application_id=`0x50494431`、compatibility_version=1。启动加载成功使用已保存值，否则使用声明默认值。注册表冻结后 HostComm CONFIG 可以读取/修改这些业务值，CAN/UART/IMU 配置不参与参数注册。
 
-Application线程每10ms取得一个三值一致快照。示例不保存实际控制器指针，不驱动执行器；真实应用在自己的控制周期边界把本地快照交给算法。参数对象和名称均为固件寿命，不能把栈上临时对象注册后离开作用域。
+另一个 `SRNOS::Telemetry::Value<int32_t>` 声明 `motor.encoder`、单位 count、最大 100 Hz。托管任务每 10 ms 发布示例计数及 `SRNOS_TimeUs()`；真实父项目换为电机采样结果即可。它只保留最新快照，不写 EEPROM、不允许 CONFIG WRITE；未订阅时也不会每次 Publish 唤醒 HostComm。
+
+周期 step 取得 PID 三值的一致 Snapshot，再交给业务逻辑；例子不持有控制器指针、不驱动执行器。长期循环和周期等待由 SDK 托管，检查 `srnos_example_create_result` 确认创建成功。
+
+WRITE 立即更新 RAM；只有显式 SAVE 才持久化。SAVE 在 HostCmd 执行，不阻塞 HostComm 或控制任务。用 STATE 观察 generation/saved_generation/dirty：保存版本 10 期间改到 11，保存完成后仍显示未保存修改。LOAD 遇到并发修改返回冲突，不覆盖新值；恢复默认也只改 RAM，仍需显式 SAVE。EEPROM 只有单份记录，掉电中断保存可能使其失效，下一次启动回退默认。
+
+C 项目可使用 `SRNOS_ParametersRegisterPersistent` 和 `SRNOS_TelemetryRegister/Publish`。登记复制元数据，父项目在启动配置期完成注册，不在运行期新增。详细合同见 [Parameters](../../Source/Services/Parameters/README.md)、[Telemetry](../../Source/Services/Telemetry/README.md) 和 [Kernel](../../Source/Kernel/README.md)。本轮主机/构建验收不表示完成板端掉电或高频吞吐测试。
+
+完整端到端目录、RAM WRITE、显式 SAVE、运行 LOAD 失败保留现值及 EEPROM 格式见 [存储总览](../../Docs/Storage.md)；主机字段见 [CONFIG 协议](../../Source/Services/Parameters/HostLink/README.md)。

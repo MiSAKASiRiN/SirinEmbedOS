@@ -45,7 +45,7 @@ SirinEmbedOS/
 │   ├── CMakeLists.txt          # 项目维护的板级组件/独立构建入口
 │   ├── CMakePresets.json
 │   ├── cmake/                 # CubeMX 生成的工具链、HAL 源文件清单
-│   ├── Glue/                  # 自维护的板级接线、回调与启动适配
+│   ├── Support/                  # 自维护的板级接线、回调与启动适配
 │   └── Linker/                # 自维护的内存段扩展及链接配置
 ├── ThirdParty/
 │   ├── FreeRTOS/
@@ -66,6 +66,8 @@ SirinEmbedOS/
     └── PrototypeBindings/     # 通过公开 API 声明原串口用途
 ```
 
+- 自维护 C 函数、类型和跨文件符号使用 `SRNOS_<能力><动作或类型>`；枚举、配置宏、头保护使用 `SRNOS_<MODULE>_*`，C++ 位于 `SRNOS` 下的能力命名空间。旧 API/头路径不保留兼容别名。仅第三方、CubeMX 和规定的 RTOS/HAL/USB/供应商 ABI 入口保留原名；历史来源和实测证据不改写。
+- 父项目仅包含 SDK 公共头。`SirinEmbedOS::Platform` 提供完整链接但不传播 RTOS/CMSIS/HAL/Board/Source include；私有依赖只授予 SDK 实现及独立内核测试适配。新增公共头须通过独立 C11/C++17、依赖闭包与命名检查。迁移合同见 `Docs/SDKMigration.md`。
 - 公共头文件集中在 `Include/SirinEmbedOS/`；私有头文件放实现旁边，不要求每个小模块再套 `Inc/Src`。
 - `Board/` 暂不增加多厂商、多 MCU、多板型目录层级；出现真实硬件差异后再调整。
 - CubeMX 当前还在 `Board/` 根生成启动汇编、基础链接脚本等文件，保留其生成位置。最终固件使用自维护的 `Board/Linker/SirinEmbedOS.ld`；不通过搬动生成文件改变 regenerate 的输出边界。
@@ -86,7 +88,7 @@ SirinEmbedOS/
 | 系统服务 | `Source/Services/` | 日志、参数、HostLink、USB、网络、文件系统等长期运行或供应用调用的功能。服务的 worker/task 与该服务放在一起，不恢复一个平铺全部 `tskptt_*` 的目录。 |
 | 系统观测 | `Source/Diagnostics/` | Debug Watch、线程运行统计、健康状态与诊断快照。区分低成本观测基础设施和主动采样任务；底层模块不得为了记录计数而依赖上层通信或日志服务。 |
 | 固定板级实现 | `Board/` | 当前硬件的 IOC、生成代码和自维护接线。允许固化本板引脚、实例和绑定，不为假想板卡建立额外平台层。 |
-| 上游依赖 | `ThirdParty/` | 固定版本的 RTOS 和 middleware 源码。保留许可证和来源；本项目的适配优先放 `Source/` 或 `Board/Glue/`，必须修改上游时记录补丁。 |
+| 上游依赖 | `ThirdParty/` | 固定版本的 RTOS 和 middleware 源码。保留许可证和来源；本项目的适配优先放 `Source/` 或 `Board/Support/`，必须修改上游时记录补丁。 |
 | SDK 默认配置 | `Config/` | 公共能力的默认容量、服务策略、配置声明和校验规则。父项目可以通过明确接口覆盖允许变化的项目，不把某台机器人的参数写成 SDK 默认硬件事实。 |
 | 构建装配 | `CMake/` | 自维护的工具链适配、组件依赖、配置生成和固件构建辅助。与 CubeMX 管理的 `Board/cmake/` 区分。 |
 | 开发工具 | `Tools/` | 在开发机执行的 Panic 解码、检查或辅助脚本，不参与 MCU 固件源码扫描。 |
@@ -100,17 +102,17 @@ SirinEmbedOS/
 | `OMNICTL2_3.ioc` | 当前硬件配置输入；改动后核对引脚、时钟、DMA、NVIC 和生成差异。 |
 | `Core/Inc`、`Core/Src` | CubeMX 生成的 HAL 初始化、main 和中断入口；自维护接入仅使用 `USER CODE` 区。 |
 | `Drivers/` | CubeMX 配套的 HAL/CMSIS，通常不直接修改。 |
-| `Glue/` | 自维护的启动接线、HAL callback 转接、硬件绑定、板级时序和必要补丁；不承载日志协议解析或机器人业务循环。 |
+| `Support/` | 自维护的 System/IO/Devices/USB 四组板级支撑；包含启动、Fault/libc、硬件绑定、时序和回调，服务行为仍归 Source/Services。 |
 | `Linker/` | 自维护的完整固件链接脚本，包含 DMA、BDMA、保留区、heap、MSP 和 libc arena；原生成脚本保留作生成基线，不叠加参与最终链接。 |
 | `cmake/`、生成的启动文件和基础链接脚本 | 保留 CubeMX 的生成位置与管理方式，经项目侧适配接入构建。 |
 
 ### 放置与依赖判断
 
 - 应用调用 SDK 公共接口；SDK 不反向包含父项目的任务或控制算法头文件。父项目通过配置、回调或任务描述显式接入。
-- 常规调用关系为：系统服务使用 Kernel、IO 或设备能力，设备驱动使用所需 IO；这些实现都可以使用 Core。固定硬件绑定通过 `Board/Glue/` 装配。
-- Glue 可以引用两端接口来完成注册与回调转接，但不要把它变成跨层共享业务逻辑的存放处。
+- 常规调用关系为：系统服务使用 Kernel、IO 或设备能力，设备驱动使用所需 IO；这些实现都可以使用 Core。固定硬件绑定通过 `Board/Support/` 装配。
+- Support 可以引用两端接口来完成注册与回调转接，但不要把它变成跨层共享业务逻辑的存放处。
 - 不为了目录分层给每次函数调用增加虚函数或动态注册。固定硬件允许静态绑定；依赖清晰与可复用接口优先。
-- CAN 的队列、路由和发送调度放 `Source/IO/`；具体器件寄存器实现放 `Source/Devices/`；HAL 实例和 IRQ 接线放 `Board/Glue/`。必要时用小型 backend 接口隔开，不能让 router 与器件驱动互相依赖。
+- CAN 的队列、路由和发送调度放 `Source/IO/`；具体器件寄存器实现放 `Source/Devices/`；HAL 实例和 IRQ 接线放 `Board/Support/`。必要时用小型 backend 接口隔开，不能让 router 与器件驱动互相依赖。
 - IMU 的寄存器操作、采样和通用设备状态放 `Source/Devices/`；应用姿态控制、机构补偿和动作策略留在父项目。板载 IMU 默认集成不改变这个边界。
 - 一个服务内部的任务循环、队列和私有辅助函数可以放在同一个能力目录。是否继续分子目录取决于实际规模，不机械建立多级 `Inc/Src/Modules/Impl`。
 - 新增公共 API 时，同步考虑其实现目录、配置归属和测试位置；目录移动不应顺带改变协议、时序或资源所有权。
@@ -153,6 +155,17 @@ MyRobot/
 
 SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些电机、控制目标和周期、IMU 数据如何参与控制，由父项目决定。经多个应用确认有复用价值的算法，再按需求沉淀到 SDK。
 
+### 父项目线程建立与管理
+
+- 父项目新线程使用 `Include/SirinEmbedOS/Kernel/Thread.h` 的 `SRNOS_ThreadConfig`（init/step/cleanup），一般业务代码不直接调用 FreeRTOS/CMSIS 创建、删除、通知或延时 API。同步对象使用 `Sync.h`，统计 hook 由 SDK 内部提供；旧 entry 合同不保留。
+- 需要保存管理句柄的任务，优先在 `SRNOS_ApplicationMain()` 或已有应用任务中调用 ThreadCreate；先准备参数/同步对象，检查创建结果，再启用生产者。ApplicationMain 可返回，创建的业务线程继续运行。不要在周期 step 中再写永久循环或周期 Delay。
+- 固定任务可以在 ApplicationConfigure 中填写 threads[]/thread_count；回调内只声明、不创建。名称和参数不得指向配置回调的临时对象。列表任务可能先于 ApplicationMain 运行，不能依赖后者先初始化资源；列表当前不返回句柄，有管理需求优先运行期 Create。
+- Create 成功与 init 成功分别通过返回值和 GetInfo 查询。回调可能先于 Create 返回执行，自身句柄用 GetCurrent；业务参数由调用者保留至 Delete 成功。
+- 管理者负责 RequestStop/Join/Delete；Delete 已包含请求停止与等待，只有成功后才能清空句柄/回收参数。超时或 BUSY 保留资源稍后重试，正常退出或失败也须 Delete。回调自身结束返回 STEP_STOP/FAILED，不能同步删除自身；SDK 服务不得由父项目删除。
+- 调度用 TimeMs/Delay/DelayUntil，DelayUntil 是绝对毫秒截止点、有限跨度不超过 INT32_MAX；TimeUs 是独立观测时钟。ISR 仅使用明确的 FromISR 接口，不能创建/删除或阻塞。
+- 应用名称唯一、1～15 字节，禁止 SRNOS_ 前缀；优先级 1～39，栈按字节且包含 TLS。启动列表和运行期对象共用有界池/数量限额，使用 KernelGetResources 检查用量，不能把名义数量上限当成内存保证。
+- 具体示例、超时及所有权合同以 [根 README](README.md#托管任务与父项目内核接口)、[Kernel README](Source/Kernel/README.md) 和 [Minimal](Examples/Minimal/README.md) 为准；公共合同变更同步维护这三处及相关 CHANGELOG。
+
 ### 构建与启动边界
 
 - CLion 默认打开 SDK 根目录 `SirinEmbedOS/`，不打开 `Board/` 作为日常工程；IDE 配置与构建输出分别留在根目录 `.idea/`、`build/`。忽略规则不阻止 IDE 创建文件，实际位置由打开的工程目录决定。
@@ -163,19 +176,29 @@ SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些
 - 父项目决定最终固件名、应用源文件和顶层交叉编译工具链。SDK 被 `add_subdirectory()` 引入时不能擅自重置父项目工具链或固件目标。
 - SDK 路径基于自身目录解析，不以 `${CMAKE_SOURCE_DIR}` 假定 SDK 就是顶层项目。应用配置显式传入，不反向读取父项目约定目录。
 - CubeMX 生成的 Board CMake 按实际内容适配接入，不能假定它天然可作为库；特别检查 `CMAKE_PROJECT_NAME`、固件 target、链接选项和路径。
-- SDK 持有唯一的板级 `main()`，在 `USER CODE` 区调用 Board glue。父项目在 `SRNOS_ApplicationConfigure(SRNOS_SystemConfig *)` 声明资源用途、服务与应用线程；配置回调、协议/业务参数注册、冲突检查和冻结都在 `osKernelInitialize()` 前完成，禁止在这些回调中阻塞 I/O 或创建线程。可选 `bind_channels` 用于内置协议之后声明原始通道、H12H 和 RS485 设备。
-- 父项目实现 `SRNOS_ApplicationMain()`，在调度后的 Application 线程执行，允许返回。SDK 先完成启动期业务参数加载尝试和 USB 启动，再放行该入口及 `threads` 中声明的应用线程；默认参数加载失败保留当前业务值。父项目不得再次初始化/启动调度器。
+- SDK 持有唯一的板级 `main()`，在 `USER CODE` 区调用 Board support。父项目在 `SRNOS_ApplicationConfigure(SRNOS_SystemConfig *)` 声明资源用途、服务与应用线程；配置回调、协议/业务参数注册、冲突检查和冻结都在 `osKernelInitialize()` 前完成，禁止在这些回调中阻塞 I/O 或创建线程。可选 `bind_channels` 用于内置协议之后声明原始通道、H12H 和 RS485 设备。
+- 父项目实现 `SRNOS_ApplicationMain()`，在调度后的 Application 线程执行，允许返回。SDK 先完成启动期业务参数加载尝试和 USB 启动，再放行该入口及 `threads` 中声明的应用线程；启动参数加载失败使用声明默认值，运行期显式 LOAD 失败保留当前 RAM。父项目不得再次初始化/启动调度器。
 - SDK 统一装配总线、IMU、日志、HostLink、诊断等服务线程。父项目通过 `SIRINEMBEDOS_CONFIG_HEADER` 覆盖 `SRNOS_APP_*`、`SRNOS_HEAP_*` 等编译期默认值，通过系统配置声明线程栈/优先级和启用项；一套构建共享一套 SDK 配置。`SRNOS_SystemHeapBudget()` 校验保守启动预算，不覆盖应用运行期额外分配。
 - 默认普通 UART 不绑定协议或日志。`Examples/PrototypeBindings` 显式演示原端口分配，`Examples/Parameters` 演示业务值注册与安全快照。启动阶段状态、服务线程已创建、设备健康是不同事实；USB 已启动不代表枚举成功，CAN4/IMU 的运行就绪需看各自状态。
 - `Examples/Minimal` 用于独立验证 SDK，也应使用公开配置与接入机制，避免形成一套仅示例能用的特殊路径。
 
+### CubeMX CLI Generate
+
+- 实际板级目录为 `Board/`。需要生成 HAL 时优先运行 `python3 Board/generate.py`，可从任意工作目录使用该脚本的绝对路径调用；脚本根据自身位置定位当前 checkout，不依赖开发者机器上的固定工程路径。
+- 脚本通过系统进程调用 CubeMX `-q <脚本文件>`，命令依次为 `config load "<当前checkout的IOC绝对路径>"`、`project generate`、`exit`，工作目录固定为 `Board/`。macOS CLI 实测不能依赖 `cwd` 解析相对 IOC 路径，否则 `-q` 也可能弹出找不到 IOC 的错误窗口。macOS 默认查找 `/Applications/STMicroelectronics/STM32CubeMX.app/Contents/MacOS/STM32CubeMX`，也支持 `--cubemx <可执行文件>`、环境变量 `STM32CUBEMX` 或 PATH 中的 `STM32CubeMX`。`--dry-run` 只打印计划，`--timeout` 设置生成超时（默认300秒）。
+- 每次实际执行先将 Board 内容备份到根 `build/cubemx/<时间戳-唯一后缀>/Board-before`（排除 build、.idea、__pycache__），同目录保存实际 `.mx`、生成日志、时序检查日志和变化文件清单。脚本不自动回滚、不构建、不烧录、不操作调试器；生成失败仍保留现场与快照供比较。已有 `Board/generate.mx` 是原始手工脚本，含本机绝对路径，日常使用 `generate.py`。
+- 不能仅凭进程退出码宣称成功：核对 `project generate` 的 `OK` 和生成内容。脚本会检查退出码/成功标记，并运行 `Tools/Debug/check_i2c_timing.py`，要求 IOC、生成的 I2C4 TIMING 和 Support 常量一致。不要为消除检查失败而盲目同步常量，应先核对时钟、滤波、时序及此前板测依据。
+- 生成后与本次快照比较，检查 USER CODE、SDK 自维护 CMake/Support/Linker、HAL/CMSIS、工具链和中断所有权，保留原有未提交修改；再进行对应固件构建，涉及生成清单或构建接入时运行 `Tests/Build/check_sdk.py`。生成、编译与板端验证分别报告，不覆盖当前调试会话所用 ELF。
+- 2026-09-28 本机 CubeMX 6.18.1 / DB.6.0.181 使用该 CLI 路径成功生成，原始调用仅将 `hi2c4.Init.Timing` 更新为已板测的 `0x10C7182D`，407 个 USER CODE 区域完整保留。实际版本以运行日志为准，macOS bundle 曾显示过期的6.13。后续仍检查实际差异，不假定每次只改一行；记录见 `Docs/Validation/CubeMX-20260928/README.md`。
+- 用户明确要求仅修改 IOC、不要 Generate 时遵从该范围；已授权的生成工作无需重复询问。Generate 不隐含授权重新烧录或接管用户暂停现场。
+
 ### 当前 Kernel 实现边界
 
 - FreeRTOS 10.6.2、CMSIS-RTOS2、heap_5 与原工程 CM4F 浮点 port 固定快照位于 `ThirdParty/FreeRTOS/`，来源、许可证和 SHA256 清单同目录维护；当前未修改第三方源码。
-- `Config/FreeRTOSConfig.h` 由 SDK 管理，不由 CubeMX 生成。使用 Picolibc TLS，关闭 Newlib reentrancy；trace 统一经 `Diagnostics/Runtime/Trace.h` 分发至 Fault 元数据和 HSKP。不得恢复指向旧工程的 hooks。
+- `Config/FreeRTOSConfig.h` 由 SDK 管理，不由 CubeMX 生成。使用 Picolibc TLS，关闭 Newlib reentrancy；trace 统一经 私有 `Source/Diagnostics/Runtime/trace_internal.h` 分发至 Fault 元数据和 HSKP。不得恢复指向旧工程的 hooks。
 - FreeRTOS/CMSIS 拥有 SVC、PendSV、SysTick，HAL 继续以 TIM7 计时。FromISR API 的中断优先级数值必须为 5～15。
-- `Board/Glue/kernel_board.c` 定义按地址递增的 DTCM 64 KiB + D1 128 KiB heap_5 区域；`osKernelInitialize()` 是 heap 注册的唯一入口。最终内存布局由 `Board/Linker/SirinEmbedOS.ld` 管理，普通 data/TLS/BSS 在 D1，DTCM 留给热数据、heap 和 MSP。NOLOAD heap payload 不保证清零，两区均不是 DMA 分配器。
-- DMA/Watch 位于非缓存 D2，BDMA 位于 D3，启动时显式清零；ITCM 显式复制，Fault retained 区保留并验证。Picolibc TLS 占用线程栈；独立 libc arena 和静态递归 RTOS 锁已接入，禁止在 ISR 分配或调用阻塞 stdio，不宣称任意共享 FILE 都线程安全。
+- `Board/Support/System/kernel_board.c` 定义按地址递增的 DTCM 64 KiB + D1 128 KiB heap_5 区域；`osKernelInitialize()` 是 heap 注册的唯一入口。最终内存布局由 `Board/Linker/SirinEmbedOS.ld` 管理，普通 data/TLS/BSS 在 D1，DTCM 留给热数据、heap 和 MSP。NOLOAD heap payload 不保证清零，两区均不是 DMA 分配器。
+- DMA 位于非缓存 D2，BDMA 位于 D3；CAN Router 专用 BSS 与 Watch 位于 ITCM，按 64 位显式清零，ITCM 代码按 64 位复制。三者共享 64 KiB；专用段禁止构造期访问。Fault retained 留在 D2 并验证。Picolibc TLS 占用线程栈；独立 libc arena 和静态递归 RTOS 锁已接入，禁止在 ISR 分配或调用阻塞 stdio，不宣称任意共享 FILE 都线程安全。
 - Fault 向量由 SDK glue 持有，异常捕获不依赖日志或动态分配。紧急输出默认为空，仅允许启动阶段显式预留，不复位/占用 USART1；正常日志只经自己的 Serial/USB sink。细节见 `Source/Core/README.md`。
 - 构建接入说明与配置合同见 `README.md`；`Tests/Build/check_sdk.py` 验证父项目、配置、链接、堆和第三方哈希。能力测试与待测项见 `Docs/Validation.md`，不代表板端调度与外设验证。
 
@@ -230,7 +253,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - API 明确单位、超时、返回状态、线程/ISR 调用限制和数据所有权。
 - 异步 I/O 明确 buffer 生命周期及完成通知；不提前复用尚在传输中的内存。
 - 优先沿用已迁入的 `SRNOS_*` / `SRNOS::` 基础操作，避免重复实现字节复制、边界检查、Endian、Assert/Panic 等能力。不新增旧名兼容别名。
-- HostLink 可写入的仅限显式 `PARAMS_MUTABLE_BUSINESS` 声明且有约束的业务数值，例如 PID 增益；默认参数只读。系统底层选择、UART/CAN/IMU 配置、线程预算和服务开关不得放入可远程修改的参数表。注册和访问权限初始化后冻结；业务代码通过一致快照在自己的周期边界应用数值，不让通信线程直接修改控制器内部状态。
+- HostLink 可写入的仅限显式 `SRNOS::Parameters::Persistent<T>` 或对应 C 描述声明且有默认值、稳定 ID 和范围的业务数值，例如 PID 增益；遥测使用只读且不可持久化的 `SRNOS::Telemetry::Value<T>`。系统底层选择、UART/CAN/IMU 配置、线程预算和服务开关不得放入可远程修改的参数表。注册和访问权限初始化后冻结；业务代码通过一致快照在自己的周期边界应用数值，不让通信线程直接修改控制器内部状态。
 - 新接口命名、旧 API 兼容范围和组件目录应结合迁入的实际实现确定，不凭本文假定它们已经存在。
 
 ## 重构与验证规则
@@ -298,7 +321,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 
 已增加 Sensors 公共 API、冻结配置、LSM/LIS/SPA 驱动与 SensorBringUp。SPI4 使用唯一 High6 分发者、八槽有界复制队列、四 IMU 后一个普通事务的仲裁；同步调用也经此通路。BMI/LSM 默认 1 ms；LIS/SPA 共用 Normal/2 KiB/10 ms 线程，LSM High5/2 KiB。接口、取消与缓冲生命周期见 `Docs/Sensors.md`。
 
-默认运行正式 INS，四颗传感器均采集；BMI/LSM 统一板内坐标后经启动冻结安装旋转进入单一 Mahony 状态。温控由独立 INS High5/3KiB/1ms worker 唯一持有，默认60°C、允许20..75°C，LSM优先/BMI回退，80°C保护及75°C以下5秒恢复。板内变换固定于 Board/Glue/sensor_frames.c，应用只能配置 board_to_robot_wxyz。旧全局 INS、方向预设、校准/存储 worker 和两套温控已删除，没有 legacy 模式。SensorBringUp 以 ins.enabled=false 保留原始采样和统一温控。默认参数加载与 HostLink LOAD/SAVE关闭。FT24C128A 已有独立 SRNOS_EEPROM 阻塞/非阻塞驱动及整片备份恢复板测，参数/INS 存储尚未迁移；旧 24C02 接口仅保留上层编译依赖，禁止用于新器件。I2C4 已复用 High6/3KiB 线程作唯一分发者，四槽中 LIS/SPA 各保留一槽、后台两槽，最多连续四笔周期事务后服务等待后台。EEPROM 读写/校验每笔最多32B，写周期不占总线；LIS/SPA 使用30ms完成信号量等待。整片并发正常短测通过，LIS约88–93Hz、SPA约16Hz，无离线/总线错误；不代表掉电、断线或严格100Hz实时性验收，见 Docs/Validation/I2C-20260928/README.md。服务与遥测合同见 Docs/INS.md、Docs/HostLink.md。
+默认运行正式 INS，四颗传感器均采集；BMI/LSM 统一板内坐标后经启动冻结安装旋转进入单一 Mahony 状态。温控由独立 INS High5/3KiB/1ms worker 唯一持有，默认60°C、允许20..75°C，LSM优先/BMI回退，80°C保护及75°C以下5秒恢复。板内变换固定于 Board/Support/Devices/sensor_frames.c，应用只能配置 board_to_robot_wxyz。旧全局 INS、方向预设、校准/存储 worker 和两套温控已删除，没有 legacy 模式。SensorBringUp 以 ins.enabled=false 保留原始采样和统一温控。默认启用启动参数加载及 HostLink LOAD/SAVE。FT24C128A 的身份、双 IMU 校准及业务参数由 Storage 单份 CRC/提交页记录管理；旧 24C02 接口和格式已删除。启动总期限 2 s，参数无效采用默认值，校准无效忽略并降级；保存校准下次启动生效。新增持久化及 1 kHz 标量遥测仍需板端验收，先前整片 EEPROM 板测不等于这些新功能已实测。I2C4 已复用 High6/3KiB 线程作唯一分发者，四槽中 LIS/SPA 各保留一槽、后台两槽，最多连续四笔周期事务后服务等待后台。EEPROM 读写/校验每笔最多32B，写周期不占总线；LIS/SPA 使用30ms完成信号量等待。I2C4 当前为400kHz Fast mode，固定PLL3R=60MHz、TIMINGR=0x10C7182D，由IOC与Support维护；已通过CubeMX 6.18.1 CLI的-q脚本执行project generate，生成时序与Support一致，USER CODE接入保留。生成边界与日志见Board/README.md和Docs/Validation/CubeMX-20260928/README.md。数字SCL实测约370kHz，整片写含校验约5.12秒、读约1.03秒，LIS约97–99Hz、SPA约16Hz，无离线/总线错误。按用户要求板上保留EEPROMBringUp及测试数据，融合/加热关闭；不代表模拟边沿、掉电、断线或严格100Hz实时性验收，见 Docs/Validation/I2C400-20260928/README.md。服务与遥测合同见 Docs/INS.md、Docs/HostLink.md。
 
 18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；连续窗口、SHA、结束状态均以 `Docs/Validation.md` 最新条目为准。
 
@@ -315,3 +338,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 低动态波动RMS口径固定为三轴分量整体 sqrt((varX+varY+varZ)/3)，加速度0.03g、角速度0.5°/s；不能为了通过板测跳过低动态/收敛或加入未声明的标定。服务执行不动态分配/打印/等USB，公共快照只做短临界区复制。姿态仅相对航向，用户校准未完成，机器人应用须检查VALID/epoch。
 
 19组主机套件、九个父项目目标和三个BringUp构建通过；最终板端三个10秒窗口姿态约1kHz、双路等权、无协议丢样，LSM反馈约60°C。短测不代表精度/闭环/十分钟长测通过。硬件断线和80°C保护仅主机注入，不能主动过热板子。具体配置、SHA、栈水位和GDB结束状态以Docs/Validation.md最新条目为准。
+
+## 板级支撑维护（2026-09-28）
+
+`Board/Support` 仅按 System、IO、Devices、USB 分一层，源码由同目录 `component.cmake` 显式登记；不新增板型层或通用 backend。私有引用带分组路径，Support include 路径仅为 PRIVATE。应用公共函数与类型保持，蜂鸣器/WS2812 固定 GPIO/TIM/DMA 宏收回板级私有头，不支持应用覆盖布线。指示器提示和 worker 位于 `Source/Services/Indicators`，Kernel 仍创建原线程。USB 引脚准备、MCP 默认绑定统一从板级实现取得。维护索引及 IRQ 所有权见 `Board/Support/README.md`；边界审查见 `Docs/BoardSupport.md`。

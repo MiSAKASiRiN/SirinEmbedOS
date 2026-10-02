@@ -2,6 +2,7 @@
 #define SRNOS_DEVICES_SENSORS_H
 #include <stdbool.h>
 #include <stdint.h>
+#include "SirinEmbedOS/IO/SPI/SPI.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -78,6 +79,8 @@ typedef struct {
     uint32_t protection_count, protection_recoveries;
 } SRNOS_HeaterStatus;
 bool SRNOS_SensorGetHeaterStatus(SRNOS_HeaterStatus *);
+/* Copies task-context statistics; no driver or hardware handle escapes. */
+void SRNOS_SensorGetBMI088SPIStatistics(SRNOS_SPIStatistics *accel, SRNOS_SPIStatistics *gyro);
 #ifdef __cplusplus
 }
 #endif

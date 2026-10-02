@@ -1,11 +1,11 @@
-#ifndef OMX_LIB_ALGOS_OLS_HPP
-#define OMX_LIB_ALGOS_OLS_HPP
+#ifndef SRNOS_MATH_OLS_HPP
+#define SRNOS_MATH_OLS_HPP
 
 #include <array>
 #include <cmath>
 #include <cstddef>
 
-namespace algo {
+namespace SRNOS::Math {
 
 template <std::size_t Window>
 class OlsWindow {
@@ -93,6 +93,6 @@ private:
     float time_s_ {0.0f};
 };
 
-} // namespace algo
+} // namespace SRNOS::Math
 
 #endif

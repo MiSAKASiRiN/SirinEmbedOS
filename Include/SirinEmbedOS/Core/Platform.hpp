@@ -1,5 +1,5 @@
-#ifndef SIRINOS_PLATFORM_HPP
-#define SIRINOS_PLATFORM_HPP
+#ifndef SRNOS_PLATFORM_HPP
+#define SRNOS_PLATFORM_HPP
 
 #include <cstddef>
 #include <cstdint>

@@ -1,6 +1,6 @@
 #include "ins_internal.h"
 extern "C" {
-#include "sensor_frames.h"
+#include "Devices/sensor_frames.h"
 }
 #include <cassert>
 #include <cmath>
@@ -34,7 +34,8 @@ int main() {
         }
     }
     SRNOS_INSCore c;SRNOS_INSCoreInit(&c,&cfg,1000);advance(c,1000,2600000);
-    assert(c.snapshot.attitude.flags&SRNOS_INS_VALID);assert(c.snapshot.status.phase==SRNOS_INS_RUNNING);
+    assert(c.snapshot.attitude.flags&SRNOS_INS_VALID);assert(c.snapshot.status.phase==SRNOS_INS_DEGRADED);
+    assert(c.snapshot.attitude.flags&SRNOS_INS_UNCALIBRATED);
     assert(c.snapshot.attitude.source_mask==3&&c.snapshot.attitude.weights[0]==.5f);
     assert(fabsf(c.snapshot.attitude.quaternion_wxyz[0]-1)<1e-5f);
     auto seq=c.snapshot.attitude.sequence;advance(c,2601000,2620000,2);
@@ -48,6 +49,39 @@ int main() {
     assert(!SRNOS_INSCoreStep(&c,samples,&mag,&pressure,&heat,2832000));assert(c.snapshot.attitude.flags&SRNOS_INS_PREDICTED);
     assert(!SRNOS_INSCoreStep(&c,samples,&mag,&pressure,&heat,2837000));assert(!(c.snapshot.attitude.flags&SRNOS_INS_VALID));
     advance(c,2838000,5440000,1);assert(c.snapshot.attitude.flags&SRNOS_INS_VALID);assert(c.snapshot.status.epoch>epoch);
+    // Calibration is applied in sensor axes BEFORE board/application rotation.
+    auto corrected_cfg=cfg;corrected_cfg.board_to_robot_wxyz[0]=corrected_cfg.board_to_robot_wxyz[1]=sqrtf(.5f);
+    SRNOS_INSCore corrected;SRNOS_INSCoreInit(&corrected,&corrected_cfg,1000);
+    SRNOS_IMUCalibration calibration[2]={};
+    for(unsigned n=0;n<2;n++)for(unsigned i=0;i<3;i++) {
+        calibration[n].gyro_bias_rad_s[i]=.02f*(float)(i+1);
+        calibration[n].accel_bias_m_s2[i]=.1f*(float)(i+1);
+        calibration[n].accel_scale[i]=.9f+.1f*(float)i;
+    }
+    SRNOS_INSCoreSetCalibration(&corrected,calibration,3);
+    for(uint64_t us=1000;us<=2700000;us+=1000) {
+        fill(us);
+        for(unsigned n=0;n<2;n++)for(unsigned i=0;i<3;i++) {
+            samples[n].gyro_rad_s[i]=calibration[n].gyro_bias_rad_s[i];
+            samples[n].accel_m_s2[i]=samples[n].accel_m_s2[i]/calibration[n].accel_scale[i]+calibration[n].accel_bias_m_s2[i];
+        }
+        auto raw=samples[0];
+        assert(!SRNOS_INSCoreStep(&corrected,samples,&mag,&pressure,&heat,us));
+        assert(!memcmp(&raw,&samples[0],sizeof(raw)));
+    }
+    assert(corrected.snapshot.status.calibrated&&corrected.snapshot.status.phase==SRNOS_INS_RUNNING);
+    assert(!(corrected.snapshot.attitude.flags&SRNOS_INS_UNCALIBRATED));
+    assert(fabsf(corrected.snapshot.imu[0].accel_m_s2[1]+9.80665f)<1e-4f);
+    assert(fabsf(corrected.snapshot.imu[1].gyro_rad_s[0])<1e-6f);
+    // One uncalibrated contributor makes the result explicitly degraded.
+    corrected.calibration_mask=1;advance(corrected,2701000,2702000);
+    assert(corrected.snapshot.status.phase==SRNOS_INS_DEGRADED&&!corrected.snapshot.status.calibrated);
+    // Pending storage does not seed fusion or treat absent calibration as sensor failure.
+    SRNOS_INSCoreInit(&corrected,&cfg,1000);corrected.calibration_pending=true;
+    memset(samples,0,sizeof(samples));heat.duty=.25f;
+    assert(!SRNOS_INSCoreStep(&corrected,samples,&mag,&pressure,&heat,2000000));
+    assert(corrected.snapshot.status.calibration_load_pending&&corrected.snapshot.status.heater.duty==.25f);
+    assert(!(corrected.snapshot.attitude.flags&SRNOS_INS_VALID));heat={};
     // No sensor at boot is fatal after a bounded 3s; environment cannot satisfy it.
     SRNOS_INSCoreInit(&c,&cfg,1000);memset(samples,0,sizeof(samples));
     assert(!SRNOS_INSCoreStep(&c,samples,&mag,&pressure,&heat,3000000));

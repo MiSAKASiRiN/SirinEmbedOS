@@ -1,0 +1,3 @@
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08010fae in _binary_Docs_Validation_EEPROM_20260928_firmware_before_bin_start ()

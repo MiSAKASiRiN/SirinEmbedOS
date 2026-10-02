@@ -1,0 +1,266 @@
+{
+  "Debug": {
+    "example": "Minimal",
+    "elf_sha256": "39eb8944e1748268a191f80d8525ab5819698fe7b3d51f631b0fc2f7fc9dc90f",
+    "regions_used_bytes": {
+      "DTCMRAM": 131072,
+      "RAM_D1": 313568,
+      "RAM_D2": 9696,
+      "RAM_D3": 544,
+      "ITCMRAM": 224,
+      "FLASH": 276456
+    },
+    "d1_remaining_bytes": 14112,
+    "sections": {
+      "NULL": {
+        "address": "0x0",
+        "size": 0
+      },
+      ".isr_vector": {
+        "address": "0x8000000",
+        "size": 716
+      },
+      ".text": {
+        "address": "0x80002d0",
+        "size": 261380
+      },
+      ".rodata": {
+        "address": "0x803ffd8",
+        "size": 13072
+      },
+      ".ARM.extab": {
+        "address": "0x80432e8",
+        "size": 0
+      },
+      ".ARM": {
+        "address": "0x80432e8",
+        "size": 16
+      },
+      ".preinit_array": {
+        "address": "0x80432f8",
+        "size": 4
+      },
+      ".init_array": {
+        "address": "0x80432fc",
+        "size": 0
+      },
+      ".fini_array": {
+        "address": "0x80432fc",
+        "size": 0
+      },
+      ".data": {
+        "address": "0x24000000",
+        "size": 1032
+      },
+      ".tdata": {
+        "address": "0x24000408",
+        "size": 0
+      },
+      ".tbss": {
+        "address": "0x24000408",
+        "size": 0
+      },
+      ".bss": {
+        "address": "0x24000420",
+        "size": 173240
+      },
+      ".sirinos_heap_d1": {
+        "address": "0x2402a8e0",
+        "size": 131072
+      },
+      ".srnos_libc_heap": {
+        "address": "0x2404a8e0",
+        "size": 8192
+      },
+      ".sirinos_heap_dtcm": {
+        "address": "0x20000000",
+        "size": 65536
+      },
+      ".itcm_text": {
+        "address": "0x0",
+        "size": 224
+      },
+      ".dtcm_bss": {
+        "address": "0x20010000",
+        "size": 41568
+      },
+      ".dma_nc": {
+        "address": "0x30000000",
+        "size": 192
+      },
+      ".dma_nc_buf": {
+        "address": "0x300000c0",
+        "size": 6304
+      },
+      ".bdma_buf": {
+        "address": "0x38000000",
+        "size": 544
+      },
+      ".eth_dma": {
+        "address": "0x30001960",
+        "size": 0
+      },
+      ".sirinos_noinit": {
+        "address": "0x30002480",
+        "size": 352
+      },
+      ".srnos_msp": {
+        "address": "0x2001e000",
+        "size": 8192
+      },
+      ".comment": {
+        "address": "0x0",
+        "size": 146
+      },
+      ".ARM.attributes": {
+        "address": "0x0",
+        "size": 75
+      },
+      ".symtab": {
+        "address": "0x0",
+        "size": 63168
+      },
+      ".shstrtab": {
+        "address": "0x0",
+        "size": 466
+      },
+      ".strtab": {
+        "address": "0x0",
+        "size": 52739
+      }
+    },
+    "tls_size": 0
+  },
+  "Release": {
+    "example": "Minimal",
+    "elf_sha256": "2f3fe59c2050f7904f31cb5c89d7a38a18c28821b3d4cba1df3cefef3b25ccf5",
+    "regions_used_bytes": {
+      "DTCMRAM": 131072,
+      "RAM_D1": 313632,
+      "RAM_D2": 9696,
+      "RAM_D3": 544,
+      "ITCMRAM": 192,
+      "FLASH": 197336
+    },
+    "d1_remaining_bytes": 14048,
+    "sections": {
+      "NULL": {
+        "address": "0x0",
+        "size": 0
+      },
+      ".isr_vector": {
+        "address": "0x8000000",
+        "size": 716
+      },
+      ".text": {
+        "address": "0x80002d0",
+        "size": 182160
+      },
+      ".rodata": {
+        "address": "0x802ca60",
+        "size": 13208
+      },
+      ".ARM.extab": {
+        "address": "0x802fdf8",
+        "size": 0
+      },
+      ".ARM": {
+        "address": "0x802fdf8",
+        "size": 16
+      },
+      ".preinit_array": {
+        "address": "0x802fe08",
+        "size": 4
+      },
+      ".init_array": {
+        "address": "0x802fe0c",
+        "size": 0
+      },
+      ".fini_array": {
+        "address": "0x802fe0c",
+        "size": 0
+      },
+      ".data": {
+        "address": "0x24000000",
+        "size": 1036
+      },
+      ".tdata": {
+        "address": "0x2400040c",
+        "size": 0
+      },
+      ".tbss": {
+        "address": "0x2400040c",
+        "size": 0
+      },
+      ".bss": {
+        "address": "0x24000420",
+        "size": 173284
+      },
+      ".sirinos_heap_d1": {
+        "address": "0x2402a920",
+        "size": 131072
+      },
+      ".srnos_libc_heap": {
+        "address": "0x2404a920",
+        "size": 8192
+      },
+      ".sirinos_heap_dtcm": {
+        "address": "0x20000000",
+        "size": 65536
+      },
+      ".itcm_text": {
+        "address": "0x0",
+        "size": 192
+      },
+      ".dtcm_bss": {
+        "address": "0x20010000",
+        "size": 41568
+      },
+      ".dma_nc": {
+        "address": "0x30000000",
+        "size": 192
+      },
+      ".dma_nc_buf": {
+        "address": "0x300000c0",
+        "size": 6304
+      },
+      ".bdma_buf": {
+        "address": "0x38000000",
+        "size": 544
+      },
+      ".eth_dma": {
+        "address": "0x30001960",
+        "size": 0
+      },
+      ".sirinos_noinit": {
+        "address": "0x30002480",
+        "size": 352
+      },
+      ".srnos_msp": {
+        "address": "0x2001e000",
+        "size": 8192
+      },
+      ".comment": {
+        "address": "0x0",
+        "size": 146
+      },
+      ".ARM.attributes": {
+        "address": "0x0",
+        "size": 75
+      },
+      ".symtab": {
+        "address": "0x0",
+        "size": 93296
+      },
+      ".shstrtab": {
+        "address": "0x0",
+        "size": 323
+      },
+      ".strtab": {
+        "address": "0x0",
+        "size": 67301
+      }
+    },
+    "tls_size": 0
+  }
+}

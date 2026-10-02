@@ -1,5 +1,5 @@
-#ifndef SIRINOS_UMBRELLA_HPP
-#define SIRINOS_UMBRELLA_HPP
+#ifndef SRNOS_UMBRELLA_HPP
+#define SRNOS_UMBRELLA_HPP
 
 #include "SirinEmbedOS/Core/Array.hpp"
 #include "SirinEmbedOS/Core/Bounds.hpp"

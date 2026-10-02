@@ -11,9 +11,11 @@ typedef enum { HAL_OK, HAL_ERROR, HAL_BUSY, HAL_TIMEOUT } HAL_StatusTypeDef;
 #define GPIO_PIN_RESET 0
 #define HAL_SPI_STATE_READY 0
 #define HAL_SPI_STATE_BUSY 1
-static inline uint32_t __get_PRIMASK(void) { return 0; }
-static inline void __disable_irq(void) {}
-static inline void __set_PRIMASK(uint32_t m) {(void)m;}
+extern uint32_t SRNOS_TestPrimask;
+void SRNOS_TestPreempt(void);
+static inline uint32_t __get_PRIMASK(void) { return SRNOS_TestPrimask; }
+static inline void __disable_irq(void) { SRNOS_TestPrimask=1; }
+static inline void __set_PRIMASK(uint32_t m) { uint32_t old=SRNOS_TestPrimask;SRNOS_TestPrimask=m;if(old&&!m)SRNOS_TestPreempt(); }
 static inline uint32_t __get_IPSR(void) { return 0; }
 uint32_t HAL_GetTick(void);
 void HAL_GPIO_WritePin(GPIO_TypeDef *,uint16_t,int);

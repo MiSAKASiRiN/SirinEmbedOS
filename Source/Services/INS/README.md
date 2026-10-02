@@ -1,8 +1,12 @@
 # INS 服务
 
+2026-09-29 已按静止原始噪声实测提高校准阈值，连续两次双IMU静态校准、保存及软件复位加载通过；保留revision2并清除INS未校准标记。实际精度、可控运动反例和真实断电仍未验收，见 [阈值复测](../../../Docs/Validation/StaticThreshold-20260929/README.md)。
+
 SirinEmbedOS 固定板载惯性服务：统一坐标，使用 BMI088 与 LSM6DS3 的六轴数据驱动一个 Mahony 姿态状态，并管理唯一的 IMU 加热通路。LIS2MDL 与 SPA06 只提供测量，不参与融合。默认启用，应用无需自行创建 INS 线程。
 
 完整参数、时序与失效合同见 [Docs/INS.md](../../../Docs/INS.md)，本模块历史见 [CHANGELOG](CHANGELOG.md)。
+
+2026-09-28 当前固件独立一分钟采集双 IMU/INS 各 60001 条有效样本，五条流无缺序；但温稳曾进入后退出，INS 在有效输出下切换正常/温度降级。采样连续性与恒温/姿态精度分别验收，数据及范围见 [当前板测](../../../Docs/Validation/SRNOSBoard-20260928/README.md)。
 
 ## 实现分工
 
@@ -14,7 +18,7 @@ SirinEmbedOS 固定板载惯性服务：统一坐标，使用 BMI088 与 LSM6DS3
 | `ins_snapshot.c` | 多任务一致复制、有效性检查与复制耗时统计 |
 | `ins_internal.h` | 模块内部状态及接线，业务代码不包含此头 |
 
-公共 API 位于 [INS.h](../../../Include/SirinEmbedOS/Services/INS.h)。固定器件旋转由 [Board glue](../../../Board/Glue/sensor_frames.c) 实现；驱动与 SPI/I²C 所有权仍在 Devices/IO，遥测编码位于 [ins_telemetry.c](../HostLink/ins_telemetry.c)。INS 不操作总线，不在周期循环内分配内存或等待 USB。
+公共 API 位于 [INS.h](../../../Include/SirinEmbedOS/Services/INS.h)。固定器件旋转由 [Board glue](../../../Board/Support/Devices/sensor_frames.c) 实现；驱动与 SPI/I²C 所有权仍在 Devices/IO，遥测编码位于 [ins_telemetry.c](../HostLink/ins_telemetry.c)。INS 不操作总线，不在周期循环内分配内存或等待 USB。
 
 ## 应用接入
 
@@ -70,7 +74,7 @@ INS 的 SI 向量为机器人坐标：加速度 m/s²（包含重力对应的比
 - 低动态观测连续 0.5 秒后建立重力方向，继续融合至少 2 秒且末尾 0.2 秒低动态才发布有效姿态；持续运动可使初始化继续等待。
 - 任一健康六轴温度 ≥80°C 立即关 PWM；满足触发来源重新有效且全部有效温度 <75°C 连续 5 秒后才可恢复。硬件故障保持关闭。
 
-本阶段“温补”只是恒温，不含温度误差曲线、用户零偏/比例/安装标定。默认禁用旧参数加载及 HostLink 存储命令，未适配 EEPROM。没有 legacy 融合或温控选择入口。
+本阶段温控只提供恒温，不含温度误差曲线补偿。EEPROM 校准记录加载/保存和 HostLink 存储默认启用；零偏/比例校正及静态校准的当前边界见下文。没有 legacy 融合或温控选择入口。
 
 ## CDC 测试与保存
 
@@ -105,3 +109,65 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
 ## 验证边界
 
 主机测试在 [Tests/Services/INS](../../../Tests/Services/INS) 和 [IMUTelemetry](../../../Tests/Services/IMUTelemetry)。固件构建、板测证据与未测事项以 [Validation](../../../Docs/Validation.md) 为准。2026-09-28 已完成三个 10 秒窗口短测，不能据此宣称十分钟稳定性、精度校准、动态性能或满 CAN 负载验收通过。
+
+## 板级边界
+
+传感器固定坐标及加热 PWM 接入移入 Board/Support/Devices，heater_board 名称表达输出职责；融合、温控及任务配置不变。
+
+## 托管线程
+
+SRNOS_INS 接入托管单轮与原 1 ms 超期重置等待；初始化不纳入循环统计。 栈、优先级、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+
+## 遥测快照边界
+
+INS 与原始传感器遥测逐条在短保护区取得记录，编码在保护外完成，避免整批复制期间屏蔽中断。队列容量、线记录格式、订阅合同和硬件采样频率保留；HostComm 的拥塞/断连不反向改变融合周期。实际临界区和 INS 时序仍需本轮板测。
+
+## 校准持久化
+
+公共接口为 `SirinEmbedOS/Services/IMUCalibration.h`：Validate、Get、GetStatus、Save。BMI088 和 LSM6DS3 各一份记录，SENSOR 轴、SI 单位，v1 保存三轴 gyro bias、accel bias/对角 scale 及校准温度。公式为 `g'=g-bias`、`a'=(a-bias)*scale`，在板级和应用旋转前应用。Sensors 的原始数据及原始遥测保持不变。支持上位机触发任意姿态静止陀螺零偏校准；加速度 bias/scale 仍须由外部多姿态校准流程提供。
+
+校验有限数值、器件/模型/坐标版本；gyro bias各轴绝对值≤1 rad/s、accel bias≤9.80665 m/s²、scale 0.5–1.5、温度−40～125°C。它们是拒绝异常记录的工程边界，不是准确性保证。Save在调用任务协作等待（0表示默认5s），不得从控制/INS周期调用；固定快照写入后只标记pending_restart，新值下次启动才生效，失败不改变活动校准。
+
+AppInit负责 EEPROM，INS仅等待解析结果并继续温控/状态更新。两颗校准分别校验，总启动存储预算2s；超时关闭接纳窗口，迟到结果不能进入融合。无效记录按零偏0、scale1回退，参与融合的任一源未校准时设置UNCALIBRATED并进入DEGRADED，姿态仍可VALID。真实传感器健康与存储状态分开；默认没有校准的板子以后会明确显示降级。
+
+`SRNOS_IMUCalibrationGetStatus()`提供各器件加载/保存结果、活动/保存revision及待重启掩码；`INSStatus.calibrated_imu_mask`和`calibration_load_pending`给出融合侧状态。身份、校准和参数互不覆盖，单份写入不保证保留旧版本。主机已覆盖序列化、独立损坏、时钟回绕/迟到加载、下一次启动生效和非单位安装旋转；实际校准精度、断电以及共享总线压力仍须板测。
+
+保存由外部校准流程取得的数据（仅在低优先级管理任务调用）：
+
+```c
+#include "SirinEmbedOS/Services/IMUCalibration.h"
+SRNOS_StorageStatus SRNOS_SaveMeasuredCalibration(const SRNOS_IMUCalibration *measured) {
+    SRNOS_StorageStatus result = SRNOS_IMUCalibrationValidate(measured);
+    if (result != SRNOS_STORAGE_OK) return result;
+    return SRNOS_IMUCalibrationSave(measured, 5000);
+}
+/* measured必须填入sensor、MODEL_VERSION、SENSOR_AXES_VERSION和实测SI数值；
+ * 成功后Get仍返回当前活动值，用GetStatus检查pending_restart_mask。 */
+```
+
+## 手动静态校准
+
+上位机在 CONFIG service `0x02` 发 REQUEST message `0x09`，正文 `01 03` 表示 v1、两颗 IMU；`01 01` 仅 BMI088，`01 02` 仅 LSM6DS3。无需六面放置，但整个观察窗口必须物理静止，建议温度稳定后触发。先固定板卡再发命令，不应在运动控制运行时校准。协议和完整结果字段见 [HostLink 协议](../../../Docs/HostLink.md#手动静态-imu-校准)。
+
+HostCmd 每 10 ms 读取一次最新 SENSOR 轴原始快照，收集约 5 s，估计三轴陀螺零偏和平均温度。单个未知姿态不能把重力与加速度零偏分开，因此保留 EEPROM 中有效的 accel bias/scale；无有效记录时使用 bias=0、scale=1。不会把当前重力向量作为加速度零偏扣除。IMU 也无法区分足够缓慢的匀速转动与零偏，软件静止检查不能替代实际静止要求。[ST 加速度校准说明](https://www.st.com/resource/en/application_note/an4508-parameters-and-calibration-of-a-lowg-3axis-accelerometer-stmicroelectronics.pdf)
+
+拒绝条件包括：传感器非 READY、字段无效、错误/丢样/恢复计数变化、非有限值、样本年龄超过 20 ms、相邻观察时间超过 40 ms 或序号不前进；加热故障、过温和缺失反馈也会结束操作。观察窗口还要求至少 400 个不同样本、跨度至少 4.9 s。工程静止阈值为原始单轴角速度绝对值≤0.10 rad/s、峰峰值≤0.12 rad/s、标准差≤0.02 rad/s；加速度模长 8.8–10.8 m/s²、单轴峰峰值≤0.40 m/s²、标准差≤0.08 m/s²；温度变化≤1.0°C。以上为异常拒绝条件；原始噪声可能触发旧阈值，当前阈值已通过静止复测，但更宽阈值对轻微运动较不敏感，不能代替物理静止要求或校准精度证明。
+
+所有选中 IMU 都通过采集校验后才开始保存。采集及保存过程持有校准写入租约，其他本地校准 Save/RunStatic 返回 BUSY；EEPROM 总线只在真正读写时占用，普通参数存储仍可能竞争并使本操作报错。每颗沿用独立单份记录、CRC 和读回验证，任一保存失败返回错误及 `saved_mask`，已经成功写入的另一颗不回滚。成功只表示保存完成，**新值下次启动生效**，当前 INS 和原始采样不变；gyro-only 记录有效也不表示已完成加速度多姿态标定。
+
+总执行期限 20 s（不包括等待 HostCmd 队列），失败不自动重试。HostCmd 在本次操作完成前无法执行其他耗时命令，HostComm、传感器和 INS 继续运行。已开始的操作断连后继续，旧会话响应丢弃；重连后用 `0x0A` 查询结果。重试同一活动请求不重复执行，但已完成响应只缓存 2 s，过期或新会话重发可启动新校准。
+
+本地低优先级管理任务也可调用，不需要 HAL/RTOS 头：
+
+```c
+#include <SirinEmbedOS/Services/IMUCalibration.h>
+SRNOS_IMUStaticStatus result;
+SRNOS_IMUStaticResult rc = SRNOS_IMUCalibrationRunStatic(
+    SRNOS_IMU_CALIBRATION_BOTH_MASK, &result);
+/* rc == SRNOS_IMU_STATIC_OK: 所有请求记录已保存，下次启动应用。
+ * 失败读取 result.failed_sensor / saved_mask / storage_status。 */
+```
+
+不新增线程、运行期内存分配或高优先级采样 hook。固定整数/浮点累计器在 HostCmd 中运行，仅进度副本使用短保护；等待时让出 CPU。主机回归、固件资源及尚未板测的范围见 [本轮验证](../../../Docs/Validation/StaticIMU-20260929/README.md)。
+
+分区、48 B 校准记录正文、启动解析和单份失败语义统一见 [EEPROM 设计](../../../Docs/Storage.md)。

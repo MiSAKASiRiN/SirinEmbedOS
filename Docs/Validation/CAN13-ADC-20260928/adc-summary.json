@@ -1,0 +1,42 @@
+{
+  "reference": {
+    "voltage_v": 24,
+    "current_a": 0.091,
+    "note": "User reported approximate external meter readings; not synchronized with individual ADC samples"
+  },
+  "n": 13,
+  "values": {
+    "current_a": {
+      "min": 0.07258418947458267,
+      "mean": 0.08985724472082578,
+      "max": 0.12155666202306747
+    },
+    "voltage_v": {
+      "min": 24.5637264251709,
+      "mean": 24.641251197228065,
+      "max": 24.684951782226562
+    },
+    "vbat_v": {
+      "min": 3.3029844760894775,
+      "mean": 3.3070529974423923,
+      "max": 3.31269907951355
+    },
+    "vrefint_v": {
+      "min": 1.2361904382705688,
+      "mean": 1.2361904382705688,
+      "max": 1.2361904382705688
+    },
+    "temperature_c": {
+      "min": 91.2230224609375,
+      "mean": 92.01527874286359,
+      "max": 92.53180694580078
+    },
+    "vdda_v": {
+      "min": 3.310791254043579,
+      "mean": 3.314961543449989,
+      "max": 3.3172998428344727
+    }
+  },
+  "voltage_difference_percent": 2.6718799884502653,
+  "current_difference_percent": -1.2557750320595806
+}

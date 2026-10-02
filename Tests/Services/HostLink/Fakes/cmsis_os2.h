@@ -1,5 +1,5 @@
-#ifndef TEST_CMSIS_OS2_H
-#define TEST_CMSIS_OS2_H
+#ifndef SRNOS_TEST_HOST_LINK_CMSIS_OS2_H
+#define SRNOS_TEST_HOST_LINK_CMSIS_OS2_H
 
 #include <stdint.h>
 
@@ -21,6 +21,7 @@ osStatus_t osMessageQueueGet(osMessageQueueId_t queue,
                              void *msg,
                              uint8_t *priority,
                              uint32_t timeout);
+osStatus_t osDelay(uint32_t ticks);
 uint32_t osMessageQueueGetCount(osMessageQueueId_t queue);
 
-#endif /* TEST_CMSIS_OS2_H */
+#endif /* SRNOS_TEST_HOST_LINK_CMSIS_OS2_H */

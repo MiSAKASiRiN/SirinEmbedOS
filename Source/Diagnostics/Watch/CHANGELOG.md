@@ -1,0 +1,7 @@
+# Changelog
+
+## Unreleased
+
+- 2026-09-29：将已有 `.debug_watch` 从 D2 移入 ITCM，按匹配 ELF 符号访问；保留各记录 magic/version，MpuDcache 末尾新增 ITCM 字节数字段并更新 size。主机/构建和实板初始化、运行 SPI/I2C 计数读取通过；未保证运行中多字段原子快照。见 [记录](../../../Docs/Validation/ITCM-20260929/README.md)。
+
+- 2026-09-28：统一 SRNOS 公共声明与头路径，删除旧名称兼容层，补齐父项目调用与资源边界说明；原协议/存储格式保持。主机及固件构建结果见本轮总验证记录，板端行为待复测。

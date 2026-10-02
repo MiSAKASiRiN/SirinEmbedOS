@@ -23,7 +23,8 @@ typedef enum {
     SRNOS_EEPROM_IO_ERROR,
     SRNOS_EEPROM_TIMEOUT,
     SRNOS_EEPROM_VERIFY_ERROR,
-    SRNOS_EEPROM_CANCELLED
+    SRNOS_EEPROM_CANCELLED,
+    SRNOS_EEPROM_READ_ONLY
 } SRNOS_EEPROMStatus;
 
 /* All operations require a running scheduler, task context and enabled IRQs.
@@ -34,6 +35,8 @@ typedef enum {
  * an entire multi-page operation deadline. Poll cadence adds caller latency.
  * Buffers remain owned by caller and valid until terminal Poll/Cancel; TX must
  * remain unchanged. RX may contain a completed prefix after error/cancellation.
+ * With Storage enabled, raw writes overlapping 0x0000..0x2FFF return READ_ONLY.
+ * A record operation holds a private lease: all raw I/O then returns BUSY.
  * Zero length and ranges crossing 0x4000 are rejected before any bus access.
  */
 SRNOS_EEPROMStatus SRNOS_EEPROMReadAsync(uint16_t address, void *data,

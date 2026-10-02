@@ -1,11 +1,16 @@
-#ifndef TEST_FREERTOS_H
-#define TEST_FREERTOS_H
+#ifndef SRNOS_TEST_HOST_LINK_FREERTOS_H
+#define SRNOS_TEST_HOST_LINK_FREERTOS_H
 
 #include <assert.h>
 #include <stdint.h>
 
 typedef uint32_t TickType_t;
 typedef int BaseType_t;
+
+#define taskSCHEDULER_NOT_STARTED 0
+#define taskSCHEDULER_RUNNING 2
+BaseType_t xPortIsInsideInterrupt(void);
+BaseType_t xTaskGetSchedulerState(void);
 
 #define pdTRUE             1
 #define pdFALSE            0
@@ -18,4 +23,4 @@ void test_task_exit_critical(void);
 #define taskENTER_CRITICAL() test_task_enter_critical()
 #define taskEXIT_CRITICAL()  test_task_exit_critical()
 
-#endif /* TEST_FREERTOS_H */
+#endif /* SRNOS_TEST_HOST_LINK_FREERTOS_H */

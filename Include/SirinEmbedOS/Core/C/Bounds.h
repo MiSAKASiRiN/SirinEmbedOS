@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_BOUNDS_H
-#define SIRINOS_C_BOUNDS_H
+#ifndef SRNOS_C_BOUNDS_H
+#define SRNOS_C_BOUNDS_H
 
 #include <stdbool.h>
 #include <stddef.h>

@@ -1,3 +1,0 @@
-#pragma once
-#include <stdint.h>
-void osDelay(uint32_t);

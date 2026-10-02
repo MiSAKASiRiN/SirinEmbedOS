@@ -1,0 +1,9 @@
+#pragma once
+#include <stdint.h>
+void SRNOS_TimeInit(uint32_t);
+uint32_t SRNOS_TimeIsReady(void);
+uint32_t SRNOS_TimeGetCpuHz(void);
+uint32_t SRNOS_TimeGetCounter(void);
+uint32_t SRNOS_TimeGetElapsedCycles(uint32_t,uint32_t);
+uint64_t SRNOS_TimeGetUptimeUs(void);
+uint64_t SRNOS_TimeGetUptimeCycles64(void);

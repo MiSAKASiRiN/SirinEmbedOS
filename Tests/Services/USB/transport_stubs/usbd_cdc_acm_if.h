@@ -56,6 +56,6 @@ uint8_t USBD_CDC_SetRxBuffer(uint8_t ch, USBD_HandleTypeDef *device,
 uint8_t USBD_CDC_ReceivePacket(uint8_t ch, USBD_HandleTypeDef *device);
 uint8_t USBD_CDC_TransmitPacket(uint8_t ch, USBD_HandleTypeDef *device);
 
-uint8_t CDC_Transmit(uint8_t ch, uint8_t *data, uint16_t length);
+uint8_t SRNOS_USBCdcTransmit(uint8_t ch, uint8_t *data, uint16_t length);
 
 #endif

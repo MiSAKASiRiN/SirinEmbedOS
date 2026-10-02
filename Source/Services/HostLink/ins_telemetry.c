@@ -1,7 +1,9 @@
+#include "FreeRTOS.h"
+#include "task.h"
 #include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"
 #include "SirinEmbedOS/Kernel/System.h"
 #include "SirinEmbedOS/Core/C/Endian.h"
-#include "SirinEmbedOS/Diagnostics/Time/bsp_dwt.h"
+#include "SirinEmbedOS/Diagnostics/Time/Time.h"
 #include <string.h>
 typedef struct {
     union {SRNOS_INSAttitude attitude;SRNOS_MagneticSample magnetic;SRNOS_PressureSample pressure;} value;
@@ -56,24 +58,31 @@ void SRNOS_INSTelemetryObserve(const SRNOS_INSSnapshot *s) {
     const bool valid[3]={(s->attitude.flags&SRNOS_INS_VALID)!=0,
         s->magnetic.header.state==SRNOS_SENSOR_READY&&(s->magnetic.header.valid_fields&SRNOS_SENSOR_MAG),
         s->pressure.header.state==SRNOS_SENSOR_READY&&(s->pressure.header.valid_fields&SRNOS_SENSOR_PRESSURE)};
-    taskENTER_CRITICAL();
     for(unsigned i=0;i<3;i++) {
-        stream_t *st=&streams[i];bool changed=!st->seen||sequence[i]!=st->last_sequence;
+        stream_t *st=&streams[i];
+        taskENTER_CRITICAL();
+        bool changed=!st->seen||sequence[i]!=st->last_sequence;
         st->seen=true;st->last_sequence=sequence[i];
-        if(!valid[i]||!st->enabled||!changed)continue;
-        if(st->head-st->tail==st->capacity){++st->overflow;continue;}
-        item_t *item=&st->items[st->head%st->capacity];item->phase=s->status.phase;
-        if(i==0)item->value.attitude=s->attitude;else if(i==1)item->value.magnetic=s->magnetic;else item->value.pressure=s->pressure;
-        ++st->head;++st->enqueued;if(st->head-st->tail>st->high_water)st->high_water=st->head-st->tail;
+        if(valid[i] && st->enabled && changed) {
+            if(st->head-st->tail==st->capacity)++st->overflow;
+            else {
+                item_t *item=&st->items[st->head%st->capacity];item->phase=s->status.phase;
+                if(i==0)item->value.attitude=s->attitude;
+                else if(i==1)item->value.magnetic=s->magnetic;
+                else item->value.pressure=s->pressure;
+                ++st->head;++st->enqueued;
+                if(st->head-st->tail>st->high_water)st->high_water=st->head-st->tail;
+            }
+        }
+        taskEXIT_CRITICAL();
     }
-    taskEXIT_CRITICAL();
 }
 static void configure(void *user,bool enabled,uint32_t period) {
     (void)period;stream_t *s=user;taskENTER_CRITICAL();s->discarded+=s->head-s->tail;s->tail=s->head;s->enabled=enabled;taskEXIT_CRITICAL();
 }
-static void delivered(void *user,uint32_t count,srn_link_delivery_t result) {
+static void delivered(void *user,uint32_t count,SRNOS_HostLinkDelivery result) {
     stream_t *s=user;taskENTER_CRITICAL();
-    if(result==SRN_LINK_DELIVERED)s->sent+=count;else if(result==SRN_LINK_FAILED)s->failed+=count;else s->discarded+=count;
+    if(result==SRNOS_HOST_LINK_DELIVERED)s->sent+=count;else if(result==SRNOS_HOST_LINK_FAILED)s->failed+=count;else s->discarded+=count;
     taskEXIT_CRITICAL();
 }
 static uint64_t timestamp(const stream_t *s,const item_t *item) {
@@ -83,12 +92,15 @@ static uint32_t sequence(const stream_t *s,const item_t *item) {
     return s->stream_id==0x102?item->value.attitude.sequence:s->stream_id==0x103?item->value.magnetic.header.sequence:item->value.pressure.header.sequence;
 }
 static void pump(void *user,uint32_t now_ms) {
-    (void)now_ms;stream_t *s=user;uint64_t now=DWT_GetUptimeUs();unsigned maximum=sizeof(encoded)/s->record_bytes;
+    (void)now_ms;stream_t *s=user;uint64_t now=SRNOS_TimeGetUptimeUs();unsigned maximum=sizeof(encoded)/s->record_bytes;
     if(maximum>8)maximum=8;
     taskENTER_CRITICAL();unsigned count=s->head-s->tail;
     if(!count||(count<maximum&&now-timestamp(s,&s->items[s->tail%s->capacity])<4000)){taskEXIT_CRITICAL();return;}
     if(count>maximum)count=maximum;
-    for(unsigned i=0;i<count;i++)batch[i]=s->items[(s->tail+i)%s->capacity];taskEXIT_CRITICAL();
+    const uint32_t tail=s->tail;taskEXIT_CRITICAL();
+    for(unsigned i=0;i<count;i++) {
+        taskENTER_CRITICAL();batch[i]=s->items[(tail+i)%s->capacity];taskEXIT_CRITICAL();
+    }
     bool ok=true;
     for(unsigned i=0;i<count;i++) {
         uint8_t *out=encoded+i*s->record_bytes;
@@ -96,13 +108,13 @@ static void pump(void *user,uint32_t now_ms) {
         else if(s->stream_id==0x103)ok=ok&&SRNOS_INSEncodeMagnetic(&batch[i].value.magnetic,out,s->record_bytes);
         else ok=ok&&SRNOS_INSEncodePressure(&batch[i].value.pressure,out,s->record_bytes);
     }
-    srn_link_result_t result=ok?TSKPTT_HostComm_PublishTelemetry(s->stream_id,sequence(s,&batch[0]),(uint32_t)timestamp(s,&batch[0]),s->period_us,(uint8_t)count,encoded,count*s->record_bytes):SRN_LINK_ERR_PARAM;
-    if(result==SRN_LINK_ERR_FULL||result==SRN_LINK_ERR_BUSY)return;
-    taskENTER_CRITICAL();s->tail+=count;if(result!=SRN_LINK_OK)s->failed+=count;taskEXIT_CRITICAL();
+    SRNOS_HostLinkResult result=ok?SRNOS_HostLinkPublishTelemetry(s->stream_id,sequence(s,&batch[0]),(uint32_t)timestamp(s,&batch[0]),s->period_us,(uint8_t)count,encoded,count*s->record_bytes):SRNOS_HOST_LINK_ERR_PARAM;
+    if(result==SRNOS_HOST_LINK_ERR_FULL||result==SRNOS_HOST_LINK_ERR_BUSY)return;
+    taskENTER_CRITICAL();s->tail+=count;if(result!=SRNOS_HOST_LINK_OK)s->failed+=count;taskEXIT_CRITICAL();
 }
-static uint16_t status(void *user,const srn_cobs_prot_view_t *request,uint8_t *out,size_t cap,size_t *len,uint8_t *flags) {
-    (void)user;*len=0;*flags=0;if(request->payload_len)return SRN_LINK_STATUS_BAD_LENGTH;
-    if(cap<256)return SRN_LINK_STATUS_INTERNAL_ERROR;
+static uint16_t status(void *user,const SRNOS_ProtocolView *request,uint8_t *out,size_t cap,size_t *len,uint8_t *flags) {
+    (void)user;*len=0;*flags=0;if(request->payload_len)return SRNOS_HOST_LINK_STATUS_BAD_LENGTH;
+    if(cap<256)return SRNOS_HOST_LINK_STATUS_INTERNAL_ERROR;
     SRNOS_INSStatus st;SRNOS_INSGetStatus(&st);memset(out,0,256);cap=256;
     out[0]=1;out[1]=(uint8_t)st.phase;out[2]=st.healthy_imu_mask;
     out[3]=(uint8_t)(st.heater.enabled|st.heater.thermal_ready<<1|st.heater.overtemperature<<2|st.heater.hardware_fault<<3|st.heater.feedback_missing<<4);
@@ -121,17 +133,17 @@ static uint16_t status(void *user,const srn_cobs_prot_view_t *request,uint8_t *o
         uint32_t counters[10]={s->last_sequence,s->head-s->tail,s->high_water,s->enqueued,s->overflow,s->sent,s->failed,s->discarded,s->capacity,0};
         taskEXIT_CRITICAL();for(unsigned j=0;j<10;j++)u32(out,cap,p+4+4*j,counters[j]);
     }
-    *len=256;return SRN_LINK_STATUS_OK;
+    *len=256;return SRNOS_HOST_LINK_STATUS_OK;
 }
-srn_link_result_t SRNOS_INSTelemetryRegister(srn_link_t *link,void *user) {
-    (void)user;if(registered)return SRN_LINK_ERR_BUSY;
+SRNOS_HostLinkResult SRNOS_INSTelemetryRegister(SRNOS_HostLinkRegistration *link,void *user) {
+    (void)user;if(registered)return SRNOS_HOST_LINK_ERR_BUSY;
     for(unsigned i=0;i<3;i++) {
-        stream_t *s=&streams[i];tskptt_host_comm_telemetry_config_t config={
-            .stream_id=s->stream_id,.max_sample_size=sizeof(encoded),.required_period_us=s->period_us,.policy=SRN_LINK_FIFO,
+        stream_t *s=&streams[i];SRNOS_HostLinkTelemetryConfig config={
+            .stream_id=s->stream_id,.max_sample_size=sizeof(encoded),.required_period_us=s->period_us,.poll_interval_ms=1,.policy=SRNOS_HOST_LINK_FIFO,
             .on_config=configure,.poll=pump,.on_delivery=delivered,.user=s};
-        srn_link_result_t r=TSKPTT_HostComm_RegisterTelemetryEx(&config);if(r!=SRN_LINK_OK)return r;
+        SRNOS_HostLinkResult r=SRNOS_HostLinkRegisterTelemetryEx(&config);if(r!=SRNOS_HOST_LINK_OK)return r;
     }
-    srn_link_result_t r=srn_link_register_handler(link,SRN_LINK_SERVICE_TELEMETRY,SRNOS_INS_TELEMETRY_STATUS_MESSAGE,
-        SRN_LINK_KIND_MASK(SRN_COBS_PROT_KIND_REQUEST),SRN_LINK_QOS_RELIABLE,status,NULL);
-    registered=r==SRN_LINK_OK;return r;
+    SRNOS_HostLinkResult r=SRNOS_HostLinkRegisterHandler(link,SRNOS_HOST_LINK_SERVICE_TELEMETRY,SRNOS_INS_TELEMETRY_STATUS_MESSAGE,
+        SRNOS_HOST_LINK_KIND_MASK(SRNOS_PROTOCOL_KIND_REQUEST),SRNOS_HOST_LINK_QOS_RELIABLE,status,NULL);
+    registered=r==SRNOS_HOST_LINK_OK;return r;
 }

@@ -1,0 +1,51 @@
+Reading symbols from build/static-threshold-20260929/Release/SirinEmbedOS.elf...
+Remote debugging using localhost:2331
+0x0800e3ea in prvIdleTask ()
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2d3c8 lma 0x80002d0
+Loading section .rodata, size 0x3398 lma 0x802d698
+Loading section .ARM, size 0x10 lma 0x8030a30
+Loading section .preinit_array, size 0x4 lma 0x8030a40
+Loading section .data, size 0x44c lma 0x8030a44
+Loading section .itcm_text, size 0xc0 lma 0x8030e90
+Start address 0x08001ee0, load size 200524
+Transfer rate: 65274 KB/sec, 22280 bytes/write.
+Section .text, range 0x80002d0 -- 0x802d698: matched.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3ea in prvIdleTask ()
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/static-threshold-20260929/Release/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]
+Remote debugging using localhost:2331
+
+Program stopped.
+0x0800e3ea in prvIdleTask ()
+No symbol "imu_calibration.c" in current context.
+No symbol "imu_static_calibration.c" in current context.
+No symbol "ins_service.c" in current context.
+'xFreeBytesRemaining' has unknown type; cast it to its declared type
+'xMinimumEverFreeBytesRemaining' has unknown type; cast it to its declared type
+No symbol "TCB_t" in current context.
+$1 = void
+Value can't be converted to integer.
+No symbol "TCB_t" in current context.
+Value can't be converted to integer.
+'SRNOS_DebugDbgI2C' has unknown type; cast it to its declared type
+Resetting target
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/static-threshold-20260929/Release/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]
+Remote debugging using localhost:2331
+
+Program stopped.
+0x0800e3c0 in prvIdleTask ()
+$2 = 66024
+$3 = 61800
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/static-threshold-20260929/Release/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

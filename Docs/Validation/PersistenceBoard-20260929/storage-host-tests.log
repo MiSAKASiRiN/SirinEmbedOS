@@ -1,0 +1,2 @@
+FT24C128A: full 16KiB, page split, 16-bit addressing, readback, async ownership, bounds, NACK, timeout/cancel/quarantine and tick wrap passed
+Storage: actual FT24C128A state machine, CRC vector, every-byte power cuts, corrupt records, lease/ownership, raw protection, serial, unchanged writes, deadline/cancel and wrap passed

@@ -1,17 +1,22 @@
+#include "thread_internal.h"
 #include "kernel_internal.h"
 #include "startup_barrier.h"
 #include "SirinEmbedOS/Kernel/Startup.h"
 #include "SirinEmbedOS/Kernel/System.h"
 #include "SirinEmbedOS/Services/Services.h"
 #include "SirinEmbedOS/Services/Referee/Startup.h"
-#include "SirinEmbedOS/Diagnostics/Runtime/Startup.h"
-#include "SirinEmbedOS/IO/SPI/bsp_spi.h"
-#include "SirinEmbedOS/IO/I2C/bsp_i2c.h"
-#include "SirinEmbedOS/IO/CAN/Native/bsp_fdcan.h"
-#include "SirinEmbedOS/IO/CAN/Router/NTFDCAN_Router.h"
-#include "SirinEmbedOS/IO/CAN/External/EXFDCAN_Router.h"
-#include "SirinEmbedOS/IO/RS485/RS485_Router.h"
+#include "../Services/SystemMonitor/monitor_internal.h"
+#include "SirinEmbedOS/Services/HostLink/SystemMonitorTelemetry.h"
+#include "IO/SPI/spi_internal.h"
+#include "IO/I2C/i2c_internal.h"
+#include "IO/CAN/Native/fdcan_internal.h"
+#include "IO/CAN/can_startup.h"
+#include "SirinEmbedOS/IO/RS485/RS485.h"
 #include "../Services/INS/ins_internal.h"
+#include "../Services/INS/imu_calibration_internal.h"
+#include "Services/Parameters/parameters_internal.h"
+#include "Services/Telemetry/telemetry_internal.h"
+#include "../Services/Indicators/indicators_internal.h"
 #include "SirinEmbedOS/Services/HostLink/IMUTelemetry.h"
 #include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"
 #include "FreeRTOS.h"
@@ -23,31 +28,34 @@ extern void SRNOS_BMIWorker(void *);
 extern void SRNOS_LSMWorker(void *);
 extern void SRNOS_EnvironmentWorker(void *);
 extern SRNOS_SystemResult SRNOS_SystemFreeze(const SRNOS_SystemConfig *);
-extern bool SRNOS_BoardIndicatorsPrepare(bool bringup);
-extern void SRNOS_BoardIndicatorsWorker(void *);
-extern void SRNOS_CAN_PrepareResources(void);
 static SRNOS_IMUSampleObserver app_imu_observer;
 static void *app_imu_user;
 static void observe_imu(SRNOS_SensorId id,const SRNOS_IMUSample *sample,void *user) {
     (void)user;SRNOS_IMUTelemetryObserve(id,sample,NULL);
     if(app_imu_observer&&app_imu_observer!=SRNOS_IMUTelemetryObserve) app_imu_observer(id,sample,app_imu_user);
 }
-static bool ins_link_enabled;
+static bool ins_link_enabled, monitor_link_enabled;
 static SRNOS_HostLinkSetupFn app_host_setup;
 static void *app_host_user;
-static srn_link_result_t setup_host(srn_link_t *link,void *user) {
-    (void)user;srn_link_result_t r=SRN_LINK_OK;
+static SRNOS_HostLinkResult setup_host(SRNOS_HostLinkRegistration *link,void *user) {
+    (void)user;SRNOS_HostLinkResult r=SRNOS_HOST_LINK_OK;
     if(ins_link_enabled) {
         r=SRNOS_IMUTelemetryRegister(link,NULL);
-        if(r==SRN_LINK_OK)r=SRNOS_INSTelemetryRegister(link,NULL);
+        if(r==SRNOS_HOST_LINK_OK)r=SRNOS_INSTelemetryRegister(link,NULL);
     }
-    if(r==SRN_LINK_OK&&app_host_setup && (!ins_link_enabled ||
+    if(r==SRNOS_HOST_LINK_OK&&monitor_link_enabled) r=SRNOS_SystemMonitorTelemetryRegister(link,NULL);
+    if(r==SRNOS_HOST_LINK_OK&&app_host_setup && (!ins_link_enabled ||
         (app_host_setup!=SRNOS_IMUTelemetryRegister&&app_host_setup!=SRNOS_INSTelemetryRegister)))
         r=app_host_setup(link,app_host_user);
     return r;
 }
 static SRNOS_SystemStatus status;
 static osEventFlagsId_t application_ready;
+static uint32_t startup_remaining(uint32_t deadline)
+{
+    int32_t left=(int32_t)(deadline-SRNOS_TimeMs());
+    return left>0?(uint32_t)left:0;
+}
 __attribute__((weak)) void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config) { (void)config; }
 
 void SRNOS_SystemGetStatus(SRNOS_SystemStatus *out)
@@ -62,26 +70,25 @@ static void application_thread(void *argument)
 {
     (void)argument;
     const SRNOS_SystemConfig *c = SRNOS_SystemGetConfig();
-    status.native_can_ready = bsp_fdcan_init_all() && bsp_fdcan_start_all();
+    status.native_can_ready = SRNOS_FDCANInitAll() && SRNOS_FDCANStartAll();
     configASSERT((osEventFlagsSet(application_ready, 2u) & osFlagsError) == 0u);
-    status.parameter_load_status = c->load_parameters ? (int)params_load() : (int)PARAMS_STATUS_OK;
+    const uint32_t deadline=SRNOS_IMUCalibrationStartupBegin(SRNOS_TimeMs());
+    uint32_t left=startup_remaining(deadline);
+    status.identity_load_status=left?SRNOS_StorageLoadIdentity(left):SRNOS_STORAGE_TIMEOUT;
+    SRNOS_IMUCalibrationLoadStartup(deadline);
+    status.parameter_load_status = c->load_parameters ?
+        (int)SRNOS_ParametersLoadStartup(startup_remaining(deadline)) : (int)SRNOS_PARAMETERS_STATUS_OK;
     if (c->usb_enabled) status.usb_ready = SRNOS_USBStart();
     status.phase = SRNOS_SYSTEM_RUNNING;
+    SRNOS_KernelThreadReleaseApplications();
     configASSERT((osEventFlagsSet(application_ready, 1u) & osFlagsError) == 0u);
     SRNOS_ApplicationMain();
-    osThreadExit();
-}
-static void configured_application_thread(void *arg)
-{
-    const SRNOS_ThreadConfig *thread = arg;
-    configASSERT(SRNOS_StartupWaitReady(application_ready, 1u));
-    thread->entry(thread->argument);
-    osThreadExit();
+    return;
 }
 static void make_thread(const char *name, osThreadFunc_t entry, void *arg, uint32_t stack, osPriority_t priority)
 {
     const osThreadAttr_t attributes = { .name=name, .stack_size=stack, .priority=priority };
-    configASSERT(osThreadNew(entry, arg, &attributes) != NULL);
+    configASSERT(SRNOS_KernelThreadNew(entry, arg, &attributes) != NULL);
 }
 typedef struct {
     const char *name;
@@ -92,17 +99,17 @@ typedef struct {
     bool wait_board;
 } system_thread_t;
 static const system_thread_t system_threads[] = {
-    {"CAN1_RX",Start_CAN_RxRouter,(void *)1,4096,osPriorityHigh,true},
-    {"CAN1_TX",Start_CAN_TxRouter,(void *)1,4096,osPriorityHigh,true},
-    {"CAN2_RX",Start_CAN_RxRouter,(void *)2,4096,osPriorityHigh,true},
-    {"CAN2_TX",Start_CAN_TxRouter,(void *)2,4096,osPriorityHigh,true},
-    {"CAN3_RX",Start_CAN_RxRouter,(void *)3,4096,osPriorityHigh,true},
-    {"CAN3_TX",Start_CAN_TxRouter,(void *)3,4096,osPriorityHigh,true},
-    {"CAN4_RX",Start_EXFDCAN_RxRouter,NULL,4096,osPriorityHigh4,false},
-    {"CAN4_TX",Start_EXFDCAN_TxRouter,NULL,4096,osPriorityHigh4,false},
-    {"BMI",SRNOS_BMIWorker,NULL,2048,osPriorityHigh5,false},
-    {"INS",SRNOS_INSWorker,NULL,3072,osPriorityHigh5,false},
-    {"Indicators",SRNOS_BoardIndicatorsWorker,NULL,1024,osPriorityLow,false},
+    {"SRNOS_CAN1_RX",SRNOS_NativeCANRxRouterWorker,(void *)1,4096,osPriorityHigh,true},
+    {"SRNOS_CAN1_TX",SRNOS_NativeCANTxRouterWorker,(void *)1,4096,osPriorityHigh,true},
+    {"SRNOS_CAN2_RX",SRNOS_NativeCANRxRouterWorker,(void *)2,4096,osPriorityHigh,true},
+    {"SRNOS_CAN2_TX",SRNOS_NativeCANTxRouterWorker,(void *)2,4096,osPriorityHigh,true},
+    {"SRNOS_CAN3_RX",SRNOS_NativeCANRxRouterWorker,(void *)3,4096,osPriorityHigh,true},
+    {"SRNOS_CAN3_TX",SRNOS_NativeCANTxRouterWorker,(void *)3,4096,osPriorityHigh,true},
+    {"SRNOS_CAN4_RX",SRNOS_ExternalCANRxRouterWorker,NULL,4096,osPriorityHigh4,false},
+    {"SRNOS_CAN4_TX",SRNOS_ExternalCANTxRouterWorker,NULL,4096,osPriorityHigh4,false},
+    {"SRNOS_BMI",SRNOS_BMIWorker,NULL,2048,osPriorityHigh5,false},
+    {"SRNOS_INS",SRNOS_INSWorker,NULL,3072,osPriorityHigh5,false},
+    {"SRNOS_Indic",SRNOS_IndicatorsWorker,NULL,1024,osPriorityLow,false},
 };
 static void system_thread_entry(void *arg)
 {
@@ -111,7 +118,7 @@ static void system_thread_entry(void *arg)
     t->entry(t->arg);
     /* Failed device initialization is reported by the device status. FreeRTOS
      * task entries must never return into the port's fatal return trap. */
-    osThreadExit();
+    return;
 }
 void SRNOS_KernelStart(void)
 {
@@ -120,8 +127,8 @@ void SRNOS_KernelStart(void)
     started = 1U;
     SRNOS_SystemConfig draft;
     SRNOS_SystemConfigDefaults(&draft);
-    bsp_spi_init_pre();
-    bsp_i2c_init();
+    SRNOS_SPIInitPre();
+    SRNOS_I2CInit();
     SRNOS_ApplicationConfigure(&draft);
     configASSERT(SRNOS_SystemValidate(&draft) == SRNOS_SYSTEM_OK);
     configASSERT(SRNOS_SerialConfigure(draft.serial, draft.serial_count) == SRNOS_SERIAL_OK);
@@ -130,34 +137,40 @@ void SRNOS_KernelStart(void)
     if (draft.logging_enabled) {
         configASSERT(SRNOS_LoggingPrepare(draft.log_backends, SRNOS_SerialGetChannel(draft.log_port)));
     }
+    monitor_link_enabled=draft.system_monitor_enabled;
     ins_link_enabled=draft.ins.enabled;app_host_setup=draft.host_link_setup;app_host_user=draft.host_link_user;
     if (draft.host_link_enabled) {
-        configASSERT(SRNOS_HostLinkPrepareEx(draft.usb_enabled, draft.host_link_storage_enabled, draft.diagnostics_enabled, setup_host, NULL));
+        configASSERT(SRNOS_HostLinkPrepareEx(draft.usb_enabled, draft.host_link_storage_enabled, setup_host, NULL));
     }
     if (draft.bind_channels) configASSERT(draft.bind_channels(draft.bind_channels_user));
     app_imu_observer=draft.sensors.imu_observer;app_imu_user=draft.sensors.imu_observer_user;
     draft.sensors.imu_observer=observe_imu;draft.sensors.imu_observer_user=NULL;
     SRNOS_SensorsPrepare(&draft.sensors);
-    configASSERT(SRNOS_DiagnosticsPrepare(draft.diagnostics_enabled));
-    configASSERT(SRNOS_ParametersFreeze() == PARAMS_STATUS_OK);
+    configASSERT(SRNOS_SystemMonitorPrepare(draft.system_monitor_enabled));
+    configASSERT(SRNOS_StoragePrepare(&draft.storage));
+    SRNOS_IMUCalibrationPrepare(draft.storage.enabled);
+    SRNOS_ParametersConfigure(draft.parameter_application_id,draft.parameter_compatibility_version);
+    configASSERT(SRNOS_TelemetryFreeze());
+    configASSERT(SRNOS_ParametersFreeze() == SRNOS_PARAMETERS_STATUS_OK);
     SRNOS_CAN_FreezeConfiguration();
     configASSERT(SRNOS_SystemFreeze(&draft) == SRNOS_SYSTEM_OK);
     status.phase = SRNOS_SYSTEM_CONFIG_FROZEN;
     const SRNOS_SystemConfig *c = SRNOS_SystemGetConfig();
     SRNOS_INSPrepare(&c->ins);
 
-    configASSERT(SRNOS_BoardIndicatorsPrepare(c->bringup_indicators));
+    configASSERT(SRNOS_IndicatorsPrepare(c->bringup_indicators));
     configASSERT(osKernelInitialize() == osOK);
+    configASSERT(SRNOS_KernelThreadPrepare(c->cycle_statistics_enabled));
     application_ready = osEventFlagsNew(NULL);
     configASSERT(application_ready != NULL);
-    bsp_spi_init_rtos();
-    bsp_i2c_init_rtos();
+    SRNOS_SPIInitRtos();
+    SRNOS_I2CInitRtos();
     SRNOS_CAN_PrepareResources();
     configASSERT(SRNOS_SerialStart() == SRNOS_SERIAL_OK);
     configASSERT(SRNOS_RemoteControlStart() == 0);
     configASSERT(SRNOS_RefereeStart() == 0);
-    configASSERT(SRNOS_RS485Start(c->rs485_response_timeout_ms) == 0);
-    configASSERT(SRNOS_DiagnosticsStart());
+    configASSERT(SRNOS_RS485Start(c->SRNOS_RS485ResponseTimeoutMs) == 0);
+    configASSERT(SRNOS_SystemMonitorStart());
     if (c->logging_enabled) configASSERT(SRNOS_LoggingStart());
     if (c->host_link_enabled) configASSERT(SRNOS_HostLinkStart());
     /* Preserve the prototype's bounded shared-SPI worker priority ordering:
@@ -166,13 +179,14 @@ void SRNOS_KernelStart(void)
         const system_thread_t *t=&system_threads[i];
         make_thread(t->name, system_thread_entry, (void *)t, t->stack, t->priority);
     }
-    if(c->sensors.lsm_enabled) make_thread("LSM", SRNOS_LSMWorker, NULL, 2048, osPriorityHigh5);
-    if(c->sensors.lis_enabled || c->sensors.spa_enabled) make_thread("Environment", SRNOS_EnvironmentWorker, NULL, 2048, osPriorityNormal);
+    if(c->sensors.lsm_enabled) make_thread("SRNOS_LSM", SRNOS_LSMWorker, NULL, 2048, osPriorityHigh5);
+    if(c->sensors.lis_enabled || c->sensors.spa_enabled) make_thread("SRNOS_Env", SRNOS_EnvironmentWorker, NULL, 2048, osPriorityNormal);
     for (size_t i=0; i<c->thread_count; ++i) {
         const SRNOS_ThreadConfig *t = &c->threads[i];
-        make_thread(t->name, configured_application_thread, (void *)t, t->stack_bytes, (osPriority_t)t->priority);
+        SRNOS_Thread handle;
+        configASSERT(SRNOS_KernelThreadCreateConfigured(t,&handle)==SRNOS_OK);
     }
-    make_thread("Application", application_thread, NULL, c->application_stack_bytes, (osPriority_t)c->application_priority);
+    make_thread("SRNOS_AppInit", application_thread, NULL, c->application_stack_bytes, (osPriority_t)c->application_priority);
     status.phase = SRNOS_SYSTEM_THREADS_CREATED;
     (void)osKernelStart();
     SRNOS_KernelFailure("scheduler returned", __FILE__, __LINE__);

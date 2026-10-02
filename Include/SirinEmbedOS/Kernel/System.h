@@ -2,25 +2,21 @@
 #define SRNOS_KERNEL_SYSTEM_H
 #include <stdbool.h>
 #include <stddef.h>
+#include "SirinEmbedOS/Kernel/Thread.h"
 #include <stdint.h>
 #include "SirinEmbedOS/Devices/Sensors.h"
 #include "SirinEmbedOS/Services/INS.h"
+#include "SirinEmbedOS/Services/Storage.h"
 #include "SirinEmbedOS/IO/Serial/Serial.h"
 #include "SirinEmbedOS/Services/RemoteControl/Startup.h"
-#include "SirinEmbedOS/Services/HostLink/tskptt_host_comm.h"
+#include "SirinEmbedOS/Services/HostLink/HostLink.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define SRNOS_SYSTEM_MAX_SERIAL 5u
 #define SRNOS_SYSTEM_MAX_THREADS 8u
-typedef struct {
-    const char *name; /* Static storage; maximum 15 visible characters. */
-    void (*entry)(void *);
-    void *argument;
-    uint32_t stack_bytes; /* >=1024, multiple of 8. */
-    uint32_t priority;    /* CMSIS priority 1..39, below fixed bus workers. */
-} SRNOS_ThreadConfig;
+
 typedef struct {
     SRNOS_SensorConfig sensors;
     SRNOS_INSConfig ins;
@@ -35,14 +31,22 @@ typedef struct {
     bool host_link_enabled;
     bool host_link_storage_enabled;
     bool bringup_indicators;
-    bool diagnostics_enabled;
+    bool system_monitor_enabled;
+    bool cycle_statistics_enabled;
     bool load_parameters;
-    uint32_t rs485_response_timeout_ms;
+    SRNOS_StorageConfig storage;
+    /* Stable application-owned namespace. Nonzero when persistent parameters
+     * exist; change compatibility version only for incompatible semantics. */
+    uint32_t parameter_application_id;
+    uint16_t parameter_compatibility_version;
+    uint32_t SRNOS_RS485ResponseTimeoutMs;
     uint32_t application_stack_bytes;
     uint32_t application_priority;
+    /* Startup names/arguments must outlive this configuration callback.
+     * Runtime ThreadCreate instead copies the supplied description/name. */
     SRNOS_ThreadConfig threads[SRNOS_SYSTEM_MAX_THREADS];
     size_t thread_count;
-    tskptt_host_comm_project_setup_fn host_link_setup;
+    SRNOS_HostLinkProjectSetupFn host_link_setup;
     void *host_link_user;
     /* Optional second configuration phase: Serial channels now exist, built-in
      * services already hold their ports. Declare H12H/RS485 or raw channel
@@ -70,11 +74,13 @@ typedef struct {
     bool native_can_ready;
     bool usb_ready;
     int parameter_load_status;
+    SRNOS_StorageStatus identity_load_status;
 } SRNOS_SystemStatus;
 
 void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *config);
 /* Conservative kernel heap reservation (bytes), including fixed workers,
- * optional service queues, application stacks and allocation overhead. */
+ * optional service queues, fixed application object pool, lifecycle/statistics
+ * storage and allocation overhead. Runtime pool exhaustion is recoverable. */
 uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *config);
 SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *config);
 bool SRNOS_SystemConfigurationFrozen(void);

@@ -1,0 +1,2 @@
+PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: build/itcm-migration-20260929/Debug/SirinEmbedOS.elf
+PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: build/itcm-migration-20260929/Release/SirinEmbedOS.elf

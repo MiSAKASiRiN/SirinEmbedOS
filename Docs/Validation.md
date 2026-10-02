@@ -1,5 +1,41 @@
 # 迁移验证记录
 
+## 2026-09-29 ITCM RAM 迁移
+
+CAN Router 上下文和 Debug Watch 正式迁入 ITCM，Release 释放 D1 59904 B、D2 2848 B；ITCM 余 2528 B，heap/线程/队列容量不变。25 套主机、十个父项目与 Debug/Release 通过。板端预填后软件复位清零、代码复制、Watch 读取、CDC 监测及五流短测通过；CAN 未短接，收发压力与实际断电未验。新 Release 留板运行，EEPROM 未改，调试连接释放。见 [记录](Validation/ITCM-20260929/README.md)。
+
+## 2026-09-29 静态校准阈值复测
+
+提高原始噪声拒绝阈值后，两次双IMU静态校准均成功，各501样本、约5.3秒，活动请求重试未重复执行。软件复位加载revision2，与返回零偏逐值一致，INS清除UNCALIBRATED；温稳降级仍独立存在。按用户要求保留新固件和EEPROM，未处理遥测。见 [复测记录](Validation/StaticThreshold-20260929/README.md)。
+
+## 2026-09-29 持久化与静态校准板测
+
+参数保存/复位加载、保存代次隔离、CRC与全片恢复通过；静态校准在确认静止后仍误报MOVING，未获得成功校准。8路1kHz订阅实收约7284标量/s，CDC停止读取/重连可恢复。Monitor约0.05%、临界区2µs；最终运行正常Minimal Release、原EEPROM恢复、探针释放。完整范围和未测项见 [本轮记录](Validation/PersistenceBoard-20260929/README.md)。
+
+## 2026-09-28 单份持久化与高频变量
+
+FT24C128A身份/双IMU校准/业务参数单份记录、Persistent与只读Telemetry、SOURCE V2已实现。25套主机、90公共头/156编译及依赖单元、十个父项目固件、命名/结构/第三方哈希、Debug/Release及独立板测入口通过。Release D1剩余14048 B；未烧录，真实断电/高频遥测/INS与CAN组合负载仍待验收。见 [本轮记录](Validation/Persistence-20260928/README.md)。
+
+## 2026-09-28 CAN1/CAN3 吞吐与 ADC 仪表单点
+
+修复真实板测发现的 CAN weak 通知空实现；INS 有效后双向合计 6000/8000 帧/s 均完整交付，CPU 76.77%/95.21%，过载出现明确提交背压。ADC 均值 24.641 V/0.08986 A，电压较用户 24 V 高 2.67%，不据单点改系数。恢复正常 Release 并释放探针，完整结果及未测边界见 [记录](Validation/CAN13-ADC-20260928/README.md)。
+
+## 2026-09-28 SRNOS 当前固件烧录与板测
+
+用户授权后烧录并校验新固件，完成两组统计开/关对照、1600 次生命周期/11384 检查零失败、ADC 四项软件注入、CDC 停读/DTR 重连。新增统计 CPU 0.99155/0.98988 个百分点（余量很小）、Monitor 约 0.0492%、监测临界区 2 µs；含预采集的完整 hook 峰值 0.762 µs。最终恢复正常 Minimal Release 并释放探针，独立一分钟双 IMU/INS 各 60001 条有效样本，五流缺序/协议错误为 0。温稳曾通过后退出，INS 有效但部分时间降级；CAN 实际负载、仪表精度、串口和物理故障未验收。见 [当前板测与原始数据索引](Validation/SRNOSBoard-20260928/README.md)、[底层后续清单](Development.md)。
+
+## 2026-09-28 SRNOS 全面命名、公共隔离与运行优化
+
+23 套主机测试、87 公共头/151 编译及依赖单元、十种父项目固件、13 条真实应用编译命令隔离、110 个 SDK 对象全局名、结构/第三方哈希及 Debug/Release 通过。落实事件等待、有界工作、活动请求去重、锁外回调、预留复制与 SDK 超时；保持线程分离和硬件时序。新增固定存储、D2/D3/TLS/heap 和 ELF 校验值见 [本轮记录](Validation/SRNOSBoundary-20260928/README.md)。此次未烧录，先前板测不替代本轮性能与负载验收。
+
+## 2026-09-28 托管任务与 SystemMonitor 板端实测
+
+用户授权烧录后完成生命周期、统计开关对照、ADC/故障注入、CDC 背压/DTR 重连。每组 400 次生命周期、2846 检查零失败；循环统计新增 CPU 0.5535 个百分点，完整 hook 最大 0.70 µs，Monitor 平均 0.05176%、最长临界区 2 µs。修复 BDMA 停止误隔离和 CLI SAMPLE 消息号。最终运行正常 Release、已释放调试器；仪表精度和外部 CAN 负载仍未验收。详见 [板端记录](Validation/ManagedTasksBoard-20260928/README.md)。
+
+## 2026-09-28 SystemMonitor
+
+SystemMonitor替代Diagnostics，ADC五参数1 Hz与逐槽线程统计、两条HostLink遥测及主机JSONL工具完成。22组主机套件、根Minimal Debug/Release、九个父项目固件、结构/回调/内存检查通过；ADC缓冲位于D3、32字节对齐。未烧录或板测，CPU≤0.1%/临界区≤10 µs及模拟精度仍待验证。详细记录见 [SystemMonitor-20260928](Validation/SystemMonitor-20260928/README.md)。
+
 日期：2026-09-26。环境：macOS，ST Arm Clang **21.1.1 rel2.20260323-1806** / Picolibc，STM32CubeCLT **1.22.0**。前期记录为主机、源码与链接验证；后续用户提供的首次板端调试结果单独记录在文末。修复开发过程中未执行 CubeMX generate、烧录或操作硬件会话。
 
 ## 已通过
@@ -24,7 +60,7 @@
 
 ```sh
 python3 Tests/run_host_tests.py
-python3 Tests/Build/check_structure.py
+python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
 ```
 
 交叉编译与父项目回归：
@@ -125,7 +161,7 @@ DTCM中RTOS heap为65,536 B、热数据为41,568 B、顶部MSP为8,192 B。链�
 其他观测：
 
 - heap_5 当前/历史最低空闲均 116,416 B；完整任务快照 19 个任务，Indicators 已越过启动屏障。
-- CAN1–3 RX 的历史最小空闲栈各 412 B。源码有 32 个 `bsp_fdcan_rx_frame_t` 的局部数组，目标 sizeof 为 108 B，即 3,456 B；尚无溢出证据，但真实 CAN 负载下栈余量需优先复核。
+- CAN1–3 RX 的历史最小空闲栈各 412 B。源码有 32 个 `SRNOS_FDCANRxFrame` 的局部数组，目标 sizeof 为 108 B，即 3,456 B；尚无溢出证据，但真实 CAN 负载下栈余量需优先复核。
 - 复位后约 40 秒，MCP SPI xfer_calls/xfer_ok 均 15,958，busy/timeout/error 均零；外置 CAN init_errors=0、rx_frames/tx_frames 均零。仅证明此窗口内初始化及 SPI 访问，不证明 CAN 帧收发。
 - USB ready=true，但日志 usb_configured=0、tx_bytes=0；CDC 枚举和端到端日志未验证，不能仅据此断定 USB 实现故障。
 - GDB 栈展开出现相邻帧相同提示，未将其单独当作真实递归或栈损坏证据。
@@ -159,7 +195,7 @@ LIS2MDL WHO_AM_I=0x40，SPA06 ID=0x11（产品 1/版本 1）；BMI/MCP 在相同
 
 ### 测量方法与限制
 
-最终镜像烧录后先采集完整 RAM 快照与任务栈，再持续运行至少 10 分钟；窗口中不暂停、不进行全任务栈扫描。GDB 的 KernelFailure、LIB_INS_Init、IMU_CalibStorage_Init、params_load 硬件断点用于确认没有进入这些路径。栈统计在窗口前后暂停，由主机导出 RAM 并计算填充水位，不在目标调用函数。
+最终镜像烧录后先采集完整 RAM 快照与任务栈，再持续运行至少 10 分钟；窗口中不暂停、不进行全任务栈扫描。GDB 的 KernelFailure、LIB_INS_Init、IMU_CalibStorage_Init、SRNOS_ParametersLoad 硬件断点用于确认没有进入这些路径。栈统计在窗口前后暂停，由主机导出 RAM 并计算填充水位，不在目标调用函数。
 
 状态和计数来自每秒发布且 sampling=false 的快照及暂停后读取的总线计数；两者时刻有小幅差异，不混算完成率。样本率使用固件完整 10 秒窗口，最大周期包含启动过程，不能把最大值当稳态周期。USB 仅验证启动状态，未确认 CDC 枚举/日志到主机；RAM 快照是本轮主要观测渠道。
 
@@ -308,3 +344,26 @@ CDC1 `/dev/cu.usbmodem355C343932333`，CLI Python 3 + pyserial。握手后未订
 ## 2026-09-28 I2C4 周期传感器与后台 EEPROM 调度
 
 实现周期保留槽、后台有界队列和防饥饿分发，FT24C128A 读写/校验均最多 32 B，LIS/SPA 使用 30 ms 完成信号量等待。20 组主机套件、九个父项目构建与专用 Debug/Release 均通过。最终连续 32.864 秒板测 20 项检查通过、整片恢复一致；LIS 约88–93 Hz、SPA约16 Hz，全阶段 READY，无总线错误/超时/恢复。测试前完整原始 Flash 已恢复并全区比对，MCU 运行原固件；GDB/J-Link 仍连接、无新增断点。具体取舍、时序统计、SHA 与未测边界见 [完整记录](Validation/I2C-20260928/README.md)。
+
+## 2026-09-28 I2C4 Fast-mode 提速
+
+先将此前全仓库工作提交为 `ebef330`，再将 IOC/Glue 调整为 400 kHz Fast mode，保留调度与 32 B 分段。20 组主机套件、九个父项目构建、Debug/Release 和时序检查通过；21 项板测全部通过，负载耗时 13.703 秒。数字 SCL 约 370 kHz，整片写含校验由 8.19 秒降为 5.12 秒，整片读由 2.57 秒降为 1.03 秒；LIS 约97–99 Hz、SPA约16 Hz，持续 READY，零总线错误/超时。最终 EEPROM 16384 B 与主机独立生成模式逐字节一致。
+
+用户明确无需恢复：板上保留 Fast-mode EEPROMBringUp 和测试内容，MCU 运行、融合与加热关闭，GDB/J-Link 仍连接、无断点。未执行 CubeMX regenerate，未测模拟边沿或异常电气工况；首次候选的 HAL 时钟查询不支持问题及修正、全部统计/SHA/证据见 [完整提速记录](Validation/I2C400-20260928/README.md)。
+
+## 2026-09-28 CubeMX CLI 生成
+
+随后按用户明确要求，使用已有 `Board/generate.mx` 经 CubeMX 6.18.1 `-q` 执行 `project generate`，退出码 0。与生成前快照相比，CubeMX 仅更新 `Board/Core/Src/i2c.c` 的 TIMING 为已板测的 `0x10C7182D`；407 个 USER CODE 区域及其他 Board 文件保持一致。时序检查覆盖 IOC/生成代码/Glue 三处一致；独立 Minimal Debug/Release 和九个父项目构建检查通过。日志及边界见 [生成记录](Validation/CubeMX-20260928/README.md)。本轮没有烧录或操作调试会话。
+
+## 2026-09-28 Board/Support 职责整理
+
+Glue 重组为 Support/System、IO、Devices、USB，指示器策略独立为服务，USB 准备及 MCP 默认绑定收拢，固定指示设备硬件宏私有化。原 20 组基线、当前 21 组主机测试、九个父项目目标和 Minimal/Board/EEPROMBringUp 三入口构建通过。生成区、IOC、HAL、链接脚本和历史证据保持；没有生成/烧录或板测。详细验收、尺寸及保护检查见 [BoardSupport-20260928](Validation/BoardSupport-20260928/README.md)。
+
+
+## 2026-09-28 托管任务、父项目 Kernel API 与循环统计
+
+init/step/cleanup、协作生命周期和有界运行期线程/同步池已实现；SDK worker 统一框架与 SRNOS_ 命名，基础 CPU/ADC 流保留，新增 0x0003 循环统计。22 组主机、九个父项目固件、Minimal Debug/Release、EEPROMBringUp Debug 以及结构/ELF/上游哈希检查通过。代码/协议、内存预算和板端待测边界见 [ManagedTasks-20260928](Validation/ManagedTasks-20260928/README.md)。本轮未 Generate、烧录或板测；低干扰目标尚未由实机证明。
+
+## 2026-09-29：上位机触发静态 IMU 校准
+
+实现任意静止姿态陀螺零偏估计、异常拒绝、单份 EEPROM 校验保存及 CONFIG 0x09/0x0A 命令和状态查询；新值下次启动生效。25 组主机套件、91 个公共头/158 编译单元、父项目十种固件、命名/结构/内存与 Debug/Release 通过；没有烧录。静态内存增量、栈帧说明与板端待测见 [StaticIMU-20260929](Validation/StaticIMU-20260929/README.md)。

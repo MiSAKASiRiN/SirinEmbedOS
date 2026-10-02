@@ -30,36 +30,50 @@ set_property(CACHE SIRINEMBEDOS_EXAMPLE PROPERTY STRINGS Minimal BringUp SensorB
 set(SIRINEMBEDOS_CONFIG_HEADER "" CACHE FILEPATH "Absolute path to application SDK configuration")
 add_library(sirinos_config INTERFACE)
 target_include_directories(sirinos_config INTERFACE
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include" "${CMAKE_CURRENT_SOURCE_DIR}/Config")
+        "${CMAKE_CURRENT_SOURCE_DIR}/Include")
 if(SIRINEMBEDOS_CONFIG_HEADER)
     if(NOT IS_ABSOLUTE "${SIRINEMBEDOS_CONFIG_HEADER}" OR NOT EXISTS "${SIRINEMBEDOS_CONFIG_HEADER}")
         message(FATAL_ERROR "SIRINEMBEDOS_CONFIG_HEADER must name an existing absolute file")
     endif()
     target_compile_definitions(sirinos_config INTERFACE
-            SIRINEMBEDOS_CONFIG_HEADER="${SIRINEMBEDOS_CONFIG_HEADER}")
+            SRNOS_CONFIG_HEADER="${SIRINEMBEDOS_CONFIG_HEADER}")
 endif()
 
 target_compile_definitions(sirinos_config INTERFACE SRNOS_MEMORY_SECTIONS=1)
 
+# Only SDK implementation objects consume the RTOS, HAL and DSP headers.
+# The final firmware receives these objects, not their compile-time dependencies.
+add_library(sirinos_build_internal INTERFACE)
+target_link_libraries(sirinos_build_internal INTERFACE sirinos_config stm32cubemx)
+target_include_directories(sirinos_build_internal INTERFACE
+        "${CMAKE_CURRENT_SOURCE_DIR}/Config"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+        "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FreeRTOS/Source/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FreeRTOS/Source/portable/GCC/ARM_CM4F"
+        "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FreeRTOS/Source/CMSIS_RTOS_V2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FreeRTOS/CMSIS/Include")
+
 set(SIRINEMBEDOS_BUILDING_SDK TRUE)
 add_subdirectory(Board)
 add_subdirectory(Source/Kernel)
-target_link_libraries(sirinos_board sirinos_kernel)
+target_link_libraries(sirinos_board sirinos_build_internal)
 
 set(SIRINEMBEDOS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
+include(Board/Support/component.cmake)
 include(Source/Core/component.cmake)
 include(Source/Devices/component.cmake)
 include(Source/IO/Serial/component.cmake)
 include(Source/Services/component.cmake)
 add_library(sirinos_components OBJECT
     ${SRNOS_FOUNDATION_SOURCES} ${SRNOS_DEVICES_SOURCES}
-    ${SRNOS_SERIAL_SOURCES} ${SRNOS_SERVICES_SOURCES})
-target_link_libraries(sirinos_components PUBLIC sirinos_config sirinos_kernel stm32cubemx)
+    ${SRNOS_SERIAL_SOURCES} ${SRNOS_SERVICES_SOURCES}
+    ${SRNOS_SUPPORT_COMPONENT_SOURCES})
+target_link_libraries(sirinos_components PRIVATE sirinos_build_internal)
 target_include_directories(sirinos_components PRIVATE
+    ${SRNOS_SUPPORT_PRIVATE_INCLUDES}
     ${SRNOS_FOUNDATION_PRIVATE_INCLUDES} ${SRNOS_DEVICES_PRIVATE_INCLUDES}
     ${SRNOS_SERIAL_PRIVATE_INCLUDES} ${SRNOS_SERVICES_PRIVATE_INCLUDES}
     )
-target_include_directories(sirinos_components SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/CMSISDSP/Include")
 target_compile_definitions(sirinos_components PRIVATE ${SRNOS_SERVICES_DEFINITIONS})
 target_compile_options(sirinos_components PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions;-fno-rtti;-fno-threadsafe-statics>)
@@ -69,7 +83,7 @@ target_compile_options(sirinos_components PRIVATE
 add_library(sirinos_platform INTERFACE)
 add_library(SirinEmbedOS::Platform ALIAS sirinos_platform)
 target_link_libraries(sirinos_platform INTERFACE
-        sirinos_board STM32_Drivers sirinos_kernel sirinos_components
+        sirinos_config ${TOOLCHAIN_LINK_LIBRARIES}
         $<TARGET_OBJECTS:sirinos_board>
         $<TARGET_OBJECTS:STM32_Drivers>
         $<TARGET_OBJECTS:sirinos_kernel>
@@ -94,4 +108,8 @@ if(SIRINEMBEDOS_BUILD_EXAMPLE)
         message(FATAL_ERROR "Unknown SIRINEMBEDOS_EXAMPLE: ${SIRINEMBEDOS_EXAMPLE}; use Minimal, BringUp, SensorBringUp, INSBringUp or EEPROMBringUp")
     endif()
     sirinos_add_firmware(SirinEmbedOS "Examples/${SIRINEMBEDOS_EXAMPLE}/app_main.c")
+    if(SIRINEMBEDOS_EXAMPLE STREQUAL "EEPROMBringUp")
+        _srnos_attach_kernel_test_adapter(SirinEmbedOS
+                "${CMAKE_CURRENT_SOURCE_DIR}/Examples/EEPROMBringUp/kernel_test_adapter.c")
+    endif()
 endif()

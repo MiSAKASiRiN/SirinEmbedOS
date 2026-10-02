@@ -1,6 +1,7 @@
 #include "SirinEmbedOS/Kernel/System.h"
-#include "SirinEmbedOS/Services/Logging/bsp_srn_log.h"
-#include "SirinEmbedOSConfig.h"
+#include "thread_config.h"
+#include "SirinEmbedOS/Services/Logging/Log.h"
+#include "SirinEmbedOS/Config.h"
 #include <string.h>
 #include <math.h>
 
@@ -19,19 +20,23 @@ void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *c)
     c->sensors.bmi_period_ms=1;
     c->sensors.lsm_period_ms=1;
     c->sensors.environment_period_ms=10;
-    c->remote.primary = RC_SRC_DR16;
-    c->remote.secondary = RC_SRC_VT03;
+    c->remote.primary = SRNOS_RC_SRC_DR16;
+    c->remote.secondary = SRNOS_RC_SRC_VT03;
     c->remote.idle_ms = 50;
     c->remote.offline_ms = 300;
     c->remote.stick_deadzone = 10;
     c->logging_enabled = true;
     c->usb_enabled = true;
     c->host_link_enabled = true;
-    c->host_link_storage_enabled = false;
-    c->diagnostics_enabled = true;
-    c->load_parameters = false;
-    c->log_backends = SRN_LOG_BACKEND_USB_CDC;
-    c->rs485_response_timeout_ms = 100;
+    c->host_link_storage_enabled = true;
+    c->system_monitor_enabled = true;
+    c->cycle_statistics_enabled = true;
+    c->load_parameters = true;
+    c->storage.enabled = true;
+    c->storage.factory_identity_write = false;
+    c->parameter_compatibility_version = 1;
+    c->log_backends = SRNOS_LOG_BACKEND_USB_CDC;
+    c->SRNOS_RS485ResponseTimeoutMs = 100;
     c->application_stack_bytes = SRNOS_APP_STACK_BYTES;
     c->application_priority = SRNOS_APP_PRIORITY;
 }
@@ -44,7 +49,9 @@ uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
     if (!c || c->thread_count > SRNOS_SYSTEM_MAX_THREADS || c->serial_count > SRNOS_SYSTEM_MAX_SERIAL) return UINT32_MAX;
     /* Base: eight CAN workers, IMU, two bus dispatch workers, indicators,
      * idle/timer, TCB/TLS and synchronization overhead, plus startup reserve.
-     * Optional reserves deliberately exceed current queue/control-block sizes. */
+     * Optional reserves deliberately exceed current queue/control-block sizes.
+     * HostLink active/pending state and Serial RX/TX semaphore storage are
+     * fixed D1 objects, checked in the link map, not extra heap allocations. */
     uint64_t bytes = 64u * 1024u + c->application_stack_bytes + 512u;
     bytes += 3584u; /* INS/control worker including TCB/TLS. */
     bytes += 2560u; /* SPI/I2C request completion semaphores and startup reserve. */
@@ -52,12 +59,14 @@ uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
     if (c->sensors.lis_enabled || c->sensors.spa_enabled) bytes += 2560u;
     if (c->logging_enabled) bytes += 16u * 1024u;
     if (c->host_link_enabled) bytes += 8u * 1024u;
-    if (c->diagnostics_enabled) bytes += 5u * 1024u;
+    if (c->system_monitor_enabled) bytes += 5u * 1024u;
     if (c->serial_count) bytes += 3u * 1024u + c->serial_count * 2560u;
     if (c->remote.dr16_port || c->remote.vt03_port) bytes += 4u * 1024u;
     if (c->referee_port) bytes += 4u * 1024u;
     for (size_t i=0; i<c->serial_count; ++i) if (c->serial[i].port == SRNOS_SERIAL_UART7) bytes += 8u * 1024u;
-    for (size_t i=0; i<c->thread_count; ++i) bytes += c->threads[i].stack_bytes + 512u;
+    bytes += 8192u; /* Fixed lifecycle registry, allocated once before scheduling. */
+    if(c->cycle_statistics_enabled)bytes += 8192u; /* Fixed cycle accumulators. */
+    bytes += SRNOS_APP_OBJECT_POOL_BYTES; /* Includes all application thread objects. */
     return bytes > UINT32_MAX ? UINT32_MAX : (uint32_t)bytes;
 }
 
@@ -71,13 +80,14 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
         c->sensors.lsm_period_ms < 1 || c->sensors.lsm_period_ms > 100 ||
         c->sensors.environment_period_ms < 10 || c->sensors.environment_period_ms > 100 ||
         !valid_stack(c->application_stack_bytes) || !valid_priority(c->application_priority) ||
-        !c->rs485_response_timeout_ms || c->rs485_response_timeout_ms > 60000 ||
+        !c->SRNOS_RS485ResponseTimeoutMs || c->SRNOS_RS485ResponseTimeoutMs > 60000 ||
+        !c->parameter_compatibility_version ||
         (c->host_link_enabled && !c->usb_enabled) ||
         (c->logging_enabled && (c->log_backends & ~7u)) ||
-        (c->logging_enabled && (c->log_backends & SRN_LOG_BACKEND_USB_CDC) && !c->usb_enabled) ||
+        (c->logging_enabled && (c->log_backends & SRNOS_LOG_BACKEND_USB_CDC) && !c->usb_enabled) ||
         !c->remote.idle_ms || c->remote.idle_ms >= c->remote.offline_ms ||
-        c->remote.primary < RC_SRC_DR16 || c->remote.primary > RC_SRC_VT03 ||
-        c->remote.secondary < RC_SRC_DR16 || c->remote.secondary > RC_SRC_VT03 ||
+        c->remote.primary < SRNOS_RC_SRC_DR16 || c->remote.primary > SRNOS_RC_SRC_VT03 ||
+        c->remote.secondary < SRNOS_RC_SRC_DR16 || c->remote.secondary > SRNOS_RC_SRC_VT03 ||
         c->remote.primary == c->remote.secondary) return SRNOS_SYSTEM_INVALID;
     double qnorm=0;
     for(unsigned i=0;i<4;i++) {
@@ -88,8 +98,8 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
     SRNOS_SerialStatus ss = SRNOS_SerialValidate(c->serial, c->serial_count);
     if (ss != SRNOS_SERIAL_OK) return ss == SRNOS_SERIAL_CONFLICT ? SRNOS_SYSTEM_CONFLICT : SRNOS_SYSTEM_INVALID;
     const SRNOS_SerialPortId roles[] = { c->remote.dr16_port, c->remote.vt03_port, c->referee_port,
-        c->logging_enabled && (c->log_backends & SRN_LOG_BACKEND_UART) ? c->log_port : SRNOS_SERIAL_NONE };
-    if (c->logging_enabled && (c->log_backends & SRN_LOG_BACKEND_UART) && !c->log_port) return SRNOS_SYSTEM_INVALID;
+        c->logging_enabled && (c->log_backends & SRNOS_LOG_BACKEND_UART) ? c->log_port : SRNOS_SERIAL_NONE };
+    if (c->logging_enabled && (c->log_backends & SRNOS_LOG_BACKEND_UART) && !c->log_port) return SRNOS_SYSTEM_INVALID;
     for (size_t i = 0; i < sizeof(roles)/sizeof(roles[0]); ++i) {
         if (roles[i] == SRNOS_SERIAL_NONE) continue;
         const SRNOS_SerialConfig *port = NULL;
@@ -100,11 +110,15 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
         if (i == 1 && (port->baud_rate != 921600 || port->data_bits != 8 || port->stop_bits != 1 || port->parity != SRNOS_SERIAL_PARITY_NONE)) return SRNOS_SYSTEM_INVALID;
         if (i == 2 && (port->baud_rate != 115200 || port->data_bits != 8 || port->stop_bits != 1 || port->parity != SRNOS_SERIAL_PARITY_NONE || !port->tx_enabled)) return SRNOS_SYSTEM_INVALID;
     }
+    if(c->thread_count>SRNOS_APP_THREAD_LIMIT)return SRNOS_SYSTEM_RESOURCE;
+    uint64_t app_storage=0;
     for (size_t i = 0; i < c->thread_count; ++i) {
         const SRNOS_ThreadConfig *t = &c->threads[i];
-        if (!t->entry || !t->name || !t->name[0] || strlen(t->name) >= 16 ||
-            !valid_stack(t->stack_bytes) || !valid_priority(t->priority)) return SRNOS_SYSTEM_INVALID;
+        app_storage+=t->stack_bytes+1024u; /* Pool rounding, TCB, completion event and TLS margin. */
+        if (!SRNOS_KernelThreadConfigValid(t)) return SRNOS_SYSTEM_INVALID;
+        for(size_t j=0;j<i;j++) if(!strcmp(t->name,c->threads[j].name)) return SRNOS_SYSTEM_CONFLICT;
     }
+    if(app_storage>SRNOS_APP_OBJECT_POOL_BYTES)return SRNOS_SYSTEM_RESOURCE;
     if (SRNOS_SystemHeapBudget(c) > SRNOS_HEAP_DTCM_BYTES + SRNOS_HEAP_D1_BYTES) return SRNOS_SYSTEM_RESOURCE;
     return SRNOS_SYSTEM_OK;
 }

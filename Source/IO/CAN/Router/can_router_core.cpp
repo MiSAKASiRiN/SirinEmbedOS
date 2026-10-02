@@ -1,5 +1,6 @@
 #include "can_router_core_internal.h"
 #include "can_router_collections.hpp"
+#include "SirinEmbedOS/Core/Memory/MemorySections.h"
 
 #include "FreeRTOS.h"
 #include "cmsis_os2.h"
@@ -10,49 +11,49 @@
 #include <cstdint>
 #include <cstring>
 
-#ifndef CAN_ROUTER_MAX_ADAPTERS
-#define CAN_ROUTER_MAX_ADAPTERS 64u
+#ifndef SRNOS_CAN_ROUTER_MAX_ADAPTERS
+#define SRNOS_CAN_ROUTER_MAX_ADAPTERS 64u
 #endif
 
-#ifndef CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER
-#define CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER 16u
+#ifndef SRNOS_CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER
+#define SRNOS_CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER 16u
 #endif
 
-#ifndef CAN_ROUTER_GROUP_SHADOWS
-#define CAN_ROUTER_GROUP_SHADOWS 24u
+#ifndef SRNOS_CAN_ROUTER_GROUP_SHADOWS
+#define SRNOS_CAN_ROUTER_GROUP_SHADOWS 24u
 #endif
 
-#ifndef CAN_ROUTER_POLL_TX_MAX
-#define CAN_ROUTER_POLL_TX_MAX 4u
+#ifndef SRNOS_CAN_ROUTER_POLL_TX_MAX
+#define SRNOS_CAN_ROUTER_POLL_TX_MAX 4u
 #endif
 
-#ifndef CAN_ROUTER_URGENT_ATTEMPT_MAX
-#define CAN_ROUTER_URGENT_ATTEMPT_MAX 16u
+#ifndef SRNOS_CAN_ROUTER_URGENT_ATTEMPT_MAX
+#define SRNOS_CAN_ROUTER_URGENT_ATTEMPT_MAX 16u
 #endif
 
-#ifndef CAN_ROUTER_PERIODIC_ATTEMPT_MAX
-#define CAN_ROUTER_PERIODIC_ATTEMPT_MAX 16u
+#ifndef SRNOS_CAN_ROUTER_PERIODIC_ATTEMPT_MAX
+#define SRNOS_CAN_ROUTER_PERIODIC_ATTEMPT_MAX 16u
 #endif
 
-#ifndef CAN_ROUTER_PERIODIC_TX_FREE_RESERVE
-#define CAN_ROUTER_PERIODIC_TX_FREE_RESERVE 2u
+#ifndef SRNOS_CAN_ROUTER_PERIODIC_TX_FREE_RESERVE
+#define SRNOS_CAN_ROUTER_PERIODIC_TX_FREE_RESERVE 2u
 #endif
 
-#ifndef CAN_ROUTER_PERIOD_MS_MIN
-#define CAN_ROUTER_PERIOD_MS_MIN 1u
+#ifndef SRNOS_CAN_ROUTER_PERIOD_MS_MIN
+#define SRNOS_CAN_ROUTER_PERIOD_MS_MIN 1u
 #endif
 
-#ifndef CAN_ROUTER_PERIOD_MS_MAX
-#define CAN_ROUTER_PERIOD_MS_MAX 1000u
+#ifndef SRNOS_CAN_ROUTER_PERIOD_MS_MAX
+#define SRNOS_CAN_ROUTER_PERIOD_MS_MAX 1000u
 #endif
 
-#ifndef CAN_ROUTER_ONESHOT_DEFAULT_TTL_MS
-#define CAN_ROUTER_ONESHOT_DEFAULT_TTL_MS 20u
+#ifndef SRNOS_CAN_ROUTER_ONESHOT_DEFAULT_TTL_MS
+#define SRNOS_CAN_ROUTER_ONESHOT_DEFAULT_TTL_MS 20u
 #endif
 
 typedef struct {
     void *obj;
-    can_adapter_ops_t ops;
+    SRNOS_CANAdapterOps ops;
     uint32_t period_ms;
     uint32_t next_due_ms;
 } adapter_entry_t;
@@ -60,9 +61,9 @@ typedef struct {
 typedef struct {
     void *obj;
     void (*commit_tx)(void *obj,
-                      can_tx_kind_t kind,
-                      const can_tx_item_t *item,
-                      can_tx_result_t result);
+                      SRNOS_CANTxKind kind,
+                      const SRNOS_CANTxItem *item,
+                      SRNOS_CANTxResult result);
 } adapter_commit_ref_t;
 
 typedef struct {
@@ -78,7 +79,7 @@ typedef struct {
 typedef struct {
     bool used;
     adapter_commit_ref_t adapter;
-    can_tx_item_t item;
+    SRNOS_CANTxItem item;
 } group_slot_item_t;
 
 typedef struct {
@@ -93,23 +94,25 @@ typedef struct {
 } group_acc_t;
 
 typedef struct {
-    group_acc_t groups[CAN_ROUTER_GROUP_SHADOWS];
-    can_tx_item_t items[CAN_ROUTER_POLL_TX_MAX];
+    group_acc_t groups[SRNOS_CAN_ROUTER_GROUP_SHADOWS];
+    SRNOS_CANTxItem items[SRNOS_CAN_ROUTER_POLL_TX_MAX];
 } tx_scratch_t;
 
 typedef struct {
-    adapter_entry_t adapters[CAN_ROUTER_MAX_ADAPTERS];
+    adapter_entry_t adapters[SRNOS_CAN_ROUTER_MAX_ADAPTERS];
     uint8_t adapter_count;
-    can_router_detail::route_table_t routes;
-    can_router_detail::oneshot_queue_t oneshot;
-    group_shadow_t shadows[CAN_ROUTER_GROUP_SHADOWS];
+    SRNOS_CANRouterDetail::route_table_t routes;
+    SRNOS_CANRouterDetail::oneshot_queue_t oneshot;
+    group_shadow_t shadows[SRNOS_CAN_ROUTER_GROUP_SHADOWS];
     tx_scratch_t tx_scratch;
-    volatile can_router_stats_t stats;
+    volatile SRNOS_CANRouterStats stats;
     uint32_t oneshot_seq;
-} can_router_ctx_t;
+} SRNOS_CANRouterCtx;
 
-static can_router_ctx_t s_ctx[CAN_ROUTER_CHANNEL_COUNT + 1u];
-static const can_router_backend_ops_t *s_backend[CAN_ROUTER_CHANNEL_COUNT + 1u];
+/* Software queues/tables only; DMA staging remains in its reachable SRAM.
+ * The SDK clears this section before ApplicationConfigure and router setup. */
+SRNOS_ITCM_BSS static SRNOS_CANRouterCtx s_ctx[SRNOS_CAN_ROUTER_CHANNEL_COUNT + 1u];
+static const SRNOS_CANRouterBackendOps *s_backend[SRNOS_CAN_ROUTER_CHANNEL_COUNT + 1u];
 
 static bool s_configuration_frozen;
 #if defined(__arm__) || defined(__thumb__)
@@ -150,25 +153,25 @@ extern "C" bool SRNOS_CAN_ConfigurationFrozen(void)
     return s_configuration_frozen;
 }
 
-static can_router_ctx_t *ctx_of(can_channel_t ch)
+static SRNOS_CANRouterCtx *ctx_of(SRNOS_CANChannel ch)
 {
-    if ((ch == 0u) || (ch > CAN_ROUTER_CHANNEL_COUNT)) {
+    if ((ch == 0u) || (ch > SRNOS_CAN_ROUTER_CHANNEL_COUNT)) {
         return nullptr;
     }
     return &s_ctx[ch];
 }
 
-static const can_router_backend_ops_t *backend_of(can_channel_t ch)
+static const SRNOS_CANRouterBackendOps *backend_of(SRNOS_CANChannel ch)
 {
-    if ((ch == 0u) || (ch > CAN_ROUTER_CHANNEL_COUNT)) {
+    if ((ch == 0u) || (ch > SRNOS_CAN_ROUTER_CHANNEL_COUNT)) {
         return nullptr;
     }
     return s_backend[ch];
 }
 
-static uint32_t router_now_ms(can_channel_t ch)
+static uint32_t router_now_ms(SRNOS_CANChannel ch)
 {
-    const can_router_backend_ops_t *backend = backend_of(ch);
+    const SRNOS_CANRouterBackendOps *backend = backend_of(ch);
     if (backend && backend->now_ms) {
         return backend->now_ms();
     }
@@ -182,55 +185,55 @@ static bool time_reached(uint32_t now, uint32_t due)
 
 static uint32_t clamp_period_ms(uint32_t period_ms)
 {
-    if (period_ms < CAN_ROUTER_PERIOD_MS_MIN) {
-        period_ms = CAN_ROUTER_PERIOD_MS_MIN;
+    if (period_ms < SRNOS_CAN_ROUTER_PERIOD_MS_MIN) {
+        period_ms = SRNOS_CAN_ROUTER_PERIOD_MS_MIN;
     }
-    if (period_ms > CAN_ROUTER_PERIOD_MS_MAX) {
-        period_ms = CAN_ROUTER_PERIOD_MS_MAX;
+    if (period_ms > SRNOS_CAN_ROUTER_PERIOD_MS_MAX) {
+        period_ms = SRNOS_CAN_ROUTER_PERIOD_MS_MAX;
     }
     return period_ms;
 }
 
 static uint8_t norm_flags(uint8_t flags)
 {
-    return (uint8_t)(flags & (CAN_FRAME_FLAG_EXT | CAN_FRAME_FLAG_RTR));
+    return (uint8_t)(flags & (SRNOS_CAN_FRAME_FLAG_EXT | SRNOS_CAN_FRAME_FLAG_RTR));
 }
 
 static uint32_t norm_id(uint32_t id, uint8_t flags)
 {
-    return (flags & CAN_FRAME_FLAG_EXT) ? (id & 0x1FFFFFFFu) : (id & 0x7FFu);
+    return (flags & SRNOS_CAN_FRAME_FLAG_EXT) ? (id & 0x1FFFFFFFu) : (id & 0x7FFu);
 }
 
-static bool normalize_frame(can_frame_t *frame)
+static bool normalize_frame(SRNOS_CANFrame *frame)
 {
     if (!frame) {
         return false;
     }
     frame->flags = norm_flags(frame->flags);
     frame->id = norm_id(frame->id, frame->flags);
-    if ((frame->flags & CAN_FRAME_FLAG_RTR) || (frame->dlc > CAN_ROUTER_MAX_DATA_BYTES)) {
+    if ((frame->flags & SRNOS_CAN_FRAME_FLAG_RTR) || (frame->dlc > SRNOS_CAN_ROUTER_MAX_DATA_BYTES)) {
         return false;
     }
-    for (uint8_t i = frame->dlc; i < CAN_ROUTER_MAX_DATA_BYTES; ++i) {
+    for (uint8_t i = frame->dlc; i < SRNOS_CAN_ROUTER_MAX_DATA_BYTES; ++i) {
         frame->data[i] = 0u;
     }
     return true;
 }
 
-static bool normalize_filter(can_rx_filter_t *filter)
+static bool normalize_filter(SRNOS_CANRxFilter *filter)
 {
     if (!filter) {
         return false;
     }
-    filter->flags = (uint8_t)(filter->flags & CAN_FRAME_FLAG_EXT);
+    filter->flags = (uint8_t)(filter->flags & SRNOS_CAN_FRAME_FLAG_EXT);
     filter->id = norm_id(filter->id, filter->flags);
     return true;
 }
 
 static void commit_item(const adapter_entry_t *adapter,
-                        can_tx_kind_t kind,
-                        const can_tx_item_t *item,
-                        can_tx_result_t result)
+                        SRNOS_CANTxKind kind,
+                        const SRNOS_CANTxItem *item,
+                        SRNOS_CANTxResult result)
 {
     if (adapter && adapter->obj && adapter->ops.commit_tx) {
         adapter->ops.commit_tx(adapter->obj, kind, item, result);
@@ -238,59 +241,63 @@ static void commit_item(const adapter_entry_t *adapter,
 }
 
 static void commit_ref(const adapter_commit_ref_t *adapter,
-                       can_tx_kind_t kind,
-                       const can_tx_item_t *item,
-                       can_tx_result_t result)
+                       SRNOS_CANTxKind kind,
+                       const SRNOS_CANTxItem *item,
+                       SRNOS_CANTxResult result)
 {
     if (adapter && adapter->obj && adapter->commit_tx) {
         adapter->commit_tx(adapter->obj, kind, item, result);
     }
 }
 
-static void signal_tx(can_channel_t ch)
+static void signal_tx(SRNOS_CANChannel ch)
 {
-    const can_router_backend_ops_t *backend = backend_of(ch);
+    const SRNOS_CANRouterBackendOps *backend = backend_of(ch);
     if (backend && backend->signal_tx) {
         backend->signal_tx(ch);
     }
 }
 
-extern "C" void can_router_core_set_backend(can_channel_t ch, const can_router_backend_ops_t *ops)
+extern "C" void SRNOS_CANRouterCoreSetBackend(SRNOS_CANChannel ch, const SRNOS_CANRouterBackendOps *ops)
 {
-    if ((ch == 0u) || (ch > CAN_ROUTER_CHANNEL_COUNT)) {
+    if ((ch == 0u) || (ch > SRNOS_CAN_ROUTER_CHANNEL_COUNT)) {
         return;
     }
     s_backend[ch] = ops;
 }
 
-extern "C" const volatile can_router_stats_t *can_router_get_stats(can_channel_t ch)
+extern "C" bool SRNOS_CANRouterGetStats(SRNOS_CANChannel ch, SRNOS_CANRouterStats *out)
 {
-    can_router_ctx_t *ctx = ctx_of(ch);
-    return ctx ? &ctx->stats : nullptr;
+    SRNOS_CANRouterCtx *ctx=ctx_of(ch);if(!ctx||!out)return false;
+#if defined(__arm__) || defined(__thumb__)
+    if(__get_IPSR()!=0 || osKernelGetState()!=osKernelRunning)return false;
+#endif
+    enter_critical();std::memcpy(out,(const void *)&ctx->stats,sizeof(*out));exit_critical();
+    return true;
 }
 
-extern "C" int can_router_subscribe_raw(can_channel_t ch,
-                                         can_rx_filter_t filter,
-                                         can_router_rx_handler_t cb,
+extern "C" int SRNOS_CANRouterSubscribeRaw(SRNOS_CANChannel ch,
+                                         SRNOS_CANRxFilter filter,
+                                         SRNOS_CANRouterRxHandler cb,
                                          void *user)
 {
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !cb || !normalize_filter(&filter)) {
         return -1;
     }
 
     enter_critical();
-    if (can_router_detail::route_raw_exists(ctx->routes, filter, cb, user)) {
+    if (SRNOS_CANRouterDetail::route_raw_exists(ctx->routes, filter, cb, user)) {
         exit_critical();
         return 0;
     }
-    can_router_detail::route_entry_t entry = {};
+    SRNOS_CANRouterDetail::route_entry_t entry = {};
     entry.filter = filter;
-    entry.kind = can_router_detail::route_kind_t::raw;
+    entry.kind = SRNOS_CANRouterDetail::route_kind_t::raw;
     entry.callback.raw = cb;
     entry.target = user;
-    if (!can_router_detail::route_insert(ctx->routes, entry)) {
+    if (!SRNOS_CANRouterDetail::route_insert(ctx->routes, entry)) {
         ctx->stats.rx_route_capacity_rejects++;
         exit_critical();
         return -2;
@@ -303,19 +310,19 @@ extern "C" int can_router_subscribe_raw(can_channel_t ch,
     return 0;
 }
 
-extern "C" int can_router_unsubscribe_raw(can_channel_t ch,
-                                           can_rx_filter_t filter,
-                                           can_router_rx_handler_t cb,
+extern "C" int SRNOS_CANRouterUnsubscribeRaw(SRNOS_CANChannel ch,
+                                           SRNOS_CANRxFilter filter,
+                                           SRNOS_CANRouterRxHandler cb,
                                            void *user)
 {
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !cb || !normalize_filter(&filter)) {
         return -1;
     }
 
     enter_critical();
-    if (!can_router_detail::route_erase_raw(ctx->routes, filter, cb, user)) {
+    if (!SRNOS_CANRouterDetail::route_erase_raw(ctx->routes, filter, cb, user)) {
         exit_critical();
         return -2;
     }
@@ -324,13 +331,13 @@ extern "C" int can_router_unsubscribe_raw(can_channel_t ch,
     return 0;
 }
 
-extern "C" int can_router_attach_adapter(can_channel_t ch,
+extern "C" int SRNOS_CANRouterAttachAdapter(SRNOS_CANChannel ch,
                                           void *obj,
-                                          const can_adapter_ops_t *ops,
+                                          const SRNOS_CANAdapterOps *ops,
                                           uint32_t period_ms)
 {
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !obj || !ops || (!ops->on_rx && !ops->poll_tx && !ops->tick)) {
         return -1;
     }
@@ -339,11 +346,11 @@ extern "C" int can_router_attach_adapter(can_channel_t ch,
     if ((filter_count > 0u) && (!ops->rx_filter_at || !ops->on_rx)) {
         return -1;
     }
-    if (filter_count > CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER) {
+    if (filter_count > SRNOS_CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER) {
         return -3;
     }
 
-    can_rx_filter_t filters[CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER] = {};
+    SRNOS_CANRxFilter filters[SRNOS_CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER] = {};
     for (size_t i = 0; i < filter_count; ++i) {
         if (!ops->rx_filter_at(obj, i, &filters[i]) || !normalize_filter(&filters[i])) {
             return -1;
@@ -360,11 +367,11 @@ extern "C" int can_router_attach_adapter(can_channel_t ch,
             return -2;
         }
     }
-    if (ctx->adapter_count >= CAN_ROUTER_MAX_ADAPTERS) {
+    if (ctx->adapter_count >= SRNOS_CAN_ROUTER_MAX_ADAPTERS) {
         exit_critical();
         return -3;
     }
-    if (filter_count > (CAN_ROUTER_ROUTE_CAPACITY - ctx->routes.count)) {
+    if (filter_count > (SRNOS_CAN_ROUTER_ROUTE_CAPACITY - ctx->routes.count)) {
         ctx->stats.rx_route_capacity_rejects++;
         exit_critical();
         return -4;
@@ -377,12 +384,12 @@ extern "C" int can_router_attach_adapter(can_channel_t ch,
     entry->next_due_ms = now_ms;
     ctx->adapter_count++;
     for (size_t i = 0u; i < filter_count; ++i) {
-        can_router_detail::route_entry_t route = {};
+        SRNOS_CANRouterDetail::route_entry_t route = {};
         route.filter = filters[i];
-        route.kind = can_router_detail::route_kind_t::adapter;
+        route.kind = SRNOS_CANRouterDetail::route_kind_t::adapter;
         route.target = obj;
         route.callback.adapter = ops->on_rx;
-        (void)can_router_detail::route_insert(ctx->routes, route);
+        (void)SRNOS_CANRouterDetail::route_insert(ctx->routes, route);
     }
     ctx->stats.rx_route_count = ctx->routes.count;
     if (ctx->stats.rx_route_high_water < ctx->routes.count) {
@@ -397,10 +404,10 @@ extern "C" int can_router_attach_adapter(can_channel_t ch,
     return 0;
 }
 
-extern "C" int can_router_detach_adapter(can_channel_t ch, void *obj)
+extern "C" int SRNOS_CANRouterDetachAdapter(SRNOS_CANChannel ch, void *obj)
 {
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !obj) {
         return -1;
     }
@@ -417,7 +424,7 @@ extern "C" int can_router_detach_adapter(can_channel_t ch, void *obj)
         exit_critical();
         return -2;
     }
-    (void)can_router_detail::route_erase_adapter(ctx->routes, obj);
+    (void)SRNOS_CANRouterDetail::route_erase_adapter(ctx->routes, obj);
     const uint8_t last = (uint8_t)(ctx->adapter_count - 1u);
     if ((uint8_t)adapter_index != last) {
         ctx->adapters[adapter_index] = ctx->adapters[last];
@@ -430,28 +437,28 @@ extern "C" int can_router_detach_adapter(can_channel_t ch, void *obj)
     return 0;
 }
 
-extern "C" int can_router_post_oneshot(can_channel_t ch,
-                                        const can_frame_t *frame,
+extern "C" int SRNOS_CANRouterPostOneshot(SRNOS_CANChannel ch,
+                                        const SRNOS_CANFrame *frame,
                                         uint8_t priority,
                                         uint32_t ttl_ms)
 {
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !frame) {
         return -1;
     }
 
-    can_frame_t copy = *frame;
+    SRNOS_CANFrame copy = *frame;
     if (!normalize_frame(&copy)) {
         return -1;
     }
     if (ttl_ms == 0u) {
-        ttl_ms = CAN_ROUTER_ONESHOT_DEFAULT_TTL_MS;
+        ttl_ms = SRNOS_CAN_ROUTER_ONESHOT_DEFAULT_TTL_MS;
     }
 
     const uint32_t now_ms = router_now_ms(ch);
     enter_critical();
     const uint32_t next_seq = ctx->oneshot_seq + 1u;
-    const bool inserted = can_router_detail::oneshot_enqueue(ctx->oneshot,
+    const bool inserted = SRNOS_CANRouterDetail::oneshot_enqueue(ctx->oneshot,
                                                               copy,
                                                               priority,
                                                               now_ms + ttl_ms,
@@ -472,9 +479,9 @@ extern "C" int can_router_post_oneshot(can_channel_t ch,
     return 0;
 }
 
-extern "C" void can_router_core_note_rx_wake(can_channel_t ch, bool by_isr)
+extern "C" void SRNOS_CANRouterCoreNoteRxWake(SRNOS_CANChannel ch, bool by_isr)
 {
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx) {
         return;
     }
@@ -485,43 +492,43 @@ extern "C" void can_router_core_note_rx_wake(can_channel_t ch, bool by_isr)
     }
 }
 
-extern "C" void can_router_core_note_tx_complete(can_channel_t ch)
+extern "C" void SRNOS_CANRouterCoreNoteTxComplete(SRNOS_CANChannel ch)
 {
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (ctx) {
         ctx->stats.tx_complete_events++;
     }
 }
 
-extern "C" void can_router_core_on_rx_frame(can_channel_t ch,
-                                             const can_frame_t *frame,
+extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,
+                                             const SRNOS_CANFrame *frame,
                                              uint32_t now_ms)
 {
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !frame) {
         return;
     }
 
-    can_frame_t copy = *frame;
+    SRNOS_CANFrame copy = *frame;
     if (!normalize_frame(&copy)) {
         ctx->stats.rx_dropped++;
         return;
     }
 
     ctx->stats.rx_pops++;
-    can_rx_filter_t key = {};
+    SRNOS_CANRxFilter key = {};
     key.id = copy.id;
-    key.flags = (uint8_t)(copy.flags & CAN_FRAME_FLAG_EXT);
+    key.flags = (uint8_t)(copy.flags & SRNOS_CAN_FRAME_FLAG_EXT);
     uint32_t lookup_steps = 0u;
     uint8_t snapshot_count = 0u;
-    can_router_detail::route_target_t snapshot[CAN_ROUTER_ROUTE_CAPACITY];
+    SRNOS_CANRouterDetail::route_target_t snapshot[SRNOS_CAN_ROUTER_ROUTE_CAPACITY];
 
     enter_critical();
-    size_t index = can_router_detail::route_lower_bound(ctx->routes, key, &lookup_steps);
+    size_t index = SRNOS_CANRouterDetail::route_lower_bound(ctx->routes, key, &lookup_steps);
     while (index < ctx->routes.count &&
-           can_router_detail::same_key(ctx->routes.entries[index].filter, key)) {
+           SRNOS_CANRouterDetail::same_key(ctx->routes.entries[index].filter, key)) {
         lookup_steps++;
-        const can_router_detail::route_entry_t &route = ctx->routes.entries[index++];
+        const SRNOS_CANRouterDetail::route_entry_t &route = ctx->routes.entries[index++];
         snapshot[snapshot_count].kind = route.kind;
         snapshot[snapshot_count].target = route.target;
         snapshot[snapshot_count].callback = route.callback;
@@ -531,11 +538,11 @@ extern "C" void can_router_core_on_rx_frame(can_channel_t ch,
     exit_critical();
 
     for (uint8_t i = 0u; i < snapshot_count; ++i) {
-        const can_router_detail::route_target_t &route = snapshot[i];
-        if (route.kind == can_router_detail::route_kind_t::raw && route.callback.raw) {
+        const SRNOS_CANRouterDetail::route_target_t &route = snapshot[i];
+        if (route.kind == SRNOS_CANRouterDetail::route_kind_t::raw && route.callback.raw) {
             route.callback.raw(ch, &copy, route.target);
             ctx->stats.rx_routed_raw++;
-        } else if (route.kind == can_router_detail::route_kind_t::adapter &&
+        } else if (route.kind == SRNOS_CANRouterDetail::route_kind_t::adapter &&
                    route.target && route.callback.adapter) {
             route.callback.adapter(route.target, &copy, now_ms);
             ctx->stats.rx_routed_adapter++;
@@ -547,17 +554,17 @@ extern "C" void can_router_core_on_rx_frame(can_channel_t ch,
     }
 }
 
-static bool backend_try_accept(can_router_ctx_t *ctx,
-                               can_channel_t ch,
-                               const can_frame_t *frame,
-                               can_router_tx_class_t tx_class)
+static bool backend_try_accept(SRNOS_CANRouterCtx *ctx,
+                               SRNOS_CANChannel ch,
+                               const SRNOS_CANFrame *frame,
+                               SRNOS_CANRouterTxClass tx_class)
 {
-    const can_router_backend_ops_t *backend = backend_of(ch);
+    const SRNOS_CANRouterBackendOps *backend = backend_of(ch);
     if (!backend || !backend->try_push || !frame) {
         return false;
     }
 
-    can_frame_t copy = *frame;
+    SRNOS_CANFrame copy = *frame;
     if (!normalize_frame(&copy)) {
         return false;
     }
@@ -571,8 +578,8 @@ static bool backend_try_accept(can_router_ctx_t *ctx,
         ctx->stats.tx_backend_busy++;
         return false;
     }
-    if ((tx_class == CAN_ROUTER_TX_CLASS_PERIODIC) &&
-        (free_level <= CAN_ROUTER_PERIODIC_TX_FREE_RESERVE)) {
+    if ((tx_class == SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC) &&
+        (free_level <= SRNOS_CAN_ROUTER_PERIODIC_TX_FREE_RESERVE)) {
         ctx->stats.tx_backend_busy++;
         return false;
     }
@@ -584,34 +591,34 @@ static bool backend_try_accept(can_router_ctx_t *ctx,
     return ok;
 }
 
-static void expire_oneshots_locked(can_router_ctx_t *ctx, uint32_t now_ms)
+static void expire_oneshots_locked(SRNOS_CANRouterCtx *ctx, uint32_t now_ms)
 {
-    const size_t expired = can_router_detail::oneshot_expire(ctx->oneshot, now_ms);
+    const size_t expired = SRNOS_CANRouterDetail::oneshot_expire(ctx->oneshot, now_ms);
     ctx->stats.tx_oneshot_expired += expired;
     ctx->stats.tx_oneshot_depth = ctx->oneshot.depth;
 }
 
-static bool drain_oneshots(can_router_ctx_t *ctx, can_channel_t ch, uint32_t now_ms)
+static bool drain_oneshots(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_t now_ms)
 {
     uint32_t attempts = 0u;
-    while (attempts < CAN_ROUTER_URGENT_ATTEMPT_MAX) {
-        can_router_detail::oneshot_slot_t item = {};
+    while (attempts < SRNOS_CAN_ROUTER_URGENT_ATTEMPT_MAX) {
+        SRNOS_CANRouterDetail::oneshot_slot_t item = {};
         uint8_t index = 0u;
         enter_critical();
         expire_oneshots_locked(ctx, now_ms);
-        const bool found = can_router_detail::oneshot_peek(ctx->oneshot, &index, &item);
+        const bool found = SRNOS_CANRouterDetail::oneshot_peek(ctx->oneshot, &index, &item);
         exit_critical();
 
         if (!found) {
             return true;
         }
 
-        if (!backend_try_accept(ctx, ch, &item.frame, CAN_ROUTER_TX_CLASS_URGENT)) {
+        if (!backend_try_accept(ctx, ch, &item.frame, SRNOS_CAN_ROUTER_TX_CLASS_URGENT)) {
             return false;
         }
 
         enter_critical();
-        if (can_router_detail::oneshot_remove_if_seq(ctx->oneshot, index, item.seq)) {
+        if (SRNOS_CANRouterDetail::oneshot_remove_if_seq(ctx->oneshot, index, item.seq)) {
             ctx->stats.tx_urgent_accepted++;
             ctx->stats.tx_oneshot_depth = ctx->oneshot.depth;
         }
@@ -621,12 +628,12 @@ static bool drain_oneshots(can_router_ctx_t *ctx, can_channel_t ch, uint32_t now
     return true;
 }
 
-static group_shadow_t *find_or_alloc_shadow(can_router_ctx_t *ctx,
+static group_shadow_t *find_or_alloc_shadow(SRNOS_CANRouterCtx *ctx,
                                             uint32_t group_id,
                                             uint8_t flags,
                                             uint8_t endian)
 {
-    for (uint32_t i = 0; i < CAN_ROUTER_GROUP_SHADOWS; ++i) {
+    for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_shadow_t *s = &ctx->shadows[i];
         if (s->valid && s->group_id == group_id && s->flags == flags) {
             if (!s->endian_set) {
@@ -636,7 +643,7 @@ static group_shadow_t *find_or_alloc_shadow(can_router_ctx_t *ctx,
             return s;
         }
     }
-    for (uint32_t i = 0; i < CAN_ROUTER_GROUP_SHADOWS; ++i) {
+    for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_shadow_t *s = &ctx->shadows[i];
         if (!s->valid) {
             memset(s, 0, sizeof(*s));
@@ -651,9 +658,9 @@ static group_shadow_t *find_or_alloc_shadow(can_router_ctx_t *ctx,
     return nullptr;
 }
 
-static group_shadow_t *find_shadow(can_router_ctx_t *ctx, uint32_t group_id, uint8_t flags)
+static group_shadow_t *find_shadow(SRNOS_CANRouterCtx *ctx, uint32_t group_id, uint8_t flags)
 {
-    for (uint32_t i = 0; i < CAN_ROUTER_GROUP_SHADOWS; ++i) {
+    for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_shadow_t *s = &ctx->shadows[i];
         if (s->valid && s->group_id == group_id && s->flags == flags) {
             return s;
@@ -667,7 +674,7 @@ static group_acc_t *find_or_alloc_group(group_acc_t *groups,
                                         uint8_t flags,
                                         uint8_t endian)
 {
-    for (uint32_t i = 0; i < CAN_ROUTER_GROUP_SHADOWS; ++i) {
+    for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_acc_t *g = &groups[i];
         if (g->valid && g->group_id == group_id && g->flags == flags) {
             if (!g->endian_set) {
@@ -677,7 +684,7 @@ static group_acc_t *find_or_alloc_group(group_acc_t *groups,
             return g;
         }
     }
-    for (uint32_t i = 0; i < CAN_ROUTER_GROUP_SHADOWS; ++i) {
+    for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_acc_t *g = &groups[i];
         if (!g->valid) {
             memset(g, 0, sizeof(*g));
@@ -694,21 +701,21 @@ static group_acc_t *find_or_alloc_group(group_acc_t *groups,
 
 static bool add_group_item(group_acc_t *groups,
                            const adapter_entry_t *adapter,
-                           const can_tx_item_t *item,
-                           can_tx_kind_t kind)
+                           const SRNOS_CANTxItem *item,
+                           SRNOS_CANTxKind kind)
 {
     if (!item || item->group_i16.slot > 3u) {
-        commit_item(adapter, kind, item, CAN_TX_RESULT_DROPPED);
+        commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
         return false;
     }
 
-    const uint8_t flags = (uint8_t)(item->group_i16.flags & CAN_FRAME_FLAG_EXT);
+    const uint8_t flags = (uint8_t)(item->group_i16.flags & SRNOS_CAN_FRAME_FLAG_EXT);
     const uint32_t group_id = norm_id(item->group_i16.group_id, flags);
-    const uint8_t endian = (item->group_i16.endian == CAN_TX_ENDIAN_LE) ?
-                           CAN_TX_ENDIAN_LE : CAN_TX_ENDIAN_BE;
+    const uint8_t endian = (item->group_i16.endian == SRNOS_CAN_TX_ENDIAN_LE) ?
+                           SRNOS_CAN_TX_ENDIAN_LE : SRNOS_CAN_TX_ENDIAN_BE;
     group_acc_t *g = find_or_alloc_group(groups, group_id, flags, endian);
     if (!g || (g->endian_set && g->endian != endian)) {
-        commit_item(adapter, kind, item, CAN_TX_RESULT_DROPPED);
+        commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
         return false;
     }
 
@@ -717,7 +724,7 @@ static bool add_group_item(group_acc_t *groups,
         commit_ref(&g->slot_item[slot].adapter,
                    kind,
                    &g->slot_item[slot].item,
-                   CAN_TX_RESULT_DROPPED);
+                   SRNOS_CAN_TX_RESULT_DROPPED);
     }
 
     g->slot_used[slot] = true;
@@ -729,9 +736,9 @@ static bool add_group_item(group_acc_t *groups,
     return true;
 }
 
-static void compose_group_frame(can_router_ctx_t *ctx,
+static void compose_group_frame(SRNOS_CANRouterCtx *ctx,
                                 const group_acc_t *g,
-                                can_frame_t *out)
+                                SRNOS_CANFrame *out)
 {
     memset(out, 0, sizeof(*out));
     out->id = g->group_id;
@@ -739,7 +746,7 @@ static void compose_group_frame(can_router_ctx_t *ctx,
     out->dlc = 8u;
 
     const group_shadow_t *shadow = find_shadow(ctx, g->group_id, g->flags);
-    const bool le = (g->endian == CAN_TX_ENDIAN_LE);
+    const bool le = (g->endian == SRNOS_CAN_TX_ENDIAN_LE);
     for (uint8_t slot = 0; slot < 4u; ++slot) {
         int16_t value = 0;
         if (g->slot_used[slot]) {
@@ -759,13 +766,13 @@ static void compose_group_frame(can_router_ctx_t *ctx,
     }
 }
 
-static void commit_group(can_router_ctx_t *ctx,
+static void commit_group(SRNOS_CANRouterCtx *ctx,
                          group_acc_t *g,
-                         can_tx_kind_t kind,
-                         can_tx_result_t result)
+                         SRNOS_CANTxKind kind,
+                         SRNOS_CANTxResult result)
 {
     group_shadow_t *shadow = nullptr;
-    if (result == CAN_TX_RESULT_ACCEPTED) {
+    if (result == SRNOS_CAN_TX_RESULT_ACCEPTED) {
         shadow = find_or_alloc_shadow(ctx, g->group_id, g->flags, g->endian);
     }
 
@@ -774,46 +781,46 @@ static void commit_group(can_router_ctx_t *ctx,
             continue;
         }
         commit_ref(&g->slot_item[slot].adapter, kind, &g->slot_item[slot].item, result);
-        if (shadow && result == CAN_TX_RESULT_ACCEPTED) {
+        if (shadow && result == SRNOS_CAN_TX_RESULT_ACCEPTED) {
             shadow->slot_valid[slot] = true;
             shadow->slot_val[slot] = g->slot_val[slot];
         }
     }
 }
 
-static bool transmit_raw_item(can_router_ctx_t *ctx,
-                              can_channel_t ch,
+static bool transmit_raw_item(SRNOS_CANRouterCtx *ctx,
+                              SRNOS_CANChannel ch,
                               const adapter_entry_t *adapter,
-                              can_tx_kind_t kind,
-                              const can_tx_item_t *item)
+                              SRNOS_CANTxKind kind,
+                              const SRNOS_CANTxItem *item)
 {
     if (!item) {
         return true;
     }
 
-    can_frame_t frame = item->frame;
+    SRNOS_CANFrame frame = item->frame;
     if (!normalize_frame(&frame)) {
-        commit_item(adapter, kind, item, CAN_TX_RESULT_DROPPED);
-        if (kind == CAN_TX_KIND_PERIODIC) {
+        commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
+        if (kind == SRNOS_CAN_TX_KIND_PERIODIC) {
             ctx->stats.tx_periodic_dropped++;
         }
         return true;
     }
 
-    const can_router_tx_class_t tx_class = (kind == CAN_TX_KIND_URGENT) ?
-                                           CAN_ROUTER_TX_CLASS_URGENT :
-                                           CAN_ROUTER_TX_CLASS_PERIODIC;
+    const SRNOS_CANRouterTxClass tx_class = (kind == SRNOS_CAN_TX_KIND_URGENT) ?
+                                           SRNOS_CAN_ROUTER_TX_CLASS_URGENT :
+                                           SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC;
     if (!backend_try_accept(ctx, ch, &frame, tx_class)) {
-        if (kind == CAN_TX_KIND_URGENT) {
+        if (kind == SRNOS_CAN_TX_KIND_URGENT) {
             return false;
         }
-        commit_item(adapter, kind, item, CAN_TX_RESULT_DROPPED);
+        commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
         ctx->stats.tx_periodic_dropped++;
         return true;
     }
 
-    commit_item(adapter, kind, item, CAN_TX_RESULT_ACCEPTED);
-    if (kind == CAN_TX_KIND_URGENT) {
+    commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_ACCEPTED);
+    if (kind == SRNOS_CAN_TX_KIND_URGENT) {
         ctx->stats.tx_urgent_accepted++;
     } else {
         ctx->stats.tx_periodic_accepted++;
@@ -821,10 +828,10 @@ static bool transmit_raw_item(can_router_ctx_t *ctx,
     return true;
 }
 
-static bool drain_adapter_urgent(can_router_ctx_t *ctx, can_channel_t ch, uint32_t now_ms)
+static bool drain_adapter_urgent(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_t now_ms)
 {
     uint32_t attempts = 0u;
-    can_tx_item_t *items = ctx->tx_scratch.items;
+    SRNOS_CANTxItem *items = ctx->tx_scratch.items;
 
     for (uint32_t i = 0;; ++i) {
         adapter_entry_t adapter = {};
@@ -843,34 +850,34 @@ static bool drain_adapter_urgent(can_router_ctx_t *ctx, can_channel_t ch, uint32
 
         memset(items, 0, sizeof(ctx->tx_scratch.items));
         const size_t n = adapter.ops.poll_tx(adapter.obj,
-                                             CAN_TX_KIND_URGENT,
+                                             SRNOS_CAN_TX_KIND_URGENT,
                                              items,
-                                             CAN_ROUTER_POLL_TX_MAX,
+                                             SRNOS_CAN_ROUTER_POLL_TX_MAX,
                                              now_ms);
-        for (size_t k = 0; k < n && k < CAN_ROUTER_POLL_TX_MAX; ++k) {
+        for (size_t k = 0; k < n && k < SRNOS_CAN_ROUTER_POLL_TX_MAX; ++k) {
             attempts++;
-            if (items[k].format == CAN_TX_FORMAT_RAW_FRAME) {
-                if (!transmit_raw_item(ctx, ch, &adapter, CAN_TX_KIND_URGENT, &items[k])) {
+            if (items[k].format == SRNOS_CAN_TX_FORMAT_RAW_FRAME) {
+                if (!transmit_raw_item(ctx, ch, &adapter, SRNOS_CAN_TX_KIND_URGENT, &items[k])) {
                     return false;
                 }
-            } else if (items[k].format == CAN_TX_FORMAT_GROUP_I16) {
+            } else if (items[k].format == SRNOS_CAN_TX_FORMAT_GROUP_I16) {
                 group_acc_t *groups = ctx->tx_scratch.groups;
                 memset(groups, 0, sizeof(ctx->tx_scratch.groups));
-                if (!add_group_item(groups, &adapter, &items[k], CAN_TX_KIND_URGENT)) {
+                if (!add_group_item(groups, &adapter, &items[k], SRNOS_CAN_TX_KIND_URGENT)) {
                     continue;
                 }
-                can_frame_t frame = {};
+                SRNOS_CANFrame frame = {};
                 compose_group_frame(ctx, &groups[0], &frame);
-                if (!backend_try_accept(ctx, ch, &frame, CAN_ROUTER_TX_CLASS_URGENT)) {
+                if (!backend_try_accept(ctx, ch, &frame, SRNOS_CAN_ROUTER_TX_CLASS_URGENT)) {
                     return false;
                 }
-                commit_group(ctx, &groups[0], CAN_TX_KIND_URGENT, CAN_TX_RESULT_ACCEPTED);
+                commit_group(ctx, &groups[0], SRNOS_CAN_TX_KIND_URGENT, SRNOS_CAN_TX_RESULT_ACCEPTED);
                 ctx->stats.tx_urgent_accepted++;
             } else {
-                commit_item(&adapter, CAN_TX_KIND_URGENT, &items[k], CAN_TX_RESULT_DROPPED);
+                commit_item(&adapter, SRNOS_CAN_TX_KIND_URGENT, &items[k], SRNOS_CAN_TX_RESULT_DROPPED);
             }
 
-            if (attempts >= CAN_ROUTER_URGENT_ATTEMPT_MAX) {
+            if (attempts >= SRNOS_CAN_ROUTER_URGENT_ATTEMPT_MAX) {
                 return true;
             }
         }
@@ -878,7 +885,7 @@ static bool drain_adapter_urgent(can_router_ctx_t *ctx, can_channel_t ch, uint32
     return true;
 }
 
-static void run_adapter_ticks(can_router_ctx_t *ctx, uint32_t now_ms)
+static void run_adapter_ticks(SRNOS_CANRouterCtx *ctx, uint32_t now_ms)
 {
     for (uint32_t i = 0;; ++i) {
         adapter_entry_t adapter = {};
@@ -897,11 +904,11 @@ static void run_adapter_ticks(can_router_ctx_t *ctx, uint32_t now_ms)
     }
 }
 
-static void drain_periodic(can_router_ctx_t *ctx, can_channel_t ch, uint32_t now_ms)
+static void drain_periodic(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_t now_ms)
 {
     uint32_t attempts = 0u;
     group_acc_t *groups = ctx->tx_scratch.groups;
-    can_tx_item_t *items = ctx->tx_scratch.items;
+    SRNOS_CANTxItem *items = ctx->tx_scratch.items;
 
     memset(groups, 0, sizeof(ctx->tx_scratch.groups));
 
@@ -924,53 +931,53 @@ static void drain_periodic(can_router_ctx_t *ctx, can_channel_t ch, uint32_t now
 
         memset(items, 0, sizeof(ctx->tx_scratch.items));
         const size_t n = adapter.ops.poll_tx(adapter.obj,
-                                             CAN_TX_KIND_PERIODIC,
+                                             SRNOS_CAN_TX_KIND_PERIODIC,
                                              items,
-                                             CAN_ROUTER_POLL_TX_MAX,
+                                             SRNOS_CAN_ROUTER_POLL_TX_MAX,
                                              now_ms);
-        for (size_t k = 0; k < n && k < CAN_ROUTER_POLL_TX_MAX; ++k) {
-            if (items[k].format == CAN_TX_FORMAT_RAW_FRAME) {
-                (void)transmit_raw_item(ctx, ch, &adapter, CAN_TX_KIND_PERIODIC, &items[k]);
+        for (size_t k = 0; k < n && k < SRNOS_CAN_ROUTER_POLL_TX_MAX; ++k) {
+            if (items[k].format == SRNOS_CAN_TX_FORMAT_RAW_FRAME) {
+                (void)transmit_raw_item(ctx, ch, &adapter, SRNOS_CAN_TX_KIND_PERIODIC, &items[k]);
                 attempts++;
-            } else if (items[k].format == CAN_TX_FORMAT_GROUP_I16) {
-                (void)add_group_item(groups, &adapter, &items[k], CAN_TX_KIND_PERIODIC);
+            } else if (items[k].format == SRNOS_CAN_TX_FORMAT_GROUP_I16) {
+                (void)add_group_item(groups, &adapter, &items[k], SRNOS_CAN_TX_KIND_PERIODIC);
             } else {
-                commit_item(&adapter, CAN_TX_KIND_PERIODIC, &items[k], CAN_TX_RESULT_DROPPED);
+                commit_item(&adapter, SRNOS_CAN_TX_KIND_PERIODIC, &items[k], SRNOS_CAN_TX_RESULT_DROPPED);
                 ctx->stats.tx_periodic_dropped++;
             }
-            if (attempts >= CAN_ROUTER_PERIODIC_ATTEMPT_MAX) {
+            if (attempts >= SRNOS_CAN_ROUTER_PERIODIC_ATTEMPT_MAX) {
                 break;
             }
         }
-        if (attempts >= CAN_ROUTER_PERIODIC_ATTEMPT_MAX) {
+        if (attempts >= SRNOS_CAN_ROUTER_PERIODIC_ATTEMPT_MAX) {
             break;
         }
     }
 
-    for (uint32_t i = 0; i < CAN_ROUTER_GROUP_SHADOWS; ++i) {
+    for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_acc_t *g = &groups[i];
         if (!g->valid) {
             continue;
         }
-        can_frame_t frame = {};
+        SRNOS_CANFrame frame = {};
         compose_group_frame(ctx, g, &frame);
-        if (backend_try_accept(ctx, ch, &frame, CAN_ROUTER_TX_CLASS_PERIODIC)) {
-            commit_group(ctx, g, CAN_TX_KIND_PERIODIC, CAN_TX_RESULT_ACCEPTED);
+        if (backend_try_accept(ctx, ch, &frame, SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC)) {
+            commit_group(ctx, g, SRNOS_CAN_TX_KIND_PERIODIC, SRNOS_CAN_TX_RESULT_ACCEPTED);
             ctx->stats.tx_periodic_accepted++;
         } else {
-            commit_group(ctx, g, CAN_TX_KIND_PERIODIC, CAN_TX_RESULT_DROPPED);
+            commit_group(ctx, g, SRNOS_CAN_TX_KIND_PERIODIC, SRNOS_CAN_TX_RESULT_DROPPED);
             ctx->stats.tx_periodic_dropped++;
         }
         attempts++;
-        if (attempts >= CAN_ROUTER_PERIODIC_ATTEMPT_MAX) {
+        if (attempts >= SRNOS_CAN_ROUTER_PERIODIC_ATTEMPT_MAX) {
             break;
         }
     }
 }
 
-extern "C" void can_router_core_drain_tx(can_channel_t ch, uint32_t now_ms)
+extern "C" void SRNOS_CANRouterCoreDrainTx(SRNOS_CANChannel ch, uint32_t now_ms)
 {
-    can_router_ctx_t *ctx = ctx_of(ch);
+    SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx) {
         return;
     }
@@ -984,4 +991,30 @@ extern "C" void can_router_core_drain_tx(can_channel_t ch, uint32_t now_ms)
         return;
     }
     drain_periodic(ctx, ch, now_ms);
+}
+
+extern "C" uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel ch, uint32_t now_ms)
+{
+    auto *ctx=ctx_of(ch);if(!ctx)return UINT32_MAX;
+    uint32_t wait=UINT32_MAX;
+    enter_critical();
+    /* No public urgent-ready notification exists for adapters, so changing
+     * this cadence would silently delay parent application commands. */
+    for(unsigned i=0;i<ctx->adapter_count;i++) {
+        const auto &a=ctx->adapters[i];
+        if(a.ops.tick || a.ops.poll_tx){wait=1;break;}
+    }
+    if(ctx->oneshot.expiry_size) {
+        uint32_t deadline=ctx->oneshot.slots[ctx->oneshot.expiry_heap[0]].deadline_ms;
+        int32_t delta=(int32_t)(deadline-now_ms);
+        uint32_t expiry=delta<=0?0:(uint32_t)delta;
+        if(expiry<wait)wait=expiry;
+        const auto *backend=backend_of(ch);
+        if(backend && backend->retry_wait_ms) {
+            uint32_t retry=backend->retry_wait_ms(ch,now_ms);
+            if(retry<wait)wait=retry;
+        }
+        /* Full hardware FIFO wakes via TX completion; never spin at full. */
+    }
+    exit_critical();return wait;
 }

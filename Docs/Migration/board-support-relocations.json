@@ -1,0 +1,80 @@
+{
+  "Board/Glue/Platform.c": [
+    "Board/Support/System/fault_platform.c"
+  ],
+  "Board/Glue/STM32H7Fault.h": [
+    "Board/Support/System/fault_platform.h"
+  ],
+  "Board/Glue/sirinos_board.h": [
+    "Board/Support/System/board_startup.h"
+  ],
+  "Board/Glue/fault_handlers.c": [
+    "Board/Support/System/fault_handlers.c"
+  ],
+  "Board/Glue/memory_early.c": [
+    "Board/Support/System/memory_early.c"
+  ],
+  "Board/Glue/kernel_board.c": [
+    "Board/Support/System/kernel_board.c"
+  ],
+  "Board/Glue/libc_memory.c": [
+    "Board/Support/System/libc_memory.c"
+  ],
+  "Board/Glue/libc_arena.h": [
+    "Board/Support/System/libc_arena.h"
+  ],
+  "Board/Glue/libc_locks.c": [
+    "Board/Support/System/libc_locks.c"
+  ],
+  "Board/Glue/fixed_resources.cpp": [
+    "Board/Support/IO/can_board.cpp"
+  ],
+  "Board/Glue/fixed_resources.h": [
+    "Board/Support/IO/can_board.h"
+  ],
+  "Board/Glue/serial_ports.c": [
+    "Board/Support/IO/serial_board.c"
+  ],
+  "Board/Glue/i2c_timing.h": [
+    "Board/Support/IO/i2c_timing.h"
+  ],
+  "Board/Glue/sensors_board.c": [
+    "Board/Support/Devices/sensors_board.c"
+  ],
+  "Board/Glue/sensors_board.h": [
+    "Board/Support/Devices/sensors_board.h"
+  ],
+  "Board/Glue/sensor_frames.c": [
+    "Board/Support/Devices/sensor_frames.c"
+  ],
+  "Board/Glue/sensor_frames.h": [
+    "Board/Support/Devices/sensor_frames.h"
+  ],
+  "Board/Glue/ins_board.c": [
+    "Board/Support/Devices/heater_board.c"
+  ],
+  "Board/Glue/ins_board.h": [
+    "Board/Support/Devices/heater_board.h"
+  ],
+  "Board/Glue/usb_device_board.c": [
+    "Board/Support/USB/usb_device_board.c"
+  ],
+  "Board/Glue/README.md": [
+    "Board/Support/README.md"
+  ],
+  "Board/Glue/CHANGELOG.md": [
+    "Board/Support/CHANGELOG.md"
+  ],
+  "Board/Glue/fixed_buses.c": [
+    "Board/Support/IO/spi_board.c",
+    "Board/Support/IO/i2c_board.c"
+  ],
+  "Board/Glue/fixed_buses.h": [
+    "Board/Support/IO/spi_board.h",
+    "Board/Support/IO/i2c_board.h"
+  ],
+  "Board/Glue/indicators.c": [
+    "Board/Support/Devices/indicators_board.c",
+    "Source/Services/Indicators/indicators.c"
+  ]
+}

@@ -1,0 +1,42 @@
+/Users/sirin/CLionProjects/SirinEmbedOS/build/Debug/SirinEmbedOS.elf  :
+section                  size        addr
+.isr_vector               716   134217728
+.text                  253088   134218448
+.rodata                 12944   134471536
+.ARM.extab                  0   134484480
+.ARM                       16   134484480
+.preinit_array              4   134484496
+.init_array                 0   134484500
+.fini_array                 0   134484500
+.data                    1032   603979776
+.tdata                      0   603980808
+.tbss                       0   603980808
+.bss                   166616   603980832
+.sirinos_heap_d1       131072   604147456
+.srnos_libc_heap         8192   604278528
+.sirinos_heap_dtcm      65536   536870912
+.itcm_text                224           0
+.dtcm_bss               41568   536936448
+.dma_nc                   192   805306368
+.dma_nc_buf              6304   805306560
+.bdma_buf                 544   939524096
+.eth_dma                    0   805312864
+.debug_watch             2848   805312864
+.sirinos_noinit           352   805315712
+.srnos_msp               8192   536993792
+.debug_loclists        344077           0
+.debug_abbrev          118695           0
+.debug_info            825425           0
+.debug_rnglists         41399           0
+.debug_str_offsets     182944           0
+.debug_str             298410           0
+.debug_addr             39776           0
+.comment                  146           0
+.ARM.attributes            75           0
+.debug_frame            82836           0
+.debug_line            473892           0
+.debug_line_str         34158           0
+.debug_aranges             40           0
+Total                 3141313
+
+

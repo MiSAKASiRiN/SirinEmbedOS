@@ -33,9 +33,10 @@ list(FILTER _mx_sources EXCLUDE REGEX "/sysmem[.]c$")
 set_property(TARGET sirinos_board PROPERTY SOURCES "${_mx_sources}")
 set_source_files_properties(Core/Src/stm32h7xx_it.c PROPERTIES COMPILE_DEFINITIONS
     "NMI_Handler=SRNOS_UnusedMX_NMI;HardFault_Handler=SRNOS_UnusedMX_HardFault;MemManage_Handler=SRNOS_UnusedMX_MemManage;BusFault_Handler=SRNOS_UnusedMX_BusFault;UsageFault_Handler=SRNOS_UnusedMX_UsageFault;DebugMon_Handler=SRNOS_UnusedMX_DebugMon;DMA1_Stream0_IRQHandler=SRNOS_UnusedMX_DMA1_Stream0;DMA1_Stream1_IRQHandler=SRNOS_UnusedMX_DMA1_Stream1")
-target_sources(sirinos_board PRIVATE Glue/kernel_board.c)
+include(Support/component.cmake)
+target_sources(sirinos_board PRIVATE ${SRNOS_SUPPORT_BOARD_SOURCES})
 target_include_directories(sirinos_board PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/Glue"
+        ${SRNOS_SUPPORT_PRIVATE_INCLUDES}
         "${CMAKE_CURRENT_SOURCE_DIR}/../Source/Kernel")
 # CubeMX uses the plain signature for sirinos_board.
 target_link_libraries(sirinos_board stm32cubemx sirinos_config)

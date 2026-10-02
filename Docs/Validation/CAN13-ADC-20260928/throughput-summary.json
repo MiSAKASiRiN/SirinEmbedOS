@@ -1,0 +1,259 @@
+{
+  "stages": [
+    {
+      "stage": 0,
+      "requested_fps": [
+        0,
+        0
+      ],
+      "seconds": 5,
+      "elapsed_us": 4999957,
+      "actual_received_fps": [
+        0.0,
+        0.0
+      ],
+      "accepted": [
+        0,
+        0
+      ],
+      "received_after_drain": [
+        0,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 19.0391,
+      "monitor_percent": 0.0466,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 1,
+      "requested_fps": [
+        1000,
+        0
+      ],
+      "seconds": 2,
+      "elapsed_us": 1999979,
+      "actual_received_fps": [
+        1000.0105001102512,
+        0.0
+      ],
+      "accepted": [
+        2000,
+        0
+      ],
+      "received_after_drain": [
+        2000,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 29.2162,
+      "monitor_percent": 0.0489,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 2,
+      "requested_fps": [
+        0,
+        1000
+      ],
+      "seconds": 2,
+      "elapsed_us": 1999983,
+      "actual_received_fps": [
+        0.0,
+        1000.0085000722506
+      ],
+      "accepted": [
+        0,
+        2000
+      ],
+      "received_after_drain": [
+        0,
+        2000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 29.2182,
+      "monitor_percent": 0.0504,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 3,
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "seconds": 10,
+      "elapsed_us": 9999984,
+      "actual_received_fps": [
+        1000.00160000256,
+        1000.00160000256
+      ],
+      "accepted": [
+        10000,
+        10000
+      ],
+      "received_after_drain": [
+        10000,
+        10000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 38.625,
+      "monitor_percent": 0.0531,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 4,
+      "requested_fps": [
+        2000,
+        2000
+      ],
+      "seconds": 10,
+      "elapsed_us": 9999993,
+      "actual_received_fps": [
+        2000.00140000098,
+        2000.00140000098
+      ],
+      "accepted": [
+        20000,
+        20000
+      ],
+      "received_after_drain": [
+        20000,
+        20000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 57.4432,
+      "monitor_percent": 0.0512,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 5,
+      "requested_fps": [
+        3000,
+        3000
+      ],
+      "seconds": 10,
+      "elapsed_us": 9999984,
+      "actual_received_fps": [
+        3000.00480000768,
+        3000.00480000768
+      ],
+      "accepted": [
+        30000,
+        30000
+      ],
+      "received_after_drain": [
+        30000,
+        30000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 75.9309,
+      "monitor_percent": 0.0509,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 6,
+      "requested_fps": [
+        4000,
+        4000
+      ],
+      "seconds": 10,
+      "elapsed_us": 10000038,
+      "actual_received_fps": [
+        3999.98480005776,
+        3999.784800817757
+      ],
+      "accepted": [
+        40000,
+        40000
+      ],
+      "received_after_drain": [
+        40000,
+        40000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 94.7602,
+      "monitor_percent": 0.0565,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 7,
+      "requested_fps": [
+        5000,
+        5000
+      ],
+      "seconds": 10,
+      "elapsed_us": 10000004,
+      "actual_received_fps": [
+        4999.9980000008,
+        3425.398629840548
+      ],
+      "accepted": [
+        50000,
+        34345
+      ],
+      "received_after_drain": [
+        50000,
+        34345
+      ],
+      "rejected": [
+        0,
+        15655
+      ],
+      "cpu_percent": 78.1485,
+      "monitor_percent": 0.0531,
+      "monitor_critical_us": 2
+    },
+    {
+      "stage": 8,
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "seconds": 5,
+      "elapsed_us": 4999983,
+      "actual_received_fps": [
+        1000.0034000115601,
+        1000.0034000115601
+      ],
+      "accepted": [
+        5000,
+        5000
+      ],
+      "received_after_drain": [
+        5000,
+        5000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 39.4785,
+      "monitor_percent": 0.0543,
+      "monitor_critical_us": 2
+    }
+  ],
+  "delivered_frames": 298345,
+  "rejected_attempts": 15655,
+  "notes": "Received throughput uses only frames seen before drain; accepted frames checked against reception after 500 ms drain. CPU includes producer, both CAN controllers, SDK services and attributed interrupts."
+}

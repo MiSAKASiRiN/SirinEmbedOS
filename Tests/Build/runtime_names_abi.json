@@ -1,0 +1,138 @@
+{
+  "Config/FreeRTOSConfig.h": {
+    "reason": "FreeRTOS/CMSIS configuration and Cortex-M vector binding macros consumed by the pinned kernel.",
+    "macros": [
+      "CMSIS_device_header",
+      "INCLUDE_eTaskGetState",
+      "INCLUDE_pcTaskGetTaskName",
+      "INCLUDE_uxTaskGetStackHighWaterMark",
+      "INCLUDE_uxTaskPriorityGet",
+      "INCLUDE_vTaskDelay",
+      "INCLUDE_vTaskDelete",
+      "INCLUDE_vTaskPrioritySet",
+      "INCLUDE_vTaskSuspend",
+      "INCLUDE_xQueueGetMutexHolder",
+      "INCLUDE_xTaskDelayUntil",
+      "INCLUDE_xTaskGetCurrentTaskHandle",
+      "INCLUDE_xTaskGetIdleTaskHandle",
+      "INCLUDE_xTaskGetSchedulerState",
+      "INCLUDE_xTimerPendFunctionCall",
+      "USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION",
+      "USE_FreeRTOS_HEAP_5",
+      "configASSERT",
+      "configCHECK_FOR_STACK_OVERFLOW",
+      "configCPU_CLOCK_HZ",
+      "configENABLE_FPU",
+      "configENABLE_MPU",
+      "configGENERATE_RUN_TIME_STATS",
+      "configHEAP_5_REGIONS",
+      "configIDLE_TASK_NAME",
+      "configKERNEL_INTERRUPT_PRIORITY",
+      "configLIBRARY_LOWEST_INTERRUPT_PRIORITY",
+      "configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY",
+      "configMAX_CO_ROUTINE_PRIORITIES",
+      "configMAX_PRIORITIES",
+      "configMAX_SYSCALL_INTERRUPT_PRIORITY",
+      "configMAX_TASK_NAME_LEN",
+      "configMINIMAL_STACK_SIZE",
+      "configPRIO_BITS",
+      "configQUEUE_REGISTRY_SIZE",
+      "configRECORD_STACK_HIGH_ADDRESS",
+      "configRUN_TIME_COUNTER_TYPE",
+      "configSUPPORT_DYNAMIC_ALLOCATION",
+      "configSUPPORT_STATIC_ALLOCATION",
+      "configTASK_NOTIFICATION_ARRAY_ENTRIES",
+      "configTICK_RATE_HZ",
+      "configTIMER_QUEUE_LENGTH",
+      "configTIMER_SERVICE_TASK_NAME",
+      "configTIMER_TASK_PRIORITY",
+      "configTIMER_TASK_STACK_DEPTH",
+      "configTOTAL_HEAP_SIZE",
+      "configUSE_16_BIT_TICKS",
+      "configUSE_COUNTING_SEMAPHORES",
+      "configUSE_CO_ROUTINES",
+      "configUSE_IDLE_HOOK",
+      "configUSE_MALLOC_FAILED_HOOK",
+      "configUSE_MUTEXES",
+      "configUSE_NEWLIB_REENTRANT",
+      "configUSE_OS2_EVENTFLAGS_FROM_ISR",
+      "configUSE_OS2_MUTEX",
+      "configUSE_OS2_THREAD_ENUMERATE",
+      "configUSE_OS2_THREAD_FLAGS",
+      "configUSE_OS2_THREAD_SUSPEND_RESUME",
+      "configUSE_OS2_TIMER",
+      "configUSE_PICOLIBC_TLS",
+      "configUSE_PORT_OPTIMISED_TASK_SELECTION",
+      "configUSE_PREEMPTION",
+      "configUSE_RECURSIVE_MUTEXES",
+      "configUSE_STATS_FORMATTING_FUNCTIONS",
+      "configUSE_TICK_HOOK",
+      "configUSE_TIMERS",
+      "configUSE_TRACE_FACILITY",
+      "vPortSVCHandler",
+      "xPortPendSVHandler"
+    ]
+  },
+  "Source/Diagnostics/Runtime/trace_internal.h": {
+    "reason": "FreeRTOS trace and runtime counter hook macro names.",
+    "macros": [
+      "portCONFIGURE_TIMER_FOR_RUN_TIME_STATS",
+      "portGET_RUN_TIME_COUNTER_VALUE",
+      "traceMOVED_TASK_TO_READY_STATE",
+      "traceTASK_CREATE",
+      "traceTASK_DELETE",
+      "traceTASK_SWITCHED_IN",
+      "traceTASK_SWITCHED_OUT"
+    ]
+  },
+  "Source/Devices/MCP2518FD/spi_adapter_internal.h": {
+    "reason": "Microchip driver compile-time SPI transfer buffer contract.",
+    "macros": [
+      "SPI_DEFAULT_BUFFER_LENGTH"
+    ]
+  },
+  "Source/Services/USB/AL94.I-CUBE-USBD-COMPOSITE_conf.h": {
+    "reason": "AL94 middleware feature configuration names consumed by the retained USB sources.",
+    "macros": [
+      "_STM32F1_DEVICE",
+      "_USBD_CDC_ACM_COUNT",
+      "_USBD_USE_CDC_ACM",
+      "_USBD_USE_CDC_ECM",
+      "_USBD_USE_CDC_RNDIS",
+      "_USBD_USE_DFU",
+      "_USBD_USE_HID_CUSTOM",
+      "_USBD_USE_HID_KEYBOARD",
+      "_USBD_USE_HID_MOUSE",
+      "_USBD_USE_HS",
+      "_USBD_USE_MSC",
+      "_USBD_USE_PRNTR",
+      "_USBD_USE_UAC_MIC",
+      "_USBD_USE_UAC_SPKR",
+      "_USBD_USE_UVC"
+    ]
+  },
+  "Source/Services/USB/usbd_conf.h": {
+    "reason": "ST USB Device middleware configuration and platform adaptation macro names.",
+    "macros": [
+      "USBD_DEBUG_LEVEL",
+      "USBD_DbgLog",
+      "USBD_Delay",
+      "USBD_ErrLog",
+      "USBD_LPM_ENABLED",
+      "USBD_MAX_NUM_CONFIGURATION",
+      "USBD_MAX_NUM_INTERFACES",
+      "USBD_MAX_STR_DESC_SIZ",
+      "USBD_SELF_POWERED",
+      "USBD_SUPPORT_USER_STRING_DESC",
+      "USBD_UsrLog",
+      "USBD_memcpy",
+      "USBD_memset"
+    ]
+  },
+  "Source/Services/USB/usb_composite_memcpy.h": {
+    "reason": "Intentional forced-include override in the patched vendor composite source; not a public macro.",
+    "macros": [
+      "memcpy"
+    ]
+  }
+}

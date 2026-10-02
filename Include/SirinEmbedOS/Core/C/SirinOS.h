@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_SIRINOS_H
-#define SIRINOS_C_SIRINOS_H
+#ifndef SRNOS_C_SIRINOS_H
+#define SRNOS_C_SIRINOS_H
 
 #include "SirinEmbedOS/Core/C/Array.h"
 #include "SirinEmbedOS/Core/C/Bounds.h"

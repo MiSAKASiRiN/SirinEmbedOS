@@ -9,7 +9,7 @@
 | UART9 | VT03 接收 | 921600、8N1 |
 | USART1 | 日志输出 | 115200、8N1 |
 
-该映射以 prototype 的 `omx_uart_router_config.h` 为依据。端口格式、资源用途在初始化后冻结。SDK 默认不占用上述端口；此示例显式启用接收和日志，但不控制执行器。
+该映射以 prototype 的 `SRNOS_UartRouterConfig.h` 为依据。端口格式、资源用途在初始化后冻结。SDK 默认不占用上述端口；此示例显式启用接收和日志，但不控制执行器。
 
 原始串口、H12H 或 RS485 设备应在 `config->bind_channels` 中完成声明：先 `SRNOS_SerialGetChannel()`，再由协议初始化函数或应用调用 `SRNOS_SerialClaim()` 获取唯一所有权，保存成功获取的通道供运行期读写。已被服务占用的端口及启动后的 `GetChannel()` 返回空指针。已配置但没有所有者的端口会阻止启动。
 

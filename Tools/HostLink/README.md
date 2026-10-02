@@ -82,3 +82,17 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
 五路模式的 metadata 为 format_version=2，列定义在 `fields_by_stream`；保留 `fields` 作为旧原始 IMU 列定义。每个流有单独统计和时间基准；INS 的 `measurement_rate_hz` 用 attitude_us，其他流用采集开始时间。它是已收到样本按设备时间跨度计算的平均率，不等于固件计算率；worker 周期率从 `ins_service.cycles` / `updated_us` 的差分检查，有效姿态发布率从 `publications` 的差分检查，完整接收率同时核对行数、时间跨度与缺序。两次状态请求不是原子快照。
 
 出现 `epoch_changes` 表示航向参考重新建立，需要分段分析。`complete=true` 并不保证质量，检查 `quality_issues`（包括没有姿态样本、epoch 变化、序号/时间问题、设备溢出等）。服务未就绪时无伪有效姿态；不能将剩余流持续输出当成 INS 正常。五流十分钟 CSV 与原始字节建议预留至少 1 GB 空间。
+
+## SystemMonitor
+
+`system_monitor.py --port CDC1_PATH --duration 60 --output captures/system-monitor-01` 订阅 1 Hz ADC 与任务统计，终端显示有效性、单位及年龄，可用 `--json` 输出 JSON。保存目录须不存在，包含逐报告 records.jsonl 和结束 metadata.json；不执行参数存储、不自动选择端口或断线重连。请使用启用 system_monitor_enabled 的固件。任务CPU为ppm，栈65535代表未测量，运行片段与Ready延迟不等于循环耗时或周期抖动。完整二进制布局见 Docs/HostLink.md。
+
+## SystemMonitor 循环统计
+
+system_monitor.py 订阅任务 0x0001、ADC 0x0002 和循环 0x0003；旧固件对新增流返回 NOT_FOUND 时继续已有两条流，其余错误正常报错。循环显示墙钟 min/mean/max、抖动/延迟、miss/skip、hook 估计成本、实际窗口和数据年龄；事件任务周期字段不适用。JSONL 保存原字段及有效位，metadata 记录实际支持的流。完整线格式和命令见 Docs/HostLink.md；不开启自动重连，不把主机到达时间当采样时间。
+
+## 2026-09-28 板端验证
+
+SystemMonitor SAMPLE 帧使用 kind=2、service=4、message=2；流 ID 位于 payload，循环流 0x0003 不是 message=3。板端已验证三条流接收和 DTR 重连。
+
+现有 CLI 用于 IMU/INS/监测接收和保存，不提供参数编辑、身份写入或静态校准触发命令。SOURCE V2、CONFIG 01–0A 是固件接口，不能把协议已实现理解为这些 CLI 已有对应界面。实现上位机时以 [当前协议](../../Docs/HostLink.md) 和 [存储设计](../../Docs/Storage.md) 为准。

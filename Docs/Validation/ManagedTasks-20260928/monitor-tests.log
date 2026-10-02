@@ -1,0 +1,4 @@
+PASS: conversion, ADC lifecycle faults, late processing, slot generations, wrap, snapshots, bounded batches, telemetry pacing/backpressure
+PASS: C/Python wire agreement, validation, display and framed CDC receive
+PASS: cycle signed fields/window/age and optional stream compatibility
+PASS: actual ADC adapter calibration, aligned DMA, HT suppression, completion/OVR, verified stop, invalid binding and failed-stop isolation

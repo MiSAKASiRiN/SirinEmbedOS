@@ -1,5 +1,5 @@
-#ifndef OMX_LIB_IMU_QUATERNION_EKF_HPP
-#define OMX_LIB_IMU_QUATERNION_EKF_HPP
+#ifndef SRNOS_IMU_QUATERNION_EKF_HPP
+#define SRNOS_IMU_QUATERNION_EKF_HPP
 
 #include <array>
 #include <cstdint>
@@ -7,7 +7,7 @@
 #include "SirinEmbedOS/Algorithms/Math/kalman_filter.hpp"
 #include "SirinEmbedOS/Algorithms/Math/signal.hpp"
 
-namespace omx::imu {
+namespace SRNOS::IMU {
 
 struct QuaternionEkfConfig {
     float quaternion_process_noise {10.0f};
@@ -58,14 +58,14 @@ private:
 
     QuaternionEkfConfig config_ {};
     QuaternionEkfResult result_ {};
-    algo::KalmanFilter<7, 0, 3> filter_ {};
-    std::array<algo::FirstOrderLowPass, 3> accelerometer_filters_ {};
+    SRNOS::Math::KalmanFilter<7, 0, 3> filter_ {};
+    std::array<SRNOS::Math::FirstOrderLowPass, 3> accelerometer_filters_ {};
     bool configured_ {false};
     bool yaw_initialized_ {false};
     float previous_yaw_deg_ {0.0f};
     std::int32_t yaw_turns_ {0};
 };
 
-} // namespace omx::imu
+} // namespace SRNOS::IMU
 
 #endif

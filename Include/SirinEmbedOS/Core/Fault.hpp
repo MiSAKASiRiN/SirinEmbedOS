@@ -1,5 +1,5 @@
-#ifndef SIRINOS_FAULT_HPP
-#define SIRINOS_FAULT_HPP
+#ifndef SRNOS_FAULT_HPP
+#define SRNOS_FAULT_HPP
 
 #include "SirinEmbedOS/Core/C/Fault.h"
 

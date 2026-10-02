@@ -1,8 +1,8 @@
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
+#ifndef SRNOS_FREERTOS_CONFIG_H
+#define SRNOS_FREERTOS_CONFIG_H
 
 #include <stdint.h>
-#include "SirinEmbedOSConfig.h"
+#include "SirinEmbedOS/Config.h"
 #ifndef __PICOLIBC__
 #error "This kernel baseline requires the ST Arm Clang Picolibc runtime"
 #endif
@@ -30,6 +30,9 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 #define configMINIMAL_STACK_SIZE ((uint16_t)128)
 #define configTOTAL_HEAP_SIZE (SRNOS_HEAP_DTCM_BYTES + SRNOS_HEAP_D1_BYTES)
 #define configMAX_TASK_NAME_LEN 16
+#define configTASK_NOTIFICATION_ARRAY_ENTRIES 2
+#define configIDLE_TASK_NAME "SRNOS_Idle"
+#define configTIMER_SERVICE_TASK_NAME "SRNOS_Timer"
 #define configUSE_16_BIT_TICKS 0
 #define configUSE_MUTEXES 1
 #define configUSE_RECURSIVE_MUTEXES 1
@@ -48,6 +51,7 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 #define configGENERATE_RUN_TIME_STATS 1
 #define configRUN_TIME_COUNTER_TYPE uint64_t
 #define configUSE_TRACE_FACILITY 1
+#define INCLUDE_xTaskGetIdleTaskHandle 1
 #define configUSE_STATS_FORMATTING_FUNCTIONS 0
 
 /* Current ST Arm Clang runtime is Picolibc, not Newlib. */
@@ -76,7 +80,7 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 
 /* osKernelInitialize is the sole owner of vPortDefineHeapRegions. */
 #define USE_FreeRTOS_HEAP_5
-#define configHEAP_5_REGIONS sirinos_heap_regions
+#define configHEAP_5_REGIONS SRNOS_HeapRegions
 #define configPRIO_BITS 4
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY 15
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
@@ -87,5 +91,5 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 #define xPortPendSVHandler PendSV_Handler
 /* CMSIS-RTOS2 owns SysTick_Handler; TIM7 remains HAL's timebase. */
 #define USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION 0
-#include "SirinEmbedOS/Diagnostics/Runtime/Trace.h"
+#include "Diagnostics/Runtime/trace_internal.h"
 #endif

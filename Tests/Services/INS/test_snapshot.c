@@ -10,7 +10,7 @@ static uint64_t now=100000;
 uint32_t test_get_mask(void){return locked;}
 void test_disable_irq(void){assert(!locked);pthread_mutex_lock(&mutex);locked=1;}
 void test_set_mask(uint32_t mask){assert(!mask&&locked);locked=0;pthread_mutex_unlock(&mutex);}
-uint64_t DWT_GetUptimeUs(void){assert(locked);return now;}
+uint64_t SRNOS_TimeGetUptimeUs(void){assert(locked);return now;}
 static void *writer(void *p){
  (void)p;SRNOS_INSSnapshot s={0};s.status.phase=SRNOS_INS_RUNNING;s.status.updated_us=now;
  s.attitude.attitude_us=now;s.attitude.flags=SRNOS_INS_VALID;

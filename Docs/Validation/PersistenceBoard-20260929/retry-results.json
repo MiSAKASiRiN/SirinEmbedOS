@@ -1,0 +1,71 @@
+{
+  "status": 269,
+  "calibration": {
+    "version": 1,
+    "phase": 5,
+    "requested": 3,
+    "saved": 0,
+    "failed": 0,
+    "result": 7,
+    "job": 3,
+    "elapsed": 17,
+    "samples": [
+      1,
+      1
+    ],
+    "storage": [
+      6,
+      6
+    ],
+    "revision": [
+      0,
+      0
+    ],
+    "bias": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "temperature": [
+      0.0,
+      0.0
+    ]
+  },
+  "query": {
+    "version": 1,
+    "phase": 1,
+    "requested": 3,
+    "saved": 0,
+    "failed": 255,
+    "result": 0,
+    "job": 4,
+    "elapsed": 0,
+    "samples": [
+      0,
+      0
+    ],
+    "storage": [
+      0,
+      0
+    ],
+    "revision": [
+      0,
+      0
+    ],
+    "bias": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "temperature": [
+      0.0,
+      0.0
+    ]
+  }
+}

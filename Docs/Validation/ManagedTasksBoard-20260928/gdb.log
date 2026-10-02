@@ -1,0 +1,972 @@
+Remote debugging using localhost:2331
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+0x08038550 in ?? ()
+pc             0x8038550           0x8038550
+sp             0x2000eba0          0x2000eba0
+xpsr           0x1000000           16777216
+Reading symbols from build/ManagedTasks-Release/SirinEmbedOS.elf...
+(No debugging symbols found in build/ManagedTasks-Release/SirinEmbedOS.elf)
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x29ef4 lma 0x80002d0
+Loading section .rodata, size 0x3318 lma 0x802a1c8
+Loading section .ARM, size 0x10 lma 0x802d4e0
+Loading section .preinit_array, size 0x4 lma 0x802d4f0
+Loading section .data, size 0x40c lma 0x802d4f4
+Loading section .itcm_text, size 0xc0 lma 0x802d900
+Start address 0x08001ee0, load size 186808
+Transfer rate: 60809 KB/sec, 20756 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x802a1c4: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3f0 in xTaskIncrementTick ()
+#0  0x0800e3f0 in xTaskIncrementTick ()
+#1  0x0801052a in xPortSysTickHandler ()
+#2  <signal handler called>
+#3  0x0800e330 in prvIdleTask ()
+#4  0x0800df0c in xTaskResumeAll ()
+#5  0x240029c8 in xPendingReadyList ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+pc             0x800e3f0           0x800e3f0 <xTaskIncrementTick+120>
+lr             0x801052b           134284587
+sp             0x2001ffb0          0x2001ffb0
+xpsr           0x2100000f          553648143
+$1 = 0x0
+0x24017ae8 <published>:	0x043cd118	0x00000000	0x00000048	0x00000003
+0x24017af8 <published+16>:	0x00000000	0x00000000	0x00000000	0x00000000
+0x24017b08 <published+32>:	0x00000000	0x00000000	0x00000000	0x00000000
+0x24017b18 <published+48>:	0x00000000	0x00000000	0x00000000	0x00000000
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08012202 in DWT_GetCounter ()
+Reading symbols from build/ManagedBoard-On/ManagedTasksBoard.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2b1b8 lma 0x80002d0
+Loading section .rodata, size 0x3308 lma 0x802b488
+Loading section .ARM, size 0x10 lma 0x802e790
+Loading section .preinit_array, size 0x4 lma 0x802e7a0
+Loading section .data, size 0x40c lma 0x802e7a4
+Loading section .itcm_text, size 0xc0 lma 0x802ebb0
+Start address 0x080028e8, load size 191596
+Transfer rate: 46776 KB/sec, 21288 bytes/write.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f5d2 in prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$2 = 3
+$3 = 2846
+$4 = 0
+$5 = 0
+$6 = {cpu_hz = 550000000, minimum = 789, mean = 853, maximum = 877, read_overhead = 1}
+$7 = 30
+$8 = {updated_us = 54077635, sequence = 55, flags = 3, adc = {start_us = 0, completed_us = 0, sequence = 0, valid_fields = 0, quality = 0, raw = {0, 0, 0, 0, 0}, current_a = 0, voltage_v = 0, vbat_v = 0, vrefint_v = 0, temperature_c = 0, vdda_v = 0, state = SRNOS_MONITOR_ADC_QUARANTINED, errors = 1, timeouts = 0, recoveries = 0}, busy_ppm = 396919, idle_ppm = 603081, monitor_cpu_ppm = 530, task_count = 22, max_critical_us = 2, max_wake_late_us = 1091, skipped_cycles = 0, slot_overflows = 0}
+$9 = {Instance = 0x58026000, Init = {ClockPrescaler = 524288, Resolution = 8, DataAlign = 0, ScanConvMode = 1, EOCSelection = 8, LowPowerAutoWait = DISABLE, ContinuousConvMode = DISABLE, NbrOfConversion = 5, DiscontinuousConvMode = DISABLE, NbrOfDiscConversion = 0, ExternalTrigConv = 0, ExternalTrigConvEdge = 0, ConversionDataManagement = 1, SamplingMode = 0, DMAContinuousRequests = DISABLE, Overrun = 0, LeftBitShift = 0, OversamplingMode = DISABLE, Oversampling = {Ratio = 0, RightBitShift = 0, TriggeredMode = 0, OversamplingStopReset = 0}}, DMA_Handle = 0x24000db4 <hdma_adc3>, Lock = HAL_UNLOCKED, State = 513, ErrorCode = 0, InjectionConfig = {ContextQueue = 0, ChannelCount = 0}}
+$10 = {Instance = 0x58025430, Init = {Request = 17, Direction = 0, PeriphInc = 0, MemInc = 1024, PeriphDataAlignment = 2048, MemDataAlignment = 8192, Mode = 0, Priority = 0, FIFOMode = 0, FIFOThreshold = 0, MemBurst = 0, PeriphBurst = 0}, Lock = HAL_UNLOCKED, State = HAL_DMA_STATE_READY, Parent = 0x24000d44 <hadc3>, XferCpltCallback = 0x8003e51 <ADC_DMAConvCplt>, XferHalfCpltCallback = 0x8003ead <ADC_DMAHalfConvCplt>, XferM1CpltCallback = 0x0 <HAL_ADC_MspInit>, XferM1HalfCpltCallback = 0x0 <HAL_ADC_MspInit>, XferErrorCallback = 0x8003eb3 <ADC_DMAError>, XferAbortCallback = 0x0 <HAL_ADC_MspInit>, ErrorCode = 0, StreamBaseAddress = 1476547584, StreamIndex = 8, DMAmuxChannel = 0x58025808, DMAmuxChannelStatus = 0x58025880, DMAmuxChannelStatusMask = 4, DMAmuxRequestGen = 0x0 <HAL_ADC_MspInit>, DMAmuxRequestGenStatus = 0x0 <HAL_ADC_MspInit>, DMAmuxRequestGenStatusMask = 0}
+No symbol "ADC3" in current context.
+No symbol "BDMA_Channel2" in current context.
+$11 = {0, 0, 865, 1527, 1021}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08028cb8 in __udivmoddi4 ()
+build/managed-board-20260928/export.gdb:20: Error in sourced command file:
+Scripting in the "Python" language is not supported in this copy of GDB.
+Python scripting is not supported in this copy of GDB.
+$12 = 0x10000000
+$13 = 0x581
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3506
+3506	        prvCheckTasksWaitingTermination();
+$14 = {
+  stage = 3,
+  passed = 2846,
+  failed = 0,
+  last_failure = 0,
+  iterations = 400,
+  stats = true,
+  monitor = true,
+  hook = {
+    cpu_hz = 550000000,
+    minimum = 789,
+    mean = 853,
+    maximum = 877,
+    read_overhead = 1
+  },
+  resources_before = {
+    capacity_bytes = 32768,
+    used_bytes = 0,
+    peak_bytes = 0,
+    allocation_failures = 0,
+    app_threads = 0,
+    thread_limit = 8,
+    creation_failures = 0,
+    kernel_free_bytes = 61800,
+    kernel_minimum_free_bytes = 61800
+  },
+  resources_after = {
+    capacity_bytes = 32768,
+    used_bytes = 0,
+    peak_bytes = 30208,
+    allocation_failures = 1,
+    app_threads = 0,
+    thread_limit = 8,
+    creation_failures = 1,
+    kernel_free_bytes = 61800,
+    kernel_minimum_free_bytes = 61800
+  },
+  busy_ppm = {389269, 389277, 392889, 393901, 394189, 394170, 393977, 394182, 394201, 394183, 395005, 395446, 395206, 395436, 395403, 395193, 395446, 395393, 395164, 395470, 395542, 395330, 395451, 395300, 395438, 395812, 396608, 396668, 396501, 396682},
+  monitor_ppm = {517, 517, 520, 515, 527, 530, 526, 526, 528, 529, 524, 529, 529, 529, 528, 528, 531, 533, 530, 531, 531, 533, 527, 530, 530, 530, 531, 534, 536, 531},
+  critical_us = {2 <repeats 30 times>},
+  samples = 30,
+  ins_before = {
+    phase = SRNOS_INS_RUNNING,
+    flags = 769,
+    epoch = 1,
+    healthy_imu_mask = 3 '\003',
+    calibrated = false,
+    absolute_heading = false,
+    updated_us = 5546185,
+    cycles = 5533,
+    publications = 2816,
+    dual_cycles = 2816,
+    single_cycles = 0,
+    predicted_cycles = 0,
+    missing_cycles = 16,
+    recoveries = 0,
+    missed_deadlines = 0,
+    max_execution_us = 42,
+    max_period_us = 1086,
+    max_input_skew_us = 58,
+    max_copy_us = 5,
+    heater = {
+      enabled = false,
+      faulted = false,
+      source = -1 '\377',
+      source_selections = 0,
+      target_c = 60,
+      feedback_c = 0,
+      duty = 0,
+      thermal_ready = false,
+      overtemperature = false,
+      hardware_fault = false,
+      feedback_missing = false,
+      hot_sensor_mask = 0 '\000',
+      protection_count = 0,
+      protection_recoveries = 0
+    },
+    sensors = {SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY}
+  },
+  ins_after = {
+    phase = SRNOS_INS_RUNNING,
+    flags = 769,
+    epoch = 1,
+    healthy_imu_mask = 3 '\003',
+    calibrated = false,
+    absolute_heading = false,
+    updated_us = 35546186,
+    cycles = 35533,
+    publications = 32816,
+    dual_cycles = 32816,
+    single_cycles = 0,
+    predicted_cycles = 0,
+    missing_cycles = 16,
+    recoveries = 0,
+    missed_deadlines = 0,
+    max_execution_us = 42,
+    max_period_us = 1086,
+    max_input_skew_us = 61,
+    max_copy_us = 5,
+    heater = {
+      enabled = false,
+      faulted = false,
+      source = -1 '\377',
+      source_selections = 0,
+      target_c = 60,
+      feedback_c = 0,
+      duty = 0,
+      thermal_ready = false,
+      overtemperature = false,
+      hardware_fault = false,
+      feedback_missing = false,
+      hot_sensor_mask = 0 '\000',
+      protection_count = 0,
+      protection_recoveries = 0
+    },
+    sensors = {SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY, SRNOS_SENSOR_READY}
+  },
+  sensors_before = {{
+      state = SRNOS_SENSOR_READY,
+      identity = 30 '\036',
+      revision = 0 '\000',
+      product = 0 '\000',
+      config_readback = "\000\000\000\000\000\000\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 5113,
+      samples = 5112,
+      not_ready = 0,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 63,
+      max_period_us = 421020,
+      period_us = {0, 3389, 1722, 0, 0, 1},
+      last_sample_us = 5546274,
+      last_poll_us = 5546209
+    }, {
+      state = SRNOS_SENSOR_READY,
+      identity = 106 'j',
+      revision = 0 '\000',
+      product = 0 '\000',
+      config_readback = "D\000\000\000\210\214\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 5533,
+      samples = 5518,
+      not_ready = 0,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 97,
+      max_period_us = 1022,
+      period_us = {0, 3927, 1605, 0, 0, 0},
+      last_sample_us = 5546332,
+      last_poll_us = 5546229
+    }, {
+      state = SRNOS_SENSOR_READY,
+      identity = 64 '@',
+      revision = 0 '\000',
+      product = 0 '\000',
+      config_readback = "\020\000\214\000\000\000\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 553,
+      samples = 538,
+      not_ready = 6,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 531,
+      max_period_us = 10052,
+      period_us = {0, 0, 0, 391, 161, 0},
+      last_sample_us = 5537022,
+      last_poll_us = 5536492
+    }, {
+      state = SRNOS_SENSOR_READY,
+      identity = 17 '\021',
+      revision = 1 '\001',
+      product = 1 '\001',
+      config_readback = "C@\000\307\000\000\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 553,
+      samples = 89,
+      not_ready = 453,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 609,
+      max_period_us = 10402,
+      period_us = {0, 0, 0, 386, 166, 0},
+      last_sample_us = 5517624,
+      last_poll_us = 5537024
+    }},
+  sensors_after = {{
+      state = SRNOS_SENSOR_READY,
+      identity = 30 '\036',
+      revision = 0 '\000',
+      product = 0 '\000',
+      config_readback = "\000\000\000\000\000\000\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 35113,
+      samples = 35112,
+      not_ready = 0,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 67,
+      max_period_us = 421020,
+      period_us = {0, 23877, 11234, 0, 0, 1},
+      last_sample_us = 35546278,
+      last_poll_us = 35546211
+    }, {
+      state = SRNOS_SENSOR_READY,
+      identity = 106 'j',
+      revision = 0 '\000',
+      product = 0 '\000',
+      config_readback = "D\000\000\000\210\214\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 35533,
+      samples = 35518,
+      not_ready = 0,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 103,
+      max_period_us = 1022,
+      period_us = {0, 25827, 9705, 0, 0, 0},
+      last_sample_us = 35546338,
+      last_poll_us = 35546231
+    }, {
+      state = SRNOS_SENSOR_READY,
+      identity = 64 '@',
+      revision = 0 '\000',
+      product = 0 '\000',
+      config_readback = "\020\000\214\000\000\000\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 3553,
+      samples = 3501,
+      not_ready = 43,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 532,
+      max_period_us = 10052,
+      period_us = {0, 0, 0, 2722, 830, 0},
+      last_sample_us = 35537031,
+      last_poll_us = 35536499
+    }, {
+      state = SRNOS_SENSOR_READY,
+      identity = 17 '\021',
+      revision = 1 '\001',
+      product = 1 '\001',
+      config_readback = "C@\000\307\000\000\000",
+      init_attempts = 1,
+      initializations = 1,
+      polls = 3553,
+      samples = 579,
+      not_ready = 2963,
+      overruns = 0,
+      errors = 0,
+      recoveries = 0,
+      max_acquisition_us = 825,
+      max_period_us = 10410,
+      period_us = {0, 0, 0, 2551, 1001, 0},
+      last_sample_us = 35537638,
+      last_poll_us = 35537034
+    }},
+  snapshot = {
+    updated_us = 35059558,
+    sequence = 36,
+    flags = 3,
+    adc = {
+      start_us = 0,
+      completed_us = 0,
+      sequence = 0,
+      valid_fields = 0,
+      quality = 8,
+      raw = {0, 0, 0, 0, 0},
+      current_a = 0,
+      voltage_v = 0,
+      vbat_v = 0,
+      vrefint_v = 0,
+      temperature_c = 0,
+      vdda_v = 0,
+      state = SRNOS_MONITOR_ADC_QUARANTINED,
+      errors = 1,
+      timeouts = 0,
+      recoveries = 0
+    },
+    busy_ppm = 396740,
+    idle_ppm = 603260,
+    monitor_cpu_ppm = 531,
+    task_count = 23,
+    max_critical_us = 2,
+    max_wake_late_us = 1065,
+    skipped_cycles = 0,
+    slot_overflows = 0
+  },
+  can_before = {{
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 0,
+      rx_wake_by_timeout = 2764,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 0,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }, {
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 0,
+      rx_wake_by_timeout = 2764,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 0,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }, {
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 0,
+      rx_wake_by_timeout = 2764,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 0,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }, {
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 1,
+      rx_wake_by_timeout = 1105,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 2,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }},
+  can_after = {{
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 0,
+      rx_wake_by_timeout = 17764,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 0,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }, {
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 0,
+      rx_wake_by_timeout = 17764,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 0,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }, {
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 0,
+      rx_wake_by_timeout = 17764,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 0,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }, {
+      rx_pops = 0,
+      rx_routed_raw = 0,
+      rx_routed_adapter = 0,
+      rx_no_subscriber = 0,
+      rx_dropped = 0,
+      rx_wake_by_isr = 1,
+      rx_wake_by_timeout = 7105,
+      tx_oneshot_enqueue_ok = 0,
+      tx_oneshot_enqueue_full = 0,
+      tx_oneshot_expired = 0,
+      tx_urgent_accepted = 0,
+      tx_periodic_accepted = 0,
+      tx_periodic_dropped = 0,
+      tx_backend_busy = 0,
+      tx_complete_events = 2,
+      rx_route_count = 0,
+      rx_route_high_water = 0,
+      rx_route_lookup_steps = 0,
+      rx_route_capacity_rejects = 0,
+      tx_adapter_count = 0,
+      tx_adapter_high_water = 0,
+      tx_oneshot_depth = 0,
+      tx_oneshot_high_water = 0
+    }}
+}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f5a8 in prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+Reading symbols from build/ManagedBoard-On/ManagedTasksBoard.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2b578 lma 0x80002d0
+Loading section .rodata, size 0x3308 lma 0x802b848
+Loading section .ARM, size 0x10 lma 0x802eb50
+Loading section .preinit_array, size 0x4 lma 0x802eb60
+Loading section .data, size 0x40c lma 0x802eb64
+Loading section .itcm_text, size 0xc0 lma 0x802ef70
+Start address 0x080028e8, load size 192556
+Transfer rate: 94021 KB/sec, 21395 bytes/write.
+Section .text, range 0x80002d0 -- 0x802b848: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08029170 in memset ()
+$15 = 3
+$16 = {
+  cpu_hz = 550000000,
+  minimum = 477,
+  mean = 511,
+  maximum = 533,
+  read_overhead = 1
+}
+$17 = 0
+$18 = {
+  updated_us = 35058543,
+  sequence = 36,
+  flags = 3,
+  adc = {
+    start_us = 35043521,
+    completed_us = 35043732,
+    sequence = 36,
+    valid_fields = 63,
+    quality = 1,
+    raw = {4, 0, 909, 1528, 1021},
+    current_a = 0.00349803339,
+    voltage_v = 0,
+    vbat_v = 3.30405855,
+    vrefint_v = 1.23619044,
+    temperature_c = 87.1420059,
+    vdda_v = 3.312958,
+    state = SRNOS_MONITOR_ADC_READY,
+    errors = 0,
+    timeouts = 0,
+    recoveries = 0
+  },
+  busy_ppm = 377867,
+  idle_ppm = 622133,
+  monitor_cpu_ppm = 523,
+  task_count = 23,
+  max_critical_us = 2,
+  max_wake_late_us = 1064,
+  skipped_cycles = 0,
+  slot_overflows = 0
+}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3506
+3506	        prvCheckTasksWaitingTermination();
+Reading symbols from build/managed-board-20260928/off.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2b5d8 lma 0x80002d0
+Loading section .rodata, size 0x3308 lma 0x802b8a8
+Loading section .ARM, size 0x10 lma 0x802ebb0
+Loading section .preinit_array, size 0x4 lma 0x802ebc0
+Loading section .data, size 0x40c lma 0x802ebc4
+Loading section .itcm_text, size 0xc0 lma 0x802efd0
+Start address 0x08002948, load size 192652
+Transfer rate: 94068 KB/sec, 21405 bytes/write.
+Section .text, range 0x80002d0 -- 0x802b8a8: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f632 in prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$19 = 2
+$20 = 0
+Reading symbols from build/managed-board-20260928/on.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2b5d8 lma 0x80002d0
+Loading section .rodata, size 0x3308 lma 0x802b8a8
+Loading section .ARM, size 0x10 lma 0x802ebb0
+Loading section .preinit_array, size 0x4 lma 0x802ebc0
+Loading section .data, size 0x40c lma 0x802ebc4
+Loading section .itcm_text, size 0xc0 lma 0x802efd0
+Start address 0x0800294c, load size 192652
+Transfer rate: 94068 KB/sec, 21405 bytes/write.
+Section .text, range 0x80002d0 -- 0x802b8a8: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f608 in prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+$21 = 3
+$22 = {
+  cpu_hz = 550000000,
+  minimum = 457,
+  mean = 511,
+  maximum = 533,
+  read_overhead = 1
+}
+Reading symbols from build/managed-board-20260928/on-fast.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2b5f8 lma 0x80002d0
+Loading section .rodata, size 0x3308 lma 0x802b8c8
+Loading section .ARM, size 0x10 lma 0x802ebd0
+Loading section .preinit_array, size 0x4 lma 0x802ebe0
+Loading section .data, size 0x40c lma 0x802ebe4
+Loading section .itcm_text, size 0xc0 lma 0x802eff0
+Start address 0x0800294c, load size 192684
+Transfer rate: 94083 KB/sec, 21409 bytes/write.
+Section .text, range 0x80002d0 -- 0x802b8c8: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x080291f0 in memset ()
+$23 = 3
+$24 = 30
+$25 = {
+  cpu_hz = 550000000,
+  minimum = 310,
+  mean = 358,
+  maximum = 385,
+  read_overhead = 1
+}
+$26 = 0
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f632 in prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$27 = {{
+    rx_frames = 0,
+    rx_bytes = 0,
+    tx_frames = 0,
+    tx_bytes = 0,
+    submitted = 0,
+    sent = 0,
+    rejected = 0,
+    drop_new = 0,
+    drop_old = 0,
+    coalesced = 0,
+    queue_depth = 0,
+    queue_high_water = 0,
+    last_wait_ms = 0,
+    max_wait_ms = 0
+  }, {
+    rx_frames = 29,
+    rx_bytes = 646,
+    tx_frames = 29,
+    tx_bytes = 820,
+    submitted = 29,
+    sent = 29,
+    rejected = 0,
+    drop_new = 0,
+    drop_old = 0,
+    coalesced = 0,
+    queue_depth = 0,
+    queue_high_water = 1,
+    last_wait_ms = 0,
+    max_wait_ms = 1
+  }, {
+    rx_frames = 0,
+    rx_bytes = 0,
+    tx_frames = 9008,
+    tx_bytes = 3336268,
+    submitted = 9033,
+    sent = 9008,
+    rejected = 0,
+    drop_new = 0,
+    drop_old = 0,
+    coalesced = 24,
+    queue_depth = 0,
+    queue_high_water = 11,
+    last_wait_ms = 0,
+    max_wait_ms = 8366
+  }, {
+    rx_frames = 0,
+    rx_bytes = 0,
+    tx_frames = 0,
+    tx_bytes = 0,
+    submitted = 0,
+    sent = 0,
+    rejected = 0,
+    drop_new = 0,
+    drop_old = 0,
+    coalesced = 0,
+    queue_depth = 0,
+    queue_high_water = 0,
+    last_wait_ms = 0,
+    max_wait_ms = 0
+  }}
+$28 = {
+  updated_us = 166145530,
+  sequence = 167,
+  flags = 3,
+  adc = {
+    start_us = 166130524,
+    completed_us = 166130736,
+    sequence = 167,
+    valid_fields = 63,
+    quality = 1,
+    raw = {2, 0, 909, 1526, 1021},
+    current_a = 0.00175130891,
+    voltage_v = 0,
+    vbat_v = 3.30838895,
+    vrefint_v = 1.23619044,
+    temperature_c = 87.6281815,
+    vdda_v = 3.31729984,
+    state = SRNOS_MONITOR_ADC_READY,
+    errors = 0,
+    timeouts = 0,
+    recoveries = 0
+  },
+  busy_ppm = 383521,
+  idle_ppm = 616479,
+  monitor_cpu_ppm = 527,
+  task_count = 22,
+  max_critical_us = 2,
+  max_wake_late_us = 1096,
+  skipped_cycles = 0,
+  slot_overflows = 0
+}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f7a2 in xTaskGetTickCount () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:2307
+2307	        xTicks = xTickCount;
+$29 = 1
+$30 = {
+  start_us = 188147560,
+  completed_us = 188147771,
+  sequence = 188,
+  valid_fields = 63,
+  quality = 1,
+  raw = {4, 0, 908, 1528, 1020},
+  current_a = 0.00349803339,
+  voltage_v = 0,
+  vbat_v = 3.3008225,
+  vrefint_v = 1.23619044,
+  temperature_c = 86.7338867,
+  vdda_v = 3.312958,
+  state = SRNOS_MONITOR_ADC_READY,
+  errors = 1,
+  timeouts = 0,
+  recoveries = 1
+}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x080290ec in __udivmoddi4 ()
+$31 = 2
+$32 = {
+  start_us = 207162572,
+  completed_us = 207162784,
+  sequence = 206,
+  valid_fields = 63,
+  quality = 1,
+  raw = {4, 0, 906, 1526, 1022},
+  current_a = 0.00350261782,
+  voltage_v = 0,
+  vbat_v = 3.3116293,
+  vrefint_v = 1.23619044,
+  temperature_c = 86.4022675,
+  vdda_v = 3.31729984,
+  state = SRNOS_MONITOR_ADC_READY,
+  errors = 2,
+  timeouts = 1,
+  recoveries = 2
+}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f632 in prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$33 = 3
+$34 = 2
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08011b1c in IRQ_Context () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c:216
+216	      if (IS_IRQ_MASKED()) {
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x080291ec in memset ()
+$35 = 4
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3506
+3506	        prvCheckTasksWaitingTermination();
+$36 = 5
+$37 = {
+  updated_us = 280238529,
+  sequence = 281,
+  flags = 3,
+  adc = {
+    start_us = 251198510,
+    completed_us = 251198722,
+    sequence = 250,
+    valid_fields = 0,
+    quality = 1,
+    raw = {5, 0, 901, 1529, 1020},
+    current_a = 0.00436968217,
+    voltage_v = 0,
+    vbat_v = 3.29866385,
+    vrefint_v = 1.23619044,
+    temperature_c = 83.6367264,
+    vdda_v = 3.31079125,
+    state = SRNOS_MONITOR_ADC_QUARANTINED,
+    errors = 3,
+    timeouts = 1,
+    recoveries = 2
+  },
+  busy_ppm = 372327,
+  idle_ppm = 627673,
+  monitor_cpu_ppm = 522,
+  task_count = 22,
+  max_critical_us = 2,
+  max_wake_late_us = 1096,
+  skipped_cycles = 0,
+  slot_overflows = 0
+}
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3506
+3506	        prvCheckTasksWaitingTermination();
+Reading symbols from build/managed-board-20260928/off-fast.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2b5f8 lma 0x80002d0
+Loading section .rodata, size 0x3308 lma 0x802b8c8
+Loading section .ARM, size 0x10 lma 0x802ebd0
+Loading section .preinit_array, size 0x4 lma 0x802ebe0
+Loading section .data, size 0x40c lma 0x802ebe4
+Loading section .itcm_text, size 0xc0 lma 0x802eff0
+Start address 0x08002948, load size 192684
+Transfer rate: 62722 KB/sec, 21409 bytes/write.
+Section .text, range 0x80002d0 -- 0x802b8c8: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x080291e8 in memset ()
+$38 = 3
+$39 = 30
+$40 = 0
+$41 = {
+  vref = 1534,
+  temperature_30 = 772,
+  temperature_130 = 1018
+}
+Reading symbols from build/managed-board-20260928/final-release.elf...
+(No debugging symbols found in build/managed-board-20260928/final-release.elf)
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2a2cc lma 0x80002d0
+Loading section .rodata, size 0x3318 lma 0x802a5a0
+Loading section .ARM, size 0x10 lma 0x802d8b8
+Loading section .preinit_array, size 0x4 lma 0x802d8c8
+Loading section .data, size 0x40c lma 0x802d8cc
+Loading section .itcm_text, size 0xc0 lma 0x802dcd8
+Start address 0x08001ee0, load size 187792
+Transfer rate: 91695 KB/sec, 20865 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x802a59c: matched.
+Section .rodata, range 0x802a5a0 -- 0x802d8b8: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800f8c6 in xQueueReceive ()
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/managed-board-20260928/final-release.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

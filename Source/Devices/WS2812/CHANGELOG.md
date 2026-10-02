@@ -1,0 +1,7 @@
+# Changelog
+
+## Unreleased
+
+- 2026-09-28：公开 SRNOS_WS2812Result，HAL 初始化、IRQ、DMA scratch 和 critical sender 私有化；保留电气时序，明确 ISR 回调及所有权。公共头/固件构建验证，物理灯效待测。
+
+- 2026-09-28：完成 Support 职责整理；接口/时序/调度保持，固定硬件配置改为板级私有。21 组主机测试与固件集成构建通过；未板测。

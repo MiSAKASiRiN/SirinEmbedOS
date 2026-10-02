@@ -1,0 +1,1 @@
+PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: build/Release/SirinEmbedOS.elf

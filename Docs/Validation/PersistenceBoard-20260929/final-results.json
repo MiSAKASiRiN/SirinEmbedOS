@@ -1,0 +1,213 @@
+{
+  "hello": "0204e0013f0000000c040f00",
+  "state": {
+    "version": 1,
+    "flags": 0,
+    "compat": 1,
+    "app": 0,
+    "gen": 1,
+    "saved": 0,
+    "revision": 0,
+    "load": 0,
+    "save": 15,
+    "loaded": 0,
+    "defaulted": 0,
+    "ignored": 0,
+    "count": 0
+  },
+  "static": {
+    "version": 1,
+    "phase": 0,
+    "requested": 0,
+    "saved": 0,
+    "failed": 255,
+    "result": 0,
+    "job": 0,
+    "elapsed": 0,
+    "samples": [
+      0,
+      0
+    ],
+    "storage": [
+      0,
+      0
+    ],
+    "revision": [
+      0,
+      0
+    ],
+    "bias": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "temperature": [
+      0.0,
+      0.0
+    ]
+  },
+  "ins_start": {
+    "phase": 2,
+    "healthy_mask": 3,
+    "heater_flags": 1,
+    "flags": 784,
+    "epoch": 1,
+    "updated_us": 20322207,
+    "cycles": 20311,
+    "publications": 0,
+    "dual_cycles": 0,
+    "single_cycles": 0,
+    "predicted_cycles": 0,
+    "missing_cycles": 2,
+    "recoveries": 0,
+    "missed_deadlines": 0,
+    "max_execution_us": 27,
+    "max_period_us": 1025,
+    "max_copy_us": 5,
+    "heater_source": 1,
+    "hot_mask": 0,
+    "sensor_states": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "target_c": 60.0,
+    "feedback_c": 56.16796875,
+    "duty": 0.8829367160797119,
+    "protection_count": 0,
+    "protection_recoveries": 0,
+    "source_selections": 1,
+    "board_to_robot_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "streams": {
+      "258": {
+        "stream": 258,
+        "enabled": false,
+        "sequence": 0,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 64
+      },
+      "259": {
+        "stream": 259,
+        "enabled": false,
+        "sequence": 1996,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 16
+      },
+      "260": {
+        "stream": 260,
+        "enabled": false,
+        "sequence": 331,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 8
+      }
+    }
+  },
+  "ins_end": {
+    "phase": 6,
+    "healthy_mask": 3,
+    "heater_flags": 1,
+    "flags": 817,
+    "epoch": 1,
+    "updated_us": 65324207,
+    "cycles": 65313,
+    "publications": 2797,
+    "dual_cycles": 2797,
+    "single_cycles": 0,
+    "predicted_cycles": 0,
+    "missing_cycles": 2,
+    "recoveries": 0,
+    "missed_deadlines": 0,
+    "max_execution_us": 32,
+    "max_period_us": 1025,
+    "max_copy_us": 5,
+    "heater_source": 1,
+    "hot_mask": 0,
+    "sensor_states": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "target_c": 60.0,
+    "feedback_c": 59.5859375,
+    "duty": 0.7306749820709229,
+    "protection_count": 0,
+    "protection_recoveries": 0,
+    "source_selections": 1,
+    "board_to_robot_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "streams": {
+      "258": {
+        "stream": 258,
+        "enabled": false,
+        "sequence": 2797,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 64
+      },
+      "259": {
+        "stream": 259,
+        "enabled": false,
+        "sequence": 6436,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 16
+      },
+      "260": {
+        "stream": 260,
+        "enabled": false,
+        "sequence": 1066,
+        "depth": 0,
+        "high_water": 0,
+        "enqueued": 0,
+        "overflow": 0,
+        "sent": 0,
+        "failed": 0,
+        "discarded": 0,
+        "capacity": 8
+      }
+    }
+  },
+  "echo": "66696e616c206669726d776172652072756e6e696e67"
+}

@@ -39,6 +39,8 @@ typedef struct {
     uint32_t flags, epoch;
     uint8_t healthy_imu_mask;
     bool calibrated, absolute_heading;
+    uint8_t calibrated_imu_mask;
+    bool calibration_load_pending;
     uint64_t updated_us;
     uint32_t cycles, publications, dual_cycles, single_cycles, predicted_cycles;
     uint32_t missing_cycles, recoveries, missed_deadlines;

@@ -1,0 +1,395 @@
+{
+  "warmup_ms": 64000,
+  "total_delivered": 298342,
+  "total_rejected": 15658,
+  "checks": "PASS: accepted delivered; sequence, hardware, TTL, sensor counters; INS valid and 1 kHz publication",
+  "stages": [
+    {
+      "stage": 0,
+      "requested_fps": [
+        0,
+        0
+      ],
+      "elapsed_us": 4999948,
+      "received_active": [
+        0,
+        0
+      ],
+      "actual_received_fps": 0.0,
+      "accepted": [
+        0,
+        0
+      ],
+      "received_after_drain": [
+        0,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 20.5285,
+      "monitor_percent": 0.0489,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 5000,
+      "sensor_samples_delta": [
+        5000,
+        5000,
+        490,
+        82
+      ]
+    },
+    {
+      "stage": 1,
+      "requested_fps": [
+        1000,
+        0
+      ],
+      "elapsed_us": 1999981,
+      "received_active": [
+        2000,
+        0
+      ],
+      "actual_received_fps": 1000.0095000902509,
+      "accepted": [
+        2000,
+        0
+      ],
+      "received_after_drain": [
+        2000,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 30.2766,
+      "monitor_percent": 0.0498,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 2000,
+      "sensor_samples_delta": [
+        2000,
+        2000,
+        200,
+        33
+      ]
+    },
+    {
+      "stage": 2,
+      "requested_fps": [
+        0,
+        1000
+      ],
+      "elapsed_us": 1999995,
+      "received_active": [
+        0,
+        2000
+      ],
+      "actual_received_fps": 1000.00250000625,
+      "accepted": [
+        0,
+        2000
+      ],
+      "received_after_drain": [
+        0,
+        2000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 30.2861,
+      "monitor_percent": 0.0508,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 2000,
+      "sensor_samples_delta": [
+        2000,
+        2000,
+        200,
+        32
+      ]
+    },
+    {
+      "stage": 3,
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "elapsed_us": 9999983,
+      "received_active": [
+        10000,
+        10000
+      ],
+      "actual_received_fps": 2000.0034000057801,
+      "accepted": [
+        10000,
+        10000
+      ],
+      "received_after_drain": [
+        10000,
+        10000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 39.5424,
+      "monitor_percent": 0.0542,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 10000,
+      "sensor_samples_delta": [
+        10000,
+        10000,
+        990,
+        163
+      ]
+    },
+    {
+      "stage": 4,
+      "requested_fps": [
+        2000,
+        2000
+      ],
+      "elapsed_us": 9999988,
+      "received_active": [
+        20000,
+        20000
+      ],
+      "actual_received_fps": 4000.00480000576,
+      "accepted": [
+        20000,
+        20000
+      ],
+      "received_after_drain": [
+        20000,
+        20000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 58.3263,
+      "monitor_percent": 0.0521,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 10000,
+      "sensor_samples_delta": [
+        10000,
+        10000,
+        983,
+        163
+      ]
+    },
+    {
+      "stage": 5,
+      "requested_fps": [
+        3000,
+        3000
+      ],
+      "elapsed_us": 9999972,
+      "received_active": [
+        30000,
+        30000
+      ],
+      "actual_received_fps": 6000.01680004704,
+      "accepted": [
+        30000,
+        30000
+      ],
+      "received_after_drain": [
+        30000,
+        30000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 76.7687,
+      "monitor_percent": 0.0513,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 10000,
+      "sensor_samples_delta": [
+        10000,
+        10000,
+        984,
+        164
+      ]
+    },
+    {
+      "stage": 6,
+      "requested_fps": [
+        4000,
+        4000
+      ],
+      "elapsed_us": 10000035,
+      "received_active": [
+        40000,
+        39998
+      ],
+      "actual_received_fps": 7999.772000797997,
+      "accepted": [
+        40000,
+        40000
+      ],
+      "received_after_drain": [
+        40000,
+        40000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 95.2117,
+      "monitor_percent": 0.0571,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        5
+      ],
+      "ins_flags": [
+        801,
+        801
+      ],
+      "ins_publications_delta": 10000,
+      "sensor_samples_delta": [
+        10000,
+        10000,
+        986,
+        163
+      ]
+    },
+    {
+      "stage": 7,
+      "requested_fps": [
+        5000,
+        5000
+      ],
+      "elapsed_us": 9999986,
+      "received_active": [
+        50000,
+        34254
+      ],
+      "actual_received_fps": 8425.411795576514,
+      "accepted": [
+        50000,
+        34342
+      ],
+      "received_after_drain": [
+        50000,
+        34342
+      ],
+      "rejected": [
+        0,
+        15658
+      ],
+      "cpu_percent": 78.6804,
+      "monitor_percent": 0.0536,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        5,
+        6
+      ],
+      "ins_flags": [
+        801,
+        817
+      ],
+      "ins_publications_delta": 10000,
+      "sensor_samples_delta": [
+        10000,
+        10000,
+        983,
+        164
+      ]
+    },
+    {
+      "stage": 8,
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "elapsed_us": 4999985,
+      "received_active": [
+        5000,
+        5000
+      ],
+      "actual_received_fps": 2000.0060000180001,
+      "accepted": [
+        5000,
+        5000
+      ],
+      "received_after_drain": [
+        5000,
+        5000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "cpu_percent": 39.6676,
+      "monitor_percent": 0.0542,
+      "monitor_critical_us": 2,
+      "ins_phase": [
+        6,
+        6
+      ],
+      "ins_flags": [
+        817,
+        817
+      ],
+      "ins_publications_delta": 5000,
+      "sensor_samples_delta": [
+        5000,
+        5000,
+        495,
+        82
+      ]
+    }
+  ]
+}

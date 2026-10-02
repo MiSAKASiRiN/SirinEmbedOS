@@ -12,58 +12,58 @@ B站账号：华南小虎队
 ***************************************/
 
 /* Hamilton robot/body -> world rotation. Row 2 is world-up in body axes. */
-void RotationMatrix_update(struct MAHONY_FILTER_t *mahony_filter)
+void SRNOS_MahonyRotationMatrixUpdate(struct SRNOS_MahonyState *SRNOS_MahonyFilter)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return;
     }
 
-    float q1q1 = mahony_filter->q1 * mahony_filter->q1;
-    float q2q2 = mahony_filter->q2 * mahony_filter->q2;
-    float q3q3 = mahony_filter->q3 * mahony_filter->q3;
+    float q1q1 = SRNOS_MahonyFilter->q1 * SRNOS_MahonyFilter->q1;
+    float q2q2 = SRNOS_MahonyFilter->q2 * SRNOS_MahonyFilter->q2;
+    float q3q3 = SRNOS_MahonyFilter->q3 * SRNOS_MahonyFilter->q3;
 
-    float q0q1 = mahony_filter->q0 * mahony_filter->q1;
-    float q0q2 = mahony_filter->q0 * mahony_filter->q2;
-    float q0q3 = mahony_filter->q0 * mahony_filter->q3;
-    float q1q2 = mahony_filter->q1 * mahony_filter->q2;
-    float q1q3 = mahony_filter->q1 * mahony_filter->q3;
-    float q2q3 = mahony_filter->q2 * mahony_filter->q3;
+    float q0q1 = SRNOS_MahonyFilter->q0 * SRNOS_MahonyFilter->q1;
+    float q0q2 = SRNOS_MahonyFilter->q0 * SRNOS_MahonyFilter->q2;
+    float q0q3 = SRNOS_MahonyFilter->q0 * SRNOS_MahonyFilter->q3;
+    float q1q2 = SRNOS_MahonyFilter->q1 * SRNOS_MahonyFilter->q2;
+    float q1q3 = SRNOS_MahonyFilter->q1 * SRNOS_MahonyFilter->q3;
+    float q2q3 = SRNOS_MahonyFilter->q2 * SRNOS_MahonyFilter->q3;
 
-    mahony_filter->rMat[0][0] = 1.0f - 2.0f * q2q2 - 2.0f * q3q3;
-    mahony_filter->rMat[0][1] = 2.0f * (q1q2  -q0q3);
-    mahony_filter->rMat[0][2] = 2.0f * (q1q3 +q0q2);
+    SRNOS_MahonyFilter->rMat[0][0] = 1.0f - 2.0f * q2q2 - 2.0f * q3q3;
+    SRNOS_MahonyFilter->rMat[0][1] = 2.0f * (q1q2  -q0q3);
+    SRNOS_MahonyFilter->rMat[0][2] = 2.0f * (q1q3 +q0q2);
 
-    mahony_filter->rMat[1][0] = 2.0f * (q1q2 +q0q3);
-    mahony_filter->rMat[1][1] = 1.0f - 2.0f * q1q1 - 2.0f * q3q3;
-    mahony_filter->rMat[1][2] = 2.0f * (q2q3  -q0q1);
+    SRNOS_MahonyFilter->rMat[1][0] = 2.0f * (q1q2 +q0q3);
+    SRNOS_MahonyFilter->rMat[1][1] = 1.0f - 2.0f * q1q1 - 2.0f * q3q3;
+    SRNOS_MahonyFilter->rMat[1][2] = 2.0f * (q2q3  -q0q1);
 
-    mahony_filter->rMat[2][0] = 2.0f * (q1q3  -q0q2);
-    mahony_filter->rMat[2][1] = 2.0f * (q2q3  +q0q1);
-    mahony_filter->rMat[2][2] = 1.0f - 2.0f * q1q1 - 2.0f * q2q2;
+    SRNOS_MahonyFilter->rMat[2][0] = 2.0f * (q1q3  -q0q2);
+    SRNOS_MahonyFilter->rMat[2][1] = 2.0f * (q2q3  +q0q1);
+    SRNOS_MahonyFilter->rMat[2][2] = 1.0f - 2.0f * q1q1 - 2.0f * q2q2;
 }
 
 // 将陀螺仪和加速度计的输入值赋予滤波器结构体
-void mahony_input(struct MAHONY_FILTER_t *mahony_filter,Axis3f gyro,Axis3f acc)
+void SRNOS_MahonyInput(struct SRNOS_MahonyState *SRNOS_MahonyFilter,SRNOS_Axis3f gyro,SRNOS_Axis3f acc)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return;
     }
 
-    mahony_filter->gyro = gyro;
-    mahony_filter->acc = acc;
+    SRNOS_MahonyFilter->gyro = gyro;
+    SRNOS_MahonyFilter->acc = acc;
 }
 
 // 使用Mahony算法更新滤波器状态
-void mahony_update(struct MAHONY_FILTER_t *mahony_filter)
+void SRNOS_MahonyUpdate(struct SRNOS_MahonyState *SRNOS_MahonyFilter)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return;
     }
 
-    if (!isfinite(mahony_filter->dt) || (mahony_filter->dt <= 0.0f))
+    if (!isfinite(SRNOS_MahonyFilter->dt) || (SRNOS_MahonyFilter->dt <= 0.0f))
     {
         return;
     }
@@ -74,107 +74,107 @@ void mahony_update(struct MAHONY_FILTER_t *mahony_filter)
     float ez = 0.0f;
 
     /*角速度，度转弧度*/
-//    mahony_filter->gyro.x *= DEG2RAD;        /* 度转弧度 */
-//    mahony_filter->gyro.y *= DEG2RAD;
-//    mahony_filter->gyro.z *= DEG2RAD;;
+//    SRNOS_MahonyFilter->gyro.x *= DEG2RAD;        /* 度转弧度 */
+//    SRNOS_MahonyFilter->gyro.y *= DEG2RAD;
+//    SRNOS_MahonyFilter->gyro.z *= DEG2RAD;;
 
     /*单位化加速计测量值*/
-    normalise = sqrtf(mahony_filter->acc.x * mahony_filter->acc.x
-                    + mahony_filter->acc.y * mahony_filter->acc.y
-                    + mahony_filter->acc.z * mahony_filter->acc.z);
+    normalise = sqrtf(SRNOS_MahonyFilter->acc.x * SRNOS_MahonyFilter->acc.x
+                    + SRNOS_MahonyFilter->acc.y * SRNOS_MahonyFilter->acc.y
+                    + SRNOS_MahonyFilter->acc.z * SRNOS_MahonyFilter->acc.z);
 
     uint8_t acc_valid = (uint8_t)(isfinite(normalise) && (normalise > 1.0e-6f));
     if (acc_valid != 0u)
     {
         float inv_acc_norm = 1.0f / normalise;
-        mahony_filter->acc.x *= inv_acc_norm;
-        mahony_filter->acc.y *= inv_acc_norm;
-        mahony_filter->acc.z *= inv_acc_norm;
+        SRNOS_MahonyFilter->acc.x *= inv_acc_norm;
+        SRNOS_MahonyFilter->acc.y *= inv_acc_norm;
+        SRNOS_MahonyFilter->acc.z *= inv_acc_norm;
     }
 
     /*加速计读取的方向与重力加速计方向的差值，用向量叉乘计算*/
-	//vx=mahony_filter->rMat[2][0]=2.0f * (q1q3 + -q0q2)
-	//vy=mahony_filter->rMat[2][1]=2.0f * (q2q3 - -q0q1)
-	//vz=mahony_filter->rMat[2][2]=1.0f - 2.0f * q1q1 - 2.0f * q2q2
+	//vx=SRNOS_MahonyFilter->rMat[2][0]=2.0f * (q1q3 + -q0q2)
+	//vy=SRNOS_MahonyFilter->rMat[2][1]=2.0f * (q2q3 - -q0q1)
+	//vz=SRNOS_MahonyFilter->rMat[2][2]=1.0f - 2.0f * q1q1 - 2.0f * q2q2
     if (acc_valid != 0u)
     {
-        ex = (mahony_filter->acc.y * mahony_filter->rMat[2][2] - mahony_filter->acc.z * mahony_filter->rMat[2][1]);
-        ey = (mahony_filter->acc.z * mahony_filter->rMat[2][0] - mahony_filter->acc.x * mahony_filter->rMat[2][2]);
-        ez = (mahony_filter->acc.x * mahony_filter->rMat[2][1] - mahony_filter->acc.y * mahony_filter->rMat[2][0]);
+        ex = (SRNOS_MahonyFilter->acc.y * SRNOS_MahonyFilter->rMat[2][2] - SRNOS_MahonyFilter->acc.z * SRNOS_MahonyFilter->rMat[2][1]);
+        ey = (SRNOS_MahonyFilter->acc.z * SRNOS_MahonyFilter->rMat[2][0] - SRNOS_MahonyFilter->acc.x * SRNOS_MahonyFilter->rMat[2][2]);
+        ez = (SRNOS_MahonyFilter->acc.x * SRNOS_MahonyFilter->rMat[2][1] - SRNOS_MahonyFilter->acc.y * SRNOS_MahonyFilter->rMat[2][0]);
 
         /*
          * 重力只提供两个可观测自由度，但这个可观测平面在任意大姿态下
          * 并不固定等于机体 X/Y 平面。因此必须保留完整的 ex/ey/ez；
          * 误差向量本身与重力方向正交，不会因此获得绝对 yaw。
          */
-        if (mahony_filter->Ki > 0.0f)
+        if (SRNOS_MahonyFilter->Ki > 0.0f)
         {
-            mahony_filter->exInt += mahony_filter->Ki * ex * mahony_filter->dt;
-            mahony_filter->eyInt += mahony_filter->Ki * ey * mahony_filter->dt;
-            mahony_filter->ezInt += mahony_filter->Ki * ez * mahony_filter->dt;
+            SRNOS_MahonyFilter->exInt += SRNOS_MahonyFilter->Ki * ex * SRNOS_MahonyFilter->dt;
+            SRNOS_MahonyFilter->eyInt += SRNOS_MahonyFilter->Ki * ey * SRNOS_MahonyFilter->dt;
+            SRNOS_MahonyFilter->ezInt += SRNOS_MahonyFilter->Ki * ez * SRNOS_MahonyFilter->dt;
         }
         else
         {
-            mahony_filter->exInt = 0.0f;
-            mahony_filter->eyInt = 0.0f;
-            mahony_filter->ezInt = 0.0f;
+            SRNOS_MahonyFilter->exInt = 0.0f;
+            SRNOS_MahonyFilter->eyInt = 0.0f;
+            SRNOS_MahonyFilter->ezInt = 0.0f;
         }
 
         /* 用叉积误差做完整三维 PI 修正 */
-        mahony_filter->gyro.x += mahony_filter->Kp * ex + mahony_filter->exInt;
-        mahony_filter->gyro.y += mahony_filter->Kp * ey + mahony_filter->eyInt;
-        mahony_filter->gyro.z += mahony_filter->Kp * ez + mahony_filter->ezInt;
+        SRNOS_MahonyFilter->gyro.x += SRNOS_MahonyFilter->Kp * ex + SRNOS_MahonyFilter->exInt;
+        SRNOS_MahonyFilter->gyro.y += SRNOS_MahonyFilter->Kp * ey + SRNOS_MahonyFilter->eyInt;
+        SRNOS_MahonyFilter->gyro.z += SRNOS_MahonyFilter->Kp * ez + SRNOS_MahonyFilter->ezInt;
     }
     else
     {
-        mahony_filter->exInt = 0.0f;
-        mahony_filter->eyInt = 0.0f;
-        mahony_filter->ezInt = 0.0f;
+        SRNOS_MahonyFilter->exInt = 0.0f;
+        SRNOS_MahonyFilter->eyInt = 0.0f;
+        SRNOS_MahonyFilter->ezInt = 0.0f;
     }
 
     /* 一阶近似算法，四元数运动学方程的离散化形式和积分 */
-    float q0Last = mahony_filter->q0;
-    float q1Last = mahony_filter->q1;
-    float q2Last = mahony_filter->q2;
-    float q3Last = mahony_filter->q3;
-    float halfT = mahony_filter->dt * 0.5f;
-    mahony_filter->q0 += (-q1Last * mahony_filter->gyro.x - q2Last * mahony_filter->gyro.y - q3Last * mahony_filter->gyro.z) * halfT;
-    mahony_filter->q1 += ( q0Last * mahony_filter->gyro.x + q2Last * mahony_filter->gyro.z - q3Last * mahony_filter->gyro.y) * halfT;
-    mahony_filter->q2 += ( q0Last * mahony_filter->gyro.y - q1Last * mahony_filter->gyro.z + q3Last * mahony_filter->gyro.x) * halfT;
-    mahony_filter->q3 += ( q0Last * mahony_filter->gyro.z + q1Last * mahony_filter->gyro.y - q2Last * mahony_filter->gyro.x) * halfT;
+    float q0Last = SRNOS_MahonyFilter->q0;
+    float q1Last = SRNOS_MahonyFilter->q1;
+    float q2Last = SRNOS_MahonyFilter->q2;
+    float q3Last = SRNOS_MahonyFilter->q3;
+    float halfT = SRNOS_MahonyFilter->dt * 0.5f;
+    SRNOS_MahonyFilter->q0 += (-q1Last * SRNOS_MahonyFilter->gyro.x - q2Last * SRNOS_MahonyFilter->gyro.y - q3Last * SRNOS_MahonyFilter->gyro.z) * halfT;
+    SRNOS_MahonyFilter->q1 += ( q0Last * SRNOS_MahonyFilter->gyro.x + q2Last * SRNOS_MahonyFilter->gyro.z - q3Last * SRNOS_MahonyFilter->gyro.y) * halfT;
+    SRNOS_MahonyFilter->q2 += ( q0Last * SRNOS_MahonyFilter->gyro.y - q1Last * SRNOS_MahonyFilter->gyro.z + q3Last * SRNOS_MahonyFilter->gyro.x) * halfT;
+    SRNOS_MahonyFilter->q3 += ( q0Last * SRNOS_MahonyFilter->gyro.z + q1Last * SRNOS_MahonyFilter->gyro.y - q2Last * SRNOS_MahonyFilter->gyro.x) * halfT;
 
     /*单位化四元数*/
-    normalise = sqrtf(mahony_filter->q0 * mahony_filter->q0
-                    + mahony_filter->q1 * mahony_filter->q1
-                    + mahony_filter->q2 * mahony_filter->q2
-                    + mahony_filter->q3 * mahony_filter->q3);
+    normalise = sqrtf(SRNOS_MahonyFilter->q0 * SRNOS_MahonyFilter->q0
+                    + SRNOS_MahonyFilter->q1 * SRNOS_MahonyFilter->q1
+                    + SRNOS_MahonyFilter->q2 * SRNOS_MahonyFilter->q2
+                    + SRNOS_MahonyFilter->q3 * SRNOS_MahonyFilter->q3);
 
     if (!isfinite(normalise) || (normalise <= 1.0e-6f))
     {
-        mahony_init(mahony_filter, mahony_filter->Kp, mahony_filter->Ki, mahony_filter->dt);
+        SRNOS_MahonyInit(SRNOS_MahonyFilter, SRNOS_MahonyFilter->Kp, SRNOS_MahonyFilter->Ki, SRNOS_MahonyFilter->dt);
         return;
     }
 
     float inv_q_norm = 1.0f / normalise;
-    mahony_filter->q0 *= inv_q_norm;
-    mahony_filter->q1 *= inv_q_norm;
-    mahony_filter->q2 *= inv_q_norm;
-    mahony_filter->q3 *= inv_q_norm;
+    SRNOS_MahonyFilter->q0 *= inv_q_norm;
+    SRNOS_MahonyFilter->q1 *= inv_q_norm;
+    SRNOS_MahonyFilter->q2 *= inv_q_norm;
+    SRNOS_MahonyFilter->q3 *= inv_q_norm;
 
     /*计算旋转矩阵*/
-    mahony_filter->RotationMatrix_update(mahony_filter);
+    SRNOS_MahonyFilter->SRNOS_MahonyRotationMatrixUpdate(SRNOS_MahonyFilter);
 }
 
 // 从旋转矩阵中提取姿态角
-void mahony_output(struct MAHONY_FILTER_t *mahony_filter)
+void SRNOS_MahonyOutput(struct SRNOS_MahonyState *SRNOS_MahonyFilter)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return;
     }
 
     /*计算roll pitch yaw 欧拉角*/
-    float sin_pitch = -mahony_filter->rMat[2][0];
+    float sin_pitch = -SRNOS_MahonyFilter->rMat[2][0];
     if (sin_pitch > 1.0f)
     {
         sin_pitch = 1.0f;
@@ -183,37 +183,37 @@ void mahony_output(struct MAHONY_FILTER_t *mahony_filter)
     {
         sin_pitch = -1.0f;
     }
-    mahony_filter->pitch = asinf(sin_pitch);
-    mahony_filter->roll = atan2f(mahony_filter->rMat[2][1], mahony_filter->rMat[2][2]) ;
-    mahony_filter->yaw = atan2f(mahony_filter->rMat[1][0], mahony_filter->rMat[0][0]) ;
+    SRNOS_MahonyFilter->pitch = asinf(sin_pitch);
+    SRNOS_MahonyFilter->roll = atan2f(SRNOS_MahonyFilter->rMat[2][1], SRNOS_MahonyFilter->rMat[2][2]) ;
+    SRNOS_MahonyFilter->yaw = atan2f(SRNOS_MahonyFilter->rMat[1][0], SRNOS_MahonyFilter->rMat[0][0]) ;
 }
 
 // 初始化Mahony滤波器的参数和函数指针
-void mahony_init(struct MAHONY_FILTER_t *mahony_filter,float Kp,float Ki,float dt)
+void SRNOS_MahonyInit(struct SRNOS_MahonyState *SRNOS_MahonyFilter,float Kp,float Ki,float dt)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return;
     }
 
-    memset(mahony_filter, 0, sizeof(*mahony_filter));
-    mahony_filter->Kp = Kp;
-    mahony_filter->Ki = Ki;
-    mahony_filter->dt = dt;
-    mahony_filter->q0 = 1.0f;
-    mahony_filter->q1 = 0.0f;
-    mahony_filter->q2 = 0.0f;
-    mahony_filter->q3 = 0.0f;
-    mahony_filter->mahony_input = mahony_input;
-    mahony_filter->mahony_update = mahony_update;
-    mahony_filter->mahony_output = mahony_output;
-    mahony_filter->RotationMatrix_update = RotationMatrix_update;
-    mahony_filter->RotationMatrix_update(mahony_filter);
+    memset(SRNOS_MahonyFilter, 0, sizeof(*SRNOS_MahonyFilter));
+    SRNOS_MahonyFilter->Kp = Kp;
+    SRNOS_MahonyFilter->Ki = Ki;
+    SRNOS_MahonyFilter->dt = dt;
+    SRNOS_MahonyFilter->q0 = 1.0f;
+    SRNOS_MahonyFilter->q1 = 0.0f;
+    SRNOS_MahonyFilter->q2 = 0.0f;
+    SRNOS_MahonyFilter->q3 = 0.0f;
+    SRNOS_MahonyFilter->SRNOS_MahonyInput = SRNOS_MahonyInput;
+    SRNOS_MahonyFilter->SRNOS_MahonyUpdate = SRNOS_MahonyUpdate;
+    SRNOS_MahonyFilter->SRNOS_MahonyOutput = SRNOS_MahonyOutput;
+    SRNOS_MahonyFilter->SRNOS_MahonyRotationMatrixUpdate = SRNOS_MahonyRotationMatrixUpdate;
+    SRNOS_MahonyFilter->SRNOS_MahonyRotationMatrixUpdate(SRNOS_MahonyFilter);
 }
 
-uint8_t mahony_seed_from_accel(struct MAHONY_FILTER_t *mahony_filter, Axis3f acc)
+uint8_t SRNOS_MahonySeedFromAccel(struct SRNOS_MahonyState *SRNOS_MahonyFilter, SRNOS_Axis3f acc)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return 0u;
     }
@@ -230,7 +230,7 @@ uint8_t mahony_seed_from_accel(struct MAHONY_FILTER_t *mahony_filter, Axis3f acc
     const float az = acc.z * inv_norm;
 
     /*
-     * 与 RotationMatrix_update() 的 ZYX 约定一致：将预测重力
+     * 与 SRNOS_MahonyRotationMatrixUpdate() 的 ZYX 约定一致：将预测重力
      * rMat[2][] 直接对齐到归一化加速度，并选择 yaw=0 作为航向规范。
      */
     const float roll = atan2f(ay, az);
@@ -253,32 +253,32 @@ uint8_t mahony_seed_from_accel(struct MAHONY_FILTER_t *mahony_filter, Axis3f acc
     }
 
     const float inv_q_norm = 1.0f / q_norm;
-    mahony_filter->q0 = q0 * inv_q_norm;
-    mahony_filter->q1 = q1 * inv_q_norm;
-    mahony_filter->q2 = q2 * inv_q_norm;
-    mahony_filter->q3 = q3 * inv_q_norm;
-    mahony_filter->exInt = 0.0f;
-    mahony_filter->eyInt = 0.0f;
-    mahony_filter->ezInt = 0.0f;
-    mahony_filter->acc = acc;
-    mahony_filter->RotationMatrix_update(mahony_filter);
-    mahony_output(mahony_filter);
+    SRNOS_MahonyFilter->q0 = q0 * inv_q_norm;
+    SRNOS_MahonyFilter->q1 = q1 * inv_q_norm;
+    SRNOS_MahonyFilter->q2 = q2 * inv_q_norm;
+    SRNOS_MahonyFilter->q3 = q3 * inv_q_norm;
+    SRNOS_MahonyFilter->exInt = 0.0f;
+    SRNOS_MahonyFilter->eyInt = 0.0f;
+    SRNOS_MahonyFilter->ezInt = 0.0f;
+    SRNOS_MahonyFilter->acc = acc;
+    SRNOS_MahonyFilter->SRNOS_MahonyRotationMatrixUpdate(SRNOS_MahonyFilter);
+    SRNOS_MahonyOutput(SRNOS_MahonyFilter);
     return 1u;
 }
 
-void mahony_set_gain(struct MAHONY_FILTER_t *mahony_filter, float Kp, float Ki)
+void SRNOS_MahonySetGain(struct SRNOS_MahonyState *SRNOS_MahonyFilter, float Kp, float Ki)
 {
-    if (mahony_filter == NULL)
+    if (SRNOS_MahonyFilter == NULL)
     {
         return;
     }
 
-    mahony_filter->Kp = Kp;
-    mahony_filter->Ki = Ki;
+    SRNOS_MahonyFilter->Kp = Kp;
+    SRNOS_MahonyFilter->Ki = Ki;
     if (Ki <= 0.0f)
     {
-        mahony_filter->exInt = 0.0f;
-        mahony_filter->eyInt = 0.0f;
-        mahony_filter->ezInt = 0.0f;
+        SRNOS_MahonyFilter->exInt = 0.0f;
+        SRNOS_MahonyFilter->eyInt = 0.0f;
+        SRNOS_MahonyFilter->ezInt = 0.0f;
     }
 }

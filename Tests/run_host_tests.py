@@ -7,9 +7,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SUITES = (
     "Core", "Kernel", "Algorithms/Control", "Algorithms/Math", "Algorithms/Power",
-    "IO/CAN/Router", "IO/SPI", "IO/I2C", "Devices/EEPROM", "Devices/IMU", "Devices/Sensors", "Devices/Indicators", "Serial", "Services/HostLink/Codec",
+    "IO/CAN/Router", "IO/SPI", "IO/I2C", "Devices/EEPROM", "Devices/MCP2518FD", "Devices/IMU", "Devices/Sensors", "Services/Indicators", "Serial", "Services/HostLink/Codec",
     "Services/HostLink", "Services/Parameters", "Services/Parameters/HostLink",
-    "Services/USB", "Services/IMUTelemetry", "Services/INS",
+    "Services/Storage", "Services/Telemetry", "Services/Logging", "Services/USB", "Services/IMUTelemetry", "Services/INS", "Services/SystemMonitor",
 )
 failed = []
 for suite in SUITES:

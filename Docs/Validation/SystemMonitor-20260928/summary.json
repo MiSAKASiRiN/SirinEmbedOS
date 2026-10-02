@@ -1,0 +1,67 @@
+{
+  "Debug": {
+    "elf": "build/SystemMonitor-Debug/SirinEmbedOS.elf",
+    "sha256": "0dca9ea9293abafed472017526b14952eda9259198c0127ddfc69341e5ad6b37",
+    "symbols": {
+      "__bdma_buf_end__": {
+        "address": "0x38000220",
+        "size": 0
+      },
+      "__bdma_buf_start__": {
+        "address": "0x38000000",
+        "size": 0
+      },
+      "__sirinos_heap_d1_end": {
+        "address": "0x24046fe0",
+        "size": 0
+      },
+      "__sirinos_heap_d1_start": {
+        "address": "0x24026fe0",
+        "size": 0
+      },
+      "adc_samples": {
+        "address": "0x38000200",
+        "size": 10
+      }
+    },
+    "size": " 253508\t   1016\t 423484\t 678008\t  a5878\t/Users/sirin/CLionProjects/SirinEmbedOS/build/SystemMonitor-Debug/SirinEmbedOS.elf"
+  },
+  "Release": {
+    "elf": "build/SystemMonitor-Release/SirinEmbedOS.elf",
+    "sha256": "2570232aa4b520939e5fc5800a5ec5d38e4d2d88e06bffe360623eb5df6a7958",
+    "symbols": {
+      "__bdma_buf_end__": {
+        "address": "0x38000220",
+        "size": 0
+      },
+      "__bdma_buf_start__": {
+        "address": "0x38000000",
+        "size": 0
+      },
+      "__sirinos_heap_d1_end": {
+        "address": "0x24047000",
+        "size": 0
+      },
+      "__sirinos_heap_d1_start": {
+        "address": "0x24027000",
+        "size": 0
+      },
+      "adc_samples": {
+        "address": "0x38000200",
+        "size": 10
+      }
+    },
+    "size": " 178576\t   1020\t 423496\t 603092\t  933d4\t/Users/sirin/CLionProjects/SirinEmbedOS/build/SystemMonitor-Release/SirinEmbedOS.elf"
+  },
+  "validation": {
+    "host_suites": 22,
+    "parent_firmwares": 9,
+    "adc_buffer_alignment": 32,
+    "board_run": false,
+    "flash": false,
+    "performance_targets_unverified": {
+      "monitor_cpu_ppm": 1000,
+      "max_critical_us": 10
+    }
+  }
+}

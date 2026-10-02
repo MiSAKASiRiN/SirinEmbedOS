@@ -279,7 +279,7 @@ SECTIONS
 
 SECTIONS
 {
-  .itcm_text :
+  .itcm_text : ALIGN(32)
   {
     . = ALIGN(32);
     __itcm_text_start__ = .;
@@ -293,6 +293,16 @@ SECTIONS
 
   __itcm_text_load_start__ = LOADADDR(.itcm_text);
   __itcm_text_size__ = __itcm_text_end__ - __itcm_text_start__;
+
+  /* CPU-only zero-initialized software state. Initialized in 64-bit writes
+     before SDK configuration. Never place DMA buffers or constructor state here. */
+  .itcm_bss (NOLOAD) : ALIGN(32)
+  {
+    SRNOS_ITCMBssStart = .;
+    *(.itcm_bss .itcm_bss.*)
+    . = ALIGN(32);
+    SRNOS_ITCMBssEnd = .;
+  } > ITCMRAM
 
   .dtcm_bss (NOLOAD) :
   {
@@ -357,8 +367,8 @@ SECTIONS
     __eth_dma_end__ = .;
   } > RAM_D2
 
-  /* Debugger-readable watch variables.
-     Keep this separate from DMA descriptors so debug state has a clear meaning. */
+  /* CPU/debugger-only Watch, sharing ITCM capacity with software state/code.
+     TCM bypasses D-cache; DMA descriptors and retained Fault stay in D2. */
   .debug_watch (NOLOAD) :
   {
     . = ALIGN(32);
@@ -368,7 +378,7 @@ SECTIONS
 
     . = ALIGN(32);
     __debug_watch_end__ = .;
-  } > RAM_D2
+  } > ITCMRAM
 }
 
 /* Provide handy sizes (not mandatory) */
@@ -410,7 +420,11 @@ ASSERT((SRNOS_LIBC_BYTES >= 256) && ((SRNOS_LIBC_BYTES & 7) == 0), "Invalid libc
 ASSERT(__dtcm_bss_end__ <= _sstack, "DTCM data/heap overlaps MSP")
 ASSERT(__sirinos_heap_dtcm_end <= _sstack, "FreeRTOS DTCM heap overlaps MSP")
 ASSERT(__srnos_libc_end <= ORIGIN(RAM_D1) + LENGTH(RAM_D1), "D1 heap/libc/data overflow")
-ASSERT(__sirinos_noinit_end__ <= ORIGIN(RAM_D2) + LENGTH(RAM_D2), "D2 DMA/watch/retained overflow")
+ASSERT(__sirinos_noinit_end__ <= ORIGIN(RAM_D2) + LENGTH(RAM_D2), "D2 DMA/retained overflow")
 ASSERT(__bdma_buf_end__ <= ORIGIN(RAM_D3) + LENGTH(RAM_D3), "BDMA overflow")
-ASSERT(__itcm_text_end__ <= ORIGIN(ITCMRAM) + LENGTH(ITCMRAM), "ITCM overflow")
+ASSERT(__itcm_text_end__ <= SRNOS_ITCMBssStart, "ITCM code/BSS overlap")
+ASSERT(SRNOS_ITCMBssStart != 0, "ITCM data must not occupy NULL address")
+ASSERT(SRNOS_ITCMBssEnd <= __debug_watch_start__, "ITCM BSS/Watch overlap")
+ASSERT(__debug_watch_end__ <= ORIGIN(ITCMRAM) + LENGTH(ITCMRAM), "ITCM code/BSS/Watch overflow")
+ASSERT(((ABSOLUTE(__itcm_text_load_start__) | ABSOLUTE(__itcm_text_start__) | ABSOLUTE(__itcm_text_end__) | ABSOLUTE(SRNOS_ITCMBssStart) | ABSOLUTE(SRNOS_ITCMBssEnd) | ABSOLUTE(__debug_watch_start__) | ABSOLUTE(__debug_watch_end__)) & 7) == 0, "ITCM initialization requires 64-bit alignment")
 ASSERT((ADDR(.tdata) - ADDR(.data)) == (LOADADDR(.tdata) - LOADADDR(.data)), "TLS data copy must remain contiguous")

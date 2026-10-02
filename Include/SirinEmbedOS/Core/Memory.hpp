@@ -1,5 +1,5 @@
-#ifndef SIRINOS_MEMORY_HPP
-#define SIRINOS_MEMORY_HPP
+#ifndef SRNOS_MEMORY_HPP
+#define SRNOS_MEMORY_HPP
 
 #include <cstddef>
 #include <cstdint>

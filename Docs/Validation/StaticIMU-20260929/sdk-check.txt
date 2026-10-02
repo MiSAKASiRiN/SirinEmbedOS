@@ -1,0 +1,19 @@
+PASS: 91 public headers, 158 C11/C++17 standalone/aggregate units and dependency closures
+PASS: public macros and compiler-parsed C/C++ declarations in 91 headers use SRNOS names
+PASS: 13 application compile commands expose only SDK public headers
+PASS: 273 active SDK source/header names; 4 exact Microchip file exceptions
+PASS: 114 current SDK objects have SRNOS external definitions or exact owner/ABI exceptions
+Compile input classification: CubeMX generated=23, CubeMX vendor HAL/CMSIS=41, application or explicit test adapter=8, parent application=6, pinned third-party middleware=12, retained Microchip implementation=1, self-maintained SDK=114, verified build-time USB vendor patch=2
+PASS: RobotFirmware
+PASS: ManualFirmware
+PASS: PrototypeBindings
+PASS: ParameterExample
+PASS: BringUpExample
+PASS: SensorBringUpExample
+PASS: INSBringUpExample
+PASS: EEPROMBringUpExample
+PASS: RawBinding
+PASS: AllComponents
+PASS: MSP/libc capacity overrides and rejected arena overflow
+PASS: vendor hashes, parent project, ten firmware targets, C++/TLS linkage, config overrides, IRQ and heap layout
+Build/static checks only; no board execution was performed.

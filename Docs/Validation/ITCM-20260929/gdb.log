@@ -1,0 +1,80 @@
+Remote debugging using :2331
+UARTEx_SetNbDataToProcess (huart=0x1 <HAL_MultiProcessorEx_AddressLength_Set>) at /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c:1021
+1021	    huart->NbRxDataToProcess = ((uint16_t)rx_fifo_depth * numerator[rx_fifo_threshold]) /
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+UARTEx_SetNbDataToProcess (huart=0x1 <HAL_MultiProcessorEx_AddressLength_Set>) at /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c:1021
+1021	    huart->NbRxDataToProcess = ((uint16_t)rx_fifo_depth * numerator[rx_fifo_threshold]) /
+Reading symbols from build/itcm-migration-20260929/Debug/SirinEmbedOS.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x40e24 lma 0x80002d0
+Loading section .rodata, size 0x3310 lma 0x80410f8
+Loading section .ARM, size 0x10 lma 0x8044408
+Loading section .preinit_array, size 0x4 lma 0x8044418
+Loading section .data, size 0x448 lma 0x804441c
+Loading section .itcm_text, size 0xe0 lma 0x8044880
+Start address 0x08002424, load size 280892
+Transfer rate: 54861 KB/sec, 25535 bytes/write.
+Section .text, range 0x80002d0 -- 0x80410f4: matched.
+Section .itcm_text, range 0x8044880 -- 0x8044960: matched.
+Hardware assisted breakpoint 1 at 0x803ba1a: file /Users/sirin/CLionProjects/SirinEmbedOS/Board/Support/System/fault_platform.c, line 159.
+Resetting target
+Continuing.
+
+Breakpoint 1, SRNOS_Platform_Initialize () at /Users/sirin/CLionProjects/SirinEmbedOS/Board/Support/System/fault_platform.c:159
+159	    SRNOS_Fault_Initialize();
+build/itcm-migration-20260929/check-startup.gdb:20: Error in sourced command file:
+Scripting in the "Python" language is not supported in this copy of GDB.
+Restoring binary file build/itcm-migration-20260929/itcm-poison.bin into memory (0xe0 to 0xf640)
+0xe0 <_ZL5s_ctx>:	0xa5a5a5a5	0xa5a5a5a5	0xa5a5a5a5	0xa5a5a5a5
+0xeb00 <SRNOS_DebugDbgMpuDcache>:	0xa5a5a5a5	0xa5a5a5a5	0xa5a5a5a5	0xa5a5a5a5
+Resetting target
+Continuing.
+
+Breakpoint 1, SRNOS_Platform_Initialize () at /Users/sirin/CLionProjects/SirinEmbedOS/Board/Support/System/fault_platform.c:159
+159	    SRNOS_Fault_Initialize();
+$1 = {h = {magic = 1330468932, version = 1, size = 72, module_id = 6, instance = 0, seq = 1, flags = 0, last_tick = 0, last_status = 0}, mem_sections_enabled = 1, init_count = 1, dma_nc_size = 192, dma_nc_buf_size = 6304, bdma_buf_size = 544, eth_dma_size = 0, dtcm_bss_size = 41568, dtcm_heap_size = 65536, debug_watch_size = 2880, itcm_text_size = 224, itcm_bss_size = 59936}
+$2 = 0x0
+$3 = 0x0
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$4 = 18729
+$5 = 66024
+$6 = 61800
+$7 = {{h = {magic = 1330468932, version = 1, size = 180, module_id = 1, instance = 0, seq = 0, flags = 0, last_tick = 0, last_status = 0}, xfer_start = 99928, xfer_done = 99928, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 4, state = 0, hal_state = 0, hal_error = 0, cb_status = 0, current_dev = 0, last_dev = 0, last_cs_port = 0, last_cs_pin = 0, lock_held = 0, lock_owner = 0, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 0, lock_busy = 0, lock_error = 0, lock_release = 0, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0, launch_guard = 0, pending_status = 0, early_complete = 0, deferred_publish = 0, spurious_complete = 0, pending_overwrite = 0, start_conflict = 0, last_hal_ret = 0}}
+$8 = {{h = {magic = 1330468932, version = 1, size = 148, module_id = 2, instance = 0, seq = 0, flags = 0, last_tick = 18734, last_status = 0}, xfer_start = 7751, xfer_done = 7751, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 1, state = 0, hal_state = 0, hal_error = 0, current_dev = 0, last_dev = 603996172, mem_addr = 8, mem_addr_size = 1, xfer_type = 3 '\003', direct_xfer = 0 '\000', rx_copy_back = 1 '\001', reserved0 = 0 '\000', cb_status = 0, lock_held = 0, lock_owner = 0, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 0, lock_busy = 0, lock_error = 0, lock_release = 0, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0}}
+$9 = {{h = {magic = 1330468932, version = 1, size = 104, module_id = 17, instance = 0, seq = 0, flags = 0, last_tick = 0, last_status = 0}, configured = 1, dtr = 0, tx_active = 0, rx_events = 0, rx_bytes = 0, rx_drop = 0, tx_events = 0, tx_bytes = 0, tx_complete = 0, tx_busy = 0, tx_errors = 0, tx_drop = 48, disconnects = 0, last_rx_len = 0, last_tx_len = 0, queue_depth = 0, queue_high_water = 0, replay_active = 0, replay_restarts = 1}, {h = {magic = 1330468932, version = 1, size = 104, module_id = 17, instance = 1, seq = 0, flags = 0, last_tick = 0, last_status = 0}, configured = 1, dtr = 0, tx_active = 0, rx_events = 0, rx_bytes = 0, rx_drop = 0, tx_events = 0, tx_bytes = 0, tx_complete = 0, tx_busy = 0, tx_errors = 0, tx_drop = 0, disconnects = 0, last_rx_len = 0, last_tx_len = 0, queue_depth = 0, queue_high_water = 0, replay_active = 0, replay_restarts = 0}}
+$10 = 0x0
+$11 = 0x0
+Reading symbols from build/itcm-migration-20260929/Release/SirinEmbedOS.elf...
+(No debugging symbols found in build/itcm-migration-20260929/Release/SirinEmbedOS.elf)
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2d400 lma 0x80002d0
+Loading section .rodata, size 0x3398 lma 0x802d6d0
+Loading section .ARM, size 0x10 lma 0x8030a68
+Loading section .preinit_array, size 0x4 lma 0x8030a78
+Loading section .data, size 0x44c lma 0x8030a7c
+Loading section .itcm_text, size 0xc0 lma 0x8030ee0
+Start address 0x08001ee0, load size 200580
+Transfer rate: 65292 KB/sec, 22286 bytes/write.
+Section .text, range 0x80002d0 -- 0x802d6d0: matched.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .itcm_text, range 0x8030ee0 -- 0x8030fa0: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08014910 in dispatch_step ()
+$12 = 184173
+$13 = 66024
+$14 = 61800
+$15 = 0x0
+$16 = 0x0
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/itcm-migration-20260929/Release/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

@@ -3,8 +3,8 @@ set -euo pipefail
 root=$(cd "$(dirname "$0")/../../.." && pwd)
 build=$(mktemp -d)
 trap 'rm -rf "$build"' EXIT
-flags=(-Wall -Wextra -Werror -O1 -g -fsanitize=undefined -I"$root/Include" -I"$root/Source/Services/INS" -I"$root/Board/Glue")
-for source in Source/Services/INS/ins_core.c Source/Devices/IMU/mahony_filter.c Board/Glue/sensor_frames.c; do
+flags=(-Wall -Wextra -Werror -O1 -g -fsanitize=undefined -I"$root/Tests/Support" -I"$root/Include" -I"$root/Source" -I"$root/Source/Services/INS" -I"$root/Board/Support")
+for source in Source/Services/INS/ins_core.c Source/Devices/IMU/mahony_filter.c Board/Support/Devices/sensor_frames.c; do
   cc -std=c11 "${flags[@]}" -c "$root/$source" -o "$build/$(basename "$source").o"
 done
 c++ -std=c++17 "${flags[@]}" "$root/Tests/Services/INS/test_ins.cpp" \
@@ -14,3 +14,12 @@ cc -std=c11 "${flags[@]}" -pthread -I"$root/Tests/Services/INS/stubs" \
  -I"$root/Tests/Services/IMUTelemetry/stubs" \
  "$root/Source/Services/INS/ins_snapshot.c" "$root/Tests/Services/INS/test_snapshot.c" -o "$build/test_snapshot"
 "$build/test_snapshot"
+cc -std=c11 -I"$root/Tests/Services/INS/calibration_stubs" "${flags[@]}" \
+ -I"$root/Tests/Services/INS/stubs" \
+ "$root/Source/Services/INS/imu_calibration.c" "$root/Tests/Services/INS/test_calibration.c" -o "$build/test_calibration"
+"$build/test_calibration"
+cc -std=c11 -I"$root/Tests/Services/INS/calibration_stubs" "${flags[@]}" \
+ -I"$root/Tests/Services/INS/stubs" \
+ "$root/Source/Services/INS/imu_calibration.c" "$root/Source/Services/INS/imu_static_calibration.c" \
+ "$root/Tests/Services/INS/test_static_calibration.c" -o "$build/test_static_calibration"
+"$build/test_static_calibration"

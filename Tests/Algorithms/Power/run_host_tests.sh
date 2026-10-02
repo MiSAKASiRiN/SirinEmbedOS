@@ -4,8 +4,8 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/../../.." && pwd)
 out="${TMPDIR:-/tmp}/srnos-power-host-tests"
 mkdir -p "$out"
 ${CXX:-c++} -std=c++17 -Wall -Wextra -Werror -pedantic -O1 -g \
-    -fsanitize=undefined -I"$root/Include" \
-    "$root/Source/Algorithms/Power/lib_power_control.cpp" \
+    -fsanitize=undefined -I"$root/Tests/Support" -I"$root/Include" -I"$root/Source" \
+    "$root/Source/Algorithms/Power/PowerControl.cpp" \
     "$root/Tests/Algorithms/Power/test_power.cpp" -o "$out/test_power"
 "$out/test_power"
 echo "Power model host tests passed"

@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_ARRAY_H
-#define SIRINOS_C_ARRAY_H
+#ifndef SRNOS_C_ARRAY_H
+#define SRNOS_C_ARRAY_H
 
 #include <stddef.h>
 

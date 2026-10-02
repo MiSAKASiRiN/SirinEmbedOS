@@ -1,6 +1,6 @@
 # SensorBringUp
 
-2613 新器件可达性与 SDK 驱动验证入口。关闭正式融合，启用 BMI 原始采样、LSM、LIS2MDL、SPA06，保持 MCP 服务运行；不主动发送外部 CAN 测试帧。关闭参数启动加载、HostLink LOAD/SAVE 和周期诊断扫描，采样不调用融合、用户校准或 EEPROM；独立启用加热，优先 LSM 反馈目标60°C，LSM失效时回退BMI。CDC1 启用订阅式双 IMU 二进制遥测，CDC0 保持每秒摘要。2613 EEPROM 换型尚未适配，本例不访问 EEPROM。
+2613 新器件可达性与 SDK 驱动验证入口。关闭正式融合，启用 BMI 原始采样、LSM、LIS2MDL、SPA06，保持 MCP 服务运行；不主动发送外部 CAN 测试帧。关闭业务参数启动加载、HostLink SAVE/LOAD/静态校准命令和周期诊断扫描；原始采样不执行融合或应用校准系数；独立启用加热，优先 LSM 反馈目标60°C，LSM失效时回退BMI。CDC1 启用订阅式双 IMU 二进制遥测，CDC0 保持每秒摘要。FT24C128A 及 Storage 已接入。本例未关闭 storage.enabled，启动仍会读取身份/IMU 校准记录，原始数据不套用校准；没有自动写入。存储开关见 [存储总览](../../Docs/Storage.md)。
 
 ```sh
 export PATH="/opt/ST/STM32CubeCLT_1.22.0/st-arm-clang/bin:$PATH"
@@ -30,3 +30,7 @@ GDB 已开启文本 logging 时，可在主机运行 `python3 Tools/Debug/read_s
 使用 `Tools/HostLink/imu_telemetry.py --port CDC1_PATH --duration 600` 进行用户长测；Python 环境安装、完整协议、计数解释见 [HostLink.md](../../Docs/HostLink.md)。订阅前不发送 IMU 数据，退出取消订阅。不要同时让串口终端占用 CDC1。
 
 2026-09-27：四颗器件均 READY，LSM ID=0x6A。最终遥测固件已完成两个 10 秒正常窗口、取消/DTR 重连和软件复位短测；未完成十分钟验收。实测数据与精确 ELF SHA 见 [验证记录](../../Docs/Validation.md)。
+
+## 托管接口迁移
+
+长期应用工作改为托管 step 描述，周期等待由 SDK 负责；观察 srnos_example_create_result 检查创建结果。 旧 ThreadConfig.entry 不再支持；公共创建/停止/删除及同步用法见 Source/Kernel/README.md。本次编译不意味着重新执行板端测试。

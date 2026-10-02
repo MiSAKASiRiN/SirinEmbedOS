@@ -1,0 +1,143 @@
+Remote debugging using localhost:2331
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+0x0800e35a in ?? ()
+pc             0x800e35a           0x800e35a
+lr             0x800df0d           134274829
+sp             0x24001f08          0x24001f08
+#0  0x0800e35a in ?? ()
+#1  0x0800df0c in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e330 in ?? ()
+Reading symbols from build/acceptance-20260929/maintenance/SirinEmbedOS.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x418f4 lma 0x80002d0
+Loading section .rodata, size 0x32f0 lma 0x8041bc8
+Loading section .ARM, size 0x10 lma 0x8044eb8
+Loading section .preinit_array, size 0x4 lma 0x8044ec8
+Loading section .data, size 0x448 lma 0x8044ecc
+Loading section .itcm_text, size 0xe0 lma 0x8045318
+Start address 0x08002cdc, load size 283628
+Transfer rate: 69245 KB/sec, 25784 bytes/write.
+Section .text, range 0x80002d0 -- 0x8041bc4: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+$1 = {stage = 1, command = 0, passed = 1, failed = 0, started_ms = 0, elapsed_ms = 0, poll_count = 0, status = SRNOS_EEPROM_OK, restore_status = SRNOS_EEPROM_OK, backup_valid = true, restored = false, restore_skipped = false, backup_hash = 2949387238, restored_hash = 0, final_hash = 0, upload_hash = 0, upload_arm = 0, bus_before = {state = 0, hal_state = 0, hal_error = 0, lock_held = 0, lock_owner = 0, current_dev = 0, current_len = 0, last_status = 0, last_tick = 0, recover_count = 0, cb_queued = 0, cb_queue_overflow = 0, queued = 0, high_water = 0, quarantined = 0, periodic = {accepted = 0, completed = 0, errors = 0, timeouts = 0, cancelled = 0, queue_full = 0, max_queue_us = 0, max_transfer_us = 0}, background = {accepted = 0, completed = 0, errors = 0, timeouts = 0, cancelled = 0, queue_full = 0, max_queue_us = 0, max_transfer_us = 0}}, bus_after = {state = 0, hal_state = 0, hal_error = 0, lock_held = 0, lock_owner = 0, current_dev = 0, current_len = 0, last_status = 0, last_tick = 0, recover_count = 0, cb_queued = 0, cb_queue_overflow = 0, queued = 0, high_water = 0, quarantined = 0, periodic = {accepted = 0, completed = 0, errors = 0, timeouts = 0, cancelled = 0, queue_full = 0, max_queue_us = 0, max_transfer_us = 0}, background = {accepted = 0, completed = 0, errors = 0, timeouts = 0, cancelled = 0, queue_full = 0, max_queue_us = 0, max_transfer_us = 0}}, lis_before = {state = SRNOS_SENSOR_DISABLED, identity = 0 '\000', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 0, initializations = 0, polls = 0, samples = 0, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 0, max_period_us = 0, period_us = {0, 0, 0, 0, 0, 0}, last_sample_us = 0, last_poll_us = 0}, lis_after = {state = SRNOS_SENSOR_DISABLED, identity = 0 '\000', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 0, initializations = 0, polls = 0, samples = 0, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 0, max_period_us = 0, period_us = {0, 0, 0, 0, 0, 0}, last_sample_us = 0, last_poll_us = 0}, spa_before = {state = SRNOS_SENSOR_DISABLED, identity = 0 '\000', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 0, initializations = 0, polls = 0, samples = 0, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 0, max_period_us = 0, period_us = {0, 0, 0, 0, 0, 0}, last_sample_us = 0, last_poll_us = 0}, spa_after = {state = SRNOS_SENSOR_DISABLED, identity = 0 '\000', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 0, initializations = 0, polls = 0, samples = 0, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 0, max_period_us = 0, period_us = {0, 0, 0, 0, 0, 0}, last_sample_us = 0, last_poll_us = 0}}
+$2 = (uint8_t *) 0x2403a998 <d1_heap+65080> "\277\bQ\232\343,u\276\aP\231\342+t\275\006O\230\341*s\274\005N\227\340)r\273\004M\226\337(q\272\003L\225\336'p\271\002K\224\335&o\270\001J\223\334%n\267"
+Reading symbols from build/acceptance-20260929/persistence/Persistence.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2df0c lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x802e1e0
+Loading section .ARM, size 0x10 lma 0x80315e8
+Loading section .preinit_array, size 0x4 lma 0x80315f8
+Loading section .init_array, size 0x4 lma 0x80315fc
+Loading section .data, size 0x44c lma 0x8031600
+Loading section .itcm_text, size 0xc0 lma 0x8031a4c
+Start address 0x080022e8, load size 203524
+Transfer rate: 66251 KB/sec, 20352 bytes/write.
+Section .text, range 0x80002d0 -- 0x802e1dc: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3506
+3506	        prvCheckTasksWaitingTermination();
+$3 = 0
+$4 = {load_status = {SRNOS_STORAGE_CORRUPT, SRNOS_STORAGE_CORRUPT}, save_status = {SRNOS_STORAGE_NOT_FOUND, SRNOS_STORAGE_NOT_FOUND}, active_revision = {0, 0}, saved_revision = {0, 0}, active_mask = 0 '\000', pending_restart_mask = 0 '\000', startup_resolved = true}
+$5 = 66024
+$6 = 61800
+$7 = {{state = SRNOS_SENSOR_READY, identity = 30 '\036', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 1, initializations = 1, polls = 30074, samples = 30073, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 82, max_period_us = 421012, period_us = {0, 24412, 5660, 0, 0, 1}, last_sample_us = 30505410, last_poll_us = 30505327}, {state = SRNOS_SENSOR_READY, identity = 106 'j', revision = 0 '\000', product = 0 '\000', config_readback = "D\000\000\000\210\214\000", init_attempts = 1, initializations = 1, polls = 30494, samples = 30479, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 54, max_period_us = 1025, period_us = {0, 26434, 4059, 0, 0, 0}, last_sample_us = 30505339, last_poll_us = 30505290}, {state = SRNOS_SENSOR_READY, identity = 64 '@', revision = 0 '\000', product = 0 '\000', config_readback = "\020\000\214\000\000\000\000", init_attempts = 1, initializations = 1, polls = 3050, samples = 3001, not_ready = 40, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 528, max_period_us = 10047, period_us = {0, 0, 0, 2533, 516, 0}, last_sample_us = 30504956, last_poll_us = 30504428}, {state = SRNOS_SENSOR_READY, identity = 17 '\021', revision = 1 '\001', product = 1 '\001', config_readback = "C@\000\307\000\000\000", init_attempts = 1, initializations = 1, polls = 3050, samples = 496, not_ready = 2543, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 560, max_period_us = 10410, period_us = {0, 0, 0, 2295, 754, 0}, last_sample_us = 30455510, last_poll_us = 30504959}}
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/acceptance-20260929/persistence/Persistence.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]
+Remote debugging using localhost:2331
+
+Program stopped.
+SRNOS_RuntimeTraceOut () at /Users/sirin/CLionProjects/SirinEmbedOS/Source/Diagnostics/Runtime/runtime_trace.c:195
+195	    hskp_trace_slot_t *slot = hskp_trace_slot_from_handle(handle);
+$8 = {{mean = {0.00852211565, -0.0138484379, -0.0095873801, -8.05708694, -1.75435126, 5.29358006}, m2 = {0, 0, 0, 0, 0, 0}, minimum = {-0.011717909, -0.0138484379, -0.0095873801, -8.05708694, -1.75435126, 5.29358006}, maximum = {0.00852211565, -0.0138484379, -0.0095873801, -8.05708694, -1.75435126, 5.29358006}, temp_mean = 56.125, temp_min = 56.125, temp_max = 56.125, first_us = 207183427, last_us = 207183427, sequence = 206751, count = 1, health = {state = SRNOS_SENSOR_READY, identity = 30 '\036', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 1, initializations = 1, polls = 206749, samples = 206748, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 96, max_period_us = 421012, period_us = {0, 155814, 50933, 0, 0, 1}, last_sample_us = 207180422, last_poll_us = 207180337}, value = {sensor = SRNOS_SENSOR_BMI088, model_version = 1, axes_version = 1, gyro_bias_rad_s = {0, 0, 0}, accel_bias_m_s2 = {0, 0, 0}, accel_scale = {1, 1, 1}, temperature_c = 0}}, {mean = {0.0109955743, -0.0342084542, 0.00244346098, -1.74436772, -7.9465642, -5.15533638}, m2 = {0, 0, 0, 0, 0, 0}, minimum = {0.0109955743, -0.0342084542, 0.00244346098, -1.74436772, -7.9465642, -5.15533638}, maximum = {0.0109955743, -0.0342084542, 0.00244346098, -1.74436772, -7.9465642, -5.15533638}, temp_mean = 60.0390625, temp_min = 60.0390625, temp_max = 60.0390625, first_us = 207183347, last_us = 207183347, sequence = 207157, count = 1, health = {state = SRNOS_SENSOR_READY, identity = 106 'j', revision = 0 '\000', product = 0 '\000', config_readback = "D\000\000\000\210\214\000", init_attempts = 1, initializations = 1, polls = 207172, samples = 207157, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 62, max_period_us = 1095, period_us = {0, 161675, 45496, 0, 0, 0}, last_sample_us = 207183347, last_poll_us = 207183296}, value = {sensor = SRNOS_SENSOR_LSM6DS3, model_version = 1, axes_version = 1, gyro_bias_rad_s = {0, 0, 0}, accel_bias_m_s2 = {0, 0, 0}, accel_scale = {1, 1, 1}, temperature_c = 0}}}
+$9 = {job_id = 4, elapsed_ms = 17, samples = {1, 1}, saved_revision = {0, 0}, gyro_bias_rad_s = {{0, 0, 0}, {0, 0, 0}}, temperature_c = {0, 0}, storage_status = {SRNOS_STORAGE_CORRUPT, SRNOS_STORAGE_CORRUPT}, result = SRNOS_IMU_STATIC_MOVING, phase = SRNOS_IMU_STATIC_FAILED, requested_mask = 3 '\003', saved_mask = 0 '\000', failed_sensor = 0 '\000'}
+$10 = 66024
+$11 = 61800
+There is no member named stats.
+$12 = {{state = SRNOS_SENSOR_READY, identity = 30 '\036', revision = 0 '\000', product = 0 '\000', config_readback = "\000\000\000\000\000\000\000", init_attempts = 1, initializations = 1, polls = 263839, samples = 263837, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 96, max_period_us = 421012, period_us = {0, 199381, 64456, 0, 0, 1}, last_sample_us = 264269418, last_poll_us = 264270333}, {state = SRNOS_SENSOR_READY, identity = 106 'j', revision = 0 '\000', product = 0 '\000', config_readback = "D\000\000\000\210\214\000", init_attempts = 1, initializations = 1, polls = 264259, samples = 264244, not_ready = 0, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 62, max_period_us = 1095, period_us = {0, 205925, 58333, 0, 0, 0}, last_sample_us = 264270344, last_poll_us = 264270294}, {state = SRNOS_SENSOR_READY, identity = 64 '@', revision = 0 '\000', product = 0 '\000', config_readback = "\020\000\214\000\000\000\000", init_attempts = 1, initializations = 1, polls = 26426, samples = 26055, not_ready = 362, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 1426, max_period_us = 10047, period_us = {0, 0, 0, 20859, 5566, 0}, last_sample_us = 264264972, last_poll_us = 264264439}, {state = SRNOS_SENSOR_READY, identity = 17 '\021', revision = 1 '\001', product = 1 '\001', config_readback = "C@\000\307\000\000\000", init_attempts = 1, initializations = 1, polls = 26426, samples = 4312, not_ready = 22103, overruns = 0, errors = 0, recoveries = 0, max_acquisition_us = 1264, max_period_us = 10909, period_us = {0, 0, 0, 19116, 7309, 0}, last_sample_us = 264215523, last_poll_us = 264264974}}
+$13 = {load_status = {SRNOS_STORAGE_CORRUPT, SRNOS_STORAGE_CORRUPT}, save_status = {SRNOS_STORAGE_NOT_FOUND, SRNOS_STORAGE_NOT_FOUND}, active_revision = {0, 0}, saved_revision = {0, 0}, active_mask = 0 '\000', pending_restart_mask = 0 '\000', startup_resolved = true}
+$14 = (osThreadId_t) 0x2000fba0 <dtcm_heap+64416>
+$15 = (StackType_t *) 0x2000f398 <dtcm_heap+62360>
+Resetting target
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/acceptance-20260929/persistence/Persistence.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]
+Remote debugging using localhost:2331
+
+Program stopped.
+0x0800e7c8 in prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+$16 = 66024
+$17 = 61800
+$18 = {registered_count = 8, active_count = 0, total_rate_hz = 0, batches = 29737, records = 237896, read_failures = 0, publish_failures = 0, missed_periods = 18152, cycles_total = 475173781, cycles_max = 17466}
+$19 = {{h = {magic = 1330468932, version = 1, size = 148, module_id = 2, instance = 0, seq = 0, flags = 0, last_tick = 109844, last_status = 0}, xfer_start = 45456, xfer_done = 45456, xfer_busy = 0, xfer_error = 0, xfer_timeout = 0, last_len = 6, state = 0, hal_state = 0, hal_error = 0, current_dev = 0, last_dev = 603996692, mem_addr = 0, mem_addr_size = 1, xfer_type = 3 '\003', direct_xfer = 0 '\000', rx_copy_back = 1 '\001', reserved0 = 0 '\000', cb_status = 0, lock_held = 0, lock_owner = 0, lock_last_fail = 0, lock_os_status = 0, lock_release_status = 0, lock_release_error = 0, lock_ok = 0, lock_busy = 0, lock_error = 0, lock_release = 0, cb_queued = 0, cb_queue_overflow = 0, cb_thread_wake = 0, recover_count = 0, recover_error = 0, last_recover_reason = 0}}
+$20 = {load_status = {SRNOS_STORAGE_CORRUPT, SRNOS_STORAGE_CORRUPT}, save_status = {SRNOS_STORAGE_NOT_FOUND, SRNOS_STORAGE_NOT_FOUND}, active_revision = {0, 0}, saved_revision = {0, 0}, active_mask = 0 '\000', pending_restart_mask = 0 '\000', startup_resolved = true}
+Scripting in the "Python" language is not supported in this copy of GDB.
+Reading symbols from build/acceptance-20260929/maintenance/SirinEmbedOS.elf...
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x418f4 lma 0x80002d0
+Loading section .rodata, size 0x32f0 lma 0x8041bc8
+Loading section .ARM, size 0x10 lma 0x8044eb8
+Loading section .preinit_array, size 0x4 lma 0x8044ec8
+Loading section .data, size 0x448 lma 0x8044ecc
+Loading section .itcm_text, size 0xe0 lma 0x8045318
+Start address 0x08002cdc, load size 283628
+Transfer rate: 138490 KB/sec, 25784 bytes/write.
+Section .text, range 0x80002d0 -- 0x8041bc4: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800d2ae in HAL_SPI_IRQHandler (hspi=0x24000958 <hspi4>) at /Users/sirin/CLionProjects/SirinEmbedOS/Board/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c:2949
+2949	    HAL_SPI_SuspendCallback(hspi);
+$21 = 1
+$22 = true
+$23 = (uint8_t *) 0x2403e998 <d1_heap+81464> ""
+Restoring binary file build/acceptance-20260929/original-eeprom.bin into memory (0x2403e998 to 0x24042998)
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$24 = 8
+$25 = SRNOS_EEPROM_OK
+$26 = true
+$27 = 2949387238
+Reading symbols from build/acceptance-20260929/minimal/SirinEmbedOS.elf...
+(No debugging symbols found in build/acceptance-20260929/minimal/SirinEmbedOS.elf)
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x2d3c8 lma 0x80002d0
+Loading section .rodata, size 0x3398 lma 0x802d698
+Loading section .ARM, size 0x10 lma 0x8030a30
+Loading section .preinit_array, size 0x4 lma 0x8030a40
+Loading section .data, size 0x44c lma 0x8030a44
+Loading section .itcm_text, size 0xc0 lma 0x8030e90
+Start address 0x08001ee0, load size 200524
+Transfer rate: 97912 KB/sec, 22280 bytes/write.
+Section .text, range 0x80002d0 -- 0x802d698: matched.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3be in prvIdleTask ()
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/acceptance-20260929/minimal/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_NUMERIC_H
-#define SIRINOS_C_NUMERIC_H
+#ifndef SRNOS_C_NUMERIC_H
+#define SRNOS_C_NUMERIC_H
 
 #include <stdbool.h>
 #include <stddef.h>

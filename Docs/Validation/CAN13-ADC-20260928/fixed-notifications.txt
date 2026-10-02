@@ -1,0 +1,12 @@
+080181d2 <SRNOS_FDCANOnRxISR>:
+ 80181d2: f000 b8f3    	b.w	0x80183bc <SRNOS_NativeCANBackendSignalRx> @ imm = #0x1e6
+ 80181d6: d4d4         	bmi	0x8018182 <_ZL12commit_groupP18SRNOS_CANRouterCtxP11group_acc_t15SRNOS_CANTxKind17SRNOS_CANTxResult+0xce> @ imm = #-0x58
+
+08018418 <SRNOS_FDCANOnTxEvent>:
+ 8018418: b510         	push	{r4, lr}
+ 801841a: 4604         	mov	r4, r0
+ 801841c: f7ff f816    	bl	0x801744c <SRNOS_CANRouterCoreNoteTxComplete> @ imm = #-0xfd4
+ 8018420: 4620         	mov	r0, r4
+ 8018422: e8bd 4010    	pop.w	{r4, lr}
+ 8018426: f7ff bfdd    	b.w	0x80183e4 <SRNOS_NativeCANBackendSignalTx> @ imm = #-0x46
+ 801842a: d4d4         	bmi	0x80183d6 <SRNOS_NativeCANBackendSignalRx+0x1a> @ imm = #-0x58

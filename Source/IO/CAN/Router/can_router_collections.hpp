@@ -1,25 +1,25 @@
-#ifndef OMX_CAN_ROUTER_COLLECTIONS_HPP
-#define OMX_CAN_ROUTER_COLLECTIONS_HPP
+#ifndef SRNOS_CAN_ROUTER_COLLECTIONS_HPP
+#define SRNOS_CAN_ROUTER_COLLECTIONS_HPP
 
-#include "SirinEmbedOS/IO/CAN/Router/NTFDCAN_Router.h"
+#include "SirinEmbedOS/IO/CAN/Router/CAN.h"
 
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 
-#ifndef CAN_ROUTER_ROUTE_CAPACITY
-#define CAN_ROUTER_ROUTE_CAPACITY 64u
+#ifndef SRNOS_CAN_ROUTER_ROUTE_CAPACITY
+#define SRNOS_CAN_ROUTER_ROUTE_CAPACITY 64u
 #endif
 
-#ifndef CAN_ROUTER_ONESHOT_Q_LEN
-#define CAN_ROUTER_ONESHOT_Q_LEN 64u
+#ifndef SRNOS_CAN_ROUTER_ONESHOT_Q_LEN
+#define SRNOS_CAN_ROUTER_ONESHOT_Q_LEN 64u
 #endif
 
-namespace can_router_detail {
+namespace SRNOS_CANRouterDetail {
 
-static_assert(CAN_ROUTER_ROUTE_CAPACITY > 0u && CAN_ROUTER_ROUTE_CAPACITY <= 255u,
+static_assert(SRNOS_CAN_ROUTER_ROUTE_CAPACITY > 0u && SRNOS_CAN_ROUTER_ROUTE_CAPACITY <= 255u,
               "route count storage requires capacity in 1..255");
-static_assert(CAN_ROUTER_ONESHOT_Q_LEN > 0u && CAN_ROUTER_ONESHOT_Q_LEN <= 255u,
+static_assert(SRNOS_CAN_ROUTER_ONESHOT_Q_LEN > 0u && SRNOS_CAN_ROUTER_ONESHOT_Q_LEN <= 255u,
               "one-shot heap indexes require capacity in 1..255");
 
 enum class route_kind_t : uint8_t {
@@ -28,12 +28,12 @@ enum class route_kind_t : uint8_t {
 };
 
 union route_callback_t {
-    can_router_rx_handler_t raw;
-    void (*adapter)(void *obj, const can_frame_t *frame, uint32_t now_ms);
+    SRNOS_CANRouterRxHandler raw;
+    void (*adapter)(void *obj, const SRNOS_CANFrame *frame, uint32_t now_ms);
 };
 
 struct route_entry_t {
-    can_rx_filter_t filter;
+    SRNOS_CANRxFilter filter;
     route_kind_t kind;
     void *target;
     route_callback_t callback;
@@ -46,24 +46,24 @@ struct route_target_t {
 };
 
 struct route_table_t {
-    route_entry_t entries[CAN_ROUTER_ROUTE_CAPACITY];
+    route_entry_t entries[SRNOS_CAN_ROUTER_ROUTE_CAPACITY];
     uint8_t count;
 };
 
-inline bool same_key(const can_rx_filter_t &lhs, const can_rx_filter_t &rhs)
+inline bool same_key(const SRNOS_CANRxFilter &lhs, const SRNOS_CANRxFilter &rhs)
 {
     return lhs.id == rhs.id && lhs.flags == rhs.flags;
 }
 
-inline bool key_less(const can_rx_filter_t &lhs, const can_rx_filter_t &rhs)
+inline bool key_less(const SRNOS_CANRxFilter &lhs, const SRNOS_CANRxFilter &rhs)
 {
-    const uint8_t lhs_ext = (uint8_t)(lhs.flags & CAN_FRAME_FLAG_EXT);
-    const uint8_t rhs_ext = (uint8_t)(rhs.flags & CAN_FRAME_FLAG_EXT);
+    const uint8_t lhs_ext = (uint8_t)(lhs.flags & SRNOS_CAN_FRAME_FLAG_EXT);
+    const uint8_t rhs_ext = (uint8_t)(rhs.flags & SRNOS_CAN_FRAME_FLAG_EXT);
     return (lhs_ext < rhs_ext) || ((lhs_ext == rhs_ext) && (lhs.id < rhs.id));
 }
 
 inline size_t route_lower_bound(const route_table_t &table,
-                                const can_rx_filter_t &key,
+                                const SRNOS_CANRxFilter &key,
                                 uint32_t *steps = nullptr)
 {
     size_t first = 0u;
@@ -85,7 +85,7 @@ inline size_t route_lower_bound(const route_table_t &table,
 }
 
 inline size_t route_upper_bound(const route_table_t &table,
-                                const can_rx_filter_t &key,
+                                const SRNOS_CANRxFilter &key,
                                 uint32_t *steps = nullptr)
 {
     size_t first = 0u;
@@ -108,7 +108,7 @@ inline size_t route_upper_bound(const route_table_t &table,
 
 inline bool route_insert(route_table_t &table, const route_entry_t &entry)
 {
-    if (table.count >= CAN_ROUTER_ROUTE_CAPACITY) {
+    if (table.count >= SRNOS_CAN_ROUTER_ROUTE_CAPACITY) {
         return false;
     }
     const size_t pos = route_upper_bound(table, entry.filter);
@@ -123,8 +123,8 @@ inline bool route_insert(route_table_t &table, const route_entry_t &entry)
 }
 
 inline bool route_raw_exists(const route_table_t &table,
-                             const can_rx_filter_t &filter,
-                             can_router_rx_handler_t cb,
+                             const SRNOS_CANRxFilter &filter,
+                             SRNOS_CANRouterRxHandler cb,
                              void *user)
 {
     for (size_t i = route_lower_bound(table, filter);
@@ -139,8 +139,8 @@ inline bool route_raw_exists(const route_table_t &table,
 }
 
 inline bool route_erase_raw(route_table_t &table,
-                            const can_rx_filter_t &filter,
-                            can_router_rx_handler_t cb,
+                            const SRNOS_CANRxFilter &filter,
+                            SRNOS_CANRouterRxHandler cb,
                             void *user)
 {
     for (size_t i = route_lower_bound(table, filter);
@@ -181,7 +181,7 @@ inline size_t route_erase_adapter(route_table_t &table, void *obj)
 }
 
 struct oneshot_slot_t {
-    can_frame_t frame;
+    SRNOS_CANFrame frame;
     uint32_t deadline_ms;
     uint32_t seq;
     uint8_t priority;
@@ -191,10 +191,10 @@ struct oneshot_slot_t {
 };
 
 struct oneshot_queue_t {
-    oneshot_slot_t slots[CAN_ROUTER_ONESHOT_Q_LEN];
-    uint8_t priority_heap[CAN_ROUTER_ONESHOT_Q_LEN];
-    uint8_t expiry_heap[CAN_ROUTER_ONESHOT_Q_LEN];
-    uint8_t free_stack[CAN_ROUTER_ONESHOT_Q_LEN];
+    oneshot_slot_t slots[SRNOS_CAN_ROUTER_ONESHOT_Q_LEN];
+    uint8_t priority_heap[SRNOS_CAN_ROUTER_ONESHOT_Q_LEN];
+    uint8_t expiry_heap[SRNOS_CAN_ROUTER_ONESHOT_Q_LEN];
+    uint8_t free_stack[SRNOS_CAN_ROUTER_ONESHOT_Q_LEN];
     uint8_t priority_size;
     uint8_t expiry_size;
     uint8_t free_count;
@@ -218,10 +218,10 @@ inline void oneshot_init(oneshot_queue_t &queue)
         return;
     }
     std::memset(&queue, 0, sizeof(queue));
-    for (uint8_t i = 0u; i < CAN_ROUTER_ONESHOT_Q_LEN; ++i) {
-        queue.free_stack[i] = (uint8_t)(CAN_ROUTER_ONESHOT_Q_LEN - 1u - i);
+    for (uint8_t i = 0u; i < SRNOS_CAN_ROUTER_ONESHOT_Q_LEN; ++i) {
+        queue.free_stack[i] = (uint8_t)(SRNOS_CAN_ROUTER_ONESHOT_Q_LEN - 1u - i);
     }
-    queue.free_count = CAN_ROUTER_ONESHOT_Q_LEN;
+    queue.free_count = SRNOS_CAN_ROUTER_ONESHOT_Q_LEN;
     queue.initialized = true;
 }
 
@@ -370,7 +370,7 @@ inline void oneshot_release(oneshot_queue_t &queue, uint8_t slot_index)
 }
 
 inline bool oneshot_enqueue(oneshot_queue_t &queue,
-                            const can_frame_t &frame,
+                            const SRNOS_CANFrame &frame,
                             uint8_t priority,
                             uint32_t deadline_ms,
                             uint32_t seq)
@@ -429,7 +429,7 @@ inline bool oneshot_remove_if_seq(oneshot_queue_t &queue,
                                   uint8_t slot_index,
                                   uint32_t seq)
 {
-    if (slot_index >= CAN_ROUTER_ONESHOT_Q_LEN) {
+    if (slot_index >= SRNOS_CAN_ROUTER_ONESHOT_Q_LEN) {
         return false;
     }
     const oneshot_slot_t &slot = queue.slots[slot_index];
@@ -440,6 +440,6 @@ inline bool oneshot_remove_if_seq(oneshot_queue_t &queue,
     return true;
 }
 
-} // namespace can_router_detail
+} // namespace SRNOS_CANRouterDetail
 
-#endif /* OMX_CAN_ROUTER_COLLECTIONS_HPP */
+#endif /* SRNOS_CAN_ROUTER_COLLECTIONS_HPP */

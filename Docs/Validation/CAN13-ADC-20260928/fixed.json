@@ -1,0 +1,2228 @@
+{
+  "phase": 3,
+  "completed": 9,
+  "failure": 0,
+  "malformed": 0,
+  "subscribe_result": [
+    0,
+    0
+  ],
+  "create_result": 0,
+  "delete_result": 0,
+  "stages": [
+    {
+      "requested_fps": [
+        0,
+        0
+      ],
+      "seconds": 5,
+      "producer_ticks": 5000,
+      "elapsed_us": 4999957,
+      "accepted": [
+        0,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        0,
+        0
+      ],
+      "received": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 190391,
+      "monitor_ppm": 466,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        },
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        },
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 5004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          4583,
+          4989,
+          485,
+          80
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 10004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          9583,
+          9989,
+          980,
+          162
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        1000,
+        0
+      ],
+      "seconds": 2,
+      "producer_ticks": 2000,
+      "elapsed_us": 1999979,
+      "accepted": [
+        2000,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        2000,
+        0
+      ],
+      "received": [
+        2000,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 292162,
+      "monitor_ppm": 489,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        },
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 2000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 2000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 2000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 2000,
+          "rx_routed_raw": 2000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 2000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 4000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 2000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 2000,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 10504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          10083,
+          10489,
+          1030,
+          170
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 12504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          12083,
+          12489,
+          1226,
+          203
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        0,
+        1000
+      ],
+      "seconds": 2,
+      "producer_ticks": 2000,
+      "elapsed_us": 1999983,
+      "accepted": [
+        0,
+        2000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        0,
+        2000
+      ],
+      "received": [
+        0,
+        2000
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 292182,
+      "monitor_ppm": 504,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 0,
+          "rx_routed_raw": 0,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 0,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 2000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 2000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 2000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 0,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 2000,
+          "rx_routed_raw": 2000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 2000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 0,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 0,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 0,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 4000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 0
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 2000,
+          "rx_routed_raw": 2000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 2000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 2000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 2000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 2000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 4000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 2000,
+          "rx_routed_raw": 2000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 2000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 2000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 2000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 2000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 4000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 0,
+          "rx_overrun": 0,
+          "tx_enqueued": 2000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 2000,
+          "rx_overrun": 0,
+          "tx_enqueued": 0,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 2000,
+          "rx_overrun": 0,
+          "tx_enqueued": 2000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 2000,
+          "rx_overrun": 0,
+          "tx_enqueued": 2000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 13004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          12583,
+          12989,
+          1276,
+          211
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 15004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          14583,
+          14989,
+          1472,
+          244
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "seconds": 10,
+      "producer_ticks": 10000,
+      "elapsed_us": 9999984,
+      "accepted": [
+        10000,
+        10000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        10000,
+        10000
+      ],
+      "received": [
+        10000,
+        10000
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 386250,
+      "monitor_ppm": 531,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 2000,
+          "rx_routed_raw": 2000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 2000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 2000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 2000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 2000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 4000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 2000,
+          "rx_routed_raw": 2000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 2000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 2000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 2000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 2000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 4000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 12000,
+          "rx_routed_raw": 12000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 12000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 12000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 12000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 12000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 24000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 12000,
+          "rx_routed_raw": 12000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 12000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 12000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 12000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 12000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 24000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 2000,
+          "rx_overrun": 0,
+          "tx_enqueued": 2000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 2000,
+          "rx_overrun": 0,
+          "tx_enqueued": 2000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 12000,
+          "rx_overrun": 0,
+          "tx_enqueued": 12000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 12000,
+          "rx_overrun": 0,
+          "tx_enqueued": 12000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 15504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          15083,
+          15489,
+          1522,
+          252
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 25504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          25083,
+          25489,
+          2509,
+          415
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        2000,
+        2000
+      ],
+      "seconds": 10,
+      "producer_ticks": 10000,
+      "elapsed_us": 9999993,
+      "accepted": [
+        20000,
+        20000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        20000,
+        20000
+      ],
+      "received": [
+        20000,
+        20000
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 574432,
+      "monitor_ppm": 512,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 12000,
+          "rx_routed_raw": 12000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 12000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 12000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 12000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 12000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 24000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 12000,
+          "rx_routed_raw": 12000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 12000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 12000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 12000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 12000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 24000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 32000,
+          "rx_routed_raw": 32000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 32000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 32000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 32000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 32000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 64000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 32000,
+          "rx_routed_raw": 32000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 32000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 32000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 32000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 32000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 64000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 12000,
+          "rx_overrun": 0,
+          "tx_enqueued": 12000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 12000,
+          "rx_overrun": 0,
+          "tx_enqueued": 12000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 32000,
+          "rx_overrun": 0,
+          "tx_enqueued": 32000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 32000,
+          "rx_overrun": 0,
+          "tx_enqueued": 32000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 26004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          25583,
+          25989,
+          2559,
+          423
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 36004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          35583,
+          35989,
+          3544,
+          586
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        3000,
+        3000
+      ],
+      "seconds": 10,
+      "producer_ticks": 10000,
+      "elapsed_us": 9999984,
+      "accepted": [
+        30000,
+        30000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        30000,
+        30000
+      ],
+      "received": [
+        30000,
+        30000
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 759309,
+      "monitor_ppm": 509,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 32000,
+          "rx_routed_raw": 32000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 32000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 32000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 32000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 32000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 64000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 32000,
+          "rx_routed_raw": 32000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 32000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 32000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 32000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 32000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 64000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 62000,
+          "rx_routed_raw": 62000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 62000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 62000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 62000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 62000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 124000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 62000,
+          "rx_routed_raw": 62000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 62000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 62000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 62000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 62000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 124000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 32000,
+          "rx_overrun": 0,
+          "tx_enqueued": 32000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 32000,
+          "rx_overrun": 0,
+          "tx_enqueued": 32000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 62000,
+          "rx_overrun": 0,
+          "tx_enqueued": 62000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 62000,
+          "rx_overrun": 0,
+          "tx_enqueued": 62000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 36504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          36083,
+          36489,
+          3594,
+          595
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 46504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          46083,
+          46489,
+          4577,
+          758
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        4000,
+        4000
+      ],
+      "seconds": 10,
+      "producer_ticks": 10000,
+      "elapsed_us": 10000038,
+      "accepted": [
+        40000,
+        40000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        40000,
+        39998
+      ],
+      "received": [
+        40000,
+        40000
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 947602,
+      "monitor_ppm": 565,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 62000,
+          "rx_routed_raw": 62000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 62000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 62000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 62000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 62000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 124000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 62000,
+          "rx_routed_raw": 62000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 62000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 62000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 62000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 62000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 124000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 102000,
+          "rx_routed_raw": 102000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 102000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 102000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 102000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 102000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 204000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 102000,
+          "rx_routed_raw": 102000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 101542,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 102000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 102000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 102000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 204000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 62000,
+          "rx_overrun": 0,
+          "tx_enqueued": 62000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 62000,
+          "rx_overrun": 0,
+          "tx_enqueued": 62000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 102000,
+          "rx_overrun": 0,
+          "tx_enqueued": 102000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 102000,
+          "rx_overrun": 0,
+          "tx_enqueued": 102000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 47004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          46583,
+          46989,
+          4627,
+          766
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 57004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          56583,
+          56989,
+          5609,
+          929
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        5000,
+        5000
+      ],
+      "seconds": 10,
+      "producer_ticks": 10000,
+      "elapsed_us": 10000004,
+      "accepted": [
+        50000,
+        34345
+      ],
+      "rejected": [
+        0,
+        15655
+      ],
+      "received_active": [
+        50000,
+        34254
+      ],
+      "received": [
+        50000,
+        34345
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 781485,
+      "monitor_ppm": 531,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 102000,
+          "rx_routed_raw": 102000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 102000,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 102000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 102000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 102000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 204000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 102000,
+          "rx_routed_raw": 102000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 101542,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 102000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 102000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 102000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 204000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 136345,
+          "rx_routed_raw": 136345,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 136345,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 152000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 152000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 152000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 272690,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 152000,
+          "rx_routed_raw": 152000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 151531,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 136345,
+          "tx_oneshot_enqueue_full": 15655,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 136345,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 68539,
+          "tx_complete_events": 136345,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 304000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 64
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 102000,
+          "rx_overrun": 0,
+          "tx_enqueued": 102000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 102000,
+          "rx_overrun": 0,
+          "tx_enqueued": 102000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 136345,
+          "rx_overrun": 0,
+          "tx_enqueued": 152000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 152000,
+          "rx_overrun": 0,
+          "tx_enqueued": 136345,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 57504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          57083,
+          57489,
+          5659,
+          938
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 67504,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          67083,
+          67489,
+          6649,
+          1101
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "seconds": 5,
+      "producer_ticks": 5000,
+      "elapsed_us": 4999983,
+      "accepted": [
+        5000,
+        5000
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received_active": [
+        5000,
+        5000
+      ],
+      "received": [
+        5000,
+        5000
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_ppm": 394785,
+      "monitor_ppm": 543,
+      "critical_us": 2,
+      "router_before": [
+        {
+          "rx_pops": 136345,
+          "rx_routed_raw": 136345,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 136345,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 152000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 152000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 152000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 272690,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 152000,
+          "rx_routed_raw": 152000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 151531,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 136345,
+          "tx_oneshot_enqueue_full": 15655,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 136345,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 68539,
+          "tx_complete_events": 136345,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 304000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 64
+        }
+      ],
+      "router_after": [
+        {
+          "rx_pops": 141345,
+          "rx_routed_raw": 141345,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 141345,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 157000,
+          "tx_oneshot_enqueue_full": 0,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 157000,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 0,
+          "tx_complete_events": 157000,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 282690,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 1
+        },
+        {
+          "rx_pops": 157000,
+          "rx_routed_raw": 157000,
+          "rx_routed_adapter": 0,
+          "rx_no_subscriber": 0,
+          "rx_dropped": 0,
+          "rx_wake_by_isr": 156531,
+          "rx_wake_by_timeout": 0,
+          "tx_oneshot_enqueue_ok": 141345,
+          "tx_oneshot_enqueue_full": 15655,
+          "tx_oneshot_expired": 0,
+          "tx_urgent_accepted": 141345,
+          "tx_periodic_accepted": 0,
+          "tx_periodic_dropped": 0,
+          "tx_backend_busy": 68539,
+          "tx_complete_events": 141345,
+          "rx_route_count": 1,
+          "rx_route_high_water": 1,
+          "rx_route_lookup_steps": 314000,
+          "rx_route_capacity_rejects": 0,
+          "tx_adapter_count": 0,
+          "tx_adapter_high_water": 0,
+          "tx_oneshot_depth": 0,
+          "tx_oneshot_high_water": 64
+        }
+      ],
+      "hardware_before": [
+        {
+          "rx_isr": 136345,
+          "rx_overrun": 0,
+          "tx_enqueued": 152000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 152000,
+          "rx_overrun": 0,
+          "tx_enqueued": 136345,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "hardware_after": [
+        {
+          "rx_isr": 141345,
+          "rx_overrun": 0,
+          "tx_enqueued": 157000,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        },
+        {
+          "rx_isr": 157000,
+          "rx_overrun": 0,
+          "tx_enqueued": 141345,
+          "tx_busy": 0,
+          "bus_off": 0,
+          "tec": 0,
+          "rec": 0,
+          "error_logging": 0,
+          "tx_pending": 0,
+          "rx_fifo_lost": 0,
+          "nominal_bps": 1000000
+        }
+      ],
+      "before": {
+        "ins_cycles": 68004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          67583,
+          67989,
+          6699,
+          1109
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "after": {
+        "ins_cycles": 73004,
+        "ins_missing": 16,
+        "ins_missed": 0,
+        "samples": [
+          72583,
+          72989,
+          7189,
+          1191
+        ],
+        "errors": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "overruns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 #include <cmath>
 #include <cstring>
 namespace {
-omx::control::Pid pid;
+SRNOS::Control::Pid pid;
 SRNOS_HeaterStatus state;
 uint64_t last_us,good_lsm_us,good_feedback_us,stable_us,cool_us;
 bool started,needs_recovery;
@@ -19,13 +19,13 @@ extern "C" void SRNOS_HeaterInit(bool enabled,float target,bool hardware_ok) {
     state={};state.enabled=enabled;state.target_c=target;state.source=-1;
     state.hardware_fault=enabled&&!hardware_ok;state.faulted=state.hardware_fault;
     last_us=good_lsm_us=good_feedback_us=stable_us=cool_us=0;started=needs_recovery=false;
-    omx::control::PidConfig cfg;
-    cfg.form=omx::control::PidForm::Positional;cfg.gains={40,2,0};
+    SRNOS::Control::PidConfig cfg;
+    cfg.form=SRNOS::Control::PidForm::Positional;cfg.gains={40,2,0};
     cfg.output_min=0;cfg.output_max=500;cfg.integral_min=0;cfg.integral_max=350;
     cfg.slew_up_per_s=cfg.slew_down_per_s=25;
-    cfg.anti_windup=omx::control::AntiWindupMode::BackCalculation;cfg.back_calculation_gain=1;
+    cfg.anti_windup=SRNOS::Control::AntiWindupMode::BackCalculation;cfg.back_calculation_gain=1;
     cfg.min_dt_s=.000001f;cfg.max_dt_s=.01f;
-    if(pid.configure(cfg)!=omx::control::PidStatus::Ok) state.hardware_fault=state.faulted=true;
+    if(pid.configure(cfg)!=SRNOS::Control::PidStatus::Ok) state.hardware_fault=state.faulted=true;
 }
 extern "C" SRNOS_HeaterStatus SRNOS_HeaterStep(const SRNOS_IMUSample samples[2],uint64_t now) {
     if(!state.enabled||state.hardware_fault) {off();return state;}
@@ -70,7 +70,7 @@ extern "C" SRNOS_HeaterStatus SRNOS_HeaterStep(const SRNOS_IMUSample samples[2],
         pid.track(state.target_c,state.feedback_c,500);state.duty=1;
     } else {
         auto result=pid.step({state.target_c,state.feedback_c,0,(float)elapsed*1e-6f});
-        if(result.status!=omx::control::PidStatus::Ok) {off();needs_recovery=true;good_feedback_us=0;}
+        if(result.status!=SRNOS::Control::PidStatus::Ok) {off();needs_recovery=true;good_feedback_us=0;}
         else state.duty=result.output/500;
     }
     return state;

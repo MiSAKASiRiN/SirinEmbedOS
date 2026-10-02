@@ -44,11 +44,11 @@
 // *****************************************************************************
 // Section: Included Files
 
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_api.h"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_register.h"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_defines.h"
-#include "SirinEmbedOS/IO/SPI/bsp_spi.h"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_spi.h"
+#include "Devices/MCP2518FD/vendor/drv_canfdspi_api.h"
+#include "Devices/MCP2518FD/vendor/drv_canfdspi_register.h"
+#include "Devices/MCP2518FD/vendor/drv_canfdspi_defines.h"
+#include "IO/SPI/spi_internal.h"
+#include "Devices/MCP2518FD/spi_adapter_internal.h"
 
 // MPLAB-compatible Nop shim for STM32 CMSIS
 #ifndef Nop

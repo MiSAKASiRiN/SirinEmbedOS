@@ -3,7 +3,7 @@
 #include "stm32h7xx.h"
 
 #include "SirinEmbedOS/Core/C/Fault.h"
-#include "SirinEmbedOS/Diagnostics/Runtime/Trace.h"
+#include "Diagnostics/Runtime/trace_internal.h"
 
 void SRNOS_KernelFailure(const char *reason, const char *file, unsigned line)
 {

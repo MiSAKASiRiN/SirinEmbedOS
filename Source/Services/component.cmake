@@ -11,9 +11,9 @@ foreach(_anchor IN ITEMS "#include \"usbd_ctlreq.h\"" "char str_buffer[16] = \"\
     message(FATAL_ERROR "USB snapshot patch anchor missing: ${_anchor}")
   endif()
 endforeach()
-string(REPLACE "#include \"usbd_ctlreq.h\"" "#include \"usbd_ctlreq.h\"\n#include \"omx_usb_cdc_channels.h\"" _srnos_composite "${_srnos_composite}")
+string(REPLACE "#include \"usbd_ctlreq.h\"" "#include \"usbd_ctlreq.h\"\n#include \"usb_cdc_channels.h\"" _srnos_composite "${_srnos_composite}")
 string(REPLACE "char str_buffer[16] = \"\";" "const char *str_buffer = NULL;" _srnos_composite "${_srnos_composite}")
-string(REPLACE "snprintf(str_buffer, sizeof(str_buffer), CDC_ACM_STR_DESC, i);" "str_buffer = omx_usb_cdc_interface_label(i);" _srnos_composite "${_srnos_composite}")
+string(REPLACE "snprintf(str_buffer, sizeof(str_buffer), CDC_ACM_STR_DESC, i);" "str_buffer = SRNOS_USBCdcInterfaceLabel(i);" _srnos_composite "${_srnos_composite}")
 file(WRITE "${_srnos_usb_build}/usbd_composite.c" "${_srnos_composite}")
 file(READ "${_srnos_usb}/Class/CDC_ACM/Src/usbd_cdc_acm.c" _srnos_cdc)
 foreach(_anchor IN ITEMS "desc[2] = cmd_itf;" "desc[45] = com_itf;")
@@ -26,34 +26,43 @@ string(REPLACE "desc[2] = cmd_itf;" "desc[2] = cmd_itf;\n    desc[7] = str_idx;"
 string(REPLACE "desc[45] = com_itf;" "desc[45] = com_itf;\n    desc[51] = str_idx;" _srnos_cdc "${_srnos_cdc}")
 file(WRITE "${_srnos_usb_build}/usbd_cdc_acm.c" "${_srnos_cdc}")
 set_source_files_properties("${_srnos_usb_build}/usbd_composite.c" PROPERTIES
-  COMPILE_OPTIONS "-include;${_srnos_usb_glue}/omx_usb_composite_memcpy.h")
+  COMPILE_OPTIONS "-include;${_srnos_usb_glue}/usb_composite_memcpy.h")
 set(SRNOS_SERVICES_SOURCES
+  "${CMAKE_CURRENT_LIST_DIR}/Storage/storage.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Telemetry/Telemetry.c"
+  "${CMAKE_CURRENT_LIST_DIR}/INS/imu_calibration.c"
+  "${CMAKE_CURRENT_LIST_DIR}/INS/imu_static_calibration.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/imu_calibration_protocol.c"
+  "${CMAKE_CURRENT_LIST_DIR}/SystemMonitor/monitor_core.c"
+  "${CMAKE_CURRENT_LIST_DIR}/SystemMonitor/monitor_service.c"
+  "${CMAKE_CURRENT_LIST_DIR}/SystemMonitor/monitor_snapshot.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/system_monitor_telemetry.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Indicators/indicators.c"
   "${CMAKE_CURRENT_LIST_DIR}/INS/ins_core.c"
   "${CMAKE_CURRENT_LIST_DIR}/INS/ins_service.c"
   "${CMAKE_CURRENT_LIST_DIR}/INS/ins_snapshot.c"
   "${CMAKE_CURRENT_LIST_DIR}/INS/ins_heater.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/ins_telemetry.c"
-  "${CMAKE_CURRENT_LIST_DIR}/Logging/bsp_srn_log.c"
-  "${CMAKE_CURRENT_LIST_DIR}/Logging/bsp_srn_debug_port.c"
-  "${CMAKE_CURRENT_LIST_DIR}/Logging/Worker/tskptt_log.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Logging/Log.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Logging/DebugPort.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Logging/Worker/LogWorker.c"
   "${CMAKE_CURRENT_LIST_DIR}/Logging/logging_service.c"
-  "${CMAKE_CURRENT_LIST_DIR}/HostLink/tskptt_host_comm.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/HostLink.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/host_link_service.c"
   "${CMAKE_CURRENT_LIST_DIR}/HostLink/imu_telemetry.c"
-  "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/lib_srn_cobs.c"
-  "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/lib_srn_cobs_prot.c"
-  "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/lib_srn_link.c"
-  "${CMAKE_CURRENT_LIST_DIR}/Parameters/lib_params.cpp"
-  "${CMAKE_CURRENT_LIST_DIR}/Parameters/lib_params_binary.cpp"
-  "${CMAKE_CURRENT_LIST_DIR}/Parameters/parameter_lock.cpp"
-  "${CMAKE_CURRENT_LIST_DIR}/Parameters/HostLink/tskptt_param_console.c"
-  "${_srnos_usb_glue}/omx_usb_cdc_channels.c"
-  "${_srnos_usb_glue}/omx_usb_cdc_log_transport.c"
-  "${_srnos_usb_glue}/omx_usbd_cdc_acm_if.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/COBS.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/Protocol.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HostLink/Codec/Link.c"
+  "${CMAKE_CURRENT_LIST_DIR}/Parameters/Parameters.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Parameters/ParameterBinary.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Parameters/ParameterLock.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Parameters/HostLink/ParameterProtocol.c"
+  "${_srnos_usb_glue}/usb_cdc_channels.c"
+  "${_srnos_usb_glue}/usb_cdc_log_transport.c"
+  "${_srnos_usb_glue}/usbd_cdc_acm_if.c"
   "${_srnos_usb_glue}/usb_boot_replay.c"
   "${_srnos_usb_glue}/usb_service.c"
   "${_srnos_usb_glue}/usbd_desc.c"
-  "${_srnos_services_root}/Board/Glue/usb_device_board.c"
   "${_srnos_usb}/Core/Src/usbd_core.c"
   "${_srnos_usb}/Core/Src/usbd_ctlreq.c"
   "${_srnos_usb}/Core/Src/usbd_ioreq.c"

@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdint.h>
-#include "../../Board/Glue/libc_arena.h"
+#include "../../Board/Support/System/libc_arena.h"
 
 int main(void)
 {

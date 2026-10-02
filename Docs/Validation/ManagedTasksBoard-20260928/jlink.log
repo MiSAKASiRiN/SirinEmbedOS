@@ -1,0 +1,2244 @@
+SEGGER J-Link GDB Server V8.96 Command Line Version
+
+JLinkARM.dll V8.96 (DLL compiled Dec 18 2025 16:43:50)
+
+Command line: -select USB=10114514 -device STM32H723VG -if SWD -speed 4000 -port 2331 -localhostonly 1 -noir -nohalt
+-----GDB Server start settings-----
+GDBInit file:                  none
+GDB Server Listening port:     2331
+SWO raw output listening port: 2332
+Terminal I/O port:             2333
+Accept remote connection:      localhost only
+Generate logfile:              off
+Verify download:               off
+Init regs on start:            off
+Silent mode:                   off
+Single run mode:               off
+Target connection timeout:     0 ms
+------J-Link related settings------
+J-Link Host interface:         USB
+J-Link script:                 none
+J-Link settings file:          none
+------Target related settings------
+Target device:                 STM32H723VG
+Target device parameters:      none
+Target interface:              SWD
+Target interface speed:        4000kHz
+Target endian:                 little
+
+Connecting to J-Link...
+J-Link is connected.
+Firmware: J-Link OB-STM32F072-CortexM compiled May  6 2021 15:30:00
+Hardware: V1.00
+S/N: 10114514
+Feature(s): JFlash, JFlashBP, JFlashDL, GDB
+Checking target voltage...
+Target voltage: 3.30 V
+Listening on TCP/IP port 2331
+Connecting to target...
+Connected to target
+Waiting for GDB connection...Connected to 0000:0000:0000:0000:0000:0000:0000:0001
+GDB client (conn. 11) requested target.xml from GDB Server
+Reading common registers: 
+...Target halted (PC = 0x08038550)
+Read register 'r0' (4 bytes) from hardware: 0x24016800
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x00000AD5
+Read register 'r4' (4 bytes) from hardware: 0x00000000
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x240165BA
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x24016810
+Read register 'r9' (4 bytes) from hardware: 0xFFFFFFFB
+Read register 'r10' (4 bytes) from hardware: 0x2401680B
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0x0091E9E9
+Read register 'sp' (4 bytes) from hardware: 0x2000EBA0
+Read register 'lr' (4 bytes) from hardware: 0x08020051
+Read register 'pc' (4 bytes) from hardware: 0x08038550
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Read 4 bytes @ 0x08038550
+Read 2 bytes @ 0x08038550
+Read 32768 bytes @ 0x08000000
+Read 32768 bytes @ 0x08008000
+Read 32768 bytes @ 0x08010000
+Read 32768 bytes @ 0x08018000
+Read 32768 bytes @ 0x08020000
+Read 32768 bytes @ 0x08028000
+Read 32768 bytes @ 0x08030000
+Read 32768 bytes @ 0x08038000
+Read 32768 bytes @ 0x08040000
+Read 32768 bytes @ 0x08048000
+Read 32768 bytes @ 0x08050000
+Read 32768 bytes @ 0x08058000
+Read 32768 bytes @ 0x08060000
+Read 32768 bytes @ 0x08068000
+Read 32768 bytes @ 0x08070000
+Read 32768 bytes @ 0x08078000
+Read 32768 bytes @ 0x08080000
+Read 32768 bytes @ 0x08088000
+Read 32768 bytes @ 0x08090000
+Read 32768 bytes @ 0x08098000
+Read 32768 bytes @ 0x080A0000
+Read 32768 bytes @ 0x080A8000
+Read 32768 bytes @ 0x080B0000
+Read 32768 bytes @ 0x080B8000
+Read 32768 bytes @ 0x080C0000
+Read 32768 bytes @ 0x080C8000
+Read 32768 bytes @ 0x080D0000
+Read 32768 bytes @ 0x080D8000
+Read 32768 bytes @ 0x080E0000
+Read 32768 bytes @ 0x080E8000
+Read 32768 bytes @ 0x080F0000
+Read 32768 bytes @ 0x080F8000
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x24016800
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x00000AD5
+Read register 'r4' (4 bytes) from hardware: 0x00000000
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x240165BA
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x24016810
+Read register 'r9' (4 bytes) from hardware: 0xFFFFFFFB
+Read register 'r10' (4 bytes) from hardware: 0x2401680B
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0x0091E9E9
+Read register 'sp' (4 bytes) from hardware: 0x2000EBA0
+Read register 'lr' (4 bytes) from hardware: 0x08020051
+Read register 'pc' (4 bytes) from hardware: 0x08038550
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Received monitor command: reset
+Resetting target
+Downloading 716 bytes @ address 0x08000000
+Downloading 64560 bytes @ address 0x080002D0
+Downloading 64240 bytes @ address 0x0800FF00
+Downloading 42964 bytes @ address 0x0801F9F0
+Downloading 13080 bytes @ address 0x0802A1C8
+Downloading 16 bytes @ address 0x0802D4E0
+Downloading 4 bytes @ address 0x0802D4F0
+Downloading 1036 bytes @ address 0x0802D4F4
+Downloading 192 bytes @ address 0x0802D900
+Writing register 'pc' = 0x08001EE0
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 756 bytes @ 0x08029ED0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800E3F0)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x240029DC
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x240397F0
+Read register 'r4' (4 bytes) from hardware: 0x00000000
+Read register 'r5' (4 bytes) from hardware: 0x24002958
+Read register 'r6' (4 bytes) from hardware: 0x240024F8
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x000115FE
+Read register 'r9' (4 bytes) from hardware: 0x240024F8
+Read register 'r10' (4 bytes) from hardware: 0x240024F4
+Read register 'r11' (4 bytes) from hardware: 0x24002958
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x2001FFB0
+Read register 'lr' (4 bytes) from hardware: 0x0801052B
+Read register 'pc' (4 bytes) from hardware: 0x0800E3F0
+Read register 'xpsr' (4 bytes) from hardware: 0x2100000F
+Read 4 bytes @ 0x0800E3F0
+Read 2 bytes @ 0x0800E3F0
+Reading register 'msp' = 0x2001FFB0
+Reading register 'psp' = 0x24001EE8
+Read 64 bytes @ 0x0800E340
+Read 4 bytes @ 0x0800E4B4
+Read 64 bytes @ 0x0800E380
+Read 64 bytes @ 0x2001FFC0
+Read 4 bytes @ 0x0801052A
+Read 64 bytes @ 0x08010500
+Read 4 bytes @ 0x24001F04
+Read 64 bytes @ 0x24001F00
+Read 4 bytes @ 0x0800E330
+Read 64 bytes @ 0x0800E300
+Read 64 bytes @ 0x24001EC0
+Read 4 bytes @ 0x0800DF0C
+Read 64 bytes @ 0x0800DEC0
+Read 4 bytes @ 0x0800DFDC
+Read 4 bytes @ 0x240029C8
+Read 64 bytes @ 0x24002980
+Read 4 bytes @ 0x240029C8
+Read 4 bytes @ 0x24000428
+Read 4 bytes @ 0x24017AE8
+Read 4 bytes @ 0x24017AEC
+Read 4 bytes @ 0x24017AF0
+Read 4 bytes @ 0x24017AF4
+Read 4 bytes @ 0x24017AF8
+Read 4 bytes @ 0x24017AFC
+Read 4 bytes @ 0x24017B00
+Read 4 bytes @ 0x24017B04
+Read 4 bytes @ 0x24017B08
+Read 4 bytes @ 0x24017B0C
+Read 4 bytes @ 0x24017B10
+Read 4 bytes @ 0x24017B14
+Read 4 bytes @ 0x24017B18
+Read 4 bytes @ 0x24017B1C
+Read 4 bytes @ 0x24017B20
+Read 4 bytes @ 0x24017B24
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x08012202)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x20C85580
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24036394
+Read register 'r5' (4 bytes) from hardware: 0x24036350
+Read register 'r6' (4 bytes) from hardware: 0x00041D7C
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0x24036350
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x240362B0
+Read register 'sp' (4 bytes) from hardware: 0x24036308
+Read register 'lr' (4 bytes) from hardware: 0x0801221B
+Read register 'pc' (4 bytes) from hardware: 0x08012202
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Read 4 bytes @ 0x08012202
+Read 2 bytes @ 0x08012202
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x20C85580
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24036394
+Read register 'r5' (4 bytes) from hardware: 0x24036350
+Read register 'r6' (4 bytes) from hardware: 0x00041D7C
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0x24036350
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x240362B0
+Read register 'sp' (4 bytes) from hardware: 0x24036308
+Read register 'lr' (4 bytes) from hardware: 0x0801221B
+Read register 'pc' (4 bytes) from hardware: 0x08012202
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Received monitor command: reset
+Resetting target
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64304 bytes @ address 0x0800FF20
+Downloading 47672 bytes @ address 0x0801FA50
+Downloading 13064 bytes @ address 0x0802B488
+Downloading 16 bytes @ address 0x0802E790
+Downloading 4 bytes @ address 0x0802E7A0
+Downloading 1036 bytes @ address 0x0802E7A4
+Downloading 192 bytes @ address 0x0802EBB0
+Writing register 'pc' = 0x080028E8
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F5D2)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x240035F8
+Read register 'r6' (4 bytes) from hardware: 0x24003194
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002808
+Read register 'lr' (4 bytes) from hardware: 0x0800F185
+Read register 'pc' (4 bytes) from hardware: 0x0800F5D2
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F5D2
+Read 4 bytes @ 0x24000420
+Read 4 bytes @ 0x24000424
+Read 4 bytes @ 0x24000428
+Read 4 bytes @ 0x2400042C
+Read 20 bytes @ 0x24000438
+Read 4 bytes @ 0x240005FC
+Read 128 bytes @ 0x240180F8
+Read 112 bytes @ 0x24000D44
+Read 4 bytes @ 0x24000D9C
+Read 120 bytes @ 0x24000DB4
+Read 10 bytes @ 0x38000200
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x08028CB8)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x40000000
+Read register 'r1' (4 bytes) from hardware: 0xFFFFFFFF
+Read register 'r2' (4 bytes) from hardware: 0x20C85580
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x00B20292
+Read register 'r5' (4 bytes) from hardware: 0x201652ED
+Read register 'r6' (4 bytes) from hardware: 0x00000001
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x00000002
+Read register 'r9' (4 bytes) from hardware: 0x24004DB8
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x2000C220
+Read register 'sp' (4 bytes) from hardware: 0x2000C200
+Read register 'lr' (4 bytes) from hardware: 0x00000004
+Read register 'pc' (4 bytes) from hardware: 0x08028CB8
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Read 4 bytes @ 0x08028CB8
+Read 2 bytes @ 0x08028CB8
+Read 2 bytes @ 0x08028CBA
+Read 4 bytes @ 0x58026008
+Read 4 bytes @ 0x58025430
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F5A6)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x240035F8
+Read register 'r6' (4 bytes) from hardware: 0x24003194
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002808
+Read register 'lr' (4 bytes) from hardware: 0x0800F185
+Read register 'pc' (4 bytes) from hardware: 0x0800F5A6
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F5A6
+Read 2336 bytes @ 0x24000420
+Read 2336 bytes @ 0x24000420
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F5A8)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x240035F8
+Read register 'r6' (4 bytes) from hardware: 0x24003194
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002808
+Read register 'lr' (4 bytes) from hardware: 0x0800F185
+Read register 'pc' (4 bytes) from hardware: 0x0800F5A8
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x240035F8
+Read register 'r6' (4 bytes) from hardware: 0x24003194
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002808
+Read register 'lr' (4 bytes) from hardware: 0x0800F185
+Read register 'pc' (4 bytes) from hardware: 0x0800F5A8
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64304 bytes @ address 0x0800FF20
+Downloading 48632 bytes @ address 0x0801FA50
+Downloading 13064 bytes @ address 0x0802B848
+Downloading 16 bytes @ address 0x0802EB50
+Downloading 4 bytes @ address 0x0802EB60
+Downloading 1036 bytes @ address 0x0802EB64
+Downloading 192 bytes @ address 0x0802EF70
+Writing register 'pc' = 0x080028E8
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 376 bytes @ 0x0802B6D0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x08029170)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x2400ADB0
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x000013DC
+Read register 'r4' (4 bytes) from hardware: 0x2400ADB0
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x240095A0
+Read register 'r7' (4 bytes) from hardware: 0x240306D8
+Read register 'r8' (4 bytes) from hardware: 0x240095A0
+Read register 'r9' (4 bytes) from hardware: 0x2400C370
+Read register 'r10' (4 bytes) from hardware: 0x0000EE07
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0xCDA71128
+Read register 'sp' (4 bytes) from hardware: 0x240306A8
+Read register 'lr' (4 bytes) from hardware: 0x08017BCB
+Read register 'pc' (4 bytes) from hardware: 0x08029170
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Read 4 bytes @ 0x08029170
+Read 2 bytes @ 0x08029170
+Read 4 bytes @ 0x24000420
+Read 20 bytes @ 0x24000438
+Read 4 bytes @ 0x24000428
+Read 128 bytes @ 0x240009E0
+Read 2336 bytes @ 0x24000420
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F5A6)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x240035F8
+Read register 'r6' (4 bytes) from hardware: 0x24003194
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002808
+Read register 'lr' (4 bytes) from hardware: 0x0800F185
+Read register 'pc' (4 bytes) from hardware: 0x0800F5A6
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F5A6
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x240035F8
+Read register 'r6' (4 bytes) from hardware: 0x24003194
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002808
+Read register 'lr' (4 bytes) from hardware: 0x0800F185
+Read register 'pc' (4 bytes) from hardware: 0x0800F5A6
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64256 bytes @ address 0x0800FF20
+Downloading 48776 bytes @ address 0x0801FA20
+Downloading 13064 bytes @ address 0x0802B8A8
+Downloading 16 bytes @ address 0x0802EBB0
+Downloading 4 bytes @ address 0x0802EBC0
+Downloading 1036 bytes @ address 0x0802EBC4
+Downloading 192 bytes @ address 0x0802EFD0
+Writing register 'pc' = 0x08002948
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 472 bytes @ 0x0802B6D0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F632)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r2' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r3' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r4' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x08011531
+Read register 'pc' (4 bytes) from hardware: 0x0800F632
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F632
+Read 4 bytes @ 0x24000420
+Read 4 bytes @ 0x24000428
+Read 2336 bytes @ 0x24000420
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r2' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r3' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r4' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x08011531
+Read register 'pc' (4 bytes) from hardware: 0x0800F632
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64256 bytes @ address 0x0800FF20
+Downloading 48776 bytes @ address 0x0801FA20
+Downloading 13064 bytes @ address 0x0802B8A8
+Downloading 16 bytes @ address 0x0802EBB0
+Downloading 4 bytes @ address 0x0802EBC0
+Downloading 1036 bytes @ address 0x0802EBC4
+Downloading 192 bytes @ address 0x0802EFD0
+Writing register 'pc' = 0x0800294C
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 472 bytes @ 0x0802B6D0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F608)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F608
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x24000420
+Read 20 bytes @ 0x24000438
+Read 2336 bytes @ 0x24000420
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F608
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64288 bytes @ address 0x0800FF20
+Downloading 48776 bytes @ address 0x0801FA40
+Downloading 13064 bytes @ address 0x0802B8C8
+Downloading 16 bytes @ address 0x0802EBD0
+Downloading 4 bytes @ address 0x0802EBE0
+Downloading 1036 bytes @ address 0x0802EBE4
+Downloading 192 bytes @ address 0x0802EFF0
+Writing register 'pc' = 0x0800294C
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 504 bytes @ 0x0802B6D0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x080291F0)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x2400ADC0
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x00000973
+Read register 'r4' (4 bytes) from hardware: 0x2400ADC0
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x240095B0
+Read register 'r7' (4 bytes) from hardware: 0x240306D8
+Read register 'r8' (4 bytes) from hardware: 0x240095B0
+Read register 'r9' (4 bytes) from hardware: 0x2400C380
+Read register 'r10' (4 bytes) from hardware: 0x00018136
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0xA0DD9BAC
+Read register 'sp' (4 bytes) from hardware: 0x240306A8
+Read register 'lr' (4 bytes) from hardware: 0x08017C43
+Read register 'pc' (4 bytes) from hardware: 0x080291F0
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Read 4 bytes @ 0x080291F0
+Read 2 bytes @ 0x080291F0
+Read 4 bytes @ 0x24000420
+Read 4 bytes @ 0x240005FC
+Read 20 bytes @ 0x24000438
+Read 4 bytes @ 0x24000428
+Read 2336 bytes @ 0x24000420
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F632)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F632
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F632
+Read 224 bytes @ 0x3000223C
+Read 128 bytes @ 0x24018108
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x24002810
+Downloading 4 bytes @ address 0x24000D44
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F632
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F632
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x24002810
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F7A2)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x24003600
+Read register 'r1' (4 bytes) from hardware: 0x0801F8A9
+Read register 'r2' (4 bytes) from hardware: 0x00000222
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24037CD4
+Read register 'r5' (4 bytes) from hardware: 0x24037C80
+Read register 'r6' (4 bytes) from hardware: 0x0002E2C0
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x384E58D9
+Read register 'sp' (4 bytes) from hardware: 0x24037C78
+Read register 'lr' (4 bytes) from hardware: 0x0801F8B1
+Read register 'pc' (4 bytes) from hardware: 0x0800F7A2
+Read register 'xpsr' (4 bytes) from hardware: 0x41000000
+Read 4 bytes @ 0x0800F7A2
+Read 4 bytes @ 0x24000D48
+Read 80 bytes @ 0x24018118
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x24037C78
+Downloading 4 bytes @ address 0x24000D44
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x24003600
+Read register 'r1' (4 bytes) from hardware: 0x0801F8A9
+Read register 'r2' (4 bytes) from hardware: 0x00000222
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24037CD4
+Read register 'r5' (4 bytes) from hardware: 0x24037C80
+Read register 'r6' (4 bytes) from hardware: 0x0002E2C0
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x384E58D9
+Read register 'sp' (4 bytes) from hardware: 0x24037C78
+Read register 'lr' (4 bytes) from hardware: 0x0801F8B1
+Read register 'pc' (4 bytes) from hardware: 0x0800F7A2
+Read register 'xpsr' (4 bytes) from hardware: 0x41000000
+Read 4 bytes @ 0x0800F7A2
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x24037C78
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x080290EC)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x1459EC3C
+Read register 'r2' (4 bytes) from hardware: 0x20C85580
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0xEBA613C3
+Read register 'r5' (4 bytes) from hardware: 0x1459EC3C
+Read register 'r6' (4 bytes) from hardware: 0x00000001
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x00001E6E
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x24036FA0
+Read register 'sp' (4 bytes) from hardware: 0x24036F80
+Read register 'lr' (4 bytes) from hardware: 0x00000006
+Read register 'pc' (4 bytes) from hardware: 0x080290EC
+Read register 'xpsr' (4 bytes) from hardware: 0x41000000
+Read 4 bytes @ 0x080290EC
+Read 2 bytes @ 0x080290EC
+Read 4 bytes @ 0x24000D48
+Read 80 bytes @ 0x24018118
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x24036F80
+Read 64 bytes @ 0x08029000
+Downloading 4 bytes @ address 0x24000D44
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x1459EC3C
+Read register 'r2' (4 bytes) from hardware: 0x20C85580
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0xEBA613C3
+Read register 'r5' (4 bytes) from hardware: 0x1459EC3C
+Read register 'r6' (4 bytes) from hardware: 0x00000001
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x00001E6E
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0x24036FA0
+Read register 'sp' (4 bytes) from hardware: 0x24036F80
+Read register 'lr' (4 bytes) from hardware: 0x00000006
+Read register 'pc' (4 bytes) from hardware: 0x080290EC
+Read register 'xpsr' (4 bytes) from hardware: 0x41000000
+Read 4 bytes @ 0x080290EC
+Read 2 bytes @ 0x080290EC
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x24036F80
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F632)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F632
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F632
+Read 4 bytes @ 0x24000D48
+Read 4 bytes @ 0x2401815C
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x08011B1C)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x00000000
+Read register 'r5' (4 bytes) from hardware: 0x00000001
+Read register 'r6' (4 bytes) from hardware: 0x00000000
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r9' (4 bytes) from hardware: 0x00000001
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xBD5CCE67
+Read register 'sp' (4 bytes) from hardware: 0x2000C228
+Read register 'lr' (4 bytes) from hardware: 0x08011D33
+Read register 'pc' (4 bytes) from hardware: 0x08011B1C
+Read register 'xpsr' (4 bytes) from hardware: 0x61000000
+Read 4 bytes @ 0x08011B1C
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x2000C228
+Read 64 bytes @ 0x2000C200
+Downloading 4 bytes @ address 0x24000D44
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x00000000
+Read register 'r5' (4 bytes) from hardware: 0x00000001
+Read register 'r6' (4 bytes) from hardware: 0x00000000
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r9' (4 bytes) from hardware: 0x00000001
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xBD5CCE67
+Read register 'sp' (4 bytes) from hardware: 0x2000C228
+Read register 'lr' (4 bytes) from hardware: 0x08011D33
+Read register 'pc' (4 bytes) from hardware: 0x08011B1C
+Read register 'xpsr' (4 bytes) from hardware: 0x61000000
+Read 4 bytes @ 0x08011B1C
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x2000C228
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x080291EC)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x24010B60
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x000001B9
+Read register 'r4' (4 bytes) from hardware: 0x24010B60
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x2400F350
+Read register 'r7' (4 bytes) from hardware: 0x240346F8
+Read register 'r8' (4 bytes) from hardware: 0x2400F350
+Read register 'r9' (4 bytes) from hardware: 0x24012120
+Read register 'r10' (4 bytes) from hardware: 0x0003D72C
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0x3AEC61F5
+Read register 'sp' (4 bytes) from hardware: 0x240346C8
+Read register 'lr' (4 bytes) from hardware: 0x08017C43
+Read register 'pc' (4 bytes) from hardware: 0x080291EC
+Read register 'xpsr' (4 bytes) from hardware: 0x21000800
+Read 4 bytes @ 0x080291EC
+Read 2 bytes @ 0x080291EC
+Read 4 bytes @ 0x080291E8
+Read 4 bytes @ 0x24000D48
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x240346C8
+Read 64 bytes @ 0x080291C0
+Downloading 4 bytes @ address 0x24000D44
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x24010B60
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x000001B9
+Read register 'r4' (4 bytes) from hardware: 0x24010B60
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x2400F350
+Read register 'r7' (4 bytes) from hardware: 0x240346F8
+Read register 'r8' (4 bytes) from hardware: 0x2400F350
+Read register 'r9' (4 bytes) from hardware: 0x24012120
+Read register 'r10' (4 bytes) from hardware: 0x0003D72C
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0x3AEC61F5
+Read register 'sp' (4 bytes) from hardware: 0x240346C8
+Read register 'lr' (4 bytes) from hardware: 0x08017C43
+Read register 'pc' (4 bytes) from hardware: 0x080291EC
+Read register 'xpsr' (4 bytes) from hardware: 0x21000800
+Read 4 bytes @ 0x080291EC
+Read 2 bytes @ 0x080291EC
+Read 4 bytes @ 0x080291E8
+Reading register 'msp' = 0x2001FFE0
+Reading register 'psp' = 0x240346C8
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F606)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F606
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F606
+Read 4 bytes @ 0x24000D48
+Read 128 bytes @ 0x24018108
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F606)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F606
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800F606
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2403A490
+Read register 'r4' (4 bytes) from hardware: 0x2403A358
+Read register 'r5' (4 bytes) from hardware: 0x24003600
+Read register 'r6' (4 bytes) from hardware: 0x2400319C
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24002810
+Read register 'lr' (4 bytes) from hardware: 0x0800F1E5
+Read register 'pc' (4 bytes) from hardware: 0x0800F606
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64288 bytes @ address 0x0800FF20
+Downloading 48776 bytes @ address 0x0801FA40
+Downloading 13064 bytes @ address 0x0802B8C8
+Downloading 16 bytes @ address 0x0802EBD0
+Downloading 4 bytes @ address 0x0802EBE0
+Downloading 1036 bytes @ address 0x0802EBE4
+Downloading 192 bytes @ address 0x0802EFF0
+Writing register 'pc' = 0x08002948
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 504 bytes @ 0x0802B6D0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x080291E8)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x2400ADC0
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x00000459
+Read register 'r4' (4 bytes) from hardware: 0x2400ADC0
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x240095B0
+Read register 'r7' (4 bytes) from hardware: 0x2402EEC8
+Read register 'r8' (4 bytes) from hardware: 0x240095B0
+Read register 'r9' (4 bytes) from hardware: 0x2400C380
+Read register 'r10' (4 bytes) from hardware: 0x0001A1E7
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x2402EE98
+Read register 'lr' (4 bytes) from hardware: 0x08017C43
+Read register 'pc' (4 bytes) from hardware: 0x080291E8
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Read 4 bytes @ 0x080291E8
+Read 2 bytes @ 0x080291E8
+Read 4 bytes @ 0x24000420
+Read 4 bytes @ 0x240005FC
+Read 4 bytes @ 0x24000428
+Read 6 bytes @ 0x2401878E
+Read 2336 bytes @ 0x24000420
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x2400ADC0
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x000015C0
+Read register 'r3' (4 bytes) from hardware: 0x00000459
+Read register 'r4' (4 bytes) from hardware: 0x2400ADC0
+Read register 'r5' (4 bytes) from hardware: 0x00000000
+Read register 'r6' (4 bytes) from hardware: 0x240095B0
+Read register 'r7' (4 bytes) from hardware: 0x2402EEC8
+Read register 'r8' (4 bytes) from hardware: 0x240095B0
+Read register 'r9' (4 bytes) from hardware: 0x2400C380
+Read register 'r10' (4 bytes) from hardware: 0x0001A1E7
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x2402EE98
+Read register 'lr' (4 bytes) from hardware: 0x08017C43
+Read register 'pc' (4 bytes) from hardware: 0x080291E8
+Read register 'xpsr' (4 bytes) from hardware: 0x01000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64560 bytes @ address 0x080002D0
+Downloading 64240 bytes @ address 0x0800FF00
+Downloading 43948 bytes @ address 0x0801F9F0
+Downloading 13080 bytes @ address 0x0802A5A0
+Downloading 16 bytes @ address 0x0802D8B8
+Downloading 4 bytes @ address 0x0802D8C8
+Downloading 1036 bytes @ address 0x0802D8CC
+Downloading 192 bytes @ address 0x0802DCD8
+Writing register 'pc' = 0x08001EE0
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 716 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A5A0
+Read 1024 bytes @ 0x0802A9A0
+Read 1024 bytes @ 0x0802ADA0
+Read 1024 bytes @ 0x0802B1A0
+Read 1024 bytes @ 0x0802B5A0
+Read 1024 bytes @ 0x0802B9A0
+Read 1024 bytes @ 0x0802BDA0
+Read 1024 bytes @ 0x0802C1A0
+Read 1024 bytes @ 0x0802C5A0
+Read 1024 bytes @ 0x0802C9A0
+Read 1024 bytes @ 0x0802CDA0
+Read 1024 bytes @ 0x0802D1A0
+Read 792 bytes @ 0x0802D5A0
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800F8C6)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x2000F100
+Read register 'r5' (4 bytes) from hardware: 0x2402D888
+Read register 'r6' (4 bytes) from hardware: 0x00000001
+Read register 'r7' (4 bytes) from hardware: 0x2402D880
+Read register 'r8' (4 bytes) from hardware: 0x2402D8F8
+Read register 'r9' (4 bytes) from hardware: 0x2000F124
+Read register 'r10' (4 bytes) from hardware: 0x00000000
+Read register 'r11' (4 bytes) from hardware: 0x00000000
+Read register 'r12' (4 bytes) from hardware: 0x2401DBA8
+Read register 'sp' (4 bytes) from hardware: 0x2402D880
+Read register 'lr' (4 bytes) from hardware: 0x0800F801
+Read register 'pc' (4 bytes) from hardware: 0x0800F8C6
+Read register 'xpsr' (4 bytes) from hardware: 0x61000000
+Read 4 bytes @ 0x0800F8C6
+Read 2 bytes @ 0x0800F8C6
+GDB closed TCP/IP connection (Socket 11)
+Starting target CPU...
+Restoring target state and closing J-Link connection...
+Shutting down...

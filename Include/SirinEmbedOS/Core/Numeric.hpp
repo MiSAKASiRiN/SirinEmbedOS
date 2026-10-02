@@ -1,5 +1,5 @@
-#ifndef SIRINOS_NUMERIC_HPP
-#define SIRINOS_NUMERIC_HPP
+#ifndef SRNOS_NUMERIC_HPP
+#define SRNOS_NUMERIC_HPP
 
 #include <cstddef>
 #include <limits>

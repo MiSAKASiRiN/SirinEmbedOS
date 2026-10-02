@@ -1,0 +1,43 @@
+{
+  "busy_ppm": {
+    "min": 193955,
+    "mean": 194871.90476190476,
+    "max": 195958
+  },
+  "monitor_cpu_ppm": {
+    "min": 485,
+    "mean": 487.76190476190476,
+    "max": 490
+  },
+  "max_critical_us": {
+    "min": 2,
+    "mean": 2.0,
+    "max": 2
+  },
+  "errors": {
+    "min": 0,
+    "mean": 0.0,
+    "max": 0
+  },
+  "timeouts": {
+    "min": 0,
+    "mean": 0.0,
+    "max": 0
+  },
+  "recoveries": {
+    "min": 0,
+    "mean": 0.0,
+    "max": 0
+  },
+  "task_count": {
+    "min": 22,
+    "mean": 22.0,
+    "max": 22
+  },
+  "skipped_cycles": {
+    "min": 0,
+    "mean": 0.0,
+    "max": 0
+  },
+  "records": 21
+}

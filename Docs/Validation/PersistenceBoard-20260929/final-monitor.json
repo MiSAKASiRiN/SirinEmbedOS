@@ -1,0 +1,42 @@
+{
+  "busy_ppm": {
+    "min": 195551,
+    "mean": 197693.69565217392,
+    "max": 204673
+  },
+  "monitor_cpu_ppm": {
+    "min": 480,
+    "mean": 488.9130434782609,
+    "max": 502
+  },
+  "max_critical_us": {
+    "min": 2,
+    "mean": 2,
+    "max": 2
+  },
+  "voltage_v": {
+    "min": 0.0,
+    "mean": 0.011030661954503992,
+    "max": 0.04452552646398544
+  },
+  "current_a": {
+    "min": 0.0,
+    "mean": 0.0031385551302936738,
+    "max": 0.006129581481218338
+  },
+  "errors": {
+    "min": 0,
+    "mean": 0,
+    "max": 0
+  },
+  "timeouts": {
+    "min": 0,
+    "mean": 0,
+    "max": 0
+  },
+  "recoveries": {
+    "min": 0,
+    "mean": 0,
+    "max": 0
+  }
+}

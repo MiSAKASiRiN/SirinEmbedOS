@@ -10,32 +10,36 @@
 
 ```c
 #include "SirinEmbedOS/Devices/EEPROM.h"
+#include "SirinEmbedOS/Kernel/Thread.h"
 
 uint8_t data[300] = {0};
 SRNOS_EEPROMStatus status = SRNOS_EEPROMRead(0x0123, data, sizeof(data), 100);
 
 /* 非阻塞：由接受操作的同一任务定期推进；Start 本身不访问总线。 */
-status = SRNOS_EEPROMWriteAsync(0x0123, data, sizeof(data), 100);
+status = SRNOS_EEPROMWriteAsync(0x3000, data, sizeof(data), 100);
 if (status == SRNOS_EEPROM_OK) {
     do {
         status = SRNOS_EEPROMPoll();
-        /* IN_PROGRESS 时可继续其他任务工作，下个周期再 Poll。 */
+        /* 此示例协作等待；事件/周期任务也可每轮只调用一次 Poll。 */
+        if (status == SRNOS_EEPROM_IN_PROGRESS) (void)SRNOS_Delay(1);
     } while (status == SRNOS_EEPROM_IN_PROGRESS);
 }
 ```
 
-生产任务应在自己的循环中每次调用一次 Poll，避免用上面的示意循环忙等。阻塞 Read/Write 复用相同状态机，每次等待让出一个 RTOS tick；非阻塞接口无常驻线程、队列、回调或动态分配。调用方负责持续 Poll 或显式 Cancel。
+生产事件/周期任务可在自己的 step 中每次调用一次 Poll；示例循环每次等待均让出 CPU，不应去掉 Delay 后忙等。阻塞 Read/Write 复用相同状态机，每次等待让出一个 RTOS tick；非阻塞接口无常驻线程、队列、回调或动态分配。调用方负责持续 Poll 或显式 Cancel。
 
 - 地址与长度单位都是字节。拒绝零长度、空缓冲、超出末地址和长度溢出；读取自动分成最多 32 B，写入每段最多 32 B 且不跨 64 B 页边界，支持整片操作。
 - `timeout_ms` 范围 `1..INT32_MAX`，分别用于每次提交重试及接受后排队/传输；I2C 分发者自身另有后台 100 ms 排队和 10 ms 活动期限，不是整个跨页操作的总期限。推进频率会影响总耗时。
 - 调用者保持 RX/TX 缓冲有效至终态 Poll 或 Cancel；TX 期间不能修改。RX 出错可能包含已完成的前缀。驱动只将静态 staging 暴露给底层 RX，取消后不会再触碰用户缓冲。
 - Poll 返回 `IN_PROGRESS` 或最终结果；新请求在已有操作时返回 `BUSY`。其他任务不能 Poll/Cancel 当前操作。取消和错误不回滚已经写入的页面。
-- 正常 Poll 不等待写周期、不执行阻塞 ACK probe；DMA 地址和数据由中断推进。超时/取消经 BSP 按设备确认归属后恢复，abort 最多等待 5 ms 加上调度开销；失败隔离总线，不伪报成功。因此不是硬实时 API。
+- 正常 Poll 不等待写周期、不执行阻塞 ACK probe；DMA 地址和数据由中断推进。超时/取消经 I2C 与 Board Support 按设备确认归属后恢复，abort 最多等待 5 ms 加上调度开销；失败隔离总线，不伪报成功。因此不是硬实时 API。
 - 使用已有 I2C4 BDMA staging，未增加 DMA 段、修改 MPU/链接脚本或 SDK 线程预算。驱动自身只占一个静态状态及 32 B 中转缓冲。
 
-## 与旧上层的边界
+## 存储管理与维护
 
-`lib_24c02.*` / `lib_24c02_bl.*` 暂保留给尚未迁移的参数模块编译依赖；它们仍是旧器件协议，禁止用于 FT24C128A。新 API 不是旧名字的别名。参数区域、格式、自动加载、HostLink LOAD/SAVE 和 INS 标定持久化本轮均未迁移，默认存储开关继续关闭。
+身份、IMU 校准和业务参数由 [Storage](../../Services/Storage/README.md) 统一管理。启用管理时原始写入覆盖 `0x0000..0x2FFF` 返回 `SRNOS_EEPROM_READ_ONLY`；未管理的扩展区从 `0x3000` 开始。Storage 的整个记录操作持有私有租约，在分段/等待期间所有原始读写仍返回 BUSY，同一任务也不能绕过。Poll/Cancel 仍只允许操作的发起任务。
+
+全片测试在启动时显式将 Storage 配置为 `enabled=false`，不支持运行时解锁。旧 24C02 驱动与公共头随 Parameters 迁移删除，不提供旧格式自动迁移或兼容别名。
 
 ## 验证
 
@@ -43,4 +47,12 @@ if (status == SRNOS_EEPROM_OK) {
 
 板端入口为 [EEPROMBringUp](../../../Examples/EEPROMBringUp/README.md)，先备份并由主机保存后才能显式触发写入；实测范围见 [验证记录](../../../Docs/Validation/EEPROM-20260928/README.md)。不将主机模型等同于板端电气或掉电验证。
 
-此前器件板测发现密集读写触发环境传感器 BUSY 即离线；当前 I2C4 已增加有界分发队列及 LIS/SPA 保留槽，新的并发测试见 [I2C 验证记录](../../../Docs/Validation/I2C-20260928/README.md)。参数/INS 上层存储继续默认关闭。
+此前器件板测发现密集读写触发环境传感器 BUSY 即离线；当前 I2C4 已增加有界分发队列及 LIS/SPA 保留槽，新的并发测试见 [I2C 验证记录](../../../Docs/Validation/I2C-20260928/README.md)。该历史记录只覆盖器件和共享总线；新 Storage 格式另有主机验证，未执行新的板端掉电测试。
+
+I2C4 当前为 400 kHz Fast mode（数字采样约 370 kHz），驱动仍以 32 B 分段、6 ms 写周期等待和读回校验工作。16 KiB 阻塞/非阻塞整片写含校验约 5.12 秒、整片读约 1.03 秒；同总线 LIS/SPA 持续 READY。21 项板测及主机独立全片内容校验通过，见 [提速记录](../../../Docs/Validation/I2C400-20260928/README.md)。写入耗时仍含器件内部编程等待和任务推进间隔，不能按总线时钟倍数估算。
+
+## 命名与父项目依赖
+
+父项目只包含 `SirinEmbedOS/Devices/EEPROM.h` 使用原始能力，常规业务通过 Parameters、INS 校准及 Storage 身份接口访问管理记录，不包含私有 EEPROM/RTOS/HAL 头。
+
+业务分区与存储超时对照统一见 [持久化总览](../../../Docs/Storage.md)；原始驱动每段 timeout 与 Storage 整体 deadline 不同。

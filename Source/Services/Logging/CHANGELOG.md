@@ -1,0 +1,9 @@
+# Changelog
+
+## Unreleased
+
+- 2026-09-28：公开日志接口只导出 SRNOS 自有类型，移除 timeout 参数与 FreeRTOS/CMSIS/HAL 依赖；资源、worker 和后端接口转为私有。日志宏支持严格 C11 的单格式串调用。
+- 2026-09-28：运行期未装配、消息池耗尽和队列拥塞仅做有界丢旧/重试并返回 SRNOS 结果，不再直接输出；调度前只保留既有启动 RAM 捕获，Fault 与 libc 输出合同不变。
+- 2026-09-28：删除未使用的旧 fallback 包装和旧任务名称过滤，UART 配置/统计名收敛；日志及 HostLink 调试对象使用 SRNOS_DebugLog/SRNOS_DebugHostLink，不提供旧别名。
+- 2026-09-28：新增编译真实 Log.c 的主机套件，覆盖资源不足时无 USB/UART I/O、队列竞争失败、资源释放顺序、ISR/参数错误及锁定调度路径；启用严格 C11/枚举警告和 UBSan。板端时序、吞吐及开销仍待实测，本次未烧录。
+- 2026-09-28：SRNOS_Log 接入托管循环，队列 10 ms 等待置于统计外，格式化/发送仍在 step，保留 USB 维护。主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；时序与开销仍待板测。

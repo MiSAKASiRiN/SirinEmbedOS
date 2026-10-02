@@ -20,8 +20,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CDC_ACM_IF_H__
-#define __USBD_CDC_ACM_IF_H__
+#ifndef SRNOS_USB_CDC_ACM_IF_H
+#define SRNOS_USB_CDC_ACM_IF_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -88,7 +88,7 @@
   */
 
 /** CDC Interface callback. */
-extern USBD_CDC_ACM_ItfTypeDef  USBD_CDC_ACM_fops;
+extern USBD_CDC_ACM_ItfTypeDef  SRNOS_USBCdcInterface;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
 
@@ -103,7 +103,7 @@ extern USBD_CDC_ACM_ItfTypeDef  USBD_CDC_ACM_fops;
   * @{
   */
 
-uint8_t CDC_Transmit(uint8_t ch, uint8_t* Buf, uint16_t Len);
+uint8_t SRNOS_USBCdcTransmit(uint8_t ch, uint8_t* Buf, uint16_t Len);
 
 /* USER CODE BEGIN EXPORTED_FUNCTIONS */
 

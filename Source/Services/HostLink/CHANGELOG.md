@@ -1,0 +1,30 @@
+# Changelog
+
+## Unreleased
+
+- 2026-09-29：静态校准阈值调整后，CONFIG 09双IMU最终OK及2.5秒活动重试ACCEPTED/不重复执行完成实板验证；协议实现和遥测行为未改变，见 [复测](../../../Docs/Validation/StaticThreshold-20260929/README.md)。
+
+- 2026-09-29：实测CONFIG参数保存/加载与代次隔离、SOURCE V2及CDC重连；8路1kHz订阅仅实收约7284标量/s，未达完整接收目标；静态校准回报MOVING，未验证成功长事务去重。见 [板测](../../../Docs/Validation/PersistenceBoard-20260929/README.md)。
+
+- 2026-09-29：整理 Docs/HostLink.md：明确 COBS 外层、CRC、编码样例、服务/消息/流 ID 和状态枚举，修正默认存储权限及采集工具范围，补齐 SOURCE V1 对照。无线协议变更。
+
+
+- 2026-09-29：实现上位机手动静态 IMU 陀螺零偏校准（任意静止姿态），保留有效加速度校正，约 5 s 观察及异常拒绝后保存单份 EEPROM，新值下次启动生效。新增 CONFIG 0x09/0x0A、完整错误/部分保存状态，复用 HostCmd，无新增线程或动态工作区；验证范围见 `Docs/Validation/StaticIMU-20260929/README.md`，未烧录或实板验证。
+
+
+- 新增只读SOURCE V2 0x10～0x14，避开原IMU/INS状态0x08/0x09；V1保留线格式，缓存数据改由独立Telemetry目录提供，移除公共volatile指针/getter注册。
+- V2使用uint16频率及真实采样时间/序号/有效位，原子检查maxHz与8000标量每秒总限额；V1/V2互斥替换、32个固定频率组、每包至多16项及独立LATEST key。主机专项覆盖限额、互斥、回绕、背压、断连，未做板测。
+
+- 2026-09-28：当前事件等待/队列固件完成 CDC 停读/DTR 板测，LATEST 合并 24 项、峰值 11、解码零错误，恢复正常固件后五条传感器流一分钟无缺序。物理拔插、持续 RX/长命令组合负载仍待验收；见 Docs/Validation/SRNOSBoard-20260928。
+
+- 2026-09-28：私有容量、消息与工作状态、发送槽状态及临界区宏统一 SRNOS_HOST_LINK 前缀，IMU 缓存容量使用 SRNOS_IMU_TELEMETRY_CAPACITY；仅改命名，容量、枚举值、ABI 和线协议不变。
+
+- 2026-09-28：延后工作绑定当前 HostComm 请求身份，每个请求仅接受一次，阻止普通任务提交伪造响应或处理器重复入队；主机测试覆盖错误序号、错误任务、处理器外提交及重复提交。Debug Watch 使用 SRNOS_DebugHostLink。
+
+- 2026-09-28：公共 API 统一为 SRNOS_HostLink，移除旧命名入口；父项目通过不透明启动注册上下文扩展路由，transport、RTOS 任务入口及链接状态改为 SDK 私有。
+- 2026-09-28：活动请求 10 项与完成重放缓存 4 项分离，完成结果使用独立 pending 槽；FIFO 完成通知由 HostComm 锁外恰好调用一次。注册冲突及冻结均有检查。
+- 2026-09-28：HostComm 使用通知与截止时间等待，RX 单轮预算 1024 字节；IMU/INS 逐条短保护，保持现有批量、ODR 和全部线协议。HostLink/Codec、IMU/INS、参数协议及 Python 黄金向量主机测试通过；本轮未操作板卡，板端性能待验证。
+
+- 2026-09-28：同步明确监测流沿用 SAMPLE message=0x02；板测确认 LATEST 合并积压及 DTR 重连，三流接收/ADC 频率正常。
+
+- 2026-09-28：SRNOS_HostComm/HostCmd 接入框架，等待与处理拆分；遥测容量 8→12，新增 LATEST 循环流 0x0003。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。

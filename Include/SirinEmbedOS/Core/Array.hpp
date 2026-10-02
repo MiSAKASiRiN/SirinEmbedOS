@@ -1,5 +1,5 @@
-#ifndef SIRINOS_ARRAY_HPP
-#define SIRINOS_ARRAY_HPP
+#ifndef SRNOS_ARRAY_HPP
+#define SRNOS_ARRAY_HPP
 
 #include <cstddef>
 

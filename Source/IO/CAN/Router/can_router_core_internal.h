@@ -1,33 +1,42 @@
-#ifndef H723VG_V2_FREERTOS_CAN_ROUTER_CORE_INTERNAL_H
-#define H723VG_V2_FREERTOS_CAN_ROUTER_CORE_INTERNAL_H
+#ifndef SRNOS_CAN_ROUTER_CORE_INTERNAL_H
+#define SRNOS_CAN_ROUTER_CORE_INTERNAL_H
 
-#include "SirinEmbedOS/IO/CAN/Router/NTFDCAN_Router.h"
+#include "SirinEmbedOS/IO/CAN/Router/CAN.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum {
-    CAN_ROUTER_TX_CLASS_URGENT = 0,
-    CAN_ROUTER_TX_CLASS_PERIODIC = 1,
-} can_router_tx_class_t;
+    SRNOS_CAN_ROUTER_TX_CLASS_URGENT = 0,
+    SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC = 1,
+} SRNOS_CANRouterTxClass;
 
 typedef struct {
-    bool (*start)(can_channel_t ch);
-    uint8_t (*get_tx_free)(can_channel_t ch);
-    bool (*try_push)(can_channel_t ch, const can_frame_t *frame, can_router_tx_class_t tx_class);
-    void (*signal_tx)(can_channel_t ch);
+    bool (*start)(SRNOS_CANChannel ch);
+    uint8_t (*get_tx_free)(SRNOS_CANChannel ch);
+    bool (*try_push)(SRNOS_CANChannel ch, const SRNOS_CANFrame *frame, SRNOS_CANRouterTxClass tx_class);
+    void (*signal_tx)(SRNOS_CANChannel ch);
     uint32_t (*now_ms)(void);
-} can_router_backend_ops_t;
+    /* Optional pure/short read: retry deadline after transient backend I/O
+     * rejection, UINT32_MAX otherwise. Called only with pending oneshots. */
+    uint32_t (*retry_wait_ms)(SRNOS_CANChannel ch, uint32_t now_ms);
+} SRNOS_CANRouterBackendOps;
 
-void can_router_core_set_backend(can_channel_t ch, const can_router_backend_ops_t *ops);
-void can_router_core_on_rx_frame(can_channel_t ch, const can_frame_t *frame, uint32_t now_ms);
-void can_router_core_drain_tx(can_channel_t ch, uint32_t now_ms);
-void can_router_core_note_rx_wake(can_channel_t ch, bool by_isr);
-void can_router_core_note_tx_complete(can_channel_t ch);
+void SRNOS_CAN_FreezeConfiguration(void);
+bool SRNOS_CAN_ConfigurationFrozen(void);
+void SRNOS_CAN_PrepareResources(void);
+void SRNOS_CANRouterCoreSetBackend(SRNOS_CANChannel ch, const SRNOS_CANRouterBackendOps *ops);
+void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch, const SRNOS_CANFrame *frame, uint32_t now_ms);
+/* Remaining ms until work, UINT32_MAX when idle. Adapter urgent poll/tick
+ * retains its existing 1 ms contract; TX-complete and enqueue wake earlier. */
+uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel ch, uint32_t now_ms);
+void SRNOS_CANRouterCoreDrainTx(SRNOS_CANChannel ch, uint32_t now_ms);
+void SRNOS_CANRouterCoreNoteRxWake(SRNOS_CANChannel ch, bool by_isr);
+void SRNOS_CANRouterCoreNoteTxComplete(SRNOS_CANChannel ch);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* H723VG_V2_FREERTOS_CAN_ROUTER_CORE_INTERNAL_H */
+#endif /* SRNOS_CAN_ROUTER_CORE_INTERNAL_H */

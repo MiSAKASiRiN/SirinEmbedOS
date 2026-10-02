@@ -1,0 +1,3 @@
+SRNOS_CANRouterCoreHostTest: PASS (including frozen registration)
+native CAN RX: bounded 32-frame batches, retained readiness, real yield and idle blocking PASS
+CAN4 actual backend/core: transient SPI query/load retry without IRQ, FIFO wait, TTL and clock wrap: PASS

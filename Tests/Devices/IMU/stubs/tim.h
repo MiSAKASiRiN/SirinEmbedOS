@@ -1,5 +1,5 @@
-#ifndef LIB_IMU_HOST_TEST_TIM_H
-#define LIB_IMU_HOST_TEST_TIM_H
+#ifndef SRNOS_IMU_HOST_TEST_TIM_H
+#define SRNOS_IMU_HOST_TEST_TIM_H
 
 #include <stdint.h>
 

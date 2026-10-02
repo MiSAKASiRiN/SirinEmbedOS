@@ -7,17 +7,15 @@ mkdir -p "$out"
 
 cxx_bin=${CXX:-c++}
 cc_bin=${CC:-cc}
-# Use the pinned CMSIS header's host branch, not inline test implementations.
+# Compile the actual SDK matrix implementation.
 # Compiling the actual C backend also verifies the public C linkage contract.
 "$cc_bin" -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g \
-    -fsanitize=undefined -D__GNUC_PYTHON__ \
-    -isystem "$root/ThirdParty/CMSISDSP/Include" \
-    -c "$root/Source/Algorithms/Math/cmsis_matrix_backend.c" \
-    -o "$out/cmsis_matrix_backend.o"
+    -fsanitize=undefined \
+    -I"$root/Include" -c "$root/Source/Algorithms/Math/Matrix.c" \
+    -o "$out/Matrix.o"
 "$cxx_bin" -std=c++17 -Wall -Wextra -Werror -pedantic -O1 -g \
-    -fsanitize=undefined -D__GNUC_PYTHON__ -I"$root/Include" \
-    -isystem "$root/ThirdParty/CMSISDSP/Include" \
-    "$root/Tests/Algorithms/Math/test_algos.cpp" "$out/cmsis_matrix_backend.o" \
+    -fsanitize=undefined -I"$root/Tests/Support" -I"$root/Include" -I"$root/Source" \
+    "$root/Tests/Algorithms/Math/test_algos.cpp" "$out/Matrix.o" \
     -o "$out/test_algos"
 "$out/test_algos"
 

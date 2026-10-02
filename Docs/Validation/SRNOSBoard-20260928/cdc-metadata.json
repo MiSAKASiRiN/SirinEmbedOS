@@ -1,0 +1,33 @@
+{
+  "complete": true,
+  "port": "/dev/cu.usbmodem355C343932333",
+  "phases": [
+    {
+      "phase": "normal",
+      "monotonic_ns": 125219903006250
+    },
+    {
+      "phase": "read_stalled",
+      "monotonic_ns": 125222903517375
+    },
+    {
+      "phase": "draining",
+      "monotonic_ns": 125234909331083
+    },
+    {
+      "phase": "dtr_down",
+      "monotonic_ns": 125239909661625
+    },
+    {
+      "phase": "reconnected",
+      "monotonic_ns": 125244920686250
+    }
+  ],
+  "first_decode_errors": {},
+  "reconnected_decode_errors": {},
+  "reconnected_reports": {
+    "tasks": 6,
+    "adc": 6,
+    "cycles": 5
+  }
+}

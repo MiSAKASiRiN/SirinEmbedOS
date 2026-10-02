@@ -3,44 +3,35 @@ set(SRNOS_DEVICES_SOURCES
     Source/Devices/Sensors/sensors.c
     Source/Devices/Sensors/sensor_codec.c
     Source/Devices/Sensors/sensor_registers.c
-    Board/Glue/sensors_board.c
-    Board/Glue/sensor_frames.c
-    Board/Glue/ins_board.c
-    Source/IO/SPI/bsp_spi.c
-    Source/IO/I2C/bsp_i2c.c
-    Source/IO/CAN/External/tskptt_exfdcan_device.cpp
-    Source/IO/CAN/External/tskptt_exfdcan_rx_router.cpp
-    Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp
-    Source/IO/CAN/Native/bsp_fdcan.c
+    Source/IO/SPI/SPI.c
+    Source/IO/I2C/I2C.c
+    Source/IO/CAN/External/exfdcan_device.cpp
+    Source/IO/CAN/External/exfdcan_rx_router.cpp
+    Source/IO/CAN/External/exfdcan_tx_router.cpp
+    Source/IO/CAN/Native/FDCAN.c
     Source/IO/CAN/Router/can_router_core.cpp
-    Source/IO/CAN/Router/tskptt_ntfdcan_rx_router.cpp
-    Source/IO/CAN/Router/tskptt_ntfdcan_tx_router.cpp
-    Source/Devices/IMU/BMI088/bsp_bmi088.c
-    Source/Devices/IMU/lib_adp_omximu.cpp
+    Source/IO/CAN/Router/native_can_rx.cpp
+    Source/IO/CAN/Router/native_can_tx.cpp
+    Source/Devices/IMU/BMI088/BMI088.c
+    Source/Devices/IMU/IMUProtocol.cpp
     Source/Devices/IMU/mahony_filter.c
     Source/Devices/IMU/quaternion_ekf.cpp
-    Source/Devices/EEPROM/lib_24c02.c
-    Source/Devices/EEPROM/lib_24c02_bl.c
     Source/Devices/EEPROM/ft24c128a.c
     Source/Devices/MCP2518FD/drv_canfdspi_api.c
-    Source/Devices/MCP2518FD/drv_spi.c
-    Source/Devices/Motors/C610/lib_adp_dji_c610.cpp
-    Source/Devices/Motors/C620/lib_adp_dji_c620.cpp
-    Source/Devices/Motors/DM4310/lib_adp_dm_4310.cpp
-    Source/Devices/Motors/DM4340/lib_adp_dm_4340.cpp
-    Source/Devices/Motors/GM6020/lib_adp_dji_gm6020.cpp
-    Source/Devices/Motors/LK8016E/lib_adp_lk_mg8016e.cpp
-    Source/Devices/Buzzer/bsp_buzzer.c
-    Source/Devices/WS2812/bsp_ws2812.c
+    Source/Devices/MCP2518FD/SPIAdapter.c
+    Source/Devices/Motors/C610/C610.cpp
+    Source/Devices/Motors/C620/C620.cpp
+    Source/Devices/Motors/DM4310/DM4310.cpp
+    Source/Devices/Motors/DM4340/DM4340.cpp
+    Source/Devices/Motors/GM6020/GM6020.cpp
+    Source/Devices/Motors/LK8016E/LK8016E.cpp
+    Source/Devices/Buzzer/Buzzer.c
+    Source/Devices/WS2812/WS2812.c
     Source/Devices/WS2812/ws2812_critical.c
-    Source/Devices/NaviVision/lib_adp_navision.cpp
-    Source/Devices/Supercapacitor/lib_adp_supcap.cpp
-    Board/Glue/fixed_resources.cpp
-    Board/Glue/indicators.c
-    Board/Glue/fixed_buses.c
+    Source/Devices/NaviVision/NaviVision.cpp
+    Source/Devices/Supercapacitor/Supercapacitor.cpp
 )
 set(SRNOS_DEVICES_PRIVATE_INCLUDES
-    Board/Glue
     Source/IO/CAN/Router
     Source/IO/CAN/External
 )

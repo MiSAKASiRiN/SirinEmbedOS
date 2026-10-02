@@ -1,14 +1,14 @@
-#ifndef OMX_LIB_ALGOS_KALMAN_FILTER_HPP
-#define OMX_LIB_ALGOS_KALMAN_FILTER_HPP
+#ifndef SRNOS_MATH_KALMAN_FILTER_HPP
+#define SRNOS_MATH_KALMAN_FILTER_HPP
 
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstddef>
 
-#include "arm_math.h"
+#include "SirinEmbedOS/Algorithms/Math/Matrix.h"
 
-namespace algo {
+namespace SRNOS::Math {
 
 enum class KalmanStatus {
     Ok,
@@ -65,8 +65,8 @@ public:
         matrix(transition_matrix_, StateN, StateN, transition_.data());
         matrix(state_matrix_, StateN, 1U, state_.data());
         matrix(predicted_state_matrix_, StateN, 1U, predicted_state_.data());
-        if (arm_mat_mult_f32(&transition_matrix_, &state_matrix_,
-                             &predicted_state_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixMultiplyF32(&transition_matrix_, &state_matrix_,
+                             &predicted_state_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         if constexpr (ControlN > 0U) {
@@ -74,8 +74,8 @@ public:
             matrix(control_matrix_, ControlN, 1U, const_cast<float*>(control.data()));
             matrix(control_contribution_matrix_, StateN, 1U,
                    control_contribution_.data());
-            if (arm_mat_mult_f32(&control_model_matrix_, &control_matrix_,
-                                 &control_contribution_matrix_) != ARM_MATH_SUCCESS) {
+            if (SRNOS_MatrixMultiplyF32(&control_model_matrix_, &control_matrix_,
+                                 &control_contribution_matrix_) != SRNOS_MATRIX_OK) {
                 return KalmanStatus::MatrixError;
             }
             for (std::size_t i = 0U; i < StateN; ++i) {
@@ -89,12 +89,12 @@ public:
         matrix(temp_nn_matrix_, StateN, StateN, temp_nn_.data());
         matrix(predicted_covariance_matrix_, StateN, StateN,
                predicted_covariance_.data());
-        if (arm_mat_trans_f32(&transition_matrix_, &transition_transpose_matrix_) !=
-                ARM_MATH_SUCCESS ||
-            arm_mat_mult_f32(&transition_matrix_, &covariance_matrix_,
-                             &temp_nn_matrix_) != ARM_MATH_SUCCESS ||
-            arm_mat_mult_f32(&temp_nn_matrix_, &transition_transpose_matrix_,
-                             &predicted_covariance_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixTransposeF32(&transition_matrix_, &transition_transpose_matrix_) !=
+                SRNOS_MATRIX_OK ||
+            SRNOS_MatrixMultiplyF32(&transition_matrix_, &covariance_matrix_,
+                             &temp_nn_matrix_) != SRNOS_MATRIX_OK ||
+            SRNOS_MatrixMultiplyF32(&temp_nn_matrix_, &transition_transpose_matrix_,
+                             &predicted_covariance_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         for (std::size_t i = 0U; i < predicted_covariance_.size(); ++i) {
@@ -119,10 +119,10 @@ public:
         matrix(state_matrix_, StateN, 1U, state_.data());
         matrix(projected_measurement_matrix_, MeasureN, 1U,
                projected_measurement_.data());
-        if (arm_mat_mult_f32(&measurement_model_matrix_, &state_matrix_,
-                             &projected_measurement_matrix_) != ARM_MATH_SUCCESS ||
-            arm_mat_trans_f32(&measurement_model_matrix_,
-                              &measurement_transpose_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixMultiplyF32(&measurement_model_matrix_, &state_matrix_,
+                             &projected_measurement_matrix_) != SRNOS_MATRIX_OK ||
+            SRNOS_MatrixTransposeF32(&measurement_model_matrix_,
+                              &measurement_transpose_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         for (std::size_t i = 0U; i < MeasureN; ++i) {
@@ -132,10 +132,10 @@ public:
         matrix(covariance_matrix_, StateN, StateN, covariance_.data());
         matrix(temp_nm_matrix_, StateN, MeasureN, temp_nm_.data());
         matrix(temp_mm_matrix_, MeasureN, MeasureN, temp_mm_.data());
-        if (arm_mat_mult_f32(&covariance_matrix_, &measurement_transpose_matrix_,
-                             &temp_nm_matrix_) != ARM_MATH_SUCCESS ||
-            arm_mat_mult_f32(&measurement_model_matrix_, &temp_nm_matrix_,
-                             &temp_mm_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixMultiplyF32(&covariance_matrix_, &measurement_transpose_matrix_,
+                             &temp_nm_matrix_) != SRNOS_MATRIX_OK ||
+            SRNOS_MatrixMultiplyF32(&measurement_model_matrix_, &temp_nm_matrix_,
+                             &temp_mm_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         for (std::size_t i = 0U; i < temp_mm_.size(); ++i) {
@@ -148,16 +148,16 @@ public:
         matrix(innovation_covariance_inverse_matrix_, MeasureN, MeasureN,
                innovation_covariance_inverse_.data());
         matrix(kalman_gain_matrix_, StateN, MeasureN, kalman_gain_.data());
-        if (arm_mat_mult_f32(&temp_nm_matrix_,
+        if (SRNOS_MatrixMultiplyF32(&temp_nm_matrix_,
                              &innovation_covariance_inverse_matrix_,
-                             &kalman_gain_matrix_) != ARM_MATH_SUCCESS) {
+                             &kalman_gain_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
 
         matrix(innovation_matrix_, MeasureN, 1U, innovation_.data());
         matrix(correction_matrix_, StateN, 1U, correction_.data());
-        if (arm_mat_mult_f32(&kalman_gain_matrix_, &innovation_matrix_,
-                             &correction_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixMultiplyF32(&kalman_gain_matrix_, &innovation_matrix_,
+                             &correction_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         for (std::size_t i = 0U; i < StateN; ++i) {
@@ -167,16 +167,16 @@ public:
         matrix(kh_matrix_, StateN, StateN, kh_.data());
         matrix(identity_minus_kh_matrix_, StateN, StateN, identity_minus_kh_.data());
         matrix(updated_covariance_matrix_, StateN, StateN, updated_covariance_.data());
-        if (arm_mat_mult_f32(&kalman_gain_matrix_, &measurement_model_matrix_,
-                             &kh_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixMultiplyF32(&kalman_gain_matrix_, &measurement_model_matrix_,
+                             &kh_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         setIdentity(identity_minus_kh_, StateN);
         for (std::size_t i = 0U; i < kh_.size(); ++i) {
             identity_minus_kh_[i] -= kh_[i];
         }
-        if (arm_mat_mult_f32(&identity_minus_kh_matrix_, &covariance_matrix_,
-                             &updated_covariance_matrix_) != ARM_MATH_SUCCESS) {
+        if (SRNOS_MatrixMultiplyF32(&identity_minus_kh_matrix_, &covariance_matrix_,
+                             &updated_covariance_matrix_) != SRNOS_MATRIX_OK) {
             return KalmanStatus::MatrixError;
         }
         covariance_ = updated_covariance_;
@@ -199,12 +199,12 @@ private:
         setIdentity(data.data(), dimension);
     }
 
-    static void matrix(arm_matrix_instance_f32& instance,
+    static void matrix(SRNOS_MatrixF32& instance,
                        std::size_t rows,
                        std::size_t columns,
                        float* data) noexcept
     {
-        arm_mat_init_f32(&instance,
+        SRNOS_MatrixInitF32(&instance,
                          static_cast<uint16_t>(rows),
                          static_cast<uint16_t>(columns),
                          data);
@@ -280,30 +280,30 @@ private:
     StateMatrix updated_covariance_ {};
     StateVector control_contribution_ {};
 
-    arm_matrix_instance_f32 transition_matrix_ {};
-    arm_matrix_instance_f32 transition_transpose_matrix_ {};
-    arm_matrix_instance_f32 state_matrix_ {};
-    arm_matrix_instance_f32 predicted_state_matrix_ {};
-    arm_matrix_instance_f32 control_model_matrix_ {};
-    arm_matrix_instance_f32 control_matrix_ {};
-    arm_matrix_instance_f32 control_contribution_matrix_ {};
-    arm_matrix_instance_f32 covariance_matrix_ {};
-    arm_matrix_instance_f32 predicted_covariance_matrix_ {};
-    arm_matrix_instance_f32 temp_nn_matrix_ {};
-    arm_matrix_instance_f32 measurement_model_matrix_ {};
-    arm_matrix_instance_f32 measurement_transpose_matrix_ {};
-    arm_matrix_instance_f32 projected_measurement_matrix_ {};
-    arm_matrix_instance_f32 temp_nm_matrix_ {};
-    arm_matrix_instance_f32 temp_mm_matrix_ {};
-    arm_matrix_instance_f32 innovation_covariance_inverse_matrix_ {};
-    arm_matrix_instance_f32 kalman_gain_matrix_ {};
-    arm_matrix_instance_f32 innovation_matrix_ {};
-    arm_matrix_instance_f32 correction_matrix_ {};
-    arm_matrix_instance_f32 kh_matrix_ {};
-    arm_matrix_instance_f32 identity_minus_kh_matrix_ {};
-    arm_matrix_instance_f32 updated_covariance_matrix_ {};
+    SRNOS_MatrixF32 transition_matrix_ {};
+    SRNOS_MatrixF32 transition_transpose_matrix_ {};
+    SRNOS_MatrixF32 state_matrix_ {};
+    SRNOS_MatrixF32 predicted_state_matrix_ {};
+    SRNOS_MatrixF32 control_model_matrix_ {};
+    SRNOS_MatrixF32 control_matrix_ {};
+    SRNOS_MatrixF32 control_contribution_matrix_ {};
+    SRNOS_MatrixF32 covariance_matrix_ {};
+    SRNOS_MatrixF32 predicted_covariance_matrix_ {};
+    SRNOS_MatrixF32 temp_nn_matrix_ {};
+    SRNOS_MatrixF32 measurement_model_matrix_ {};
+    SRNOS_MatrixF32 measurement_transpose_matrix_ {};
+    SRNOS_MatrixF32 projected_measurement_matrix_ {};
+    SRNOS_MatrixF32 temp_nm_matrix_ {};
+    SRNOS_MatrixF32 temp_mm_matrix_ {};
+    SRNOS_MatrixF32 innovation_covariance_inverse_matrix_ {};
+    SRNOS_MatrixF32 kalman_gain_matrix_ {};
+    SRNOS_MatrixF32 innovation_matrix_ {};
+    SRNOS_MatrixF32 correction_matrix_ {};
+    SRNOS_MatrixF32 kh_matrix_ {};
+    SRNOS_MatrixF32 identity_minus_kh_matrix_ {};
+    SRNOS_MatrixF32 updated_covariance_matrix_ {};
 };
 
-} // namespace algo
+} // namespace SRNOS::Math
 
 #endif

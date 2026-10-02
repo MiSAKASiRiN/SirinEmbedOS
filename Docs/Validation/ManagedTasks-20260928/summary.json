@@ -1,0 +1,80 @@
+{
+  "date": "2026-09-28",
+  "hardware_executed": false,
+  "generated": false,
+  "flashed": false,
+  "host_suites": 22,
+  "parent_firmware_targets": 9,
+  "artifacts": [
+    {
+      "kind": "Minimal Debug",
+      "elf": "build/ManagedTasks-Debug/SirinEmbedOS.elf",
+      "sha256": "2d44cb718a80c6e0fbd5cbd00907d0a7f552643520d48c3dc001e90189bd62f4",
+      "symbols": {
+        "adc_samples": "0x38000200",
+        "__bdma_buf_start__": "0x38000000",
+        "__bdma_buf_end__": "0x38000220",
+        "__tls_size": "0x0",
+        "__sirinos_heap_dtcm_start": "0x20000000",
+        "__sirinos_heap_dtcm_end": "0x20010000",
+        "__sirinos_heap_d1_start": "0x24028940",
+        "__sirinos_heap_d1_end": "0x24048940",
+        "__srnos_libc_start": "0x24048940",
+        "__srnos_libc_end": "0x2404a940"
+      },
+      "d1_reserved_used": 305472,
+      "d1_unreserved": 22208
+    },
+    {
+      "kind": "Minimal Release",
+      "elf": "build/ManagedTasks-Release/SirinEmbedOS.elf",
+      "sha256": "047ad30dd49ce565ba64ca2b57d052be8f74011e2e7ed8d8671d08e8b5deb354",
+      "symbols": {
+        "adc_samples": "0x38000200",
+        "__bdma_buf_start__": "0x38000000",
+        "__bdma_buf_end__": "0x38000220",
+        "__tls_size": "0x0",
+        "__sirinos_heap_dtcm_start": "0x20000000",
+        "__sirinos_heap_dtcm_end": "0x20010000",
+        "__sirinos_heap_d1_start": "0x24028960",
+        "__sirinos_heap_d1_end": "0x24048960",
+        "__srnos_libc_start": "0x24048960",
+        "__srnos_libc_end": "0x2404a960"
+      },
+      "d1_reserved_used": 305504,
+      "d1_unreserved": 22176
+    },
+    {
+      "kind": "EEPROMBringUp Debug",
+      "elf": "build/ManagedTasks-EEPROM/SirinEmbedOS.elf",
+      "sha256": "cf8d137a1758d5cb6671a4be6bdd4cc19bd22c44bed40af5c160a68e60d59327",
+      "symbols": {
+        "adc_samples": "0x38000200",
+        "__bdma_buf_start__": "0x38000000",
+        "__bdma_buf_end__": "0x38000220",
+        "__tls_size": "0x0",
+        "__sirinos_heap_dtcm_start": "0x20000000",
+        "__sirinos_heap_dtcm_end": "0x20010000",
+        "__sirinos_heap_d1_start": "0x2402c9a0",
+        "__sirinos_heap_d1_end": "0x2404c9a0",
+        "__srnos_libc_start": "0x2404c9a0",
+        "__srnos_libc_end": "0x2404e9a0"
+      },
+      "d1_reserved_used": 321952,
+      "d1_unreserved": 5728
+    }
+  ],
+  "protected_board_files": 79,
+  "startup_pool_bytes": 32768,
+  "registry_budget_bytes": 8192,
+  "cycle_budget_bytes": 8192,
+  "board_targets_unverified": [
+    "hook start+end <=1 us without preemption",
+    "additional statistics CPU <=1%",
+    "SystemMonitor average CPU <=0.1%",
+    "sample critical section <=10 us",
+    "INS/CAN and sensor timing",
+    "runtime object lifecycle/sync stress",
+    "CDC disconnect and ADC faults"
+  ]
+}

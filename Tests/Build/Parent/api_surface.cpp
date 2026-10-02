@@ -1,96 +1,41 @@
-#include "SirinEmbedOS/Devices/Sensors.h"
-/* Compile public headers together as an external SDK consumer. */
-#include "SirinEmbedOS/Algorithms/Control/control_extensions.hpp"
-#include "SirinEmbedOS/Algorithms/Control/pid.hpp"
-#include "SirinEmbedOS/Algorithms/Math/angle.hpp"
-#include "SirinEmbedOS/Algorithms/Math/kalman_filter.hpp"
-#include "SirinEmbedOS/Algorithms/Math/ols.hpp"
-#include "SirinEmbedOS/Algorithms/Math/signal.hpp"
-#include "SirinEmbedOS/Algorithms/Power/lib_power_control.h"
-#include "SirinEmbedOS/Core/Array.hpp"
-#include "SirinEmbedOS/Core/Bounds.hpp"
-#include "SirinEmbedOS/Core/C/Array.h"
-#include "SirinEmbedOS/Core/C/Bounds.h"
-#include "SirinEmbedOS/Core/C/Endian.h"
-#include "SirinEmbedOS/Core/C/Fault.h"
-#include "SirinEmbedOS/Core/C/Memory.h"
-#include "SirinEmbedOS/Core/C/Numeric.h"
-#include "SirinEmbedOS/Core/C/Platform.h"
-#include "SirinEmbedOS/Core/C/SirinOS.h"
-#include "SirinEmbedOS/Core/C/Version.h"
-#include "SirinEmbedOS/Core/Endian.hpp"
-#include "SirinEmbedOS/Core/Fault.hpp"
-#include "SirinEmbedOS/Core/Memory/mem_sections.h"
-#include "SirinEmbedOS/Core/Memory.hpp"
-#include "SirinEmbedOS/Core/Numeric.hpp"
-#include "SirinEmbedOS/Core/Platform.hpp"
-#include "SirinEmbedOS/Core/SirinOS.h"
+/* Public API smoke test compiled as an external SDK consumer. Every installed
+ * public header is also compiled alone and together by check_sdk.py. */
+#include "SirinEmbedOS/Config.h"
 #include "SirinEmbedOS/Core/SirinOS.hpp"
-#include "SirinEmbedOS/Devices/Buzzer/bsp_buzzer.h"
-#include "SirinEmbedOS/Devices/EEPROM/lib_24c02.h"
-#include "SirinEmbedOS/Devices/EEPROM.h"
-#include "SirinEmbedOS/Devices/EEPROM/lib_24c02_bl.h"
-#include "SirinEmbedOS/Devices/H12H/lib_serial_servo_h12h.h"
-#include "SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088.h"
-#include "SirinEmbedOS/Devices/IMU/BMI088/bsp_bmi088_reg.h"
-#include "SirinEmbedOS/Devices/IMU/lib_adp_omximu.h"
-#include "SirinEmbedOS/Devices/IMU/mahony_filter.h"
-#include "SirinEmbedOS/Devices/IMU/quaternion_ekf.hpp"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_api.h"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_defines.h"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_canfdspi_register.h"
-#include "SirinEmbedOS/Devices/MCP2518FD/drv_spi.h"
-#include "SirinEmbedOS/Devices/Motors/C610/lib_adp_dji_c610.h"
-#include "SirinEmbedOS/Devices/Motors/C620/lib_adp_dji_c620.h"
-#include "SirinEmbedOS/Devices/Motors/DM4310/lib_adp_dm_4310.h"
-#include "SirinEmbedOS/Devices/Motors/DM4340/lib_adp_dm_4340.h"
-#include "SirinEmbedOS/Devices/Motors/GM6020/lib_adp_dji_gm6020.h"
-#include "SirinEmbedOS/Devices/Motors/LK8016E/lib_adp_lk_mg8016e.h"
-#include "SirinEmbedOS/Devices/NaviVision/lib_adp_navision.h"
-#include "SirinEmbedOS/Devices/Supercapacitor/lib_adp_supcap.h"
-#include "SirinEmbedOS/Devices/TL42R/lib_rs485_lc_tl42r.h"
-#include "SirinEmbedOS/Devices/WS2812/bsp_ws2812.h"
-#include "SirinEmbedOS/Devices/WS2812/ws2812_critical.h"
-#include "SirinEmbedOS/Diagnostics/Runtime/Startup.h"
-#include "SirinEmbedOS/Diagnostics/Runtime/Trace.h"
-#include "SirinEmbedOS/Diagnostics/Runtime/tskptt_hskp.h"
-#include "SirinEmbedOS/Diagnostics/Runtime/tskptt_hskp_wire.h"
-#include "SirinEmbedOS/Diagnostics/Time/bsp_dwt.h"
-#include "SirinEmbedOS/Diagnostics/Watch/omx_debug_watch.h"
-#include "SirinEmbedOS/IO/CAN/External/EXFDCAN_Router.h"
-#include "SirinEmbedOS/IO/CAN/Native/bsp_fdcan.h"
-#include "SirinEmbedOS/IO/CAN/Router/NTFDCAN_Router.h"
-#include "SirinEmbedOS/IO/I2C/bsp_i2c.h"
-#include "SirinEmbedOS/IO/RS485/Modbus/lib_modbus_rtu.h"
-#include "SirinEmbedOS/IO/RS485/RS485_Router.h"
-#include "SirinEmbedOS/IO/SPI/bsp_spi.h"
-#include "SirinEmbedOS/IO/Serial/Serial.h"
-#include "SirinEmbedOS/Kernel/Startup.h"
 #include "SirinEmbedOS/Kernel/System.h"
-#include "SirinEmbedOS/Services/HostLink/Codec/lib_srn_cobs.h"
-#include "SirinEmbedOS/Services/HostLink/Codec/lib_srn_cobs_prot.h"
-#include "SirinEmbedOS/Services/HostLink/Codec/lib_srn_link.h"
-#include "SirinEmbedOS/Services/HostLink/tskptt_host_comm.h"
-#include "SirinEmbedOS/Services/HostLink/IMUTelemetry.h"
-#include "SirinEmbedOS/Services/Logging/Worker/tskptt_log.h"
-#include "SirinEmbedOS/Services/Logging/bsp_srn_debug_port.h"
-#include "SirinEmbedOS/Services/Logging/bsp_srn_log.h"
-#include "SirinEmbedOS/Services/Parameters/HostLink/tskptt_param_console.h"
-#include "SirinEmbedOS/Services/Parameters/lib_params.h"
-#include "SirinEmbedOS/Services/Parameters/lib_params.hpp"
-#include "SirinEmbedOS/Services/Referee/Receiver/tskptt_referee.h"
-#include "SirinEmbedOS/Services/Referee/Startup.h"
-#include "SirinEmbedOS/Services/Referee/Transmitter/tskptt_referee_tx.h"
-#include "SirinEmbedOS/Services/Referee/UI/ui.h"
-#include "SirinEmbedOS/Services/Referee/UI/ui_interface.h"
-#include "SirinEmbedOS/Services/Referee/UI/ui_types.h"
-#include "SirinEmbedOS/Services/Referee/referee.h"
-#include "SirinEmbedOS/Services/RemoteControl/DR16/bsp_dr16.h"
-#include "SirinEmbedOS/Services/RemoteControl/Startup.h"
-#include "SirinEmbedOS/Services/RemoteControl/VT03/bsp_vt03.h"
-#include "SirinEmbedOS/Services/RemoteControl/lib_remote_control.h"
-#include "SirinEmbedOS/Services/Services.h"
+#include "SirinEmbedOS/Kernel/Thread.h"
+#include "SirinEmbedOS/Kernel/Sync.h"
+#include "SirinEmbedOS/Services/Referee/UI/Types.h"
+#include "SirinEmbedOS/Services/Parameters/Parameters.hpp"
+#include "SirinEmbedOS/Services/Telemetry.hpp"
+#include "SirinEmbedOS/Services/IMUCalibration.h"
+#include <type_traits>
 
-#include "SirinEmbedOS/Services/INS.h"
+/* Enforce the effective compiler search path as well as inspecting CMake flags. */
+#if __has_include("FreeRTOS.h") || __has_include("cmsis_os2.h") || \
+    __has_include("stm32h7xx_hal.h") || __has_include("arm_math.h")
+#error "SirinEmbedOS implementation headers must not be visible to a parent application"
+#endif
 
-#include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"
+static_assert(std::is_same_v<decltype(SRNOS_TimeMs()), uint32_t>);
+static_assert(std::is_same_v<decltype(SRNOS_TimeUs()), uint64_t>);
+static_assert(std::is_same_v<decltype(SRNOS_ThreadCreate(nullptr, nullptr)), SRNOS_Result>);
+static_assert(SRNOS_NO_WAIT == 0);
+static_assert(SRNOS_WAIT_FOREVER == UINT32_MAX);
+static_assert(std::is_constructible_v<SRNOS::Parameters::Persistent<float>,
+    uint32_t,const char *,float,float,float>);
+static_assert(std::is_constructible_v<SRNOS::Telemetry::Value<int32_t>,
+    const char *,const char *,uint16_t>);
+static_assert(std::is_same_v<decltype(SRNOS_IMUCalibrationSave(nullptr,0)),SRNOS_StorageStatus>);
+
+/* Names may change; the referee's packed wire records must not. */
+static_assert(sizeof(SRNOS_RefereeUIInterfaceFigure) == 15);
+static_assert(sizeof(SRNOS_RefereeUIInterfaceLine) == 15);
+static_assert(sizeof(SRNOS_RefereeUIInterfaceNumber) == 15);
+static_assert(sizeof(SRNOS_RefereeUIInterfaceString) == 45);
+static_assert(sizeof(SRNOS_RefereeUIFrameHeader) == 13);
+static_assert(sizeof(SRNOS_RefereeUI1Frame) == 30);
+static_assert(sizeof(SRNOS_RefereeUI2Frame) == 45);
+static_assert(sizeof(SRNOS_RefereeUI5Frame) == 90);
+static_assert(sizeof(SRNOS_RefereeUI7Frame) == 120);
+static_assert(sizeof(SRNOS_RefereeUIStringFrame) == 60);

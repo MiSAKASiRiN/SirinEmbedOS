@@ -1,21 +1,20 @@
 # Explicit foundation manifest; paths are SDK-relative, no source globbing.
 set(SRNOS_FOUNDATION_SOURCES
+    Source/Core/CRC32.c
     Source/Core/Fault/Fault.c
-    Source/Core/Memory/mem_sections.c
+    Source/Core/Memory/MemorySections.c
     Source/Algorithms/Control/pid.cpp
     Source/Algorithms/Control/control_extensions.cpp
-    Source/Algorithms/Math/cmsis_matrix_backend.c
-    Source/Algorithms/Power/lib_power_control.cpp
-    Source/Diagnostics/Time/bsp_dwt.c
-    Source/Diagnostics/Watch/omx_debug_watch.c
-    Source/Diagnostics/Runtime/tskptt_hskp.c
-    Source/Diagnostics/Runtime/tskptt_hskp_trace.c
+    Source/Algorithms/Math/Matrix.c
+    Source/Algorithms/Power/PowerControl.cpp
+    Source/Diagnostics/Time/Time.c
+    Source/Diagnostics/Watch/Watch.c
+    Source/Diagnostics/Runtime/cycle_statistics.c
+    Source/Diagnostics/Runtime/runtime_trace.c
     Source/Diagnostics/Runtime/Trace.c
-    Source/Diagnostics/Runtime/Startup.c
-    Board/Glue/Platform.c
-    Board/Glue/fault_handlers.c
-    Board/Glue/memory_early.c
-    Board/Glue/libc_memory.c
-    Board/Glue/libc_locks.c
 )
-set(SRNOS_FOUNDATION_PRIVATE_INCLUDES Board/Glue Source/Diagnostics/Runtime)
+set(SRNOS_FOUNDATION_PRIVATE_INCLUDES Source/Diagnostics/Runtime Source/Kernel)
+# These bounded hooks run on every managed iteration. Prefer speed over the
+# board toolchain's -Oz in Release; retain normal Debug stepping behavior.
+set_property(SOURCE "${CMAKE_CURRENT_LIST_DIR}/../Diagnostics/Runtime/cycle_statistics.c"
+    APPEND PROPERTY COMPILE_OPTIONS "$<$<CONFIG:Release>:-O2>")

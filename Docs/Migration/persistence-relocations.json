@@ -1,0 +1,16 @@
+{
+  "Source/Devices/EEPROM/EEPROM24C02.c": [
+    "Source/Devices/EEPROM/ft24c128a.c",
+    "Source/Services/Storage/storage.c"
+  ],
+  "Source/Devices/EEPROM/EEPROM24C02Blocking.c": [
+    "Source/Services/Storage/storage.c"
+  ],
+  "Include/SirinEmbedOS/Devices/EEPROM/EEPROM24C02.h": [
+    "Include/SirinEmbedOS/Devices/EEPROM.h",
+    "Include/SirinEmbedOS/Services/Storage.h"
+  ],
+  "Include/SirinEmbedOS/Devices/EEPROM/EEPROM24C02Blocking.h": [
+    "Include/SirinEmbedOS/Services/Storage.h"
+  ]
+}

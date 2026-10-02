@@ -1,0 +1,1 @@
+PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: build/static-threshold-20260929/Debug/SirinEmbedOS.elf

@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_MEMORY_H
-#define SIRINOS_C_MEMORY_H
+#ifndef SRNOS_C_MEMORY_H
+#define SRNOS_C_MEMORY_H
 
 #include <stdbool.h>
 #include <stddef.h>

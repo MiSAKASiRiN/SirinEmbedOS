@@ -1,5 +1,5 @@
-#ifndef SIRINOS_C_PLATFORM_H
-#define SIRINOS_C_PLATFORM_H
+#ifndef SRNOS_C_PLATFORM_H
+#define SRNOS_C_PLATFORM_H
 
 #include <stdbool.h>
 #include <stddef.h>
