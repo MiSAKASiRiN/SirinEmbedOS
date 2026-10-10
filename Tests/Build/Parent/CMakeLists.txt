@@ -15,9 +15,11 @@ target_link_libraries(ManualFirmware PRIVATE SirinEmbedOS::Platform)
 sirinos_add_firmware(PrototypeBindings "${SIRINEMBEDOS_SOURCE_DIR}/Examples/Minimal/app_main.c"
     "${SIRINEMBEDOS_SOURCE_DIR}/Examples/PrototypeBindings/bindings.c")
 sirinos_add_firmware(ParameterExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/Parameters/app_main.cpp")
+sirinos_add_firmware(CANFDExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/CANFD/app_main.c")
 sirinos_add_firmware(BringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/BringUp/app_main.c")
 sirinos_add_firmware(SensorBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/SensorBringUp/app_main.c")
 sirinos_add_firmware(INSBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/INSBringUp/app_main.c")
+sirinos_add_firmware(IMUTurntableBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/IMUTurntableBringUp/app_main.cpp")
 sirinos_add_firmware(EEPROMBringUpExample "${SIRINEMBEDOS_SOURCE_DIR}/Examples/EEPROMBringUp/app_main.c")
 _srnos_attach_kernel_test_adapter(EEPROMBringUpExample
     "${SIRINEMBEDOS_SOURCE_DIR}/Examples/EEPROMBringUp/kernel_test_adapter.c")

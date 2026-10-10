@@ -1,6 +1,7 @@
 // LK8016E.cpp
 // MG-supported commands: 0x80/0x88/0x81/0xA1/0xA2/0xA3..0xA8/0x280
 // Note: 0xA0 open-loop power/voltage is MS-only and not supported by MG.
+#include "../state_guard.hpp"
 #include "SirinEmbedOS/Devices/Motors/LK8016E/LK8016E.hpp"
 #include <cstring>
 #include <cmath>
@@ -76,7 +77,7 @@ void LK8016E::set_iq_raw(int16_t iq_raw)
 
 void LK8016E::set_iq_A(float iq_A)
 {
-  float max_A = torque_current_max_A_;
+  float max_A = torque_current_max_A_.load(std::memory_order_relaxed);
   if (max_A <= 0.0f) {
     max_A = 33.0f;
   }
@@ -215,8 +216,14 @@ void LK8016E::onRxFeedback(const CANFrame& f, uint32_t now_ms)
     return;
   }
 
-  __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
+  const int16_t iq_raw = is_mg_status ? rd_le_i16(&f.data[2]) : 0;
+  float max_A = torque_current_max_A_.load(std::memory_order_relaxed);
+  if (max_A <= 0.0f) max_A = 33.0f;
+  const float iq_A = static_cast<float>(iq_raw) / 2048.0f * max_A;
+  const int64_t multi_turn_cdeg = is_multi_turn_read ? rd_le_i56_sext(&f.data[1]) : 0;
+  const float multi_turn_deg = static_cast<float>(multi_turn_cdeg) * 0.01f;
 
+  const Detail::StateGuard guard;
   LK8016EState s = state_;
 
   s.motor_id = motor_id_;
@@ -226,12 +233,8 @@ void LK8016E::onRxFeedback(const CANFrame& f, uint32_t now_ms)
 
   if (is_mg_status) {
     s.temperature_C = static_cast<int8_t>(f.data[1]);
-    s.iq_raw = rd_le_i16(&f.data[2]);
-    float max_A = torque_current_max_A_;
-    if (max_A <= 0.0f) {
-      max_A = 33.0f;
-    }
-    s.iq_A = static_cast<float>(s.iq_raw) / 2048.0f * max_A;
+    s.iq_raw = iq_raw;
+    s.iq_A = iq_A;
     s.speed_dps = rd_le_i16(&f.data[4]);
     s.encoder_raw = rd_le_u16(&f.data[6]);
     s.last_encoder_rx_ms = now_ms;
@@ -241,8 +244,8 @@ void LK8016E::onRxFeedback(const CANFrame& f, uint32_t now_ms)
     s.last_encoder_rx_ms = now_ms;
     s.encoder_rx_count++;
   } else if (is_multi_turn_read) {
-    s.multi_turn_angle_cdeg = rd_le_i56_sext(&f.data[1]);
-    s.multi_turn_angle_deg = static_cast<float>(s.multi_turn_angle_cdeg) * 0.01f;
+    s.multi_turn_angle_cdeg = multi_turn_cdeg;
+    s.multi_turn_angle_deg = multi_turn_deg;
     s.multi_turn_valid = true;
     s.last_multi_turn_rx_ms = now_ms;
     s.multi_turn_rx_count++;
@@ -250,40 +253,20 @@ void LK8016E::onRxFeedback(const CANFrame& f, uint32_t now_ms)
   s.last_cmd = cmd;
 
   state_ = s;
-
-  __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
 }
 
-void LK8016E::tick(uint32_t now_ms)
-{
-  const uint32_t last = __atomic_load_n(&state_.last_rx_ms, __ATOMIC_RELAXED);
-  const bool was_online = __atomic_load_n(&state_.online, __ATOMIC_RELAXED);
-
-  if (was_online && (now_ms - last > offline_ms_)) {
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
-    state_.online = false;
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
-  }
+void LK8016E::tick(uint32_t now_ms) {
+    const Detail::StateGuard guard;
+    if (state_.online && Detail::feedbackExpired(now_ms, state_.last_rx_ms,
+                                                offline_ms_.load(std::memory_order_relaxed))) {
+        state_.online = false;
+    }
 }
 
-bool LK8016E::snapshot(LK8016EState& out) const
-{
-  for (int i = 0; i < 3; ++i) {
-    uint32_t s1 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-    if (s1 & 1u) {
-      continue;
-    }
-
-    LK8016EState tmp;
-    std::memcpy(&tmp, &state_, sizeof(tmp));
-
-    uint32_t s2 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-    if (s1 == s2) {
-      out = tmp;
-      return true;
-    }
-  }
-  return false;
+bool LK8016E::snapshot(LK8016EState& out) const {
+    const Detail::StateGuard guard;
+    out = state_;
+    return true;
 }
 
 bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const

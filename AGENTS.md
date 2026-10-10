@@ -199,7 +199,7 @@ SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些
 - FreeRTOS/CMSIS 拥有 SVC、PendSV、SysTick，HAL 继续以 TIM7 计时。FromISR API 的中断优先级数值必须为 5～15。
 - `Board/Support/System/kernel_board.c` 定义按地址递增的 DTCM 64 KiB + D1 128 KiB heap_5 区域；`osKernelInitialize()` 是 heap 注册的唯一入口。最终内存布局由 `Board/Linker/SirinEmbedOS.ld` 管理，普通 data/TLS/BSS 在 D1，DTCM 留给热数据、heap 和 MSP。NOLOAD heap payload 不保证清零，两区均不是 DMA 分配器。
 - DMA 位于非缓存 D2，BDMA 位于 D3；CAN Router 专用 BSS 与 Watch 位于 ITCM，按 64 位显式清零，ITCM 代码按 64 位复制。三者共享 64 KiB；专用段禁止构造期访问。Fault retained 留在 D2 并验证。Picolibc TLS 占用线程栈；独立 libc arena 和静态递归 RTOS 锁已接入，禁止在 ISR 分配或调用阻塞 stdio，不宣称任意共享 FILE 都线程安全。
-- Fault 向量由 SDK glue 持有，异常捕获不依赖日志或动态分配。紧急输出默认为空，仅允许启动阶段显式预留，不复位/占用 USART1；正常日志只经自己的 Serial/USB sink。细节见 `Source/Core/README.md`。
+- Fault 向量由 SDK glue 持有，异常捕获不依赖日志或动态分配。紧急输出默认在不可恢复 Panic/Fault 阶段接管 USART1 TX（PB14，115200/8N1）有界轮询输出；正常启动不占用，可在配置阶段显式注册回调覆盖。正常日志只经自己的 Serial/USB sink。细节见 `Source/Core/README.md`。
 - 构建接入说明与配置合同见 `README.md`；`Tests/Build/check_sdk.py` 验证父项目、配置、链接、堆和第三方哈希。能力测试与待测项见 `Docs/Validation.md`，不代表板端调度与外设验证。
 
 ## 核心定位：固定硬件上的通用开发平台
@@ -319,9 +319,9 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 
 ## 2613 传感器阶段（2026-09-26）
 
-已增加 Sensors 公共 API、冻结配置、LSM/LIS/SPA 驱动与 SensorBringUp。SPI4 使用唯一 High6 分发者、八槽有界复制队列、四 IMU 后一个普通事务的仲裁；同步调用也经此通路。BMI/LSM 默认 1 ms；LIS/SPA 共用 Normal/2 KiB/10 ms 线程，LSM High5/2 KiB。接口、取消与缓冲生命周期见 `Docs/Sensors.md`。
+已增加 Sensors 公共 API、冻结配置、LSM/LIS/SPA 驱动与 SensorBringUp。SPI4 使用唯一 Realtime1（49）分发者、八槽有界复制队列；IMU 优先，最多四笔后服务一笔等待的低层请求，低层内最多四 CAN4 后一个普通事务；同步调用也经此通路。BMI/LSM 默认 1 ms；LIS/SPA 共用 Normal/2 KiB/10 ms 线程，LSM Realtime / 48 / 2 KiB。接口、取消与缓冲生命周期见 `Docs/Sensors.md`。
 
-默认运行正式 INS，四颗传感器均采集；BMI/LSM 统一板内坐标后经启动冻结安装旋转进入单一 Mahony 状态。温控由独立 INS High5/3KiB/1ms worker 唯一持有，默认60°C、允许20..75°C，LSM优先/BMI回退，80°C保护及75°C以下5秒恢复。板内变换固定于 Board/Support/Devices/sensor_frames.c，应用只能配置 board_to_robot_wxyz。旧全局 INS、方向预设、校准/存储 worker 和两套温控已删除，没有 legacy 模式。SensorBringUp 以 ins.enabled=false 保留原始采样和统一温控。默认启用启动参数加载及 HostLink LOAD/SAVE。FT24C128A 的身份、双 IMU 校准及业务参数由 Storage 单份 CRC/提交页记录管理；旧 24C02 接口和格式已删除。启动总期限 2 s，参数无效采用默认值，校准无效忽略并降级；保存校准下次启动生效。新增持久化及 1 kHz 标量遥测仍需板端验收，先前整片 EEPROM 板测不等于这些新功能已实测。I2C4 已复用 High6/3KiB 线程作唯一分发者，四槽中 LIS/SPA 各保留一槽、后台两槽，最多连续四笔周期事务后服务等待后台。EEPROM 读写/校验每笔最多32B，写周期不占总线；LIS/SPA 使用30ms完成信号量等待。I2C4 当前为400kHz Fast mode，固定PLL3R=60MHz、TIMINGR=0x10C7182D，由IOC与Support维护；已通过CubeMX 6.18.1 CLI的-q脚本执行project generate，生成时序与Support一致，USER CODE接入保留。生成边界与日志见Board/README.md和Docs/Validation/CubeMX-20260928/README.md。数字SCL实测约370kHz，整片写含校验约5.12秒、读约1.03秒，LIS约97–99Hz、SPA约16Hz，无离线/总线错误。按用户要求板上保留EEPROMBringUp及测试数据，融合/加热关闭；不代表模拟边沿、掉电、断线或严格100Hz实时性验收，见 Docs/Validation/I2C400-20260928/README.md。服务与遥测合同见 Docs/INS.md、Docs/HostLink.md。
+默认运行正式 INS，四颗传感器均采集；BMI/LSM 统一板内坐标后经启动冻结安装旋转进入单一 Mahony 状态。温控由独立 INS Realtime / 48 / 3KiB / 1ms worker 唯一持有，默认60°C、允许20..75°C，LSM优先/BMI回退，80°C保护及75°C以下5秒恢复。板内变换固定于 Board/Support/Devices/sensor_frames.c，应用只能配置 board_to_robot_wxyz。旧全局 INS、方向预设、校准/存储 worker 和两套温控已删除，没有 legacy 模式。SensorBringUp 以 ins.enabled=false 保留原始采样和统一温控。默认启用启动参数加载及 HostLink LOAD/SAVE。FT24C128A 的身份、双 IMU 校准及业务参数由 Storage 单份 CRC/提交页记录管理；旧 24C02 接口和格式已删除。启动总期限 2 s，参数无效采用默认值，校准无效忽略并降级；保存校准下次启动生效。新增持久化及 1 kHz 标量遥测仍需板端验收，先前整片 EEPROM 板测不等于这些新功能已实测。I2C4 已复用 High6/3KiB 线程作唯一分发者，四槽中 LIS/SPA 各保留一槽、后台两槽，最多连续四笔周期事务后服务等待后台。EEPROM 读写/校验每笔最多32B，写周期不占总线；LIS/SPA 使用30ms完成信号量等待。I2C4 当前为400kHz Fast mode，固定PLL3R=60MHz、TIMINGR=0x10C7182D，由IOC与Support维护；已通过CubeMX 6.18.1 CLI的-q脚本执行project generate，生成时序与Support一致，USER CODE接入保留。生成边界与日志见Board/README.md和Docs/Validation/CubeMX-20260928/README.md。数字SCL实测约370kHz，整片写含校验约5.12秒、读约1.03秒，LIS约97–99Hz、SPA约16Hz，无离线/总线错误。按用户要求板上保留EEPROMBringUp及测试数据，融合/加热关闭；不代表模拟边沿、掉电、断线或严格100Hz实时性验收，见 Docs/Validation/I2C400-20260928/README.md。服务与遥测合同见 Docs/INS.md、Docs/HostLink.md。
 
 18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；连续窗口、SHA、结束状态均以 `Docs/Validation.md` 最新条目为准。
 
@@ -329,7 +329,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 
 后续所有 BringUp 示例在配置阶段设置 bringup_indicators=true，明确加热用途；当前 BringUp 关闭加热，SensorBringUp 和 INSBringUp 默认60°C。指示器在HAL完成、配置冻结后、RTOS启动前只初始化一次：第一灯黄色只提交一次，三段启动音各80ms；原Indicators线程随后亮0.5秒/灭0.5秒（1Hz），不依赖CAN/USB。不另加LED线程。实际声光须现场观察，不能仅凭计数宣称通过。INSBringUp关闭周期栈扫描；Application/通信不等待INS温稳。姿态消费者检查VALID、序号与epoch，不把系统RUNNING当作INS就绪。
 
-传感器 `imu_observer` 注册冻结，只允许有界复制或通知；不能在 High5/High6 回调打印或等待 USB。可复用 IMUTelemetry 服务为每颗 IMU 分配 64 条静态队列，HostComm 线程编码、FIFO 最多使用八个发送槽；满时丢弃新样本计数。订阅/取消仅为会话行为，不修改底层采样配置。CDC1 数据格式、CLI 和恢复合同见 `Docs/HostLink.md`。CLI 必须显式选择 CDC1，不接管其他程序占用的端口。
+传感器 `imu_observer` 注册冻结，只允许有界复制或通知；不能在 P0 采样或 SPI 分发回调打印或等待 USB。可复用 IMUTelemetry 服务为每颗 IMU 分配 64 条静态队列，HostComm 线程编码、FIFO 最多使用八个发送槽；满时丢弃新样本计数。订阅/取消仅为会话行为，不修改底层采样配置。CDC1 数据格式、CLI 和恢复合同见 `Docs/HostLink.md`。CLI 必须显式选择 CDC1，不接管其他程序占用的端口。
 
 ## 正式 INS（2026-09-28）
 
@@ -342,3 +342,14 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 ## 板级支撑维护（2026-09-28）
 
 `Board/Support` 仅按 System、IO、Devices、USB 分一层，源码由同目录 `component.cmake` 显式登记；不新增板型层或通用 backend。私有引用带分组路径，Support include 路径仅为 PRIVATE。应用公共函数与类型保持，蜂鸣器/WS2812 固定 GPIO/TIM/DMA 宏收回板级私有头，不支持应用覆盖布线。指示器提示和 worker 位于 `Source/Services/Indicators`，Kernel 仍创建原线程。USB 引脚准备、MCP 默认绑定统一从板级实现取得。维护索引及 IRQ 所有权见 `Board/Support/README.md`；边界审查见 `Docs/BoardSupport.md`。
+
+## 2026-10-03 通信与 IMU 优先策略
+
+目标为每路 CAN 同时 3 kHz RX 与 3 kHz TX，PCB 离线时只能验证软件与构建合同。P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及 UART 的 Serial/RC/Referee/RS485 worker（High7 / 47）。共享 SPI4 分发者保持 Realtime1（49），I2C4 保持 High6（46）。父项目 1..39 不变。CAN 通知使用 index 0，生命周期使用 index 1；NVIC 的 FDCAN1–3、IMU EXTI9_5、SPI4 及其 DMA 为 5；MCP EXTI15_10、五路 UART IRQ 及十路 UART DMA IRQ 为 6。IRQ、队列容量、线程栈和硬件时序进一步改变前需说明影响。软件优化与未验边界见 Docs/Validation/CANRouter-20261002/README.md，最新优先级验证见 Docs/Validation/Priority-20261003/README.md，不将虚拟时间负载测试视为 MCU 吞吐。
+
+
+## 2026-10-03 CAN Classic / FD 启动合同
+
+`SRNOS_SystemConfig.can[4]` 对应 CAN1..4，每控制器在初始化时选择 Classic 或 FD，统一检查注册冲突后复制并冻结，错误恢复沿用该配置，禁止运行期热切换。默认四路 Classic 1 Mbit/s；现有电机/其他 adapter 仅允许 Classic 1 Mbit/s。FD 业务协议由父项目通过 `IO/CAN/FD/CANFD.h` 定义，应用显式配置仲裁速率、数据速率和 BRS。FD 帧长度是精确线长，禁止静默补齐；BRS 是冻结的 TX 策略，RX 保留实际 EXT/BRS/ESI，短 FD 帧不进入 Classic router。
+
+FD 每路 32 条路由、64 个 TX 槽，共 23312 B 静态 D1；Classic 16 B 帧和 59920 B ITCM context 保持。原生 RX 每轮最多 32 帧、分小块搬运以保留 4 KiB worker 栈余量；不新增线程或扩堆。Native FDCAN 改用 PLL2Q 80 MHz（P/R 输出不变），三路 Message RAM 固定窗口从 0/0x300/0x600 word 开始；FD 每路 676 words，Classic 每路 232 words。CAN4 FD FIFO 为 RX16/TX12、64 B，共2016 B。软件支持的位速率不代表本板收发器/布线已通过高速实测。优先级仍为 P0 CAN1/2/3+IMU，P1 CAN4/UART；FD 负载必须另按帧长、BRS和位速率验算，不能将 Classic 3 kHz 收发目标外推到所有 FD 配置。2026-10-03离线证据见 Docs/Validation/CANFD-20261003/README.md；2026-10-06 CAN1/3短接实测Classic8B及FD8M64B各3k收发60秒通过，FD5M64B同档10秒通过，FD4M及以下64B该档过载。RX最小栈余3092 B、双IMU/INS连续1kHz；测试后完整恢复原Flash，不应假设当前板上已有FD固件。完整数据、身份记录/LIS线索和CAN2/4/UART/故障未验边界见 Docs/Validation/CANFD-Board-20261006/README.md。

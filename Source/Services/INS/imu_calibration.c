@@ -8,7 +8,7 @@
 #include <string.h>
 
 #define SRNOS_IMU_CALIBRATION_OWNER UINT32_C(0x53494D55)
-#define SRNOS_IMU_CALIBRATION_BYTES 48u
+#define SRNOS_IMU_CALIBRATION_BYTES 60u
 static SRNOS_IMUCalibration active[2];
 static SRNOS_IMUCalibrationStatus status;
 static uint32_t startup_deadline;
@@ -24,11 +24,13 @@ static uint32_t remaining(uint32_t deadline) {
     int32_t left=(int32_t)(deadline-SRNOS_TimeMs()); return left>0?(uint32_t)left:0;
 }
 SRNOS_StorageStatus SRNOS_IMUCalibrationValidate(const SRNOS_IMUCalibration *v) {
-    if(!v || !sensor_valid(v->sensor) || v->model_version!=SRNOS_IMU_CALIBRATION_MODEL_VERSION ||
+    if(!v || !sensor_valid(v->sensor) || (v->model_version!=1 && v->model_version!=SRNOS_IMU_CALIBRATION_MODEL_VERSION) ||
        v->axes_version!=SRNOS_IMU_CALIBRATION_SENSOR_AXES_VERSION) return SRNOS_STORAGE_INVALID_ARGUMENT;
     if(!isfinite(v->temperature_c) || v->temperature_c < -40 || v->temperature_c > 125)
         return SRNOS_STORAGE_INVALID_ARGUMENT;
     for(unsigned i=0;i<3;i++) {
+        if(v->model_version>=2 && (!isfinite(v->gyro_scale[i]) || v->gyro_scale[i]<.8f || v->gyro_scale[i]>1.2f))
+            return SRNOS_STORAGE_INVALID_ARGUMENT;
         if(!isfinite(v->gyro_bias_rad_s[i]) || fabsf(v->gyro_bias_rad_s[i])>1 ||
            !isfinite(v->accel_bias_m_s2[i]) || fabsf(v->accel_bias_m_s2[i])>9.80665f ||
            !isfinite(v->accel_scale[i]) || v->accel_scale[i]<.5f || v->accel_scale[i]>1.5f)
@@ -41,24 +43,27 @@ static void encode(const SRNOS_IMUCalibration *v,uint8_t out[SRNOS_IMU_CALIBRATI
     SRNOS_Memory_MutableByteSpan bytes=SRNOS_Memory_MutableBytes(out,SRNOS_IMU_CALIBRATION_BYTES);
     SRNOS_Endian_StoreLE16(bytes,0,(uint16_t)v->sensor);
     SRNOS_Endian_StoreLE16(bytes,2,v->model_version); SRNOS_Endian_StoreLE16(bytes,4,v->axes_version);
-    for(unsigned i=0;i<10;i++) {
-        float value=i<3?v->gyro_bias_rad_s[i]:i<6?v->accel_bias_m_s2[i-3]:i<9?v->accel_scale[i-6]:v->temperature_c;
+    for(unsigned i=0;i<13;i++) {
+        float value=i<3?v->gyro_bias_rad_s[i]:i<6?v->accel_bias_m_s2[i-3]:i<9?v->accel_scale[i-6]:i==9?v->temperature_c:(v->model_version>=2?v->gyro_scale[i-10]:1.0f);
         uint32_t bits; memcpy(&bits,&value,4); SRNOS_Endian_StoreLE32(bytes,8+4*i,bits);
     }
 }
 static SRNOS_StorageStatus decode(const uint8_t *data,size_t len,SRNOS_SensorId id,SRNOS_IMUCalibration *out) {
-    if(len!=SRNOS_IMU_CALIBRATION_BYTES) return SRNOS_STORAGE_CORRUPT;
+    if(len!=48 && len!=SRNOS_IMU_CALIBRATION_BYTES) return SRNOS_STORAGE_CORRUPT;
     const SRNOS_Memory_ByteSpan bytes=SRNOS_Memory_Bytes(data,len);
     uint16_t sensor,reserved; SRNOS_Endian_LoadLE16(bytes,0,&sensor);
     SRNOS_Endian_LoadLE16(bytes,2,&out->model_version); SRNOS_Endian_LoadLE16(bytes,4,&out->axes_version);
     SRNOS_Endian_LoadLE16(bytes,6,&reserved); out->sensor=(SRNOS_SensorId)sensor;
     if(reserved || out->sensor!=id) return SRNOS_STORAGE_INCOMPATIBLE;
-    for(unsigned i=0;i<10;i++) {
+    if((out->model_version==2 && len!=60) || (out->model_version==1 && len!=48 && len!=60)) return SRNOS_STORAGE_CORRUPT;
+    for(unsigned i=0;i<3;i++)out->gyro_scale[i]=1;
+    for(unsigned i=0;i<(len-8)/4;i++) {
         uint32_t bits; float value; SRNOS_Endian_LoadLE32(bytes,8+4*i,&bits); memcpy(&value,&bits,4);
         if(i<3)out->gyro_bias_rad_s[i]=value;
         else if(i<6)out->accel_bias_m_s2[i-3]=value;
         else if(i<9)out->accel_scale[i-6]=value;
-        else out->temperature_c=value;
+        else if(i==9)out->temperature_c=value;
+        else if(out->model_version>=2)out->gyro_scale[i-10]=value;
     }
     return SRNOS_IMUCalibrationValidate(out)==SRNOS_STORAGE_OK?SRNOS_STORAGE_OK:SRNOS_STORAGE_CORRUPT;
 }
@@ -144,7 +149,7 @@ SRNOS_StorageStatus SRNOS_IMUCalibrationReadStored(SRNOS_SensorId id,SRNOS_IMUCa
 }
 SRNOS_StorageStatus SRNOS_IMUCalibrationWriteLocked(const SRNOS_IMUCalibration *value,uint32_t timeout) {
     uint8_t bytes[SRNOS_IMU_CALIBRATION_BYTES];encode(value,bytes);uint32_t revision=0;
-    SRNOS_StorageStatus result=SRNOS_StorageWriteRecord(record(value->sensor),SRNOS_IMU_CALIBRATION_OWNER,1,bytes,sizeof(bytes),&revision,timeout);
+    SRNOS_StorageStatus result=SRNOS_StorageWriteRecord(record(value->sensor),SRNOS_IMU_CALIBRATION_OWNER,1,bytes,value->model_version>=2?sizeof(bytes):48u,&revision,timeout);
     uint32_t key=enter();status.save_status[value->sensor]=result;
     if(result==SRNOS_STORAGE_OK) {
         status.saved_revision[value->sensor]=revision;

@@ -4,6 +4,7 @@
 #include "SirinEmbedOS/Diagnostics/Time/Time.h"
 #include "cmsis_os2.h"
 #include "FreeRTOS.h"
+#include "task.h"
 #include "IO/spi_board.h"
 #include <string.h>
 
@@ -11,7 +12,9 @@ enum { SRNOS_SPI_SLOT_FREE, SRNOS_SPI_SLOT_RESERVED, SRNOS_SPI_SLOT_QUEUED, SRNO
 typedef struct {
     unsigned state;
     uint32_t order;
-    uint64_t enqueued, started;
+    uint64_t enqueued, started, submitted;
+    SRNOS_SPISequencePrepare prepare;
+    unsigned sequence_completed;
     uint64_t deadline_us;
     SRNOS_SPIDevice *dev;
     SRNOS_SPICallback cb;
@@ -29,7 +32,7 @@ struct SRNOS_SPIBus {
     SRNOS_SPIRequest slots[8];
     SRNOS_SPIRequest *active;
     SRNOS_SPIDevice *callback_dev;
-    uint32_t order, imu_run;
+    uint32_t order, imu_run, can_run;
     volatile unsigned completion;
     volatile bool accepting_irq, recover_requested;
     bool faulted;
@@ -43,18 +46,25 @@ SRNOS_DEBUG_WATCH_BSS volatile SRNOS_DbgSPI SRNOS_DebugDbgSPI[SRNOS_SPI_BUS_MAX]
 static uint32_t enter(void) { uint32_t m=__get_PRIMASK(); __disable_irq(); return m; }
 static void leave(uint32_t m) { __set_PRIMASK(m); }
 static uint32_t ticks_us(uint64_t us) { return (uint32_t)((us*osKernelGetTickFreq()+999999)/1000000); }
-static void wake(void) { if(worker) (void)osThreadFlagsSet(worker,1); }
+static void wake(void) {
+    if(!worker)return;
+    if(__get_IPSR()) {
+        BaseType_t woken=pdFALSE;
+        (void)xTaskNotifyFromISR((TaskHandle_t)worker,1,eSetBits,&woken);
+        portYIELD_FROM_ISR(woken);
+    } else (void)xTaskNotify((TaskHandle_t)worker,1,eSetBits);
+}
 static void histogram(uint32_t bins[6], uint32_t us) {
     unsigned i=us<=25?0:us<=100?1:us<=250?2:us<=500?3:us<=1000?4:5;
     ++bins[i];
 }
-static void finish(SRNOS_SPIRequest *r, SRNOS_SPIStatus status)
+static void finish(SRNOS_SPIRequest *r, SRNOS_SPIStatus status, bool count_success)
 {
     uint32_t m=enter();
     SRNOS_SPIDevice *dev=r->dev;
     SRNOS_SPICallback cb=r->cb;
     void *ctx=r->ctx;
-    if (status==SRNOS_SPI_OK) { ++dev->statistics.completed; ++SRNOS_SPI_DBG.xfer_done; }
+    if (status==SRNOS_SPI_OK) { if(count_success) { ++dev->statistics.completed; ++SRNOS_SPI_DBG.xfer_done; } }
     else { ++dev->statistics.errors; ++SRNOS_SPI_DBG.xfer_error; }
     if (status==SRNOS_SPI_TIMEOUT) { ++dev->statistics.timeouts; ++SRNOS_SPI_DBG.xfer_timeout; }
     r->result=status;
@@ -89,12 +99,13 @@ static bool abort_active(void)
     if(ok && bus.active) HAL_GPIO_WritePin(bus.active->dev->cs_port,bus.active->dev->cs_pin,GPIO_PIN_SET);
     return ok;
 }
-static SRNOS_SPIRequest *oldest(unsigned first, unsigned end)
+static SRNOS_SPIRequest *oldest(unsigned first, unsigned end, bool can)
 {
     SRNOS_SPIRequest *r=NULL;
     for(unsigned i=first;i<end;i++) {
         SRNOS_SPIRequest *p=&bus.slots[i];
-        if(p->state==SRNOS_SPI_SLOT_QUEUED && (!r || (int32_t)(p->order-r->order)<0)) r=p;
+        if(p->state==SRNOS_SPI_SLOT_QUEUED && !!p->dev->can_priority==can &&
+           (!r || (int32_t)(p->order-r->order)<0)) r=p;
     }
     return r;
 }
@@ -105,7 +116,7 @@ static void service_once(void)
     SRNOS_SPIRequest *r=bus.active;
     if(r) {
         unsigned completion=bus.completion;
-        if(completion || r->cancel || bus.recover_requested || now-r->started>=5000) {
+        if(completion || r->cancel || bus.recover_requested || now-r->started>=5000 || (r->prepare && now-r->submitted>=r->deadline_us)) {
             SRNOS_SPIStatus status=SRNOS_SPI_OK;
             bool abort_needed=completion!=1 || r->cancel || bus.recover_requested;
             if(abort_needed) {
@@ -120,22 +131,52 @@ static void service_once(void)
             histogram(r->dev->statistics.transfer_us,elapsed);
             if(elapsed>r->dev->statistics.max_transfer_us) r->dev->statistics.max_transfer_us=elapsed;
             bus.completion=0; bus.recover_requested=false;
-            finish(r,status);
+            if(status==SRNOS_SPI_OK && r->prepare) {
+                /* Each physical transfer retains its own statistics and CS
+                 * boundary. Requeue before selecting the next owner; never
+                 * execute an entire sequence as one bus reservation. */
+                ++r->dev->statistics.completed; ++SRNOS_SPI_DBG.xfer_done;
+                bus.active=NULL;
+                ++r->sequence_completed;
+                int len=r->prepare(r->ctx,r->sequence_completed,r->tx,&r->rx);
+                if(len==0) finish(r,SRNOS_SPI_OK,false);
+                else if(len<0 || len>(int)SRNOS_SPI_SEQUENCE_MAX_BYTES ||
+                        r->sequence_completed>=SRNOS_SPI_SEQUENCE_MAX_STEPS)
+                    finish(r,SRNOS_SPI_INVALID_PARAM,false);
+                else {
+                    r->len=(size_t)len;
+                    uint32_t key=enter();
+                    r->order=++bus.order; r->enqueued=SRNOS_TimeGetUptimeUs();
+                    r->state=SRNOS_SPI_SLOT_QUEUED; ++r->dev->statistics.accepted;
+                    leave(key);
+                }
+            } else finish(r,status,true);
         }
     } else bus.recover_requested=false;
+    now=SRNOS_TimeGetUptimeUs();
     for(unsigned i=0;i<8;i++) {
         r=&bus.slots[i];
-        if(r->state==SRNOS_SPI_SLOT_QUEUED && (r->cancel || bus.faulted || SRNOS_TimeGetUptimeUs()-r->enqueued>=r->deadline_us)) {
+        if(r->state==SRNOS_SPI_SLOT_QUEUED && (r->cancel || bus.faulted || now-r->submitted>=r->deadline_us)) {
             if(!r->cancel && !bus.faulted) ++r->dev->statistics.queue_expired;
-            finish(r,r->cancel?SRNOS_SPI_CANCELLED:bus.faulted?SRNOS_SPI_ERROR:SRNOS_SPI_TIMEOUT);
+            finish(r,r->cancel?SRNOS_SPI_CANCELLED:bus.faulted?SRNOS_SPI_ERROR:SRNOS_SPI_TIMEOUT,false);
         }
     }
     if(bus.active || bus.faulted) return;
     uint32_t m=enter();
-    SRNOS_SPIRequest *imu=oldest(0,4), *normal=oldest(4,8);
-    r=imu && (bus.imu_run<4 || !normal)?imu:normal;
+    SRNOS_SPIRequest *imu=oldest(0,4,false), *normal=oldest(4,8,false), *can=oldest(4,8,true);
+    /* IMU owns the next boundary, with at most four transactions before one
+     * waiting lower-class request. Within that lower class CAN has priority,
+     * with at most four CAN transactions before one waiting ordinary request.
+     * Keep the four reserved IMU slots and four shared slots unchanged.
+     * A running DMA is never preempted and all existing deadlines still apply. */
+    SRNOS_SPIRequest *lower=can && (bus.can_run<4 || !normal)?can:normal;
+    r=imu && (bus.imu_run<4 || !lower)?imu:lower;
     if(!r) { leave(m); return; }
-    if(r==imu) { if(bus.imu_run<4) ++bus.imu_run; } else bus.imu_run=0;
+    if(r==imu) { if(bus.imu_run<4) ++bus.imu_run; }
+    else {
+        bus.imu_run=0;
+        if(r==can) { if(bus.can_run<4) ++bus.can_run; } else bus.can_run=0;
+    }
     r->state=SRNOS_SPI_SLOT_ACTIVE; bus.active=r; r->started=SRNOS_TimeGetUptimeUs();
     uint64_t queue_elapsed=r->started-r->enqueued;
     uint32_t wait=queue_elapsed>UINT32_MAX?UINT32_MAX:(uint32_t)queue_elapsed;
@@ -163,11 +204,12 @@ static uint32_t next_wait(void)
         SRNOS_SPIRequest *r=&bus.slots[i];
         if(r->state==SRNOS_SPI_SLOT_ACTIVE) {
             uint64_t end=r->started+5000;
+            if(r->prepare && r->submitted+r->deadline_us<end) end=r->submitted+r->deadline_us;
             if(r->cancel) { leave(m);return 0; }
             if(end<deadline)deadline=end;
         } else if(r->state==SRNOS_SPI_SLOT_QUEUED) {
             if(!bus.active || r->cancel || bus.faulted) { leave(m);return 0; }
-            uint64_t end=r->enqueued+r->deadline_us;
+            uint64_t end=r->submitted+r->deadline_us;
             if(end<deadline)deadline=end;
         }
     }
@@ -179,7 +221,7 @@ static uint32_t next_wait(void)
 }
 static bool dispatch_wait(void *arg) {
     (void)arg;uint32_t delay=next_wait();
-    if(delay)(void)osThreadFlagsWait(1,osFlagsWaitAny,delay);
+    if(delay) { uint32_t flags; (void)xTaskNotifyWait(0,1,&flags,delay); }
     return true;
 }
 static void dispatch(void *argument) {
@@ -200,7 +242,7 @@ void SRNOS_SPIInitRtos(void)
         bus.slots[i].done=osSemaphoreNew(1,0,NULL);
         configASSERT(bus.slots[i].done);
     }
-    const osThreadAttr_t attr={.name="SRNOS_SPI4",.stack_size=3072,.priority=osPriorityHigh6};
+    const osThreadAttr_t attr={.name="SRNOS_SPI4",.stack_size=3072,.priority=osPriorityRealtime1};
     worker=SRNOS_KernelThreadNew(dispatch,NULL,&attr); configASSERT(worker);
 }
 SRNOS_SPIStatus SRNOS_SPIDeviceInit(SRNOS_SPIDevice *d,SRNOS_SPIBusId id,GPIO_TypeDef *cs,uint16_t pin)
@@ -210,13 +252,13 @@ SRNOS_SPIStatus SRNOS_SPIDeviceInit(SRNOS_SPIDevice *d,SRNOS_SPIBusId id,GPIO_Ty
     /* Device descriptors have startup/static lifetime; reinit only when idle. */
     for(unsigned i=0;i<8;i++) if(bus.slots[i].state!=SRNOS_SPI_SLOT_FREE && bus.slots[i].dev==d) return SRNOS_SPI_BUSY;
     d->bus=&bus; d->cs_port=cs; d->cs_pin=pin; d->max_speed_hz=10000000;
-    d->mode=0; d->bits_per_word=8; d->imu_priority=0;
+    d->mode=0; d->bits_per_word=8; d->imu_priority=0; d->can_priority=0;
     HAL_GPIO_WritePin(cs,pin,GPIO_PIN_SET); return SRNOS_SPI_OK;
 }
-SRNOS_SPIStatus SRNOS_SPITransferEx(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t *rx,size_t len,
-    SRNOS_SPICallback cb,void *ctx,uint8_t blocking,uint32_t timeout_ms)
+static SRNOS_SPIStatus transfer(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t *rx,size_t len,
+    SRNOS_SPICallback cb,void *ctx,uint8_t blocking,uint32_t timeout_ms,SRNOS_SPISequencePrepare prepare)
 {
-    if(!d || d->bus!=&bus || !len || len>SRNOS_SPI_DMA_STAGING_SIZE || (!tx&&!rx) ||
+    if(!d || d->bus!=&bus || (d->imu_priority && d->can_priority) || !len || len>SRNOS_SPI_DMA_STAGING_SIZE || (!tx&&!rx) ||
        (timeout_ms>INT32_MAX && timeout_ms!=SRNOS_WAIT_FOREVER) || __get_IPSR()) return SRNOS_SPI_INVALID_PARAM;
     if(!worker || osKernelGetState()!=osKernelRunning || (blocking && osThreadGetId()==worker)) return SRNOS_SPI_INVALID_PARAM;
     if(timeout_ms==SRNOS_NO_WAIT) return SRNOS_SPI_TIMEOUT;
@@ -228,7 +270,8 @@ SRNOS_SPIStatus SRNOS_SPITransferEx(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t
     if(!r) { ++d->statistics.queue_full; ++SRNOS_SPI_DBG.xfer_busy; leave(m); return SRNOS_SPI_BUSY; }
     r->dev=d; r->rx=rx; r->len=len; r->cb=cb; r->ctx=ctx;
     r->synchronous=blocking!=0; r->cancel=false;
-    r->order=++bus.order; r->enqueued=SRNOS_TimeGetUptimeUs();
+    r->prepare=prepare; r->sequence_completed=0;
+    r->order=++bus.order; r->submitted=r->enqueued=SRNOS_TimeGetUptimeUs();
     r->deadline_us=d->imu_priority?1000U:(uint64_t)(timeout_ms==SRNOS_WAIT_FOREVER?5U:timeout_ms)*1000U;
     /* RESERVED cannot be dispatched or recycled while the caller copies. */
     r->state=SRNOS_SPI_SLOT_RESERVED;
@@ -241,7 +284,7 @@ SRNOS_SPIStatus SRNOS_SPITransferEx(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t
     /* Admission/copy and queueing share one caller budget. Preemption during
      * the unmasked copy must not grant another full timeout after publication.
      * On timeout retain RX ownership until cancellation is acknowledged. */
-    uint64_t elapsed=SRNOS_TimeGetUptimeUs()-r->enqueued;
+    uint64_t elapsed=SRNOS_TimeGetUptimeUs()-r->submitted;
     uint64_t budget_us=(uint64_t)timeout_ms*1000U;
     uint32_t remaining=timeout_ms==SRNOS_WAIT_FOREVER?osWaitForever:
         elapsed<budget_us?ticks_us(budget_us-elapsed):0;
@@ -251,6 +294,19 @@ SRNOS_SPIStatus SRNOS_SPITransferEx(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t
     }
     m=enter(); SRNOS_SPIStatus result=r->result; r->state=SRNOS_SPI_SLOT_FREE; leave(m);
     return result;
+}
+SRNOS_SPIStatus SRNOS_SPITransferEx(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t *rx,size_t len,
+    SRNOS_SPICallback cb,void *ctx,uint8_t blocking,uint32_t timeout_ms)
+{
+    return transfer(d,tx,rx,len,cb,ctx,blocking,timeout_ms,NULL);
+}
+SRNOS_SPIStatus SRNOS_SPITransferSequence(SRNOS_SPIDevice *d,SRNOS_SPISequencePrepare prepare,void *ctx)
+{
+    if(!prepare || __get_IPSR() || osThreadGetId()==worker) return SRNOS_SPI_INVALID_PARAM;
+    uint8_t tx[SRNOS_SPI_SEQUENCE_MAX_BYTES], *rx=NULL;
+    int len=prepare(ctx,0,tx,&rx);
+    if(len<=0 || len>(int)SRNOS_SPI_SEQUENCE_MAX_BYTES) return SRNOS_SPI_INVALID_PARAM;
+    return transfer(d,tx,rx,(size_t)len,NULL,ctx,1,5,prepare);
 }
 SRNOS_SPIStatus SRNOS_SPITransferDMA(SRNOS_SPIDevice*d,const uint8_t*t,uint8_t*r,size_t n,SRNOS_SPICallback c,void*x) { return SRNOS_SPITransferEx(d,t,r,n,c,x,0,5); }
 SRNOS_SPIStatus SRNOS_SPITransferDMABlocking(SRNOS_SPIDevice*d,const uint8_t*t,uint8_t*r,size_t n,uint32_t ms) { return SRNOS_SPITransferEx(d,t,r,n,NULL,NULL,1,ms); }

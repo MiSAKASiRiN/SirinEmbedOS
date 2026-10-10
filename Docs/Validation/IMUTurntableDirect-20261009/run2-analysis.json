@@ -1,0 +1,450 @@
+{
+  "decoder_errors": {},
+  "sources": {
+    "turntable.motor1.encoder_raw": {
+      "count": 11182,
+      "min": 163.0,
+      "max": 3759.0,
+      "last": 3706.0,
+      "invalid": 0
+    },
+    "turntable.motor1.angle_deg": {
+      "count": 11182,
+      "min": 7.1630859375,
+      "max": 165.1904296875,
+      "last": 162.861328125,
+      "invalid": 0
+    },
+    "turntable.motor1.unwrapped_deg": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 164.970703125,
+      "last": 164.794921875,
+      "invalid": 603
+    },
+    "turntable.motor1.speed_dps": {
+      "count": 11182,
+      "min": -29.081459045410156,
+      "max": 30.513164520263672,
+      "last": -0.00017035187920555472,
+      "invalid": 603
+    },
+    "turntable.motor1.voltage_raw": {
+      "count": 11182,
+      "min": -25000.0,
+      "max": 2224.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor1.feedback_rpm": {
+      "count": 11182,
+      "min": -12.0,
+      "max": 16.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-12": 1,
+        "-11": 1,
+        "-10": 1,
+        "-9": 1,
+        "-8": 1,
+        "-7": 3,
+        "-6": 125,
+        "-5": 291,
+        "-4": 276,
+        "-3": 393,
+        "-2": 334,
+        "-1": 139,
+        "0": 8348,
+        "1": 90,
+        "2": 204,
+        "3": 312,
+        "4": 417,
+        "5": 231,
+        "6": 12,
+        "8": 1,
+        "16": 1
+      }
+    },
+    "turntable.motor1.current_raw": {
+      "count": 11182,
+      "min": -17642.0,
+      "max": 1624.0,
+      "last": 22.0,
+      "invalid": 0
+    },
+    "turntable.motor2.encoder_raw": {
+      "count": 11182,
+      "min": 4850.0,
+      "max": 4865.0,
+      "last": 4856.0,
+      "invalid": 0
+    },
+    "turntable.motor2.angle_deg": {
+      "count": 11182,
+      "min": 213.134765625,
+      "max": 213.7939453125,
+      "last": 213.3984375,
+      "invalid": 0
+    },
+    "turntable.motor2.unwrapped_deg": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 213.3984375,
+      "last": 213.134765625,
+      "invalid": 603
+    },
+    "turntable.motor2.speed_dps": {
+      "count": 11182,
+      "min": -0.8801493644714355,
+      "max": 0.4351581037044525,
+      "last": -5.307467290549539e-06,
+      "invalid": 603
+    },
+    "turntable.motor2.voltage_raw": {
+      "count": 11182,
+      "min": -375.0,
+      "max": 44.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor2.feedback_rpm": {
+      "count": 11182,
+      "min": -6.0,
+      "max": 8.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-6": 1,
+        "-4": 1,
+        "-2": 3,
+        "-1": 7,
+        "0": 11167,
+        "2": 1,
+        "3": 1,
+        "8": 1
+      }
+    },
+    "turntable.motor2.current_raw": {
+      "count": 11182,
+      "min": -1062.0,
+      "max": 305.0,
+      "last": -30.0,
+      "invalid": 0
+    },
+    "turntable.motor3.encoder_raw": {
+      "count": 11182,
+      "min": 4036.0,
+      "max": 5143.0,
+      "last": 4045.0,
+      "invalid": 0
+    },
+    "turntable.motor3.angle_deg": {
+      "count": 11182,
+      "min": 177.36328125,
+      "max": 226.0107421875,
+      "last": 177.7587890625,
+      "invalid": 0
+    },
+    "turntable.motor3.unwrapped_deg": {
+      "count": 11182,
+      "min": -6.8115234375,
+      "max": 41.4404296875,
+      "last": 41.30859375,
+      "invalid": 603
+    },
+    "turntable.motor3.speed_dps": {
+      "count": 11182,
+      "min": -1.8072000741958618,
+      "max": 16.272607803344727,
+      "last": 0.1535142958164215,
+      "invalid": 603
+    },
+    "turntable.motor3.voltage_raw": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 7368.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor3.feedback_rpm": {
+      "count": 11182,
+      "min": -59.0,
+      "max": 18.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-59": 1,
+        "-58": 2,
+        "-57": 3,
+        "-56": 1,
+        "-55": 1,
+        "-54": 2,
+        "-53": 2,
+        "-52": 4,
+        "-51": 2,
+        "-49": 1,
+        "-47": 2,
+        "-46": 1,
+        "-43": 1,
+        "-41": 1,
+        "-40": 1,
+        "-39": 1,
+        "-37": 1,
+        "-35": 1,
+        "-32": 2,
+        "-25": 2,
+        "-24": 1,
+        "-23": 1,
+        "-20": 1,
+        "-14": 1,
+        "-13": 1,
+        "-10": 1,
+        "-8": 1,
+        "-7": 1,
+        "-6": 2,
+        "-4": 1,
+        "-2": 2,
+        "-1": 12,
+        "0": 10583,
+        "1": 165,
+        "2": 358,
+        "3": 17,
+        "16": 1,
+        "18": 1
+      }
+    },
+    "turntable.motor3.current_raw": {
+      "count": 11182,
+      "min": -1637.0,
+      "max": 5896.0,
+      "last": -58.0,
+      "invalid": 0
+    },
+    "turntable.phase": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 10.0,
+      "last": 10.0,
+      "invalid": 0
+    },
+    "turntable.fault": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 7.0,
+      "last": 7.0,
+      "invalid": 0
+    },
+    "turntable.fault_axis": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.fault_measurement": {
+      "count": 11182,
+      "min": 0.0,
+      "max": 0.087890625,
+      "last": 0.087890625,
+      "invalid": 0
+    },
+    "turntable.motor1.online": {
+      "count": 5591,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor1.temperature_c": {
+      "count": 5591,
+      "min": 32.0,
+      "max": 42.0,
+      "last": 42.0,
+      "invalid": 0
+    },
+    "turntable.motor2.online": {
+      "count": 5591,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor2.temperature_c": {
+      "count": 5591,
+      "min": 29.0,
+      "max": 29.0,
+      "last": 29.0,
+      "invalid": 0
+    },
+    "turntable.motor3.online": {
+      "count": 5591,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor3.temperature_c": {
+      "count": 5591,
+      "min": 33.0,
+      "max": 38.0,
+      "last": 36.0,
+      "invalid": 0
+    },
+    "turntable.sequence_revision": {
+      "count": 560,
+      "min": 5.0,
+      "max": 5.0,
+      "last": 5.0,
+      "invalid": 0
+    }
+  },
+  "imu_quality": {
+    "256": {
+      "samples": 55906,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.0860000000008085
+    },
+    "257": {
+      "samples": 55905,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.1100000000006105
+    }
+  },
+  "phase_ranges_us_clock_seconds": {
+    "0": [
+      1.268777,
+      2.273775
+    ],
+    "1": [
+      2.278764,
+      4.293782
+    ],
+    "2": [
+      4.2987649999999995,
+      14.238783999999999
+    ],
+    "3": [
+      14.244817,
+      29.158787
+    ],
+    "4": [
+      29.164823,
+      30.428763999999997
+    ],
+    "5": [
+      30.433784,
+      35.428765
+    ],
+    "6": [
+      35.434799999999996,
+      55.168772999999995
+    ],
+    "10": [
+      55.174822999999996,
+      57.17482
+    ]
+  },
+  "id3_lift": {
+    "start_s": 2.278764,
+    "end_s": 14.144817,
+    "encoder_delta_deg": 47.98828125,
+    "baseline_seconds": [
+      1.318777,
+      2.228764
+    ],
+    "scope": "ID3 monotonic lift; gyro integral vector magnitude; not ID1 sweep or calibration",
+    "BMI088": {
+      "integral_vector_deg": [
+        -48.0901295738939,
+        -0.6786533562319736,
+        2.770111704091942
+      ],
+      "magnitude_deg": 48.17462663752545,
+      "difference_deg": 0.18634538752544927,
+      "bias_rad_s": [
+        0.0012666111382154319,
+        -0.00246064380466283,
+        -5.736040197067209e-05
+      ]
+    },
+    "LSM6DS3": {
+      "integral_vector_deg": [
+        -0.07702613272385167,
+        -47.80765911598905,
+        -1.5808930521113647
+      ],
+      "magnitude_deg": 47.83385230166965,
+      "difference_deg": -0.1544289483303487,
+      "bias_rad_s": [
+        0.009753705476983808,
+        -0.043097549897956326,
+        -0.0009733567239491494
+      ]
+    }
+  },
+  "sequence": {
+    "revision": 5,
+    "complete": false,
+    "scope": "Bias-corrected gyro projection; axis inferred from first motion, not independent calibration",
+    "axes": {
+      "1": {
+        "baseline_seconds": [
+          30.433784,
+          35.428765
+        ],
+        "segments": {
+          "forward": {
+            "completed": false,
+            "start_s": 35.434799999999996,
+            "end_s": 55.06877299999999,
+            "encoder_delta_deg": 149.4140625,
+            "sensors": {
+              "BMI088": {
+                "gyro_delta_deg": 153.23155539022375,
+                "encoder_delta_deg": 149.424616470106,
+                "difference_deg": 3.8069389201177444,
+                "rmse_deg": 3.3064944063797133,
+                "bias_rad_s": [
+                  0.0015129763544543104,
+                  -0.0022005436870249154,
+                  -0.000156986335141821
+                ],
+                "axis_in_sensor_frame": [
+                  -0.05696400705118468,
+                  0.048755527697462234,
+                  -0.9971850382048533
+                ],
+                "samples": 19634,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0860000000008085
+              },
+              "LSM6DS3": {
+                "gyro_delta_deg": 152.16602999014367,
+                "encoder_delta_deg": 149.4239513039228,
+                "difference_deg": 2.7420786862208786,
+                "rmse_deg": 2.792657093692403,
+                "bias_rad_s": [
+                  0.010394275965335252,
+                  -0.042523121695597306,
+                  -0.0011514692184717342
+                ],
+                "axis_in_sensor_frame": [
+                  0.05263101280790628,
+                  -0.05513567124487693,
+                  0.9970907853586809
+                ],
+                "samples": 19634,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.1030000000005202
+              }
+            },
+            "at_least_one_turn": false
+          }
+        },
+        "baseline_encoder_span_deg": 0.087890625,
+        "completed": false
+      }
+    }
+  }
+}

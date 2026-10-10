@@ -330,6 +330,193 @@ static void test_next_wait()
     assert(SRNOS_CANRouterDetachAdapter(ch,&object)==0);
     assert(SRNOS_CANRouterCoreNextTxWait(ch,0)==UINT32_MAX);
 }
+
+struct scripted_tx_probe_t {
+    SRNOS_CANTxItem urgent[4], periodic[4];
+    size_t urgent_count, periodic_count;
+    struct commit_t { uintptr_t token; SRNOS_CANTxKind kind; } commits[8];
+    size_t commit_count;
+};
+static scripted_tx_probe_t g_scripted_tx;
+static struct captured_tx_t {
+    SRNOS_CANFrame frame;
+    SRNOS_CANRouterTxClass kind;
+} g_captured_tx[8];
+static size_t g_captured_count;
+
+static size_t scripted_poll(void *obj, SRNOS_CANTxKind kind, SRNOS_CANTxItem *out,
+                            size_t max, uint32_t)
+{
+    const auto &probe = *static_cast<scripted_tx_probe_t *>(obj);
+    const bool urgent = kind == SRNOS_CAN_TX_KIND_URGENT;
+    const size_t count = urgent ? probe.urgent_count : probe.periodic_count;
+    assert(count <= max);
+    std::memcpy(out, urgent ? probe.urgent : probe.periodic, count * sizeof(*out));
+    return count;
+}
+
+static void scripted_commit(void *obj, SRNOS_CANTxKind kind, const SRNOS_CANTxItem *item,
+                            SRNOS_CANTxResult result)
+{
+    auto &probe = *static_cast<scripted_tx_probe_t *>(obj);
+    assert(result == SRNOS_CAN_TX_RESULT_ACCEPTED && probe.commit_count < 8u);
+    probe.commits[probe.commit_count++] = {item->token, kind};
+}
+
+static bool capture_push(SRNOS_CANChannel ch, const SRNOS_CANFrame *tx,
+                         SRNOS_CANRouterTxClass kind)
+{
+    assert(ch == SRNOS_CAN_CH_NTFDCAN2 && g_captured_count < 8u);
+    g_captured_tx[g_captured_count++] = {*tx, kind};
+    return true;
+}
+
+static SRNOS_CANTxItem group_item(uint32_t id, uint8_t slot, int16_t value, uintptr_t token)
+{
+    SRNOS_CANTxItem item{};
+    item.format = SRNOS_CAN_TX_FORMAT_GROUP_I16;
+    item.group_i16 = {id, 0u, slot, SRNOS_CAN_TX_ENDIAN_BE, value};
+    item.token = token;
+    return item;
+}
+
+static SRNOS_CANTxItem raw_item(uintptr_t token)
+{
+    SRNOS_CANTxItem item{};
+    item.format = SRNOS_CAN_TX_FORMAT_RAW_FRAME;
+    item.frame = frame(0x350u);
+    item.frame.data[0] = 0xabu;
+    item.token = token;
+    return item;
+}
+
+static void drain_script(size_t frames, size_t commits)
+{
+    g_captured_count = 0u;
+    g_scripted_tx.commit_count = 0u;
+    SRNOS_CANRouterCoreDrainTx(SRNOS_CAN_CH_NTFDCAN2, ++g_now_ms);
+    assert(g_captured_count == frames && g_scripted_tx.commit_count == commits);
+}
+
+static void expect_group(size_t index, uint32_t id, SRNOS_CANRouterTxClass kind,
+                         uint16_t a, uint16_t b, uint16_t c, uint16_t d)
+{
+    const auto &captured = g_captured_tx[index];
+    assert(captured.kind == kind && captured.frame.id == id);
+    assert(captured.frame.flags == 0u && captured.frame.dlc == 8u);
+    const uint16_t values[] = {a, b, c, d};
+    for (size_t slot = 0u; slot < 4u; ++slot) {
+        assert(captured.frame.data[slot * 2u] == (values[slot] >> 8u));
+        assert(captured.frame.data[slot * 2u + 1u] == (values[slot] & 0xffu));
+    }
+}
+
+static void expect_commit(size_t index, uintptr_t token, SRNOS_CANTxKind kind)
+{
+    assert(g_scripted_tx.commits[index].token == token);
+    assert(g_scripted_tx.commits[index].kind == kind);
+}
+
+static void expect_raw(size_t index)
+{
+    const auto &captured = g_captured_tx[index];
+    const SRNOS_CANFrame expected = raw_item(0u).frame;
+    assert(captured.kind == SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC);
+    assert(captured.frame.id == expected.id && captured.frame.dlc == expected.dlc);
+    assert(captured.frame.flags == expected.flags);
+    assert(std::memcmp(captured.frame.data, expected.data, sizeof(expected.data)) == 0);
+}
+
+static void test_frozen_routes_and_group_scratch()
+{
+    const SRNOS_CANChannel ch = SRNOS_CAN_CH_NTFDCAN2;
+    static adapter_probe_t receivers[3]{};
+    static uint32_t raw_hits;
+    for (size_t i = 0u; i < 3u; ++i) {
+        receivers[i].filters[0] = filter(0x654u, i == 2u);
+        receivers[i].filter_count = 1u;
+        assert(SRNOS_CANRouterAttachAdapter(ch, &receivers[i], &k_adapter_ops, 1u) == 0);
+    }
+    assert(SRNOS_CANRouterSubscribeRaw(ch, filter(0x654u), raw_count, &raw_hits) == 0);
+    static const SRNOS_CANAdapterOps script_ops = {
+        nullptr, nullptr, nullptr, scripted_poll, scripted_commit, nullptr,
+    };
+    static const SRNOS_CANRouterBackendOps capture_backend = {
+        nullptr, test_tx_free, capture_push, test_signal, test_now_ms, nullptr,
+    };
+    assert(SRNOS_CANRouterAttachAdapter(ch, &g_scripted_tx, &script_ops, 1u) == 0);
+    SRNOS_CANRouterCoreSetBackend(ch, &capture_backend);
+    SRNOS_CAN_FreezeConfiguration();
+
+    const auto before = stats_copy(ch);
+    SRNOS_CANFrame rx = frame(0x654u);
+    SRNOS_CANRouterCoreOnRxFrame(ch, &rx, 100u);
+    assert(receivers[0].rx_count == 1u && receivers[1].rx_count == 1u);
+    assert(receivers[2].rx_count == 0u && raw_hits == 1u);
+    rx.flags = SRNOS_CAN_FRAME_FLAG_EXT;
+    SRNOS_CANRouterCoreOnRxFrame(ch, &rx, 101u);
+    rx.id = 0x655u;
+    SRNOS_CANRouterCoreOnRxFrame(ch, &rx, 102u);
+    const auto after = stats_copy(ch);
+    assert(receivers[0].rx_count == 1u && receivers[1].rx_count == 1u);
+    assert(receivers[2].rx_count == 1u && raw_hits == 1u);
+    assert(after.rx_routed_adapter - before.rx_routed_adapter == 3u);
+    assert(after.rx_routed_raw - before.rx_routed_raw == 1u);
+    assert(after.rx_no_subscriber - before.rx_no_subscriber == 1u);
+
+    // Seed multiple groups and slots, then reuse only one accumulator for a new ID.
+    g_scripted_tx.periodic[0] = group_item(0x210u, 0u, 0x1111, 1u);
+    g_scripted_tx.periodic[1] = group_item(0x210u, 2u, 0x2222, 2u);
+    g_scripted_tx.periodic[2] = group_item(0x211u, 3u, 0x3333, 3u);
+    g_scripted_tx.periodic_count = 3u;
+    drain_script(2u, 3u);
+    expect_group(0u, 0x210u, SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC, 0x1111, 0u, 0x2222, 0u);
+    expect_group(1u, 0x211u, SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC, 0u, 0u, 0u, 0x3333);
+    expect_commit(0u, 1u, SRNOS_CAN_TX_KIND_PERIODIC);
+    expect_commit(1u, 2u, SRNOS_CAN_TX_KIND_PERIODIC);
+    expect_commit(2u, 3u, SRNOS_CAN_TX_KIND_PERIODIC);
+    g_scripted_tx.periodic[0] = group_item(0x212u, 1u, 0x4444, 4u);
+    g_scripted_tx.periodic_count = 1u;
+    drain_script(1u, 1u);
+    expect_group(0u, 0x212u, SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC, 0u, 0x4444, 0u, 0u);
+    expect_commit(0u, 4u, SRNOS_CAN_TX_KIND_PERIODIC);
+
+    // A RAW-only periodic round must neither resend nor recommit the previous group.
+    g_scripted_tx.periodic[0] = raw_item(5u);
+    drain_script(1u, 1u);
+    expect_raw(0u);
+    expect_commit(0u, 5u, SRNOS_CAN_TX_KIND_PERIODIC);
+
+    // Urgent and periodic share scratch, but each distinct ID starts with clean slots.
+    g_scripted_tx.urgent[0] = group_item(0x213u, 0u, 0x5555, 6u);
+    g_scripted_tx.urgent_count = 1u;
+    g_scripted_tx.periodic[0] = group_item(0x214u, 3u, 0x6666, 7u);
+    drain_script(2u, 2u);
+    expect_group(0u, 0x213u, SRNOS_CAN_ROUTER_TX_CLASS_URGENT, 0x5555, 0u, 0u, 0u);
+    expect_group(1u, 0x214u, SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC, 0u, 0u, 0u, 0x6666);
+    expect_commit(0u, 6u, SRNOS_CAN_TX_KIND_URGENT);
+    expect_commit(1u, 7u, SRNOS_CAN_TX_KIND_PERIODIC);
+
+    // Accepted slots of the same ID survive via its shadow, without stale commits.
+    g_scripted_tx.urgent[0] = group_item(0x215u, 0u, 0x1234, 8u);
+    g_scripted_tx.periodic[0] = group_item(0x215u, 1u, 0x5678, 9u);
+    drain_script(2u, 2u);
+    expect_group(0u, 0x215u, SRNOS_CAN_ROUTER_TX_CLASS_URGENT, 0x1234, 0u, 0u, 0u);
+    expect_group(1u, 0x215u, SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC, 0x1234, 0x5678, 0u, 0u);
+    expect_commit(0u, 8u, SRNOS_CAN_TX_KIND_URGENT);
+    expect_commit(1u, 9u, SRNOS_CAN_TX_KIND_PERIODIC);
+
+    g_scripted_tx.urgent[0] = group_item(0x216u, 2u, 0x7777, 10u);
+    g_scripted_tx.periodic[0] = raw_item(11u);
+    drain_script(2u, 2u);
+    expect_group(0u, 0x216u, SRNOS_CAN_ROUTER_TX_CLASS_URGENT, 0u, 0u, 0x7777, 0u);
+    expect_raw(1u);
+    expect_commit(0u, 10u, SRNOS_CAN_TX_KIND_URGENT);
+    expect_commit(1u, 11u, SRNOS_CAN_TX_KIND_PERIODIC);
+    g_scripted_tx.urgent_count = g_scripted_tx.periodic_count = 0u;
+    drain_script(0u, 0u);
+}
+
 int main()
 {
     for (SRNOS_CANChannel ch = 1u; ch <= SRNOS_CAN_ROUTER_CHANNEL_COUNT; ++ch) {
@@ -343,7 +530,7 @@ int main()
     test_oneshot_dual_heap();
     test_oneshot_busy_keeps_item();
     assert(!SRNOS_CAN_ConfigurationFrozen());
-    SRNOS_CAN_FreezeConfiguration();
+    test_frozen_routes_and_group_scratch();
     assert(SRNOS_CAN_ConfigurationFrozen());
     SRNOS_CANRxFilter filter = {};
     assert(SRNOS_CANRouterAttachAdapter(1, nullptr, nullptr, 1) == SRNOS_CAN_FROZEN);
@@ -352,6 +539,6 @@ int main()
     assert(SRNOS_CANRouterUnsubscribeRaw(1, filter, nullptr, nullptr) == SRNOS_CAN_FROZEN);
     SRNOS_CANFrame runtime_frame = frame(0x55u);
     assert(SRNOS_CANRouterPostOneshot(1, &runtime_frame, 1, 10) == 0);
-    std::puts("SRNOS_CANRouterCoreHostTest: PASS (including frozen registration)");
+    std::puts("SRNOS_CANRouterCoreHostTest: PASS (frozen registration/fanout, group scratch reuse and shadow retention)");
     return 0;
 }

@@ -1,0 +1,21 @@
+Remote debugging using localhost:2331
+prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3762
+3762	                --uxDeletedTasksWaitingCleanUp;
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x459ec lma 0x80002d0
+Loading section .rodata, size 0x36c8 lma 0x8045cc0
+Loading section .ARM, size 0x10 lma 0x8049388
+Loading section .preinit_array, size 0x4 lma 0x8049398
+Loading section .init_array, size 0x4 lma 0x804939c
+Loading section .data, size 0x758 lma 0x80493a0
+Loading section .itcm_text, size 0x120 lma 0x8049b00
+Start address 0x08003e7c, load size 302096
+Transfer rate: 98338 KB/sec, 25174 bytes/write.
+Section .text, range 0x80002d0 -- 0x8045cbc: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x080142d8 in prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+Reading symbols from build/IMUTurntableFast/board/run2.elf...

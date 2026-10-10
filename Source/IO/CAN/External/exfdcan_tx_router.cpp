@@ -1,4 +1,6 @@
 #include "thread_internal.h"
+#include "FreeRTOS.h"
+#include "task.h"
 //
 // exfdcan_tx_router.cpp - MCP2518FD TX backend for SRNOS_CANRouterCore
 //
@@ -38,28 +40,33 @@ static bool SRNOS_ExternalCANBackendStart(SRNOS_CANChannel ch)
 
 static uint8_t SRNOS_ExternalCANBackendGetTxFree(SRNOS_CANChannel ch)
 {
-    uint8_t dev = 0u;
-    if (!SRNOS_ExternalCANChannelToDev(ch, &dev))
-        return 0u;
-
-    SRNOS_ExternalCANCtx *ctx = SRNOS_ExternalCANCtxOf(dev);
-    if (!ctx || !ctx->stats)
-        return 0u;
-
-    ctx->tx_retry_pending=false;
-    CAN_TX_FIFO_STATUS status = CAN_TX_FIFO_FULL;
-    SRNOS_ExternalCANBusLock();
-    if (DRV_CANFDSPI_TransmitChannelStatusGet(dev, SRNOS_EXTERNAL_CAN_TX_FIFO, &status) != 0)
-    {
-        ctx->stats->tx_errors++;
-        SRNOS_ExternalCANBusUnlock();
+    uint8_t dev=0;if(!SRNOS_ExternalCANChannelToDev(ch,&dev))return 0;
+    auto *ctx=SRNOS_ExternalCANCtxOf(dev);
+    /* Admission is checked in the same SPI sequence as the RAM write. MCP
+     * exposes a not-full bit, not a free count; 3 retains the existing core
+     * periodic eligibility convention. In-flight ownership blocks new TX. */
+    return ctx && !ctx->tx_fifo.pending && !ctx->tx_fifo.quarantined?3u:0u;
+}
+static bool SRNOS_ExternalCANBackendLoad(SRNOS_CANChannel ch,uint32_t id,bool extended,
+                                        const uint8_t *data,uint8_t length,bool fd,bool brs)
+{
+    uint8_t dev=0;if(!SRNOS_ExternalCANChannelToDev(ch,&dev))return false;
+    auto *ctx=SRNOS_ExternalCANCtxOf(dev);if(!ctx)return false;
+    CAN_TX_MSGOBJ obj{};
+    obj.bF.id.SID=extended?(id>>18)&0x7ffu:id&0x7ffu;
+    obj.bF.id.EID=extended?id&0x3ffffu:0;
+    obj.bF.ctrl.IDE=extended;obj.bF.ctrl.DLC=(CAN_DLC)SRNOS_CANFDLengthToDlc(length);
+    obj.bF.ctrl.FDF=fd;obj.bF.ctrl.BRS=brs;
+    uint32_t errors=ctx->tx_fifo.errors;
+    bool accepted=SRNOS_MCPFifoTransmit(&ctx->tx_fifo,obj.byte,data,length);
+    ctx->stats->last_tx_status=ctx->tx_fifo.status;
+    ctx->stats->tx_errors+=ctx->tx_fifo.errors-errors;
+    if(accepted) {++ctx->stats->tx_frames;ctx->tx_retry_pending=false;}
+    else {
+        if(!(ctx->tx_fifo.status&CAN_TX_FIFO_NOT_FULL))++ctx->stats->tx_full;
         SRNOS_ExternalCANTxDeferRetry(ctx);
-        return 0u;
     }
-    ctx->stats->last_tx_status = (uint32_t)status;
-    SRNOS_ExternalCANBusUnlock();
-
-    return (status & CAN_TX_FIFO_NOT_FULL) ? 3u : 0u;
+    return accepted;
 }
 
 static bool SRNOS_ExternalCANBackendTryPush(SRNOS_CANChannel ch,
@@ -67,76 +74,24 @@ static bool SRNOS_ExternalCANBackendTryPush(SRNOS_CANChannel ch,
                                      SRNOS_CANRouterTxClass tx_class)
 {
     (void)tx_class;
-
-    uint8_t dev = 0u;
-    if (!SRNOS_ExternalCANChannelToDev(ch, &dev) || !frame)
+    if(!frame || !SRNOS_CANControllerIsClassic(ch) ||
+       (frame->flags & ~SRNOS_CAN_FRAME_FLAG_EXT) || frame->dlc>SRNOS_EXTERNAL_CAN_MAX_DATA_BYTES)
         return false;
-    if ((frame->flags & SRNOS_CAN_FRAME_FLAG_RTR) || (frame->dlc > SRNOS_EXTERNAL_CAN_MAX_DATA_BYTES))
+    return SRNOS_ExternalCANBackendLoad(ch,frame->id,(frame->flags&SRNOS_CAN_FRAME_FLAG_EXT)!=0,
+                                       frame->data,frame->dlc,false,false);
+}
+
+static bool SRNOS_ExternalCANFDBackendTryPush(SRNOS_CANChannel ch, const SRNOS_CANFDFrame *frame)
+{
+    const SRNOS_CANControllerConfig *config=SRNOS_CANControllerConfigOf(ch);
+    if(!frame || !config || config->mode!=SRNOS_CAN_MODE_FD ||
+       (frame->flags & ~(SRNOS_CANFD_FRAME_FLAG_EXT|SRNOS_CANFD_FRAME_FLAG_BRS)) ||
+       ((frame->flags&SRNOS_CANFD_FRAME_FLAG_BRS)!=0)!=config->brs ||
+       SRNOS_CANFDLengthToDlc(frame->length)==0xffu ||
+       frame->id>((frame->flags&SRNOS_CANFD_FRAME_FLAG_EXT)?0x1fffffffu:0x7ffu))
         return false;
-
-    SRNOS_ExternalCANCtx *ctx = SRNOS_ExternalCANCtxOf(dev);
-    if (!ctx || !ctx->stats)
-        return false;
-
-    ctx->tx_retry_pending=false;
-    CAN_TX_FIFO_STATUS status = CAN_TX_FIFO_FULL;
-    CAN_TX_MSGOBJ txObj;
-
-    SRNOS_ExternalCANBusLock();
-    if (DRV_CANFDSPI_TransmitChannelStatusGet(dev, SRNOS_EXTERNAL_CAN_TX_FIFO, &status) != 0)
-    {
-        ctx->stats->tx_errors++;
-        SRNOS_ExternalCANBusUnlock();
-        SRNOS_ExternalCANTxDeferRetry(ctx);
-        return false;
-    }
-
-    ctx->stats->last_tx_status = (uint32_t)status;
-    if (!(status & CAN_TX_FIFO_NOT_FULL))
-    {
-        ctx->stats->tx_full++;
-        ctx->stats->tx_errors++;
-        SRNOS_ExternalCANBusUnlock();
-        return false;
-    }
-
-    std::memset(&txObj, 0, sizeof(txObj));
-    if (frame->flags & SRNOS_CAN_FRAME_FLAG_EXT)
-    {
-        txObj.bF.id.SID = (frame->id >> 18) & 0x7FFu;
-        txObj.bF.id.EID = frame->id & 0x3FFFFu;
-        txObj.bF.ctrl.IDE = 1u;
-    }
-    else
-    {
-        txObj.bF.id.SID = frame->id & 0x7FFu;
-        txObj.bF.ctrl.IDE = 0u;
-    }
-    txObj.bF.ctrl.DLC = (CAN_DLC)frame->dlc;
-    txObj.bF.ctrl.RTR = 0u;
-    txObj.bF.ctrl.FDF = 0u;
-    txObj.bF.ctrl.BRS = 0u;
-
-    uint8_t buf[SRNOS_EXTERNAL_CAN_MAX_DATA_BYTES];
-    for (uint8_t i = 0; i < SRNOS_EXTERNAL_CAN_MAX_DATA_BYTES; ++i)
-        buf[i] = (i < frame->dlc) ? frame->data[i] : 0u;
-
-    if (DRV_CANFDSPI_TransmitChannelLoad(dev,
-                                         SRNOS_EXTERNAL_CAN_TX_FIFO,
-                                         &txObj,
-                                         buf,
-                                         frame->dlc,
-                                         true) == 0)
-    {
-        ctx->stats->tx_frames++;
-        SRNOS_ExternalCANBusUnlock();
-        return true;
-    }
-
-    ctx->stats->tx_errors++;
-    SRNOS_ExternalCANBusUnlock();
-    SRNOS_ExternalCANTxDeferRetry(ctx);
-    return false;
+    return SRNOS_ExternalCANBackendLoad(ch,frame->id,(frame->flags&SRNOS_CANFD_FRAME_FLAG_EXT)!=0,
+                                       frame->data,frame->length,true,config->brs);
 }
 
 static uint32_t SRNOS_ExternalCANTxRetryWait(SRNOS_CANChannel ch, uint32_t now_ms)
@@ -159,10 +114,7 @@ static void SRNOS_ExternalCANBackendSignalTx(SRNOS_CANChannel ch)
     if (!ctx)
         return;
 
-    if (ctx->evt)
-        (void)osEventFlagsSet(ctx->evt, SRNOS_EXTERNAL_CAN_EVT_TX_ROUTER);
-    else
-        ctx->pending_isr |= SRNOS_EXTERNAL_CAN_EVT_TX_ROUTER;
+    SRNOS_ExternalCANNotify(ctx, SRNOS_EXTERNAL_CAN_EVT_TX_ROUTER);
 }
 
 static uint32_t SRNOS_ExternalCANBackendNowMs(void)
@@ -179,109 +131,19 @@ static const SRNOS_CANRouterBackendOps s_backend_ops = {
     .retry_wait_ms = SRNOS_ExternalCANTxRetryWait,
 };
 
-static void SRNOS_ExternalCANBackendBind(uint8_t dev)
+static const SRNOS_CANFDBackendOps s_fd_backend_ops = {
+    .get_tx_free = SRNOS_ExternalCANBackendGetTxFree,
+    .try_push = SRNOS_ExternalCANFDBackendTryPush,
+    .signal_tx = SRNOS_ExternalCANBackendSignalTx,
+    .now_ms = SRNOS_ExternalCANBackendNowMs,
+    .retry_wait_ms = SRNOS_ExternalCANTxRetryWait,
+};
+
+extern "C" void SRNOS_ExternalCANBackendBind(uint8_t dev)
 {
     const SRNOS_CANChannel ch = SRNOS_ExternalCANChannelFromDev(dev);
-    if (ch != 0u)
+    if (SRNOS_CANControllerIsFD(ch))
+        SRNOS_CANFDCoreSetBackend(ch, &s_fd_backend_ops);
+    else if (SRNOS_CANControllerIsClassic(ch))
         SRNOS_CANRouterCoreSetBackend(ch, &s_backend_ops);
-}
-
-static void SRNOS_ExternalCANTxHandleEvent(uint8_t dev, SRNOS_ExternalCANCtx *ctx)
-{
-    CAN_MODULE_EVENT events = CAN_NO_EVENT;
-    CAN_TX_FIFO_STATUS status = CAN_TX_FIFO_FULL;
-
-    SRNOS_ExternalCANBusLock();
-    if (DRV_CANFDSPI_ModuleEventGet(dev, &events) == 0)
-    {
-        ctx->stats->last_int_flags = (uint32_t)events;
-        ctx->stats->module_events |= (uint32_t)events;
-        if (!(events & CAN_TX_EVENT))
-        {
-            ctx->stats->tx_irq_no_txif++;
-            goto SRNOS_ExternalCANTxClearAndExit;
-        }
-    }
-    else
-    {
-        ctx->stats->tx_errors++;
-        goto SRNOS_ExternalCANTxClearAndExit;
-    }
-
-    if (DRV_CANFDSPI_TransmitChannelStatusGet(dev, SRNOS_EXTERNAL_CAN_TX_FIFO, &status) == 0)
-    {
-        ctx->stats->last_tx_status = (uint32_t)status;
-        if (!(status & CAN_TX_FIFO_NOT_FULL))
-        {
-            ctx->stats->tx_full++;
-            ctx->stats->tx_errors++;
-        }
-    }
-    else
-    {
-        ctx->stats->tx_errors++;
-    }
-
-SRNOS_ExternalCANTxClearAndExit:
-    (void)DRV_CANFDSPI_ModuleEventClear(dev,
-                                        (CAN_MODULE_EVENT)(CAN_TX_EVENT |
-                                                           CAN_TX_ATTEMPTS_EVENT));
-    (void)DRV_CANFDSPI_TransmitChannelEventAttemptClear(dev, SRNOS_EXTERNAL_CAN_TX_FIFO);
-    SRNOS_ExternalCANBusUnlock();
-}
-
-extern "C" void SRNOS_ExternalCANTxRouterWorker(void *argument)
-{
-    const uint8_t dev = (uint8_t)(uintptr_t)argument;
-    SRNOS_ExternalCANCtx *ctx = SRNOS_ExternalCANCtxOf(dev);
-    const SRNOS_CANChannel ch = SRNOS_ExternalCANChannelFromDev(dev);
-    if (!ctx || ch == 0u)
-        return;
-
-    SRNOS_ExternalCANBackendBind(dev);
-
-    if (!ctx->evt)
-    {
-        if (!ctx->evt)
-            ctx->evt = osEventFlagsNew(NULL);
-    }
-    if (!ctx->evt)
-        return;
-
-    if (ctx->pending_isr)
-    {
-        (void)osEventFlagsSet(ctx->evt, ctx->pending_isr);
-        ctx->pending_isr = 0u;
-    }
-
-    if (SRNOS_ExternalCANHwInit(dev) != 0)
-    {
-        ctx->stats->init_errors++;
-        return;
-    }
-
-    uint32_t flags=0;
-    auto wait=[&]()->bool {
-        flags = osEventFlagsWait(ctx->evt,
-                                                (SRNOS_EXTERNAL_CAN_EVT_TX |
-                                                 SRNOS_EXTERNAL_CAN_EVT_INT |
-                                                 SRNOS_EXTERNAL_CAN_EVT_TX_ROUTER),
-                                                osFlagsWaitAny,
-                                                SRNOS_CANRouterCoreNextTxWait(ch, SRNOS_ExternalCANBackendNowMs()));
-
-
-        return true;
-    };
-    auto step=[&](){        const bool has_event = ((flags & osFlagsError) == 0u);
-        if (has_event && (flags & (SRNOS_EXTERNAL_CAN_EVT_TX | SRNOS_EXTERNAL_CAN_EVT_INT)))
-        {
-            ctx->stats->tx_irq++;
-            SRNOS_CANRouterCoreNoteTxComplete(ch);
-            SRNOS_ExternalCANTxHandleEvent(dev, ctx);
-        }
-
-        SRNOS_CANRouterCoreDrainTx(ch, SRNOS_ExternalCANBackendNowMs());
-
-    };
-    SRNOS_KernelRunCpp(step,wait);
 }

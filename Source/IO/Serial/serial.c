@@ -190,7 +190,7 @@ SRNOS_SerialStatus SRNOS_SerialStart(void) {
   c->rx_event=osSemaphoreNew(1,0,&rx_attr);c->tx_event=osSemaphoreNew(1,0,&tx_attr);
   if(!c->gate||!c->tx_queue||!c->rx_event||!c->tx_event)return SRNOS_SERIAL_IO;
  }
- if(any){const osThreadAttr_t attr={.name="SRNOS_Serial",.stack_size=2048,.priority=osPriorityAboveNormal};
+ if(any){const osThreadAttr_t attr={.name="SRNOS_Serial",.stack_size=2048,.priority=osPriorityHigh7};
   worker=SRNOS_KernelThreadNew(serial_worker,NULL,&attr);if(!worker)return SRNOS_SERIAL_IO;}
  return SRNOS_SERIAL_OK;
 }

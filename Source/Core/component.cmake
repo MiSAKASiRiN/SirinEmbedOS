@@ -18,3 +18,6 @@ set(SRNOS_FOUNDATION_PRIVATE_INCLUDES Source/Diagnostics/Runtime Source/Kernel)
 # board toolchain's -Oz in Release; retain normal Debug stepping behavior.
 set_property(SOURCE "${CMAKE_CURRENT_LIST_DIR}/../Diagnostics/Runtime/cycle_statistics.c"
     APPEND PROPERTY COMPILE_OPTIONS "$<$<CONFIG:Release>:-O2>")
+
+set_property(SOURCE "${CMAKE_CURRENT_LIST_DIR}/../Diagnostics/Time/Time.c"
+    APPEND PROPERTY COMPILE_OPTIONS "$<$<CONFIG:Release>:-O2>")

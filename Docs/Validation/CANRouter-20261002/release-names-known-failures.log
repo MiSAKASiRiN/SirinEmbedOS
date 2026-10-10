@@ -1,0 +1,14 @@
+FAIL: Source/Algorithms/Control/control_extensions.cpp: external definition float* std::__2::__fill_n[abi:nn210101]<float*, unsigned int, float>(float*, unsigned int, float const&)
+FAIL: Source/Algorithms/Control/control_extensions.cpp: external definition std::__2::array<float, 5u>::fill[abi:nn210101](float const&)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition float* std::__2::__fill_n[abi:nn210101]<float*, int, float>(float*, int, float const&)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition float* std::__2::__fill_n[abi:nn210101]<float*, unsigned int, float>(float*, unsigned int, float const&)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition std::__2::array<float, 21u>::fill[abi:nn210101](float const&)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition std::__2::array<float, 49u>::fill[abi:nn210101](float const&)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition std::__2::array<float, 9u>::fill[abi:nn210101](float const&)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition void std::__2::__fill[abi:nn210101]<float*, float>(float*, float*, float const&, std::__2::random_access_iterator_tag)
+FAIL: Source/Devices/IMU/quaternion_ekf.cpp: external definition void std::__2::fill[abi:nn210101]<float*, float>(float*, float*, float const&)
+FAIL: Source/Devices/Motors/DM4310/DM4310.cpp: external definition bool std::__2::__cxx_atomic_compare_exchange_strong[abi:nn210101]<unsigned char>(std::__2::__cxx_atomic_base_impl<unsigned char>*, unsigned char*, unsigned char, std::__2::memory_order, std::__2::memory_order)
+FAIL: Source/Devices/Motors/DM4340/DM4340.cpp: external definition bool std::__2::__cxx_atomic_compare_exchange_strong[abi:nn210101]<unsigned char>(std::__2::__cxx_atomic_base_impl<unsigned char>*, unsigned char*, unsigned char, std::__2::memory_order, std::__2::memory_order)
+FAIL: Source/Devices/Motors/LK8016E/LK8016E.cpp: external definition bool std::__2::__cxx_atomic_compare_exchange_strong[abi:nn210101]<unsigned char>(std::__2::__cxx_atomic_base_impl<unsigned char>*, unsigned char*, unsigned char, std::__2::memory_order, std::__2::memory_order)
+FAIL: Source/Services/Parameters/Parameters.cpp: external definition thread-local wrapper routine for errno
+13 active SDK naming violations

@@ -1,0 +1,290 @@
+{
+  "decoder_errors": {},
+  "sources": {
+    "turntable.motor1.encoder_raw": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 8191.0,
+      "last": 6649.0,
+      "invalid": 0
+    },
+    "turntable.motor1.angle_deg": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 359.9560546875,
+      "last": 292.1923828125,
+      "invalid": 0
+    },
+    "turntable.motor1.unwrapped_deg": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 2452.4560546875,
+      "last": 2452.1923828125,
+      "invalid": 609
+    },
+    "turntable.motor1.speed_dps": {
+      "count": 11409,
+      "min": -0.7285090088844299,
+      "max": 58.43214797973633,
+      "last": -0.026340609416365623,
+      "invalid": 609
+    },
+    "turntable.motor1.voltage_raw": {
+      "count": 11409,
+      "min": -3586.0,
+      "max": 270.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor1.feedback_rpm": {
+      "count": 11409,
+      "min": -2.0,
+      "max": 13.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-2": 9,
+        "-1": 16,
+        "0": 2262,
+        "1": 11,
+        "2": 31,
+        "3": 23,
+        "4": 27,
+        "5": 48,
+        "6": 140,
+        "7": 770,
+        "8": 4183,
+        "9": 2871,
+        "10": 883,
+        "11": 97,
+        "12": 32,
+        "13": 6
+      }
+    },
+    "turntable.motor1.current_raw": {
+      "count": 11409,
+      "min": -2559.0,
+      "max": 678.0,
+      "last": -112.0,
+      "invalid": 0
+    },
+    "turntable.motor2.encoder_raw": {
+      "count": 11409,
+      "min": 4851.0,
+      "max": 4854.0,
+      "last": 4853.0,
+      "invalid": 0
+    },
+    "turntable.motor2.angle_deg": {
+      "count": 11409,
+      "min": 213.1787109375,
+      "max": 213.310546875,
+      "last": 213.2666015625,
+      "invalid": 0
+    },
+    "turntable.motor2.unwrapped_deg": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 11409
+    },
+    "turntable.motor2.speed_dps": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 11409
+    },
+    "turntable.motor2.voltage_raw": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor2.feedback_rpm": {
+      "count": 11409,
+      "min": -1.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-1": 2,
+        "0": 11407
+      }
+    },
+    "turntable.motor2.current_raw": {
+      "count": 11409,
+      "min": -85.0,
+      "max": 22.0,
+      "last": -33.0,
+      "invalid": 0
+    },
+    "turntable.motor3.encoder_raw": {
+      "count": 11409,
+      "min": 4044.0,
+      "max": 4045.0,
+      "last": 4044.0,
+      "invalid": 0
+    },
+    "turntable.motor3.angle_deg": {
+      "count": 11409,
+      "min": 177.71484375,
+      "max": 177.7587890625,
+      "last": 177.71484375,
+      "invalid": 0
+    },
+    "turntable.motor3.unwrapped_deg": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 11409
+    },
+    "turntable.motor3.speed_dps": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 11409
+    },
+    "turntable.motor3.voltage_raw": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor3.feedback_rpm": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "0": 11409
+      }
+    },
+    "turntable.motor3.current_raw": {
+      "count": 11409,
+      "min": -75.0,
+      "max": 27.0,
+      "last": -10.0,
+      "invalid": 0
+    },
+    "turntable.phase": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 24.0,
+      "last": 24.0,
+      "invalid": 0
+    },
+    "turntable.fault": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.fault_axis": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.fault_measurement": {
+      "count": 11409,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor1.online": {
+      "count": 5705,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor1.temperature_c": {
+      "count": 5705,
+      "min": 35.0,
+      "max": 35.0,
+      "last": 35.0,
+      "invalid": 0
+    },
+    "turntable.motor2.online": {
+      "count": 5705,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor2.temperature_c": {
+      "count": 5705,
+      "min": 29.0,
+      "max": 29.0,
+      "last": 29.0,
+      "invalid": 0
+    },
+    "turntable.motor3.online": {
+      "count": 5705,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor3.temperature_c": {
+      "count": 5705,
+      "min": 29.0,
+      "max": 29.0,
+      "last": 29.0,
+      "invalid": 0
+    },
+    "turntable.sequence_revision": {
+      "count": 571,
+      "min": 12.0,
+      "max": 12.0,
+      "last": 12.0,
+      "invalid": 0
+    }
+  },
+  "imu_quality": {
+    "256": {
+      "samples": 57040,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.0849999999997806
+    },
+    "257": {
+      "samples": 57040,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.1100000000006105
+    }
+  },
+  "phase_ranges_us_clock_seconds": {
+    "0": [
+      1.242155,
+      2.278213
+    ],
+    "22": [
+      17.283205,
+      56.278203
+    ],
+    "23": [
+      2.2831989999999998,
+      53.278186
+    ],
+    "24": [
+      56.282168,
+      58.282168
+    ]
+  },
+  "sequence": {
+    "revision": 12,
+    "complete": false,
+    "scope": "Bias-corrected gyro projection; axis inferred from first motion, not independent calibration",
+    "axes": {}
+  }
+}

@@ -1,0 +1,3532 @@
+{
+  "phase": 3,
+  "completed": 11,
+  "failure": 0,
+  "malformed": 0,
+  "warmup_ms": 63000,
+  "fd": 1,
+  "data_rate": 5000000,
+  "functional_expected": 64,
+  "functional_received": 64,
+  "functional_bad": 0,
+  "startup": {
+    "phase": 3,
+    "native_can_ready": true,
+    "usb_ready": true,
+    "parameter_load_status": 0,
+    "identity_load_status": 6
+  },
+  "resources": {
+    "capacity_bytes": 32768,
+    "used_bytes": 0,
+    "peak_bytes": 2304,
+    "allocation_failures": 0,
+    "app_threads": 0,
+    "thread_limit": 8,
+    "creation_failures": 0,
+    "kernel_free_bytes": 66392,
+    "kernel_minimum_free_bytes": 66392
+  },
+  "stages": [
+    {
+      "index": 0,
+      "requested_fps": [
+        0,
+        0
+      ],
+      "length": 64,
+      "seconds": 5,
+      "producer_ticks": 4999,
+      "active_rx_fps": [
+        0.0,
+        0.0
+      ],
+      "accepted": [
+        0,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        0,
+        0
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 14.4891,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 0,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 0,
+        "tx_frames": 0,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 0,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              9769,
+              231,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 16
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 5000,
+            "completed": 5000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 17
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 22
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 1000,
+            "completed": 1000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 1,
+            "max_transfer_us": 0,
+            "queue_us": [
+              1000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              1000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 200.0,
+          "max_queue_since_boot_us": 10,
+          "max_transfer_since_boot_us": 71
+        }
+      ],
+      "ins_publications": 5000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        561,
+        561
+      ],
+      "sensor_samples": [
+        5000,
+        5000,
+        488,
+        82
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        12,
+        418
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          3614,
+          1386,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3436,
+          1564,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          321,
+          179,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          299,
+          201,
+          0
+        ]
+      ],
+      "observed_samples": [
+        5000,
+        5000
+      ],
+      "max_imu_period_us": [
+        1027,
+        1044
+      ],
+      "max_imu_acquisition_us": [
+        106,
+        61
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 1,
+      "requested_fps": [
+        1000,
+        0
+      ],
+      "length": 64,
+      "seconds": 3,
+      "producer_ticks": 3000,
+      "active_rx_fps": [
+        999.958,
+        0.0
+      ],
+      "accepted": [
+        3000,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        3000,
+        0
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 24.2007,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 3000,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 3000,
+        "tx_frames": 0,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 3000,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 6000,
+            "completed": 6000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              5888,
+              112,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 16
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 3000,
+            "completed": 3000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 17
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 6000,
+            "completed": 6000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 22
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 15000,
+            "completed": 15000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              15000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              12000,
+              3000,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 5000.0,
+          "max_queue_since_boot_us": 10,
+          "max_transfer_since_boot_us": 71
+        }
+      ],
+      "ins_publications": 3000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        561,
+        545
+      ],
+      "sensor_samples": [
+        3000,
+        3000,
+        300,
+        49
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        0,
+        251
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          2161,
+          839,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2289,
+          711,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          192,
+          108,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          178,
+          122,
+          0
+        ]
+      ],
+      "observed_samples": [
+        3000,
+        3000
+      ],
+      "max_imu_period_us": [
+        1011,
+        1045
+      ],
+      "max_imu_acquisition_us": [
+        89,
+        62
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 2,
+      "requested_fps": [
+        0,
+        1000
+      ],
+      "length": 64,
+      "seconds": 3,
+      "producer_ticks": 2999,
+      "active_rx_fps": [
+        0.0,
+        999.624
+      ],
+      "accepted": [
+        0,
+        2999
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        0,
+        2999
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 25.7692,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 0,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 0,
+        "tx_frames": 2999,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 0,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 6000,
+            "completed": 6000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 2,
+            "queue_us": [
+              5832,
+              168,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 3000,
+            "completed": 3000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              3000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 17
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 6000,
+            "completed": 6000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              6000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 22
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 14995,
+            "completed": 14995,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 1,
+            "queue_us": [
+              14995,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              11996,
+              2999,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 4998.33,
+          "max_queue_since_boot_us": 10,
+          "max_transfer_since_boot_us": 72
+        }
+      ],
+      "ins_publications": 3000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        3000,
+        3000,
+        300,
+        49
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        0,
+        251
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          2097,
+          903,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2242,
+          758,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          180,
+          120,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          181,
+          119,
+          0
+        ]
+      ],
+      "observed_samples": [
+        3000,
+        3000
+      ],
+      "max_imu_period_us": [
+        1010,
+        1045
+      ],
+      "max_imu_acquisition_us": [
+        89,
+        62
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 3,
+      "requested_fps": [
+        3000,
+        0
+      ],
+      "length": 64,
+      "seconds": 5,
+      "producer_ticks": 4999,
+      "active_rx_fps": [
+        2999.333,
+        0.0
+      ],
+      "accepted": [
+        14997,
+        0
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        14997,
+        0
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 41.7076,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 5000,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 14997,
+        "tx_frames": 0,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 14997,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              9777,
+              223,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 5000,
+            "completed": 5000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 17
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 22
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 69986,
+            "completed": 69986,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              69986,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              54989,
+              14997,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 13997.2,
+          "max_queue_since_boot_us": 10,
+          "max_transfer_since_boot_us": 72
+        }
+      ],
+      "ins_publications": 5000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        5000,
+        5000,
+        472,
+        82
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        28,
+        418
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          3644,
+          1356,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3588,
+          1412,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          317,
+          182,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          285,
+          215,
+          0
+        ]
+      ],
+      "observed_samples": [
+        5000,
+        5000
+      ],
+      "max_imu_period_us": [
+        1010,
+        1045
+      ],
+      "max_imu_acquisition_us": [
+        91,
+        63
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 4,
+      "requested_fps": [
+        0,
+        3000
+      ],
+      "length": 64,
+      "seconds": 5,
+      "producer_ticks": 4999,
+      "active_rx_fps": [
+        0.0,
+        2999.564
+      ],
+      "accepted": [
+        0,
+        14997
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        0,
+        14997
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 38.3481,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 0,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 0,
+        "tx_frames": 14997,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 0,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              9807,
+              193,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 5000,
+            "completed": 5000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 1,
+            "queue_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 1,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 23
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 54989,
+            "completed": 54989,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 1,
+            "queue_us": [
+              54989,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              39992,
+              14997,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 10997.8,
+          "max_queue_since_boot_us": 10,
+          "max_transfer_since_boot_us": 73
+        }
+      ],
+      "ins_publications": 5000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        5000,
+        5000,
+        500,
+        81
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        0,
+        419
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          3422,
+          1578,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3551,
+          1449,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          308,
+          192,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          291,
+          209,
+          0
+        ]
+      ],
+      "observed_samples": [
+        5000,
+        5000
+      ],
+      "max_imu_period_us": [
+        1009,
+        1044
+      ],
+      "max_imu_acquisition_us": [
+        91,
+        64
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 5,
+      "requested_fps": [
+        3000,
+        3000
+      ],
+      "length": 8,
+      "seconds": 10,
+      "producer_ticks": 9999,
+      "active_rx_fps": [
+        2999.792,
+        2999.792
+      ],
+      "accepted": [
+        29997,
+        29997
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        29997,
+        29997
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 56.4373,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 9610,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 29997,
+        "tx_frames": 29997,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 10081,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              19364,
+              636,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 23
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 200147,
+            "completed": 200147,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 5,
+            "max_transfer_us": 0,
+            "queue_us": [
+              200147,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              199743,
+              404,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 20014.7,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 73
+        }
+      ],
+      "ins_publications": 10000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        10000,
+        10000,
+        967,
+        163
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        33,
+        837
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          6899,
+          3101,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          7574,
+          2426,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          614,
+          385,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          539,
+          461,
+          0
+        ]
+      ],
+      "observed_samples": [
+        10000,
+        10000
+      ],
+      "max_imu_period_us": [
+        1010,
+        1044
+      ],
+      "max_imu_acquisition_us": [
+        90,
+        63
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 6,
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "length": 64,
+      "seconds": 5,
+      "producer_ticks": 4999,
+      "active_rx_fps": [
+        999.85,
+        999.85
+      ],
+      "accepted": [
+        4999,
+        4999
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        4999,
+        4999
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 34.2852,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 4999,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 4999,
+        "tx_frames": 4999,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 4999,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              9737,
+              263,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 5000,
+            "completed": 5000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 23
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 44991,
+            "completed": 44991,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 4,
+            "max_transfer_us": 3,
+            "queue_us": [
+              44991,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              34993,
+              9998,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 8998.2,
+          "max_queue_since_boot_us": 19,
+          "max_transfer_since_boot_us": 76
+        }
+      ],
+      "ins_publications": 5000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        5000,
+        5000,
+        500,
+        82
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        0,
+        418
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          3392,
+          1608,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3546,
+          1454,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          303,
+          197,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          295,
+          205,
+          0
+        ]
+      ],
+      "observed_samples": [
+        5000,
+        5000
+      ],
+      "max_imu_period_us": [
+        1010,
+        1045
+      ],
+      "max_imu_acquisition_us": [
+        89,
+        62
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 7,
+      "requested_fps": [
+        2000,
+        2000
+      ],
+      "length": 64,
+      "seconds": 10,
+      "producer_ticks": 9999,
+      "active_rx_fps": [
+        1999.861,
+        1999.861
+      ],
+      "accepted": [
+        19998,
+        19998
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        19998,
+        19998
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 48.4314,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 9999,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 19998,
+        "tx_frames": 19998,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 10002,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              19372,
+              628,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 45,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 15,
+          "max_transfer_since_boot_us": 18
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 22,
+          "max_transfer_since_boot_us": 23
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 159984,
+            "completed": 159984,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 1,
+            "max_transfer_us": 0,
+            "queue_us": [
+              159984,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              119987,
+              39997,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 15998.4,
+          "max_queue_since_boot_us": 20,
+          "max_transfer_since_boot_us": 76
+        }
+      ],
+      "ins_publications": 10000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        10000,
+        10000,
+        985,
+        163
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        15,
+        837
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          6650,
+          3350,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          7506,
+          2494,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          624,
+          375,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          586,
+          414,
+          0
+        ]
+      ],
+      "observed_samples": [
+        10000,
+        10000
+      ],
+      "max_imu_period_us": [
+        1011,
+        1045
+      ],
+      "max_imu_acquisition_us": [
+        89,
+        62
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 8,
+      "requested_fps": [
+        3000,
+        3000
+      ],
+      "length": 64,
+      "seconds": 10,
+      "producer_ticks": 9999,
+      "active_rx_fps": [
+        2999.788,
+        2999.788
+      ],
+      "accepted": [
+        29997,
+        29997
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        29997,
+        29997
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 61.0087,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 9997,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 29997,
+        "tx_frames": 29997,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 2,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 9999,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 16,
+            "max_transfer_us": 3,
+            "queue_us": [
+              19964,
+              36,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 61,
+          "max_transfer_since_boot_us": 21
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 16,
+            "max_transfer_us": 3,
+            "queue_us": [
+              9993,
+              7,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 31,
+          "max_transfer_since_boot_us": 21
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 49,
+            "max_transfer_us": 3,
+            "queue_us": [
+              19927,
+              73,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              19996,
+              4,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 71,
+          "max_transfer_since_boot_us": 26
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 229977,
+            "completed": 229977,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 60,
+            "max_transfer_us": 0,
+            "queue_us": [
+              229967,
+              10,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              169643,
+              60334,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 22997.7,
+          "max_queue_since_boot_us": 80,
+          "max_transfer_since_boot_us": 76
+        }
+      ],
+      "ins_publications": 10000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        10000,
+        10000,
+        1000,
+        164
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        0,
+        836
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          7275,
+          2725,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          7862,
+          2138,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          624,
+          375,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          621,
+          379,
+          0
+        ]
+      ],
+      "observed_samples": [
+        10000,
+        10000
+      ],
+      "max_imu_period_us": [
+        1082,
+        1104
+      ],
+      "max_imu_acquisition_us": [
+        143,
+        110
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    },
+    {
+      "index": 9,
+      "requested_fps": [
+        4000,
+        4000
+      ],
+      "length": 64,
+      "seconds": 10,
+      "producer_ticks": 9999,
+      "active_rx_fps": [
+        3999.406,
+        2940.131
+      ],
+      "accepted": [
+        39996,
+        29466
+      ],
+      "rejected": [
+        0,
+        10530
+      ],
+      "received": [
+        39996,
+        29466
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 68.1258,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 2,
+        "tx_irq": 4973,
+        "int_irq": 0,
+        "rx_frames": 39996,
+        "tx_frames": 29466,
+        "rx_overflow": 0,
+        "tx_full": 2526,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 9493,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 5255,
+        "isr_int1": 2,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 31,
+            "max_transfer_us": 3,
+            "queue_us": [
+              14187,
+              5813,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              20000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 92,
+          "max_transfer_since_boot_us": 24
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 5,
+            "max_transfer_us": 5,
+            "queue_us": [
+              6783,
+              3217,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              9999,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 36,
+          "max_transfer_since_boot_us": 26
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 20000,
+            "completed": 20000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 73,
+            "max_transfer_us": 4,
+            "queue_us": [
+              15624,
+              4373,
+              3,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              19471,
+              529,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 144,
+          "max_transfer_since_boot_us": 30
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 250732,
+            "completed": 250731,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 83,
+            "max_transfer_us": 5,
+            "queue_us": [
+              243184,
+              7523,
+              25,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              179593,
+              71138,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 25073.1,
+          "max_queue_since_boot_us": 163,
+          "max_transfer_since_boot_us": 81
+        }
+      ],
+      "ins_publications": 10000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        10000,
+        10000,
+        979,
+        163
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        22,
+        837
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          5184,
+          4816,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          6032,
+          3968,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          505,
+          495,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          537,
+          464,
+          0
+        ]
+      ],
+      "observed_samples": [
+        10000,
+        10000
+      ],
+      "max_imu_period_us": [
+        1134,
+        1125
+      ],
+      "max_imu_acquisition_us": [
+        173,
+        184
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": false
+    },
+    {
+      "index": 10,
+      "requested_fps": [
+        1000,
+        1000
+      ],
+      "length": 8,
+      "seconds": 5,
+      "producer_ticks": 4999,
+      "active_rx_fps": [
+        999.848,
+        999.848
+      ],
+      "accepted": [
+        4999,
+        4999
+      ],
+      "rejected": [
+        0,
+        0
+      ],
+      "received": [
+        4999,
+        4999
+      ],
+      "expired": [
+        0,
+        0
+      ],
+      "unexplained_loss": [
+        0,
+        0
+      ],
+      "gaps": [
+        0,
+        0
+      ],
+      "reordered": [
+        0,
+        0
+      ],
+      "bad": [
+        0,
+        0
+      ],
+      "cpu_percent": 32.4309,
+      "native_rx_lost": 0,
+      "native_ring_lost": 0,
+      "native_tec": 0,
+      "native_rec": 0,
+      "native_busoff": 0,
+      "mcp": {
+        "ok": 1,
+        "mode": 0,
+        "tec": 0,
+        "rec": 0,
+        "error_state": 0,
+        "nbtp": 1967879,
+        "dbtp": 262401,
+        "tdc": 132352,
+        "rx_status": 0,
+        "tx_status": 7
+      },
+      "external_delta": {
+        "rx_irq": 4998,
+        "tx_irq": 0,
+        "int_irq": 0,
+        "rx_frames": 4999,
+        "tx_frames": 4999,
+        "rx_overflow": 0,
+        "tx_full": 0,
+        "rx_errors": 0,
+        "tx_errors": 0,
+        "rx_drain_limit": 0,
+        "tx_drain_limit": 0,
+        "init_errors": 0,
+        "isr_int0": 0,
+        "isr_int1": 4999,
+        "rx_irq_no_rxif": 0,
+        "tx_irq_no_txif": 0,
+        "int_master_wake": 0,
+        "rx_hw_overflow": 0,
+        "rx_status_errors": 0,
+        "rx_read_errors": 0
+      },
+      "spi": [
+        {
+          "name": "BMI_accel",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              9639,
+              361,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 92,
+          "max_transfer_since_boot_us": 24
+        },
+        {
+          "name": "BMI_gyro",
+          "delta": {
+            "accepted": 5000,
+            "completed": 5000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              5000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 1000.0,
+          "max_queue_since_boot_us": 36,
+          "max_transfer_since_boot_us": 26
+        },
+        {
+          "name": "LSM",
+          "delta": {
+            "accepted": 10000,
+            "completed": 10000,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              10000,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 2000.0,
+          "max_queue_since_boot_us": 144,
+          "max_transfer_since_boot_us": 30
+        },
+        {
+          "name": "MCP",
+          "delta": {
+            "accepted": 39992,
+            "completed": 39992,
+            "queue_full": 0,
+            "queue_expired": 0,
+            "errors": 0,
+            "timeouts": 0,
+            "recoveries": 0,
+            "max_queue_us": 0,
+            "max_transfer_us": 0,
+            "queue_us": [
+              39992,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "transfer_us": [
+              39906,
+              86,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "transactions_per_second": 7998.4,
+          "max_queue_since_boot_us": 163,
+          "max_transfer_since_boot_us": 81
+        }
+      ],
+      "ins_publications": 5000,
+      "ins_missing": 0,
+      "ins_missed": 0,
+      "ins_flags": [
+        545,
+        545
+      ],
+      "sensor_samples": [
+        5000,
+        5000,
+        482,
+        82
+      ],
+      "sensor_errors": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_overruns": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_not_ready": [
+        0,
+        0,
+        18,
+        418
+      ],
+      "sensor_recoveries": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sensor_period_histogram": [
+        [
+          0,
+          3460,
+          1540,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3574,
+          1426,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          307,
+          193,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          327,
+          173,
+          0
+        ]
+      ],
+      "observed_samples": [
+        5000,
+        5000
+      ],
+      "max_imu_period_us": [
+        1010,
+        1043
+      ],
+      "max_imu_acquisition_us": [
+        91,
+        63
+      ],
+      "imu_period_over_1200": [
+        0,
+        0
+      ],
+      "achieved": true
+    }
+  ],
+  "stacks": [
+    {
+      "name": "SRNOS_AppInit",
+      "free_bytes": 3004,
+      "priority": 24
+    },
+    {
+      "name": "SRNOS_Env",
+      "free_bytes": 1188,
+      "priority": 24
+    },
+    {
+      "name": "SRNOS_Monitor",
+      "free_bytes": 3180,
+      "priority": 8
+    },
+    {
+      "name": "SRNOS_Idle",
+      "free_bytes": 440,
+      "priority": 0
+    },
+    {
+      "name": "SRNOS_INS",
+      "free_bytes": 1996,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_LSM",
+      "free_bytes": 1412,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_BMI",
+      "free_bytes": 1396,
+      "priority": 48
+    },
+    {
+      "name": "CANLoad",
+      "free_bytes": 1476,
+      "priority": 24
+    },
+    {
+      "name": "SRNOS_CAN4",
+      "free_bytes": 2992,
+      "priority": 47
+    },
+    {
+      "name": "SRNOS_HostComm",
+      "free_bytes": 1276,
+      "priority": 24
+    },
+    {
+      "name": "SRNOS_Log",
+      "free_bytes": 1260,
+      "priority": 8
+    },
+    {
+      "name": "SRNOS_CAN2_TX",
+      "free_bytes": 3656,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_CAN3_RX",
+      "free_bytes": 3268,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_CAN3_TX",
+      "free_bytes": 3656,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_HostCmd",
+      "free_bytes": 1420,
+      "priority": 9
+    },
+    {
+      "name": "SRNOS_Indic",
+      "free_bytes": 660,
+      "priority": 8
+    },
+    {
+      "name": "SRNOS_Timer",
+      "free_bytes": 924,
+      "priority": 2
+    },
+    {
+      "name": "SRNOS_CAN1_TX",
+      "free_bytes": 3444,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_CAN1_RX",
+      "free_bytes": 3092,
+      "priority": 48
+    },
+    {
+      "name": "SRNOS_SPI4",
+      "free_bytes": 2424,
+      "priority": 49
+    },
+    {
+      "name": "SRNOS_I2C4",
+      "free_bytes": 2676,
+      "priority": 46
+    },
+    {
+      "name": "SRNOS_CAN2_RX",
+      "free_bytes": 3268,
+      "priority": 48
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 2026-10-03：补充四路默认 Classic 1 Mbit/s 与 CAN4 FD 显式仲裁/数据/BRS 配置片段，说明初始化冻结、adapter 限制、精确长度和 D1 容量，并链接完整 CANFD 示例。Minimal 应用源码仍只运行原心跳，不主动发送 CAN；P0/P1 策略不变，FD 物理通信/吞吐尚未板测。
+
 - 2026-09-28：说明 Heartbeat 的创建位置、字段、返回值与持有句柄、启动入口返回后的生命周期，以及父项目查询/协作删除/参数存储与另一种启动声明方式。示例代码与固件不变。 文档中根 C++17 / Kernel C11 示例语法及本地链接检查通过。
 
 - 2026-09-28：长期应用工作改为托管 step 描述，周期等待由 SDK 负责；观察 srnos_example_create_result 检查创建结果。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。

@@ -1,0 +1,4097 @@
+SEGGER J-Link GDB Server V8.96 Command Line Version
+
+JLinkARM.dll V8.96 (DLL compiled Dec 18 2025 16:43:50)
+
+Command line: -select USB=10114514 -device STM32H723VG -if SWD -speed 4000 -port 2331 -localhostonly 1 -noir -nohalt
+-----GDB Server start settings-----
+GDBInit file:                  none
+GDB Server Listening port:     2331
+SWO raw output listening port: 2332
+Terminal I/O port:             2333
+Accept remote connection:      localhost only
+Generate logfile:              off
+Verify download:               off
+Init regs on start:            off
+Silent mode:                   off
+Single run mode:               off
+Target connection timeout:     0 ms
+------J-Link related settings------
+J-Link Host interface:         USB
+J-Link script:                 none
+J-Link settings file:          none
+------Target related settings------
+Target device:                 STM32H723VG
+Target device parameters:      none
+Target interface:              SWD
+Target interface speed:        4000kHz
+Target endian:                 little
+
+Connecting to J-Link...
+J-Link is connected.
+Firmware: J-Link OB-STM32F072-CortexM compiled May  6 2021 15:30:00
+Hardware: V1.00
+S/N: 10114514
+Feature(s): JFlash, JFlashBP, JFlashDL, GDB
+Checking target voltage...
+Target voltage: 3.30 V
+Listening on TCP/IP port 2331
+Connecting to target...
+Connected to target
+Waiting for GDB connection...Connected to 0000:0000:0000:0000:0000:0000:0000:0001
+GDB client (conn. 11) requested target.xml from GDB Server
+Reading common registers: 
+...Target halted (PC = 0x0800E3EA)
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2402D010
+Read register 'r4' (4 bytes) from hardware: 0x2402CED8
+Read register 'r5' (4 bytes) from hardware: 0x240029A0
+Read register 'r6' (4 bytes) from hardware: 0x24002540
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24001F50
+Read register 'lr' (4 bytes) from hardware: 0x0800DF9D
+Read register 'pc' (4 bytes) from hardware: 0x0800E3EA
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800E3EA
+Read 2 bytes @ 0x0800E3EA
+Received monitor command: halt
+Halting target CPU...
+...Target halted (PC = 0x0800E3EA)
+Reading register 'primask' = 0x00000000
+Reading register 'basepri' = 0x00000000
+Read 4 bytes @ 0xE000ED28
+Read 4 bytes @ 0xE000ED2C
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 32768 bytes @ 0x08000000
+Read 32768 bytes @ 0x08008000
+Read 32768 bytes @ 0x08010000
+Read 32768 bytes @ 0x08018000
+Read 32768 bytes @ 0x08020000
+Read 32768 bytes @ 0x08028000
+Read 32768 bytes @ 0x08030000
+Read 32768 bytes @ 0x08038000
+Read 32768 bytes @ 0x08040000
+Read 32768 bytes @ 0x08048000
+Read 32768 bytes @ 0x08050000
+Read 32768 bytes @ 0x08058000
+Read 32768 bytes @ 0x08060000
+Read 32768 bytes @ 0x08068000
+Read 32768 bytes @ 0x08070000
+Read 32768 bytes @ 0x08078000
+Read 32768 bytes @ 0x08080000
+Read 32768 bytes @ 0x08088000
+Read 32768 bytes @ 0x08090000
+Read 32768 bytes @ 0x08098000
+Read 32768 bytes @ 0x080A0000
+Read 32768 bytes @ 0x080A8000
+Read 32768 bytes @ 0x080B0000
+Read 32768 bytes @ 0x080B8000
+Read 32768 bytes @ 0x080C0000
+Read 32768 bytes @ 0x080C8000
+Read 32768 bytes @ 0x080D0000
+Read 32768 bytes @ 0x080D8000
+Read 32768 bytes @ 0x080E0000
+Read 32768 bytes @ 0x080E8000
+Read 32768 bytes @ 0x080F0000
+Read 32768 bytes @ 0x080F8000
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2402D010
+Read register 'r4' (4 bytes) from hardware: 0x2402CED8
+Read register 'r5' (4 bytes) from hardware: 0x240029A0
+Read register 'r6' (4 bytes) from hardware: 0x24002540
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24001F50
+Read register 'lr' (4 bytes) from hardware: 0x0800DF9D
+Read register 'pc' (4 bytes) from hardware: 0x0800E3EA
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64624 bytes @ address 0x0800FF20
+Downloading 64240 bytes @ address 0x0801FB90
+Downloading 20476 bytes @ address 0x0802F680
+Downloading 13224 bytes @ address 0x08034680
+Downloading 16 bytes @ address 0x08037A28
+Downloading 4 bytes @ address 0x08037A38
+Downloading 1168 bytes @ address 0x08037A3C
+Downloading 288 bytes @ address 0x08037EE0
+Writing register 'pc' = 0x08002E7C
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000804
+Setting breakpoint @ address 0x08000804, Kind = 2, Type = THUMB, BPHandle = 0x0001
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x240099A8
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F1F4
+Read register 'sp' (4 bytes) from hardware: 0x2403AFD8
+Read register 'lr' (4 bytes) from hardware: 0x08000E99
+Read register 'pc' (4 bytes) from hardware: 0x08000804
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000804, Size = 2
+Read 4 bytes @ 0x08000804
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C28
+Read 4 bytes @ 0x24000C24
+Read 26816 bytes @ 0x24000C20
+Read 8388 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x240099A8
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F1F4
+Read register 'sp' (4 bytes) from hardware: 0x2403AFD8
+Read register 'lr' (4 bytes) from hardware: 0x08000E99
+Read register 'pc' (4 bytes) from hardware: 0x08000804
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64576 bytes @ address 0x080002D0
+Downloading 64656 bytes @ address 0x0800FF10
+Downloading 64192 bytes @ address 0x0801FBA0
+Downloading 21476 bytes @ address 0x0802F660
+Downloading 13224 bytes @ address 0x08034A48
+Downloading 16 bytes @ address 0x08037DF0
+Downloading 4 bytes @ address 0x08037E00
+Downloading 1168 bytes @ address 0x08037E04
+Downloading 288 bytes @ address 0x080382A0
+Writing register 'pc' = 0x08002E7C
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000804
+Setting breakpoint @ address 0x08000804, Kind = 2, Type = THUMB, BPHandle = 0x0002
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x240099A8
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F20C
+Read register 'sp' (4 bytes) from hardware: 0x2403AFD8
+Read register 'lr' (4 bytes) from hardware: 0x08000E99
+Read register 'pc' (4 bytes) from hardware: 0x08000804
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000804, Size = 2
+Read 4 bytes @ 0x08000804
+Read 26816 bytes @ 0x24000C20
+Read 8388 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x240099A8
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F20C
+Read register 'sp' (4 bytes) from hardware: 0x2403AFD8
+Read register 'lr' (4 bytes) from hardware: 0x08000E99
+Read register 'pc' (4 bytes) from hardware: 0x08000804
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64576 bytes @ address 0x080002D0
+Downloading 64656 bytes @ address 0x0800FF10
+Downloading 64192 bytes @ address 0x0801FBA0
+Downloading 21476 bytes @ address 0x0802F660
+Downloading 13224 bytes @ address 0x08034A48
+Downloading 16 bytes @ address 0x08037DF0
+Downloading 4 bytes @ address 0x08037E00
+Downloading 1168 bytes @ address 0x08037E04
+Downloading 288 bytes @ address 0x080382A0
+Writing register 'pc' = 0x08002E7C
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 884 bytes @ 0x080346D0
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000804
+Setting breakpoint @ address 0x08000804, Kind = 2, Type = THUMB, BPHandle = 0x0003
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x240099A8
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F20C
+Read register 'sp' (4 bytes) from hardware: 0x2403AFD8
+Read register 'lr' (4 bytes) from hardware: 0x08000E99
+Read register 'pc' (4 bytes) from hardware: 0x08000804
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000804, Size = 2
+Read 4 bytes @ 0x08000804
+Read 26816 bytes @ 0x24000C20
+Read 8388 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x240099A8
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F20C
+Read register 'sp' (4 bytes) from hardware: 0x2403AFD8
+Read register 'lr' (4 bytes) from hardware: 0x08000E99
+Read register 'pc' (4 bytes) from hardware: 0x08000804
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64576 bytes @ address 0x080002D0
+Downloading 64640 bytes @ address 0x0800FF10
+Downloading 64208 bytes @ address 0x0801FB90
+Downloading 18020 bytes @ address 0x0802F660
+Downloading 13216 bytes @ address 0x08033CC8
+Downloading 16 bytes @ address 0x08037068
+Downloading 4 bytes @ address 0x08037078
+Downloading 1164 bytes @ address 0x0803707C
+Downloading 288 bytes @ address 0x08037520
+Writing register 'pc' = 0x08002604
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 500 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033CC8
+Read 1024 bytes @ 0x080340C8
+Read 1024 bytes @ 0x080344C8
+Read 1024 bytes @ 0x080348C8
+Read 1024 bytes @ 0x08034CC8
+Read 1024 bytes @ 0x080350C8
+Read 1024 bytes @ 0x080354C8
+Read 1024 bytes @ 0x080358C8
+Read 1024 bytes @ 0x08035CC8
+Read 1024 bytes @ 0x080360C8
+Read 1024 bytes @ 0x080364C8
+Read 1024 bytes @ 0x080368C8
+Read 928 bytes @ 0x08036CC8
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000748
+Setting breakpoint @ address 0x08000748, Kind = 2, Type = THUMB, BPHandle = 0x0004
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x00000005
+Read register 'r6' (4 bytes) from hardware: 0x00000003
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x24001594
+Read register 'r9' (4 bytes) from hardware: 0x24001534
+Read register 'r10' (4 bytes) from hardware: 0x2403AF9C
+Read register 'r11' (4 bytes) from hardware: 0x00000004
+Read register 'r12' (4 bytes) from hardware: 0x2400C35C
+Read register 'sp' (4 bytes) from hardware: 0x2403AF68
+Read register 'lr' (4 bytes) from hardware: 0x08000A2F
+Read register 'pc' (4 bytes) from hardware: 0x08000748
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000748, Size = 2
+Read 4 bytes @ 0x08000748
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x00000005
+Read register 'r6' (4 bytes) from hardware: 0x00000003
+Read register 'r7' (4 bytes) from hardware: 0x00000000
+Read register 'r8' (4 bytes) from hardware: 0x24001594
+Read register 'r9' (4 bytes) from hardware: 0x24001534
+Read register 'r10' (4 bytes) from hardware: 0x2403AF9C
+Read register 'r11' (4 bytes) from hardware: 0x00000004
+Read register 'r12' (4 bytes) from hardware: 0x2400C35C
+Read register 'sp' (4 bytes) from hardware: 0x2403AF68
+Read register 'lr' (4 bytes) from hardware: 0x08000A2F
+Read register 'pc' (4 bytes) from hardware: 0x08000748
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64640 bytes @ address 0x0800FF20
+Downloading 64240 bytes @ address 0x0801FBA0
+Downloading 20916 bytes @ address 0x0802F690
+Downloading 13224 bytes @ address 0x08034848
+Downloading 16 bytes @ address 0x08037BF0
+Downloading 4 bytes @ address 0x08037C00
+Downloading 1168 bytes @ address 0x08037C04
+Downloading 288 bytes @ address 0x080380A0
+Writing register 'pc' = 0x08002EE8
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 372 bytes @ 0x080346D0
+Read 1024 bytes @ 0x08034848
+Read 1024 bytes @ 0x08034C48
+Read 1024 bytes @ 0x08035048
+Read 1024 bytes @ 0x08035448
+Read 1024 bytes @ 0x08035848
+Read 1024 bytes @ 0x08035C48
+Read 1024 bytes @ 0x08036048
+Read 1024 bytes @ 0x08036448
+Read 1024 bytes @ 0x08036848
+Read 1024 bytes @ 0x08036C48
+Read 1024 bytes @ 0x08037048
+Read 1024 bytes @ 0x08037448
+Read 936 bytes @ 0x08037848
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000840
+Setting breakpoint @ address 0x08000840, Kind = 2, Type = THUMB, BPHandle = 0x0005
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000840, Size = 2
+Read 4 bytes @ 0x08000840
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64640 bytes @ address 0x0800FF20
+Downloading 64240 bytes @ address 0x0801FBA0
+Downloading 20916 bytes @ address 0x0802F690
+Downloading 13224 bytes @ address 0x08034848
+Downloading 16 bytes @ address 0x08037BF0
+Downloading 4 bytes @ address 0x08037C00
+Downloading 1168 bytes @ address 0x08037C04
+Downloading 288 bytes @ address 0x080380A0
+Writing register 'pc' = 0x08002EE8
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 372 bytes @ 0x080346D0
+Read 1024 bytes @ 0x08034848
+Read 1024 bytes @ 0x08034C48
+Read 1024 bytes @ 0x08035048
+Read 1024 bytes @ 0x08035448
+Read 1024 bytes @ 0x08035848
+Read 1024 bytes @ 0x08035C48
+Read 1024 bytes @ 0x08036048
+Read 1024 bytes @ 0x08036448
+Read 1024 bytes @ 0x08036848
+Read 1024 bytes @ 0x08036C48
+Read 1024 bytes @ 0x08037048
+Read 1024 bytes @ 0x08037448
+Read 936 bytes @ 0x08037848
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000840
+Setting breakpoint @ address 0x08000840, Kind = 2, Type = THUMB, BPHandle = 0x0006
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000840, Size = 2
+Read 4 bytes @ 0x08000840
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64640 bytes @ address 0x0800FF20
+Downloading 64240 bytes @ address 0x0801FBA0
+Downloading 20916 bytes @ address 0x0802F690
+Downloading 13224 bytes @ address 0x08034848
+Downloading 16 bytes @ address 0x08037BF0
+Downloading 4 bytes @ address 0x08037C00
+Downloading 1168 bytes @ address 0x08037C04
+Downloading 288 bytes @ address 0x080380A0
+Writing register 'pc' = 0x08002EE8
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 372 bytes @ 0x080346D0
+Read 1024 bytes @ 0x08034848
+Read 1024 bytes @ 0x08034C48
+Read 1024 bytes @ 0x08035048
+Read 1024 bytes @ 0x08035448
+Read 1024 bytes @ 0x08035848
+Read 1024 bytes @ 0x08035C48
+Read 1024 bytes @ 0x08036048
+Read 1024 bytes @ 0x08036448
+Read 1024 bytes @ 0x08036848
+Read 1024 bytes @ 0x08036C48
+Read 1024 bytes @ 0x08037048
+Read 1024 bytes @ 0x08037448
+Read 936 bytes @ 0x08037848
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000840
+Setting breakpoint @ address 0x08000840, Kind = 2, Type = THUMB, BPHandle = 0x0007
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000840, Size = 2
+Read 4 bytes @ 0x08000840
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64640 bytes @ address 0x0800FF20
+Downloading 64240 bytes @ address 0x0801FBA0
+Downloading 20916 bytes @ address 0x0802F690
+Downloading 13224 bytes @ address 0x08034848
+Downloading 16 bytes @ address 0x08037BF0
+Downloading 4 bytes @ address 0x08037C00
+Downloading 1168 bytes @ address 0x08037C04
+Downloading 288 bytes @ address 0x080380A0
+Writing register 'pc' = 0x08002EE8
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 372 bytes @ 0x080346D0
+Read 1024 bytes @ 0x08034848
+Read 1024 bytes @ 0x08034C48
+Read 1024 bytes @ 0x08035048
+Read 1024 bytes @ 0x08035448
+Read 1024 bytes @ 0x08035848
+Read 1024 bytes @ 0x08035C48
+Read 1024 bytes @ 0x08036048
+Read 1024 bytes @ 0x08036448
+Read 1024 bytes @ 0x08036848
+Read 1024 bytes @ 0x08036C48
+Read 1024 bytes @ 0x08037048
+Read 1024 bytes @ 0x08037448
+Read 936 bytes @ 0x08037848
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000840
+Setting breakpoint @ address 0x08000840, Kind = 2, Type = THUMB, BPHandle = 0x0008
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000840, Size = 2
+Read 4 bytes @ 0x08000840
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000ED9
+Read register 'pc' (4 bytes) from hardware: 0x08000840
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64592 bytes @ address 0x080002D0
+Downloading 64640 bytes @ address 0x0800FF20
+Downloading 64240 bytes @ address 0x0801FBA0
+Downloading 20916 bytes @ address 0x0802F690
+Downloading 13224 bytes @ address 0x08034848
+Downloading 16 bytes @ address 0x08037BF0
+Downloading 4 bytes @ address 0x08037C00
+Downloading 1168 bytes @ address 0x08037C04
+Downloading 288 bytes @ address 0x080380A0
+Writing register 'pc' = 0x08002EEC
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 372 bytes @ 0x080346D0
+Read 1024 bytes @ 0x08034848
+Read 1024 bytes @ 0x08034C48
+Read 1024 bytes @ 0x08035048
+Read 1024 bytes @ 0x08035448
+Read 1024 bytes @ 0x08035848
+Read 1024 bytes @ 0x08035C48
+Read 1024 bytes @ 0x08036048
+Read 1024 bytes @ 0x08036448
+Read 1024 bytes @ 0x08036848
+Read 1024 bytes @ 0x08036C48
+Read 1024 bytes @ 0x08037048
+Read 1024 bytes @ 0x08037448
+Read 936 bytes @ 0x08037848
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000844
+Setting breakpoint @ address 0x08000844, Kind = 2, Type = THUMB, BPHandle = 0x0009
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EDD
+Read register 'pc' (4 bytes) from hardware: 0x08000844
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000844, Size = 2
+Read 4 bytes @ 0x08000844
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EDD
+Read register 'pc' (4 bytes) from hardware: 0x08000844
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64576 bytes @ address 0x080002D0
+Downloading 64672 bytes @ address 0x0800FF10
+Downloading 64192 bytes @ address 0x0801FBB0
+Downloading 21644 bytes @ address 0x0802F670
+Downloading 13224 bytes @ address 0x08034B00
+Downloading 16 bytes @ address 0x08037EA8
+Downloading 4 bytes @ address 0x08037EB8
+Downloading 1168 bytes @ address 0x08037EBC
+Downloading 288 bytes @ address 0x08038360
+Writing register 'pc' = 0x08002E88
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 1024 bytes @ 0x080346D0
+Read 44 bytes @ 0x08034AD0
+Read 1024 bytes @ 0x08034B00
+Read 1024 bytes @ 0x08034F00
+Read 1024 bytes @ 0x08035300
+Read 1024 bytes @ 0x08035700
+Read 1024 bytes @ 0x08035B00
+Read 1024 bytes @ 0x08035F00
+Read 1024 bytes @ 0x08036300
+Read 1024 bytes @ 0x08036700
+Read 1024 bytes @ 0x08036B00
+Read 1024 bytes @ 0x08036F00
+Read 1024 bytes @ 0x08037300
+Read 1024 bytes @ 0x08037700
+Read 936 bytes @ 0x08037B00
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000814
+Setting breakpoint @ address 0x08000814, Kind = 2, Type = THUMB, BPHandle = 0x000A
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x00000001
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EA7
+Read register 'pc' (4 bytes) from hardware: 0x08000814
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000814, Size = 2
+Read 4 bytes @ 0x08000814
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x00000001
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EA7
+Read register 'pc' (4 bytes) from hardware: 0x08000814
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 716 bytes @ address 0x08000000
+Downloading 64576 bytes @ address 0x080002D0
+Downloading 64672 bytes @ address 0x0800FF10
+Downloading 64208 bytes @ address 0x0801FBB0
+Downloading 21564 bytes @ address 0x0802F680
+Downloading 13224 bytes @ address 0x08034AC0
+Downloading 16 bytes @ address 0x08037E68
+Downloading 4 bytes @ address 0x08037E78
+Downloading 1168 bytes @ address 0x08037E7C
+Downloading 288 bytes @ address 0x08038320
+Writing register 'pc' = 0x08002E90
+Read 716 bytes @ 0x08000000
+Read 1024 bytes @ 0x080002D0
+Read 1024 bytes @ 0x080006D0
+Read 1024 bytes @ 0x08000AD0
+Read 1024 bytes @ 0x08000ED0
+Read 1024 bytes @ 0x080012D0
+Read 1024 bytes @ 0x080016D0
+Read 1024 bytes @ 0x08001AD0
+Read 1024 bytes @ 0x08001ED0
+Read 1024 bytes @ 0x080022D0
+Read 1024 bytes @ 0x080026D0
+Read 1024 bytes @ 0x08002AD0
+Read 1024 bytes @ 0x08002ED0
+Read 1024 bytes @ 0x080032D0
+Read 1024 bytes @ 0x080036D0
+Read 1024 bytes @ 0x08003AD0
+Read 1024 bytes @ 0x08003ED0
+Read 1024 bytes @ 0x080042D0
+Read 1024 bytes @ 0x080046D0
+Read 1024 bytes @ 0x08004AD0
+Read 1024 bytes @ 0x08004ED0
+Read 1024 bytes @ 0x080052D0
+Read 1024 bytes @ 0x080056D0
+Read 1024 bytes @ 0x08005AD0
+Read 1024 bytes @ 0x08005ED0
+Read 1024 bytes @ 0x080062D0
+Read 1024 bytes @ 0x080066D0
+Read 1024 bytes @ 0x08006AD0
+Read 1024 bytes @ 0x08006ED0
+Read 1024 bytes @ 0x080072D0
+Read 1024 bytes @ 0x080076D0
+Read 1024 bytes @ 0x08007AD0
+Read 1024 bytes @ 0x08007ED0
+Read 1024 bytes @ 0x080082D0
+Read 1024 bytes @ 0x080086D0
+Read 1024 bytes @ 0x08008AD0
+Read 1024 bytes @ 0x08008ED0
+Read 1024 bytes @ 0x080092D0
+Read 1024 bytes @ 0x080096D0
+Read 1024 bytes @ 0x08009AD0
+Read 1024 bytes @ 0x08009ED0
+Read 1024 bytes @ 0x0800A2D0
+Read 1024 bytes @ 0x0800A6D0
+Read 1024 bytes @ 0x0800AAD0
+Read 1024 bytes @ 0x0800AED0
+Read 1024 bytes @ 0x0800B2D0
+Read 1024 bytes @ 0x0800B6D0
+Read 1024 bytes @ 0x0800BAD0
+Read 1024 bytes @ 0x0800BED0
+Read 1024 bytes @ 0x0800C2D0
+Read 1024 bytes @ 0x0800C6D0
+Read 1024 bytes @ 0x0800CAD0
+Read 1024 bytes @ 0x0800CED0
+Read 1024 bytes @ 0x0800D2D0
+Read 1024 bytes @ 0x0800D6D0
+Read 1024 bytes @ 0x0800DAD0
+Read 1024 bytes @ 0x0800DED0
+Read 1024 bytes @ 0x0800E2D0
+Read 1024 bytes @ 0x0800E6D0
+Read 1024 bytes @ 0x0800EAD0
+Read 1024 bytes @ 0x0800EED0
+Read 1024 bytes @ 0x0800F2D0
+Read 1024 bytes @ 0x0800F6D0
+Read 1024 bytes @ 0x0800FAD0
+Read 1024 bytes @ 0x0800FED0
+Read 1024 bytes @ 0x080102D0
+Read 1024 bytes @ 0x080106D0
+Read 1024 bytes @ 0x08010AD0
+Read 1024 bytes @ 0x08010ED0
+Read 1024 bytes @ 0x080112D0
+Read 1024 bytes @ 0x080116D0
+Read 1024 bytes @ 0x08011AD0
+Read 1024 bytes @ 0x08011ED0
+Read 1024 bytes @ 0x080122D0
+Read 1024 bytes @ 0x080126D0
+Read 1024 bytes @ 0x08012AD0
+Read 1024 bytes @ 0x08012ED0
+Read 1024 bytes @ 0x080132D0
+Read 1024 bytes @ 0x080136D0
+Read 1024 bytes @ 0x08013AD0
+Read 1024 bytes @ 0x08013ED0
+Read 1024 bytes @ 0x080142D0
+Read 1024 bytes @ 0x080146D0
+Read 1024 bytes @ 0x08014AD0
+Read 1024 bytes @ 0x08014ED0
+Read 1024 bytes @ 0x080152D0
+Read 1024 bytes @ 0x080156D0
+Read 1024 bytes @ 0x08015AD0
+Read 1024 bytes @ 0x08015ED0
+Read 1024 bytes @ 0x080162D0
+Read 1024 bytes @ 0x080166D0
+Read 1024 bytes @ 0x08016AD0
+Read 1024 bytes @ 0x08016ED0
+Read 1024 bytes @ 0x080172D0
+Read 1024 bytes @ 0x080176D0
+Read 1024 bytes @ 0x08017AD0
+Read 1024 bytes @ 0x08017ED0
+Read 1024 bytes @ 0x080182D0
+Read 1024 bytes @ 0x080186D0
+Read 1024 bytes @ 0x08018AD0
+Read 1024 bytes @ 0x08018ED0
+Read 1024 bytes @ 0x080192D0
+Read 1024 bytes @ 0x080196D0
+Read 1024 bytes @ 0x08019AD0
+Read 1024 bytes @ 0x08019ED0
+Read 1024 bytes @ 0x0801A2D0
+Read 1024 bytes @ 0x0801A6D0
+Read 1024 bytes @ 0x0801AAD0
+Read 1024 bytes @ 0x0801AED0
+Read 1024 bytes @ 0x0801B2D0
+Read 1024 bytes @ 0x0801B6D0
+Read 1024 bytes @ 0x0801BAD0
+Read 1024 bytes @ 0x0801BED0
+Read 1024 bytes @ 0x0801C2D0
+Read 1024 bytes @ 0x0801C6D0
+Read 1024 bytes @ 0x0801CAD0
+Read 1024 bytes @ 0x0801CED0
+Read 1024 bytes @ 0x0801D2D0
+Read 1024 bytes @ 0x0801D6D0
+Read 1024 bytes @ 0x0801DAD0
+Read 1024 bytes @ 0x0801DED0
+Read 1024 bytes @ 0x0801E2D0
+Read 1024 bytes @ 0x0801E6D0
+Read 1024 bytes @ 0x0801EAD0
+Read 1024 bytes @ 0x0801EED0
+Read 1024 bytes @ 0x0801F2D0
+Read 1024 bytes @ 0x0801F6D0
+Read 1024 bytes @ 0x0801FAD0
+Read 1024 bytes @ 0x0801FED0
+Read 1024 bytes @ 0x080202D0
+Read 1024 bytes @ 0x080206D0
+Read 1024 bytes @ 0x08020AD0
+Read 1024 bytes @ 0x08020ED0
+Read 1024 bytes @ 0x080212D0
+Read 1024 bytes @ 0x080216D0
+Read 1024 bytes @ 0x08021AD0
+Read 1024 bytes @ 0x08021ED0
+Read 1024 bytes @ 0x080222D0
+Read 1024 bytes @ 0x080226D0
+Read 1024 bytes @ 0x08022AD0
+Read 1024 bytes @ 0x08022ED0
+Read 1024 bytes @ 0x080232D0
+Read 1024 bytes @ 0x080236D0
+Read 1024 bytes @ 0x08023AD0
+Read 1024 bytes @ 0x08023ED0
+Read 1024 bytes @ 0x080242D0
+Read 1024 bytes @ 0x080246D0
+Read 1024 bytes @ 0x08024AD0
+Read 1024 bytes @ 0x08024ED0
+Read 1024 bytes @ 0x080252D0
+Read 1024 bytes @ 0x080256D0
+Read 1024 bytes @ 0x08025AD0
+Read 1024 bytes @ 0x08025ED0
+Read 1024 bytes @ 0x080262D0
+Read 1024 bytes @ 0x080266D0
+Read 1024 bytes @ 0x08026AD0
+Read 1024 bytes @ 0x08026ED0
+Read 1024 bytes @ 0x080272D0
+Read 1024 bytes @ 0x080276D0
+Read 1024 bytes @ 0x08027AD0
+Read 1024 bytes @ 0x08027ED0
+Read 1024 bytes @ 0x080282D0
+Read 1024 bytes @ 0x080286D0
+Read 1024 bytes @ 0x08028AD0
+Read 1024 bytes @ 0x08028ED0
+Read 1024 bytes @ 0x080292D0
+Read 1024 bytes @ 0x080296D0
+Read 1024 bytes @ 0x08029AD0
+Read 1024 bytes @ 0x08029ED0
+Read 1024 bytes @ 0x0802A2D0
+Read 1024 bytes @ 0x0802A6D0
+Read 1024 bytes @ 0x0802AAD0
+Read 1024 bytes @ 0x0802AED0
+Read 1024 bytes @ 0x0802B2D0
+Read 1024 bytes @ 0x0802B6D0
+Read 1024 bytes @ 0x0802BAD0
+Read 1024 bytes @ 0x0802BED0
+Read 1024 bytes @ 0x0802C2D0
+Read 1024 bytes @ 0x0802C6D0
+Read 1024 bytes @ 0x0802CAD0
+Read 1024 bytes @ 0x0802CED0
+Read 1024 bytes @ 0x0802D2D0
+Read 1024 bytes @ 0x0802D6D0
+Read 1024 bytes @ 0x0802DAD0
+Read 1024 bytes @ 0x0802DED0
+Read 1024 bytes @ 0x0802E2D0
+Read 1024 bytes @ 0x0802E6D0
+Read 1024 bytes @ 0x0802EAD0
+Read 1024 bytes @ 0x0802EED0
+Read 1024 bytes @ 0x0802F2D0
+Read 1024 bytes @ 0x0802F6D0
+Read 1024 bytes @ 0x0802FAD0
+Read 1024 bytes @ 0x0802FED0
+Read 1024 bytes @ 0x080302D0
+Read 1024 bytes @ 0x080306D0
+Read 1024 bytes @ 0x08030AD0
+Read 1024 bytes @ 0x08030ED0
+Read 1024 bytes @ 0x080312D0
+Read 1024 bytes @ 0x080316D0
+Read 1024 bytes @ 0x08031AD0
+Read 1024 bytes @ 0x08031ED0
+Read 1024 bytes @ 0x080322D0
+Read 1024 bytes @ 0x080326D0
+Read 1024 bytes @ 0x08032AD0
+Read 1024 bytes @ 0x08032ED0
+Read 1024 bytes @ 0x080332D0
+Read 1024 bytes @ 0x080336D0
+Read 1024 bytes @ 0x08033AD0
+Read 1024 bytes @ 0x08033ED0
+Read 1024 bytes @ 0x080342D0
+Read 1004 bytes @ 0x080346D0
+Read 1024 bytes @ 0x08034AC0
+Read 1024 bytes @ 0x08034EC0
+Read 1024 bytes @ 0x080352C0
+Read 1024 bytes @ 0x080356C0
+Read 1024 bytes @ 0x08035AC0
+Read 1024 bytes @ 0x08035EC0
+Read 1024 bytes @ 0x080362C0
+Read 1024 bytes @ 0x080366C0
+Read 1024 bytes @ 0x08036AC0
+Read 1024 bytes @ 0x08036EC0
+Read 1024 bytes @ 0x080372C0
+Read 1024 bytes @ 0x080376C0
+Read 936 bytes @ 0x08037AC0
+Received monitor command: reset
+Resetting target
+Read 2 bytes @ 0x08000814
+Setting breakpoint @ address 0x08000814, Kind = 2, Type = THUMB, BPHandle = 0x000B
+Starting target CPU...
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EAD
+Read register 'pc' (4 bytes) from hardware: 0x08000814
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Removing breakpoint @ address 0x08000814, Size = 2
+Read 4 bytes @ 0x08000814
+Read 4 bytes @ 0x24000C20
+Read 4 bytes @ 0x24000C24
+Read 4 bytes @ 0x24000C28
+Read 26816 bytes @ 0x24000C20
+Read 8564 bytes @ 0x240074E0
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EAD
+Read register 'pc' (4 bytes) from hardware: 0x08000814
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Downloading 64592 bytes @ address 0x08000000
+Downloading 64256 bytes @ address 0x0800FC50
+Downloading 64432 bytes @ address 0x0801F750
+Downloading 64560 bytes @ address 0x0802F300
+Downloading 65296 bytes @ address 0x0803EF30
+Downloading 65504 bytes @ address 0x0804EE40
+Downloading 65504 bytes @ address 0x0805EE20
+Downloading 65504 bytes @ address 0x0806EE00
+Downloading 65504 bytes @ address 0x0807EDE0
+Downloading 65504 bytes @ address 0x0808EDC0
+Downloading 65504 bytes @ address 0x0809EDA0
+Downloading 65504 bytes @ address 0x080AED80
+Downloading 65504 bytes @ address 0x080BED60
+Downloading 65504 bytes @ address 0x080CED40
+Downloading 65504 bytes @ address 0x080DED20
+Downloading 65504 bytes @ address 0x080EED00
+Downloading 4896 bytes @ address 0x080FECE0
+Writing register 'pc' = 0x08001EE0
+Read 1024 bytes @ 0x08000000
+Read 1024 bytes @ 0x08000400
+Read 1024 bytes @ 0x08000800
+Read 1024 bytes @ 0x08000C00
+Read 1024 bytes @ 0x08001000
+Read 1024 bytes @ 0x08001400
+Read 1024 bytes @ 0x08001800
+Read 1024 bytes @ 0x08001C00
+Read 1024 bytes @ 0x08002000
+Read 1024 bytes @ 0x08002400
+Read 1024 bytes @ 0x08002800
+Read 1024 bytes @ 0x08002C00
+Read 1024 bytes @ 0x08003000
+Read 1024 bytes @ 0x08003400
+Read 1024 bytes @ 0x08003800
+Read 1024 bytes @ 0x08003C00
+Read 1024 bytes @ 0x08004000
+Read 1024 bytes @ 0x08004400
+Read 1024 bytes @ 0x08004800
+Read 1024 bytes @ 0x08004C00
+Read 1024 bytes @ 0x08005000
+Read 1024 bytes @ 0x08005400
+Read 1024 bytes @ 0x08005800
+Read 1024 bytes @ 0x08005C00
+Read 1024 bytes @ 0x08006000
+Read 1024 bytes @ 0x08006400
+Read 1024 bytes @ 0x08006800
+Read 1024 bytes @ 0x08006C00
+Read 1024 bytes @ 0x08007000
+Read 1024 bytes @ 0x08007400
+Read 1024 bytes @ 0x08007800
+Read 1024 bytes @ 0x08007C00
+Read 1024 bytes @ 0x08008000
+Read 1024 bytes @ 0x08008400
+Read 1024 bytes @ 0x08008800
+Read 1024 bytes @ 0x08008C00
+Read 1024 bytes @ 0x08009000
+Read 1024 bytes @ 0x08009400
+Read 1024 bytes @ 0x08009800
+Read 1024 bytes @ 0x08009C00
+Read 1024 bytes @ 0x0800A000
+Read 1024 bytes @ 0x0800A400
+Read 1024 bytes @ 0x0800A800
+Read 1024 bytes @ 0x0800AC00
+Read 1024 bytes @ 0x0800B000
+Read 1024 bytes @ 0x0800B400
+Read 1024 bytes @ 0x0800B800
+Read 1024 bytes @ 0x0800BC00
+Read 1024 bytes @ 0x0800C000
+Read 1024 bytes @ 0x0800C400
+Read 1024 bytes @ 0x0800C800
+Read 1024 bytes @ 0x0800CC00
+Read 1024 bytes @ 0x0800D000
+Read 1024 bytes @ 0x0800D400
+Read 1024 bytes @ 0x0800D800
+Read 1024 bytes @ 0x0800DC00
+Read 1024 bytes @ 0x0800E000
+Read 1024 bytes @ 0x0800E400
+Read 1024 bytes @ 0x0800E800
+Read 1024 bytes @ 0x0800EC00
+Read 1024 bytes @ 0x0800F000
+Read 1024 bytes @ 0x0800F400
+Read 1024 bytes @ 0x0800F800
+Read 1024 bytes @ 0x0800FC00
+Read 1024 bytes @ 0x08010000
+Read 1024 bytes @ 0x08010400
+Read 1024 bytes @ 0x08010800
+Read 1024 bytes @ 0x08010C00
+Read 1024 bytes @ 0x08011000
+Read 1024 bytes @ 0x08011400
+Read 1024 bytes @ 0x08011800
+Read 1024 bytes @ 0x08011C00
+Read 1024 bytes @ 0x08012000
+Read 1024 bytes @ 0x08012400
+Read 1024 bytes @ 0x08012800
+Read 1024 bytes @ 0x08012C00
+Read 1024 bytes @ 0x08013000
+Read 1024 bytes @ 0x08013400
+Read 1024 bytes @ 0x08013800
+Read 1024 bytes @ 0x08013C00
+Read 1024 bytes @ 0x08014000
+Read 1024 bytes @ 0x08014400
+Read 1024 bytes @ 0x08014800
+Read 1024 bytes @ 0x08014C00
+Read 1024 bytes @ 0x08015000
+Read 1024 bytes @ 0x08015400
+Read 1024 bytes @ 0x08015800
+Read 1024 bytes @ 0x08015C00
+Read 1024 bytes @ 0x08016000
+Read 1024 bytes @ 0x08016400
+Read 1024 bytes @ 0x08016800
+Read 1024 bytes @ 0x08016C00
+Read 1024 bytes @ 0x08017000
+Read 1024 bytes @ 0x08017400
+Read 1024 bytes @ 0x08017800
+Read 1024 bytes @ 0x08017C00
+Read 1024 bytes @ 0x08018000
+Read 1024 bytes @ 0x08018400
+Read 1024 bytes @ 0x08018800
+Read 1024 bytes @ 0x08018C00
+Read 1024 bytes @ 0x08019000
+Read 1024 bytes @ 0x08019400
+Read 1024 bytes @ 0x08019800
+Read 1024 bytes @ 0x08019C00
+Read 1024 bytes @ 0x0801A000
+Read 1024 bytes @ 0x0801A400
+Read 1024 bytes @ 0x0801A800
+Read 1024 bytes @ 0x0801AC00
+Read 1024 bytes @ 0x0801B000
+Read 1024 bytes @ 0x0801B400
+Read 1024 bytes @ 0x0801B800
+Read 1024 bytes @ 0x0801BC00
+Read 1024 bytes @ 0x0801C000
+Read 1024 bytes @ 0x0801C400
+Read 1024 bytes @ 0x0801C800
+Read 1024 bytes @ 0x0801CC00
+Read 1024 bytes @ 0x0801D000
+Read 1024 bytes @ 0x0801D400
+Read 1024 bytes @ 0x0801D800
+Read 1024 bytes @ 0x0801DC00
+Read 1024 bytes @ 0x0801E000
+Read 1024 bytes @ 0x0801E400
+Read 1024 bytes @ 0x0801E800
+Read 1024 bytes @ 0x0801EC00
+Read 1024 bytes @ 0x0801F000
+Read 1024 bytes @ 0x0801F400
+Read 1024 bytes @ 0x0801F800
+Read 1024 bytes @ 0x0801FC00
+Read 1024 bytes @ 0x08020000
+Read 1024 bytes @ 0x08020400
+Read 1024 bytes @ 0x08020800
+Read 1024 bytes @ 0x08020C00
+Read 1024 bytes @ 0x08021000
+Read 1024 bytes @ 0x08021400
+Read 1024 bytes @ 0x08021800
+Read 1024 bytes @ 0x08021C00
+Read 1024 bytes @ 0x08022000
+Read 1024 bytes @ 0x08022400
+Read 1024 bytes @ 0x08022800
+Read 1024 bytes @ 0x08022C00
+Read 1024 bytes @ 0x08023000
+Read 1024 bytes @ 0x08023400
+Read 1024 bytes @ 0x08023800
+Read 1024 bytes @ 0x08023C00
+Read 1024 bytes @ 0x08024000
+Read 1024 bytes @ 0x08024400
+Read 1024 bytes @ 0x08024800
+Read 1024 bytes @ 0x08024C00
+Read 1024 bytes @ 0x08025000
+Read 1024 bytes @ 0x08025400
+Read 1024 bytes @ 0x08025800
+Read 1024 bytes @ 0x08025C00
+Read 1024 bytes @ 0x08026000
+Read 1024 bytes @ 0x08026400
+Read 1024 bytes @ 0x08026800
+Read 1024 bytes @ 0x08026C00
+Read 1024 bytes @ 0x08027000
+Read 1024 bytes @ 0x08027400
+Read 1024 bytes @ 0x08027800
+Read 1024 bytes @ 0x08027C00
+Read 1024 bytes @ 0x08028000
+Read 1024 bytes @ 0x08028400
+Read 1024 bytes @ 0x08028800
+Read 1024 bytes @ 0x08028C00
+Read 1024 bytes @ 0x08029000
+Read 1024 bytes @ 0x08029400
+Read 1024 bytes @ 0x08029800
+Read 1024 bytes @ 0x08029C00
+Read 1024 bytes @ 0x0802A000
+Read 1024 bytes @ 0x0802A400
+Read 1024 bytes @ 0x0802A800
+Read 1024 bytes @ 0x0802AC00
+Read 1024 bytes @ 0x0802B000
+Read 1024 bytes @ 0x0802B400
+Read 1024 bytes @ 0x0802B800
+Read 1024 bytes @ 0x0802BC00
+Read 1024 bytes @ 0x0802C000
+Read 1024 bytes @ 0x0802C400
+Read 1024 bytes @ 0x0802C800
+Read 1024 bytes @ 0x0802CC00
+Read 1024 bytes @ 0x0802D000
+Read 1024 bytes @ 0x0802D400
+Read 1024 bytes @ 0x0802D800
+Read 1024 bytes @ 0x0802DC00
+Read 1024 bytes @ 0x0802E000
+Read 1024 bytes @ 0x0802E400
+Read 1024 bytes @ 0x0802E800
+Read 1024 bytes @ 0x0802EC00
+Read 1024 bytes @ 0x0802F000
+Read 1024 bytes @ 0x0802F400
+Read 1024 bytes @ 0x0802F800
+Read 1024 bytes @ 0x0802FC00
+Read 1024 bytes @ 0x08030000
+Read 1024 bytes @ 0x08030400
+Read 1024 bytes @ 0x08030800
+Read 1024 bytes @ 0x08030C00
+Read 1024 bytes @ 0x08031000
+Read 1024 bytes @ 0x08031400
+Read 1024 bytes @ 0x08031800
+Read 1024 bytes @ 0x08031C00
+Read 1024 bytes @ 0x08032000
+Read 1024 bytes @ 0x08032400
+Read 1024 bytes @ 0x08032800
+Read 1024 bytes @ 0x08032C00
+Read 1024 bytes @ 0x08033000
+Read 1024 bytes @ 0x08033400
+Read 1024 bytes @ 0x08033800
+Read 1024 bytes @ 0x08033C00
+Read 1024 bytes @ 0x08034000
+Read 1024 bytes @ 0x08034400
+Read 1024 bytes @ 0x08034800
+Read 1024 bytes @ 0x08034C00
+Read 1024 bytes @ 0x08035000
+Read 1024 bytes @ 0x08035400
+Read 1024 bytes @ 0x08035800
+Read 1024 bytes @ 0x08035C00
+Read 1024 bytes @ 0x08036000
+Read 1024 bytes @ 0x08036400
+Read 1024 bytes @ 0x08036800
+Read 1024 bytes @ 0x08036C00
+Read 1024 bytes @ 0x08037000
+Read 1024 bytes @ 0x08037400
+Read 1024 bytes @ 0x08037800
+Read 1024 bytes @ 0x08037C00
+Read 1024 bytes @ 0x08038000
+Read 1024 bytes @ 0x08038400
+Read 1024 bytes @ 0x08038800
+Read 1024 bytes @ 0x08038C00
+Read 1024 bytes @ 0x08039000
+Read 1024 bytes @ 0x08039400
+Read 1024 bytes @ 0x08039800
+Read 1024 bytes @ 0x08039C00
+Read 1024 bytes @ 0x0803A000
+Read 1024 bytes @ 0x0803A400
+Read 1024 bytes @ 0x0803A800
+Read 1024 bytes @ 0x0803AC00
+Read 1024 bytes @ 0x0803B000
+Read 1024 bytes @ 0x0803B400
+Read 1024 bytes @ 0x0803B800
+Read 1024 bytes @ 0x0803BC00
+Read 1024 bytes @ 0x0803C000
+Read 1024 bytes @ 0x0803C400
+Read 1024 bytes @ 0x0803C800
+Read 1024 bytes @ 0x0803CC00
+Read 1024 bytes @ 0x0803D000
+Read 1024 bytes @ 0x0803D400
+Read 1024 bytes @ 0x0803D800
+Read 1024 bytes @ 0x0803DC00
+Read 1024 bytes @ 0x0803E000
+Read 1024 bytes @ 0x0803E400
+Read 1024 bytes @ 0x0803E800
+Read 1024 bytes @ 0x0803EC00
+Read 1024 bytes @ 0x0803F000
+Read 1024 bytes @ 0x0803F400
+Read 1024 bytes @ 0x0803F800
+Read 1024 bytes @ 0x0803FC00
+Read 1024 bytes @ 0x08040000
+Read 1024 bytes @ 0x08040400
+Read 1024 bytes @ 0x08040800
+Read 1024 bytes @ 0x08040C00
+Read 1024 bytes @ 0x08041000
+Read 1024 bytes @ 0x08041400
+Read 1024 bytes @ 0x08041800
+Read 1024 bytes @ 0x08041C00
+Read 1024 bytes @ 0x08042000
+Read 1024 bytes @ 0x08042400
+Read 1024 bytes @ 0x08042800
+Read 1024 bytes @ 0x08042C00
+Read 1024 bytes @ 0x08043000
+Read 1024 bytes @ 0x08043400
+Read 1024 bytes @ 0x08043800
+Read 1024 bytes @ 0x08043C00
+Read 1024 bytes @ 0x08044000
+Read 1024 bytes @ 0x08044400
+Read 1024 bytes @ 0x08044800
+Read 1024 bytes @ 0x08044C00
+Read 1024 bytes @ 0x08045000
+Read 1024 bytes @ 0x08045400
+Read 1024 bytes @ 0x08045800
+Read 1024 bytes @ 0x08045C00
+Read 1024 bytes @ 0x08046000
+Read 1024 bytes @ 0x08046400
+Read 1024 bytes @ 0x08046800
+Read 1024 bytes @ 0x08046C00
+Read 1024 bytes @ 0x08047000
+Read 1024 bytes @ 0x08047400
+Read 1024 bytes @ 0x08047800
+Read 1024 bytes @ 0x08047C00
+Read 1024 bytes @ 0x08048000
+Read 1024 bytes @ 0x08048400
+Read 1024 bytes @ 0x08048800
+Read 1024 bytes @ 0x08048C00
+Read 1024 bytes @ 0x08049000
+Read 1024 bytes @ 0x08049400
+Read 1024 bytes @ 0x08049800
+Read 1024 bytes @ 0x08049C00
+Read 1024 bytes @ 0x0804A000
+Read 1024 bytes @ 0x0804A400
+Read 1024 bytes @ 0x0804A800
+Read 1024 bytes @ 0x0804AC00
+Read 1024 bytes @ 0x0804B000
+Read 1024 bytes @ 0x0804B400
+Read 1024 bytes @ 0x0804B800
+Read 1024 bytes @ 0x0804BC00
+Read 1024 bytes @ 0x0804C000
+Read 1024 bytes @ 0x0804C400
+Read 1024 bytes @ 0x0804C800
+Read 1024 bytes @ 0x0804CC00
+Read 1024 bytes @ 0x0804D000
+Read 1024 bytes @ 0x0804D400
+Read 1024 bytes @ 0x0804D800
+Read 1024 bytes @ 0x0804DC00
+Read 1024 bytes @ 0x0804E000
+Read 1024 bytes @ 0x0804E400
+Read 1024 bytes @ 0x0804E800
+Read 1024 bytes @ 0x0804EC00
+Read 1024 bytes @ 0x0804F000
+Read 1024 bytes @ 0x0804F400
+Read 1024 bytes @ 0x0804F800
+Read 1024 bytes @ 0x0804FC00
+Read 1024 bytes @ 0x08050000
+Read 1024 bytes @ 0x08050400
+Read 1024 bytes @ 0x08050800
+Read 1024 bytes @ 0x08050C00
+Read 1024 bytes @ 0x08051000
+Read 1024 bytes @ 0x08051400
+Read 1024 bytes @ 0x08051800
+Read 1024 bytes @ 0x08051C00
+Read 1024 bytes @ 0x08052000
+Read 1024 bytes @ 0x08052400
+Read 1024 bytes @ 0x08052800
+Read 1024 bytes @ 0x08052C00
+Read 1024 bytes @ 0x08053000
+Read 1024 bytes @ 0x08053400
+Read 1024 bytes @ 0x08053800
+Read 1024 bytes @ 0x08053C00
+Read 1024 bytes @ 0x08054000
+Read 1024 bytes @ 0x08054400
+Read 1024 bytes @ 0x08054800
+Read 1024 bytes @ 0x08054C00
+Read 1024 bytes @ 0x08055000
+Read 1024 bytes @ 0x08055400
+Read 1024 bytes @ 0x08055800
+Read 1024 bytes @ 0x08055C00
+Read 1024 bytes @ 0x08056000
+Read 1024 bytes @ 0x08056400
+Read 1024 bytes @ 0x08056800
+Read 1024 bytes @ 0x08056C00
+Read 1024 bytes @ 0x08057000
+Read 1024 bytes @ 0x08057400
+Read 1024 bytes @ 0x08057800
+Read 1024 bytes @ 0x08057C00
+Read 1024 bytes @ 0x08058000
+Read 1024 bytes @ 0x08058400
+Read 1024 bytes @ 0x08058800
+Read 1024 bytes @ 0x08058C00
+Read 1024 bytes @ 0x08059000
+Read 1024 bytes @ 0x08059400
+Read 1024 bytes @ 0x08059800
+Read 1024 bytes @ 0x08059C00
+Read 1024 bytes @ 0x0805A000
+Read 1024 bytes @ 0x0805A400
+Read 1024 bytes @ 0x0805A800
+Read 1024 bytes @ 0x0805AC00
+Read 1024 bytes @ 0x0805B000
+Read 1024 bytes @ 0x0805B400
+Read 1024 bytes @ 0x0805B800
+Read 1024 bytes @ 0x0805BC00
+Read 1024 bytes @ 0x0805C000
+Read 1024 bytes @ 0x0805C400
+Read 1024 bytes @ 0x0805C800
+Read 1024 bytes @ 0x0805CC00
+Read 1024 bytes @ 0x0805D000
+Read 1024 bytes @ 0x0805D400
+Read 1024 bytes @ 0x0805D800
+Read 1024 bytes @ 0x0805DC00
+Read 1024 bytes @ 0x0805E000
+Read 1024 bytes @ 0x0805E400
+Read 1024 bytes @ 0x0805E800
+Read 1024 bytes @ 0x0805EC00
+Read 1024 bytes @ 0x0805F000
+Read 1024 bytes @ 0x0805F400
+Read 1024 bytes @ 0x0805F800
+Read 1024 bytes @ 0x0805FC00
+Read 1024 bytes @ 0x08060000
+Read 1024 bytes @ 0x08060400
+Read 1024 bytes @ 0x08060800
+Read 1024 bytes @ 0x08060C00
+Read 1024 bytes @ 0x08061000
+Read 1024 bytes @ 0x08061400
+Read 1024 bytes @ 0x08061800
+Read 1024 bytes @ 0x08061C00
+Read 1024 bytes @ 0x08062000
+Read 1024 bytes @ 0x08062400
+Read 1024 bytes @ 0x08062800
+Read 1024 bytes @ 0x08062C00
+Read 1024 bytes @ 0x08063000
+Read 1024 bytes @ 0x08063400
+Read 1024 bytes @ 0x08063800
+Read 1024 bytes @ 0x08063C00
+Read 1024 bytes @ 0x08064000
+Read 1024 bytes @ 0x08064400
+Read 1024 bytes @ 0x08064800
+Read 1024 bytes @ 0x08064C00
+Read 1024 bytes @ 0x08065000
+Read 1024 bytes @ 0x08065400
+Read 1024 bytes @ 0x08065800
+Read 1024 bytes @ 0x08065C00
+Read 1024 bytes @ 0x08066000
+Read 1024 bytes @ 0x08066400
+Read 1024 bytes @ 0x08066800
+Read 1024 bytes @ 0x08066C00
+Read 1024 bytes @ 0x08067000
+Read 1024 bytes @ 0x08067400
+Read 1024 bytes @ 0x08067800
+Read 1024 bytes @ 0x08067C00
+Read 1024 bytes @ 0x08068000
+Read 1024 bytes @ 0x08068400
+Read 1024 bytes @ 0x08068800
+Read 1024 bytes @ 0x08068C00
+Read 1024 bytes @ 0x08069000
+Read 1024 bytes @ 0x08069400
+Read 1024 bytes @ 0x08069800
+Read 1024 bytes @ 0x08069C00
+Read 1024 bytes @ 0x0806A000
+Read 1024 bytes @ 0x0806A400
+Read 1024 bytes @ 0x0806A800
+Read 1024 bytes @ 0x0806AC00
+Read 1024 bytes @ 0x0806B000
+Read 1024 bytes @ 0x0806B400
+Read 1024 bytes @ 0x0806B800
+Read 1024 bytes @ 0x0806BC00
+Read 1024 bytes @ 0x0806C000
+Read 1024 bytes @ 0x0806C400
+Read 1024 bytes @ 0x0806C800
+Read 1024 bytes @ 0x0806CC00
+Read 1024 bytes @ 0x0806D000
+Read 1024 bytes @ 0x0806D400
+Read 1024 bytes @ 0x0806D800
+Read 1024 bytes @ 0x0806DC00
+Read 1024 bytes @ 0x0806E000
+Read 1024 bytes @ 0x0806E400
+Read 1024 bytes @ 0x0806E800
+Read 1024 bytes @ 0x0806EC00
+Read 1024 bytes @ 0x0806F000
+Read 1024 bytes @ 0x0806F400
+Read 1024 bytes @ 0x0806F800
+Read 1024 bytes @ 0x0806FC00
+Read 1024 bytes @ 0x08070000
+Read 1024 bytes @ 0x08070400
+Read 1024 bytes @ 0x08070800
+Read 1024 bytes @ 0x08070C00
+Read 1024 bytes @ 0x08071000
+Read 1024 bytes @ 0x08071400
+Read 1024 bytes @ 0x08071800
+Read 1024 bytes @ 0x08071C00
+Read 1024 bytes @ 0x08072000
+Read 1024 bytes @ 0x08072400
+Read 1024 bytes @ 0x08072800
+Read 1024 bytes @ 0x08072C00
+Read 1024 bytes @ 0x08073000
+Read 1024 bytes @ 0x08073400
+Read 1024 bytes @ 0x08073800
+Read 1024 bytes @ 0x08073C00
+Read 1024 bytes @ 0x08074000
+Read 1024 bytes @ 0x08074400
+Read 1024 bytes @ 0x08074800
+Read 1024 bytes @ 0x08074C00
+Read 1024 bytes @ 0x08075000
+Read 1024 bytes @ 0x08075400
+Read 1024 bytes @ 0x08075800
+Read 1024 bytes @ 0x08075C00
+Read 1024 bytes @ 0x08076000
+Read 1024 bytes @ 0x08076400
+Read 1024 bytes @ 0x08076800
+Read 1024 bytes @ 0x08076C00
+Read 1024 bytes @ 0x08077000
+Read 1024 bytes @ 0x08077400
+Read 1024 bytes @ 0x08077800
+Read 1024 bytes @ 0x08077C00
+Read 1024 bytes @ 0x08078000
+Read 1024 bytes @ 0x08078400
+Read 1024 bytes @ 0x08078800
+Read 1024 bytes @ 0x08078C00
+Read 1024 bytes @ 0x08079000
+Read 1024 bytes @ 0x08079400
+Read 1024 bytes @ 0x08079800
+Read 1024 bytes @ 0x08079C00
+Read 1024 bytes @ 0x0807A000
+Read 1024 bytes @ 0x0807A400
+Read 1024 bytes @ 0x0807A800
+Read 1024 bytes @ 0x0807AC00
+Read 1024 bytes @ 0x0807B000
+Read 1024 bytes @ 0x0807B400
+Read 1024 bytes @ 0x0807B800
+Read 1024 bytes @ 0x0807BC00
+Read 1024 bytes @ 0x0807C000
+Read 1024 bytes @ 0x0807C400
+Read 1024 bytes @ 0x0807C800
+Read 1024 bytes @ 0x0807CC00
+Read 1024 bytes @ 0x0807D000
+Read 1024 bytes @ 0x0807D400
+Read 1024 bytes @ 0x0807D800
+Read 1024 bytes @ 0x0807DC00
+Read 1024 bytes @ 0x0807E000
+Read 1024 bytes @ 0x0807E400
+Read 1024 bytes @ 0x0807E800
+Read 1024 bytes @ 0x0807EC00
+Read 1024 bytes @ 0x0807F000
+Read 1024 bytes @ 0x0807F400
+Read 1024 bytes @ 0x0807F800
+Read 1024 bytes @ 0x0807FC00
+Read 1024 bytes @ 0x08080000
+Read 1024 bytes @ 0x08080400
+Read 1024 bytes @ 0x08080800
+Read 1024 bytes @ 0x08080C00
+Read 1024 bytes @ 0x08081000
+Read 1024 bytes @ 0x08081400
+Read 1024 bytes @ 0x08081800
+Read 1024 bytes @ 0x08081C00
+Read 1024 bytes @ 0x08082000
+Read 1024 bytes @ 0x08082400
+Read 1024 bytes @ 0x08082800
+Read 1024 bytes @ 0x08082C00
+Read 1024 bytes @ 0x08083000
+Read 1024 bytes @ 0x08083400
+Read 1024 bytes @ 0x08083800
+Read 1024 bytes @ 0x08083C00
+Read 1024 bytes @ 0x08084000
+Read 1024 bytes @ 0x08084400
+Read 1024 bytes @ 0x08084800
+Read 1024 bytes @ 0x08084C00
+Read 1024 bytes @ 0x08085000
+Read 1024 bytes @ 0x08085400
+Read 1024 bytes @ 0x08085800
+Read 1024 bytes @ 0x08085C00
+Read 1024 bytes @ 0x08086000
+Read 1024 bytes @ 0x08086400
+Read 1024 bytes @ 0x08086800
+Read 1024 bytes @ 0x08086C00
+Read 1024 bytes @ 0x08087000
+Read 1024 bytes @ 0x08087400
+Read 1024 bytes @ 0x08087800
+Read 1024 bytes @ 0x08087C00
+Read 1024 bytes @ 0x08088000
+Read 1024 bytes @ 0x08088400
+Read 1024 bytes @ 0x08088800
+Read 1024 bytes @ 0x08088C00
+Read 1024 bytes @ 0x08089000
+Read 1024 bytes @ 0x08089400
+Read 1024 bytes @ 0x08089800
+Read 1024 bytes @ 0x08089C00
+Read 1024 bytes @ 0x0808A000
+Read 1024 bytes @ 0x0808A400
+Read 1024 bytes @ 0x0808A800
+Read 1024 bytes @ 0x0808AC00
+Read 1024 bytes @ 0x0808B000
+Read 1024 bytes @ 0x0808B400
+Read 1024 bytes @ 0x0808B800
+Read 1024 bytes @ 0x0808BC00
+Read 1024 bytes @ 0x0808C000
+Read 1024 bytes @ 0x0808C400
+Read 1024 bytes @ 0x0808C800
+Read 1024 bytes @ 0x0808CC00
+Read 1024 bytes @ 0x0808D000
+Read 1024 bytes @ 0x0808D400
+Read 1024 bytes @ 0x0808D800
+Read 1024 bytes @ 0x0808DC00
+Read 1024 bytes @ 0x0808E000
+Read 1024 bytes @ 0x0808E400
+Read 1024 bytes @ 0x0808E800
+Read 1024 bytes @ 0x0808EC00
+Read 1024 bytes @ 0x0808F000
+Read 1024 bytes @ 0x0808F400
+Read 1024 bytes @ 0x0808F800
+Read 1024 bytes @ 0x0808FC00
+Read 1024 bytes @ 0x08090000
+Read 1024 bytes @ 0x08090400
+Read 1024 bytes @ 0x08090800
+Read 1024 bytes @ 0x08090C00
+Read 1024 bytes @ 0x08091000
+Read 1024 bytes @ 0x08091400
+Read 1024 bytes @ 0x08091800
+Read 1024 bytes @ 0x08091C00
+Read 1024 bytes @ 0x08092000
+Read 1024 bytes @ 0x08092400
+Read 1024 bytes @ 0x08092800
+Read 1024 bytes @ 0x08092C00
+Read 1024 bytes @ 0x08093000
+Read 1024 bytes @ 0x08093400
+Read 1024 bytes @ 0x08093800
+Read 1024 bytes @ 0x08093C00
+Read 1024 bytes @ 0x08094000
+Read 1024 bytes @ 0x08094400
+Read 1024 bytes @ 0x08094800
+Read 1024 bytes @ 0x08094C00
+Read 1024 bytes @ 0x08095000
+Read 1024 bytes @ 0x08095400
+Read 1024 bytes @ 0x08095800
+Read 1024 bytes @ 0x08095C00
+Read 1024 bytes @ 0x08096000
+Read 1024 bytes @ 0x08096400
+Read 1024 bytes @ 0x08096800
+Read 1024 bytes @ 0x08096C00
+Read 1024 bytes @ 0x08097000
+Read 1024 bytes @ 0x08097400
+Read 1024 bytes @ 0x08097800
+Read 1024 bytes @ 0x08097C00
+Read 1024 bytes @ 0x08098000
+Read 1024 bytes @ 0x08098400
+Read 1024 bytes @ 0x08098800
+Read 1024 bytes @ 0x08098C00
+Read 1024 bytes @ 0x08099000
+Read 1024 bytes @ 0x08099400
+Read 1024 bytes @ 0x08099800
+Read 1024 bytes @ 0x08099C00
+Read 1024 bytes @ 0x0809A000
+Read 1024 bytes @ 0x0809A400
+Read 1024 bytes @ 0x0809A800
+Read 1024 bytes @ 0x0809AC00
+Read 1024 bytes @ 0x0809B000
+Read 1024 bytes @ 0x0809B400
+Read 1024 bytes @ 0x0809B800
+Read 1024 bytes @ 0x0809BC00
+Read 1024 bytes @ 0x0809C000
+Read 1024 bytes @ 0x0809C400
+Read 1024 bytes @ 0x0809C800
+Read 1024 bytes @ 0x0809CC00
+Read 1024 bytes @ 0x0809D000
+Read 1024 bytes @ 0x0809D400
+Read 1024 bytes @ 0x0809D800
+Read 1024 bytes @ 0x0809DC00
+Read 1024 bytes @ 0x0809E000
+Read 1024 bytes @ 0x0809E400
+Read 1024 bytes @ 0x0809E800
+Read 1024 bytes @ 0x0809EC00
+Read 1024 bytes @ 0x0809F000
+Read 1024 bytes @ 0x0809F400
+Read 1024 bytes @ 0x0809F800
+Read 1024 bytes @ 0x0809FC00
+Read 1024 bytes @ 0x080A0000
+Read 1024 bytes @ 0x080A0400
+Read 1024 bytes @ 0x080A0800
+Read 1024 bytes @ 0x080A0C00
+Read 1024 bytes @ 0x080A1000
+Read 1024 bytes @ 0x080A1400
+Read 1024 bytes @ 0x080A1800
+Read 1024 bytes @ 0x080A1C00
+Read 1024 bytes @ 0x080A2000
+Read 1024 bytes @ 0x080A2400
+Read 1024 bytes @ 0x080A2800
+Read 1024 bytes @ 0x080A2C00
+Read 1024 bytes @ 0x080A3000
+Read 1024 bytes @ 0x080A3400
+Read 1024 bytes @ 0x080A3800
+Read 1024 bytes @ 0x080A3C00
+Read 1024 bytes @ 0x080A4000
+Read 1024 bytes @ 0x080A4400
+Read 1024 bytes @ 0x080A4800
+Read 1024 bytes @ 0x080A4C00
+Read 1024 bytes @ 0x080A5000
+Read 1024 bytes @ 0x080A5400
+Read 1024 bytes @ 0x080A5800
+Read 1024 bytes @ 0x080A5C00
+Read 1024 bytes @ 0x080A6000
+Read 1024 bytes @ 0x080A6400
+Read 1024 bytes @ 0x080A6800
+Read 1024 bytes @ 0x080A6C00
+Read 1024 bytes @ 0x080A7000
+Read 1024 bytes @ 0x080A7400
+Read 1024 bytes @ 0x080A7800
+Read 1024 bytes @ 0x080A7C00
+Read 1024 bytes @ 0x080A8000
+Read 1024 bytes @ 0x080A8400
+Read 1024 bytes @ 0x080A8800
+Read 1024 bytes @ 0x080A8C00
+Read 1024 bytes @ 0x080A9000
+Read 1024 bytes @ 0x080A9400
+Read 1024 bytes @ 0x080A9800
+Read 1024 bytes @ 0x080A9C00
+Read 1024 bytes @ 0x080AA000
+Read 1024 bytes @ 0x080AA400
+Read 1024 bytes @ 0x080AA800
+Read 1024 bytes @ 0x080AAC00
+Read 1024 bytes @ 0x080AB000
+Read 1024 bytes @ 0x080AB400
+Read 1024 bytes @ 0x080AB800
+Read 1024 bytes @ 0x080ABC00
+Read 1024 bytes @ 0x080AC000
+Read 1024 bytes @ 0x080AC400
+Read 1024 bytes @ 0x080AC800
+Read 1024 bytes @ 0x080ACC00
+Read 1024 bytes @ 0x080AD000
+Read 1024 bytes @ 0x080AD400
+Read 1024 bytes @ 0x080AD800
+Read 1024 bytes @ 0x080ADC00
+Read 1024 bytes @ 0x080AE000
+Read 1024 bytes @ 0x080AE400
+Read 1024 bytes @ 0x080AE800
+Read 1024 bytes @ 0x080AEC00
+Read 1024 bytes @ 0x080AF000
+Read 1024 bytes @ 0x080AF400
+Read 1024 bytes @ 0x080AF800
+Read 1024 bytes @ 0x080AFC00
+Read 1024 bytes @ 0x080B0000
+Read 1024 bytes @ 0x080B0400
+Read 1024 bytes @ 0x080B0800
+Read 1024 bytes @ 0x080B0C00
+Read 1024 bytes @ 0x080B1000
+Read 1024 bytes @ 0x080B1400
+Read 1024 bytes @ 0x080B1800
+Read 1024 bytes @ 0x080B1C00
+Read 1024 bytes @ 0x080B2000
+Read 1024 bytes @ 0x080B2400
+Read 1024 bytes @ 0x080B2800
+Read 1024 bytes @ 0x080B2C00
+Read 1024 bytes @ 0x080B3000
+Read 1024 bytes @ 0x080B3400
+Read 1024 bytes @ 0x080B3800
+Read 1024 bytes @ 0x080B3C00
+Read 1024 bytes @ 0x080B4000
+Read 1024 bytes @ 0x080B4400
+Read 1024 bytes @ 0x080B4800
+Read 1024 bytes @ 0x080B4C00
+Read 1024 bytes @ 0x080B5000
+Read 1024 bytes @ 0x080B5400
+Read 1024 bytes @ 0x080B5800
+Read 1024 bytes @ 0x080B5C00
+Read 1024 bytes @ 0x080B6000
+Read 1024 bytes @ 0x080B6400
+Read 1024 bytes @ 0x080B6800
+Read 1024 bytes @ 0x080B6C00
+Read 1024 bytes @ 0x080B7000
+Read 1024 bytes @ 0x080B7400
+Read 1024 bytes @ 0x080B7800
+Read 1024 bytes @ 0x080B7C00
+Read 1024 bytes @ 0x080B8000
+Read 1024 bytes @ 0x080B8400
+Read 1024 bytes @ 0x080B8800
+Read 1024 bytes @ 0x080B8C00
+Read 1024 bytes @ 0x080B9000
+Read 1024 bytes @ 0x080B9400
+Read 1024 bytes @ 0x080B9800
+Read 1024 bytes @ 0x080B9C00
+Read 1024 bytes @ 0x080BA000
+Read 1024 bytes @ 0x080BA400
+Read 1024 bytes @ 0x080BA800
+Read 1024 bytes @ 0x080BAC00
+Read 1024 bytes @ 0x080BB000
+Read 1024 bytes @ 0x080BB400
+Read 1024 bytes @ 0x080BB800
+Read 1024 bytes @ 0x080BBC00
+Read 1024 bytes @ 0x080BC000
+Read 1024 bytes @ 0x080BC400
+Read 1024 bytes @ 0x080BC800
+Read 1024 bytes @ 0x080BCC00
+Read 1024 bytes @ 0x080BD000
+Read 1024 bytes @ 0x080BD400
+Read 1024 bytes @ 0x080BD800
+Read 1024 bytes @ 0x080BDC00
+Read 1024 bytes @ 0x080BE000
+Read 1024 bytes @ 0x080BE400
+Read 1024 bytes @ 0x080BE800
+Read 1024 bytes @ 0x080BEC00
+Read 1024 bytes @ 0x080BF000
+Read 1024 bytes @ 0x080BF400
+Read 1024 bytes @ 0x080BF800
+Read 1024 bytes @ 0x080BFC00
+Read 1024 bytes @ 0x080C0000
+Read 1024 bytes @ 0x080C0400
+Read 1024 bytes @ 0x080C0800
+Read 1024 bytes @ 0x080C0C00
+Read 1024 bytes @ 0x080C1000
+Read 1024 bytes @ 0x080C1400
+Read 1024 bytes @ 0x080C1800
+Read 1024 bytes @ 0x080C1C00
+Read 1024 bytes @ 0x080C2000
+Read 1024 bytes @ 0x080C2400
+Read 1024 bytes @ 0x080C2800
+Read 1024 bytes @ 0x080C2C00
+Read 1024 bytes @ 0x080C3000
+Read 1024 bytes @ 0x080C3400
+Read 1024 bytes @ 0x080C3800
+Read 1024 bytes @ 0x080C3C00
+Read 1024 bytes @ 0x080C4000
+Read 1024 bytes @ 0x080C4400
+Read 1024 bytes @ 0x080C4800
+Read 1024 bytes @ 0x080C4C00
+Read 1024 bytes @ 0x080C5000
+Read 1024 bytes @ 0x080C5400
+Read 1024 bytes @ 0x080C5800
+Read 1024 bytes @ 0x080C5C00
+Read 1024 bytes @ 0x080C6000
+Read 1024 bytes @ 0x080C6400
+Read 1024 bytes @ 0x080C6800
+Read 1024 bytes @ 0x080C6C00
+Read 1024 bytes @ 0x080C7000
+Read 1024 bytes @ 0x080C7400
+Read 1024 bytes @ 0x080C7800
+Read 1024 bytes @ 0x080C7C00
+Read 1024 bytes @ 0x080C8000
+Read 1024 bytes @ 0x080C8400
+Read 1024 bytes @ 0x080C8800
+Read 1024 bytes @ 0x080C8C00
+Read 1024 bytes @ 0x080C9000
+Read 1024 bytes @ 0x080C9400
+Read 1024 bytes @ 0x080C9800
+Read 1024 bytes @ 0x080C9C00
+Read 1024 bytes @ 0x080CA000
+Read 1024 bytes @ 0x080CA400
+Read 1024 bytes @ 0x080CA800
+Read 1024 bytes @ 0x080CAC00
+Read 1024 bytes @ 0x080CB000
+Read 1024 bytes @ 0x080CB400
+Read 1024 bytes @ 0x080CB800
+Read 1024 bytes @ 0x080CBC00
+Read 1024 bytes @ 0x080CC000
+Read 1024 bytes @ 0x080CC400
+Read 1024 bytes @ 0x080CC800
+Read 1024 bytes @ 0x080CCC00
+Read 1024 bytes @ 0x080CD000
+Read 1024 bytes @ 0x080CD400
+Read 1024 bytes @ 0x080CD800
+Read 1024 bytes @ 0x080CDC00
+Read 1024 bytes @ 0x080CE000
+Read 1024 bytes @ 0x080CE400
+Read 1024 bytes @ 0x080CE800
+Read 1024 bytes @ 0x080CEC00
+Read 1024 bytes @ 0x080CF000
+Read 1024 bytes @ 0x080CF400
+Read 1024 bytes @ 0x080CF800
+Read 1024 bytes @ 0x080CFC00
+Read 1024 bytes @ 0x080D0000
+Read 1024 bytes @ 0x080D0400
+Read 1024 bytes @ 0x080D0800
+Read 1024 bytes @ 0x080D0C00
+Read 1024 bytes @ 0x080D1000
+Read 1024 bytes @ 0x080D1400
+Read 1024 bytes @ 0x080D1800
+Read 1024 bytes @ 0x080D1C00
+Read 1024 bytes @ 0x080D2000
+Read 1024 bytes @ 0x080D2400
+Read 1024 bytes @ 0x080D2800
+Read 1024 bytes @ 0x080D2C00
+Read 1024 bytes @ 0x080D3000
+Read 1024 bytes @ 0x080D3400
+Read 1024 bytes @ 0x080D3800
+Read 1024 bytes @ 0x080D3C00
+Read 1024 bytes @ 0x080D4000
+Read 1024 bytes @ 0x080D4400
+Read 1024 bytes @ 0x080D4800
+Read 1024 bytes @ 0x080D4C00
+Read 1024 bytes @ 0x080D5000
+Read 1024 bytes @ 0x080D5400
+Read 1024 bytes @ 0x080D5800
+Read 1024 bytes @ 0x080D5C00
+Read 1024 bytes @ 0x080D6000
+Read 1024 bytes @ 0x080D6400
+Read 1024 bytes @ 0x080D6800
+Read 1024 bytes @ 0x080D6C00
+Read 1024 bytes @ 0x080D7000
+Read 1024 bytes @ 0x080D7400
+Read 1024 bytes @ 0x080D7800
+Read 1024 bytes @ 0x080D7C00
+Read 1024 bytes @ 0x080D8000
+Read 1024 bytes @ 0x080D8400
+Read 1024 bytes @ 0x080D8800
+Read 1024 bytes @ 0x080D8C00
+Read 1024 bytes @ 0x080D9000
+Read 1024 bytes @ 0x080D9400
+Read 1024 bytes @ 0x080D9800
+Read 1024 bytes @ 0x080D9C00
+Read 1024 bytes @ 0x080DA000
+Read 1024 bytes @ 0x080DA400
+Read 1024 bytes @ 0x080DA800
+Read 1024 bytes @ 0x080DAC00
+Read 1024 bytes @ 0x080DB000
+Read 1024 bytes @ 0x080DB400
+Read 1024 bytes @ 0x080DB800
+Read 1024 bytes @ 0x080DBC00
+Read 1024 bytes @ 0x080DC000
+Read 1024 bytes @ 0x080DC400
+Read 1024 bytes @ 0x080DC800
+Read 1024 bytes @ 0x080DCC00
+Read 1024 bytes @ 0x080DD000
+Read 1024 bytes @ 0x080DD400
+Read 1024 bytes @ 0x080DD800
+Read 1024 bytes @ 0x080DDC00
+Read 1024 bytes @ 0x080DE000
+Read 1024 bytes @ 0x080DE400
+Read 1024 bytes @ 0x080DE800
+Read 1024 bytes @ 0x080DEC00
+Read 1024 bytes @ 0x080DF000
+Read 1024 bytes @ 0x080DF400
+Read 1024 bytes @ 0x080DF800
+Read 1024 bytes @ 0x080DFC00
+Read 1024 bytes @ 0x080E0000
+Read 1024 bytes @ 0x080E0400
+Read 1024 bytes @ 0x080E0800
+Read 1024 bytes @ 0x080E0C00
+Read 1024 bytes @ 0x080E1000
+Read 1024 bytes @ 0x080E1400
+Read 1024 bytes @ 0x080E1800
+Read 1024 bytes @ 0x080E1C00
+Read 1024 bytes @ 0x080E2000
+Read 1024 bytes @ 0x080E2400
+Read 1024 bytes @ 0x080E2800
+Read 1024 bytes @ 0x080E2C00
+Read 1024 bytes @ 0x080E3000
+Read 1024 bytes @ 0x080E3400
+Read 1024 bytes @ 0x080E3800
+Read 1024 bytes @ 0x080E3C00
+Read 1024 bytes @ 0x080E4000
+Read 1024 bytes @ 0x080E4400
+Read 1024 bytes @ 0x080E4800
+Read 1024 bytes @ 0x080E4C00
+Read 1024 bytes @ 0x080E5000
+Read 1024 bytes @ 0x080E5400
+Read 1024 bytes @ 0x080E5800
+Read 1024 bytes @ 0x080E5C00
+Read 1024 bytes @ 0x080E6000
+Read 1024 bytes @ 0x080E6400
+Read 1024 bytes @ 0x080E6800
+Read 1024 bytes @ 0x080E6C00
+Read 1024 bytes @ 0x080E7000
+Read 1024 bytes @ 0x080E7400
+Read 1024 bytes @ 0x080E7800
+Read 1024 bytes @ 0x080E7C00
+Read 1024 bytes @ 0x080E8000
+Read 1024 bytes @ 0x080E8400
+Read 1024 bytes @ 0x080E8800
+Read 1024 bytes @ 0x080E8C00
+Read 1024 bytes @ 0x080E9000
+Read 1024 bytes @ 0x080E9400
+Read 1024 bytes @ 0x080E9800
+Read 1024 bytes @ 0x080E9C00
+Read 1024 bytes @ 0x080EA000
+Read 1024 bytes @ 0x080EA400
+Read 1024 bytes @ 0x080EA800
+Read 1024 bytes @ 0x080EAC00
+Read 1024 bytes @ 0x080EB000
+Read 1024 bytes @ 0x080EB400
+Read 1024 bytes @ 0x080EB800
+Read 1024 bytes @ 0x080EBC00
+Read 1024 bytes @ 0x080EC000
+Read 1024 bytes @ 0x080EC400
+Read 1024 bytes @ 0x080EC800
+Read 1024 bytes @ 0x080ECC00
+Read 1024 bytes @ 0x080ED000
+Read 1024 bytes @ 0x080ED400
+Read 1024 bytes @ 0x080ED800
+Read 1024 bytes @ 0x080EDC00
+Read 1024 bytes @ 0x080EE000
+Read 1024 bytes @ 0x080EE400
+Read 1024 bytes @ 0x080EE800
+Read 1024 bytes @ 0x080EEC00
+Read 1024 bytes @ 0x080EF000
+Read 1024 bytes @ 0x080EF400
+Read 1024 bytes @ 0x080EF800
+Read 1024 bytes @ 0x080EFC00
+Read 1024 bytes @ 0x080F0000
+Read 1024 bytes @ 0x080F0400
+Read 1024 bytes @ 0x080F0800
+Read 1024 bytes @ 0x080F0C00
+Read 1024 bytes @ 0x080F1000
+Read 1024 bytes @ 0x080F1400
+Read 1024 bytes @ 0x080F1800
+Read 1024 bytes @ 0x080F1C00
+Read 1024 bytes @ 0x080F2000
+Read 1024 bytes @ 0x080F2400
+Read 1024 bytes @ 0x080F2800
+Read 1024 bytes @ 0x080F2C00
+Read 1024 bytes @ 0x080F3000
+Read 1024 bytes @ 0x080F3400
+Read 1024 bytes @ 0x080F3800
+Read 1024 bytes @ 0x080F3C00
+Read 1024 bytes @ 0x080F4000
+Read 1024 bytes @ 0x080F4400
+Read 1024 bytes @ 0x080F4800
+Read 1024 bytes @ 0x080F4C00
+Read 1024 bytes @ 0x080F5000
+Read 1024 bytes @ 0x080F5400
+Read 1024 bytes @ 0x080F5800
+Read 1024 bytes @ 0x080F5C00
+Read 1024 bytes @ 0x080F6000
+Read 1024 bytes @ 0x080F6400
+Read 1024 bytes @ 0x080F6800
+Read 1024 bytes @ 0x080F6C00
+Read 1024 bytes @ 0x080F7000
+Read 1024 bytes @ 0x080F7400
+Read 1024 bytes @ 0x080F7800
+Read 1024 bytes @ 0x080F7C00
+Read 1024 bytes @ 0x080F8000
+Read 1024 bytes @ 0x080F8400
+Read 1024 bytes @ 0x080F8800
+Read 1024 bytes @ 0x080F8C00
+Read 1024 bytes @ 0x080F9000
+Read 1024 bytes @ 0x080F9400
+Read 1024 bytes @ 0x080F9800
+Read 1024 bytes @ 0x080F9C00
+Read 1024 bytes @ 0x080FA000
+Read 1024 bytes @ 0x080FA400
+Read 1024 bytes @ 0x080FA800
+Read 1024 bytes @ 0x080FAC00
+Read 1024 bytes @ 0x080FB000
+Read 1024 bytes @ 0x080FB400
+Read 1024 bytes @ 0x080FB800
+Read 1024 bytes @ 0x080FBC00
+Read 1024 bytes @ 0x080FC000
+Read 1024 bytes @ 0x080FC400
+Read 1024 bytes @ 0x080FC800
+Read 1024 bytes @ 0x080FCC00
+Read 1024 bytes @ 0x080FD000
+Read 1024 bytes @ 0x080FD400
+Read 1024 bytes @ 0x080FD800
+Read 1024 bytes @ 0x080FDC00
+Read 1024 bytes @ 0x080FE000
+Read 1024 bytes @ 0x080FE400
+Read 1024 bytes @ 0x080FE800
+Read 1024 bytes @ 0x080FEC00
+Read 1024 bytes @ 0x080FF000
+Read 1024 bytes @ 0x080FF400
+Read 1024 bytes @ 0x080FF800
+Read 1024 bytes @ 0x080FFC00
+Read 32768 bytes @ 0x08000000
+Read 32768 bytes @ 0x08008000
+Read 32768 bytes @ 0x08010000
+Read 32768 bytes @ 0x08018000
+Read 32768 bytes @ 0x08020000
+Read 32768 bytes @ 0x08028000
+Read 32768 bytes @ 0x08030000
+Read 32768 bytes @ 0x08038000
+Read 32768 bytes @ 0x08040000
+Read 32768 bytes @ 0x08048000
+Read 32768 bytes @ 0x08050000
+Read 32768 bytes @ 0x08058000
+Read 32768 bytes @ 0x08060000
+Read 32768 bytes @ 0x08068000
+Read 32768 bytes @ 0x08070000
+Read 32768 bytes @ 0x08078000
+Read 32768 bytes @ 0x08080000
+Read 32768 bytes @ 0x08088000
+Read 32768 bytes @ 0x08090000
+Read 32768 bytes @ 0x08098000
+Read 32768 bytes @ 0x080A0000
+Read 32768 bytes @ 0x080A8000
+Read 32768 bytes @ 0x080B0000
+Read 32768 bytes @ 0x080B8000
+Read 32768 bytes @ 0x080C0000
+Read 32768 bytes @ 0x080C8000
+Read 32768 bytes @ 0x080D0000
+Read 32768 bytes @ 0x080D8000
+Read 32768 bytes @ 0x080E0000
+Read 32768 bytes @ 0x080E8000
+Read 32768 bytes @ 0x080F0000
+Read 32768 bytes @ 0x080F8000
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000003
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x00000000
+Read register 'r4' (4 bytes) from hardware: 0x24000C20
+Read register 'r5' (4 bytes) from hardware: 0x24006728
+Read register 'r6' (4 bytes) from hardware: 0x24009A58
+Read register 'r7' (4 bytes) from hardware: 0x24006AB4
+Read register 'r8' (4 bytes) from hardware: 0x24000C20
+Read register 'r9' (4 bytes) from hardware: 0x0000032C
+Read register 'r10' (4 bytes) from hardware: 0x240066C0
+Read register 'r11' (4 bytes) from hardware: 0x0000023C
+Read register 'r12' (4 bytes) from hardware: 0x2400F2BC
+Read register 'sp' (4 bytes) from hardware: 0x2403B098
+Read register 'lr' (4 bytes) from hardware: 0x08000EAD
+Read register 'pc' (4 bytes) from hardware: 0x08001EE0
+Read register 'xpsr' (4 bytes) from hardware: 0x21000000
+Received monitor command: reset
+Resetting target
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800E3C0)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000000
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2402D010
+Read register 'r4' (4 bytes) from hardware: 0x2402CED8
+Read register 'r5' (4 bytes) from hardware: 0x240029A0
+Read register 'r6' (4 bytes) from hardware: 0x24002540
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24001F50
+Read register 'lr' (4 bytes) from hardware: 0x0800DF9D
+Read register 'pc' (4 bytes) from hardware: 0x0800E3C0
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800E3C0
+Read 2 bytes @ 0x0800E3C0
+Read 4 bytes @ 0x24001A90
+Read 4 bytes @ 0x240029B4
+Read 4 bytes @ 0xE000ED28
+Read 4 bytes @ 0xE000ED2C
+Starting target CPU...
+Debugger requested to halt target...
+...Target halted (PC = 0x0800E3BE)
+Reading common registers: 
+Read register 'r0' (4 bytes) from hardware: 0x00000001
+Read register 'r1' (4 bytes) from hardware: 0x00000000
+Read register 'r2' (4 bytes) from hardware: 0x00000001
+Read register 'r3' (4 bytes) from hardware: 0x2402D010
+Read register 'r4' (4 bytes) from hardware: 0x2402CED8
+Read register 'r5' (4 bytes) from hardware: 0x240029A0
+Read register 'r6' (4 bytes) from hardware: 0x24002540
+Read register 'r7' (4 bytes) from hardware: 0xE000ED04
+Read register 'r8' (4 bytes) from hardware: 0x10000000
+Read register 'r9' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r10' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r11' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'r12' (4 bytes) from hardware: 0xA5A5A5A5
+Read register 'sp' (4 bytes) from hardware: 0x24001F50
+Read register 'lr' (4 bytes) from hardware: 0x0800DF9D
+Read register 'pc' (4 bytes) from hardware: 0x0800E3BE
+Read register 'xpsr' (4 bytes) from hardware: 0x81000000
+Read 4 bytes @ 0x0800E3BE
+Read 2 bytes @ 0x0800E3BE
+Read 4 bytes @ 0x24001A90
+Read 4 bytes @ 0x240029B4
+Read 4 bytes @ 0xE000ED28
+Read 4 bytes @ 0xE000ED2C
+GDB closed TCP/IP connection (Socket 11)
+Starting target CPU...
+Restoring target state and closing J-Link connection...
+Shutting down...

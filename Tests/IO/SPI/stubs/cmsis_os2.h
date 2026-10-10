@@ -3,7 +3,7 @@
 typedef void *osThreadId_t;
 typedef void *osSemaphoreId_t;
 typedef struct { const char *name; uint32_t stack_size; int priority; } osThreadAttr_t;
-enum { osKernelRunning=2, osPriorityHigh6=46, osOK=0, osFlagsWaitAny=0 };
+enum { osKernelRunning=2, osPriorityRealtime1=49, osOK=0, osFlagsWaitAny=0 };
 #define osWaitForever UINT32_MAX
 uint32_t osKernelGetTickFreq(void);
 int osKernelGetState(void);

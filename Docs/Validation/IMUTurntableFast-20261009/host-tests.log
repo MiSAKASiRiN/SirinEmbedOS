@@ -1,0 +1,4 @@
+PASS: CAN3 IDs, coherent telemetry, positive-only boot recovery, stale-command zero and STOP
+phase 9 position 15.381/213.135/41.265 home 15.381/213.135/41.309 speed 0.000/0.000/-0.023
+PASS: simulated homing, both 361deg sweeps, wrapped ID3 end-to-end, all return/hold; peak 9.24 deg/s
+PASS: wrapped soft limits, boot-only recovery, latched faults and bounded commands

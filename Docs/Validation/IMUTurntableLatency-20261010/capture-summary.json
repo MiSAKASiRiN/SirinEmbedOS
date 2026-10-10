@@ -1,0 +1,31 @@
+{
+  "result": "aborted_holding",
+  "job": 57092119,
+  "latest": {
+    "turntable.motor1.encoder_raw": 350,
+    "turntable.motor1.unwrapped_deg": 15.380859375,
+    "turntable.motor1.voltage_raw": 220,
+    "turntable.motor1.feedback_rpm": 0,
+    "turntable.motor1.current_raw": 138,
+    "turntable.motor2.encoder_raw": 4758,
+    "turntable.motor2.unwrapped_deg": 209.091796875,
+    "turntable.motor2.voltage_raw": 106,
+    "turntable.motor2.feedback_rpm": 0,
+    "turntable.motor2.current_raw": -42,
+    "turntable.motor3.encoder_raw": 293,
+    "turntable.motor3.unwrapped_deg": 188.3056640625,
+    "turntable.motor3.voltage_raw": -4280,
+    "turntable.motor3.feedback_rpm": 0,
+    "turntable.motor3.current_raw": -3456,
+    "turntable.phase": 9,
+    "turntable.fault": 0,
+    "turntable.sequence_revision": 24,
+    "cpu": 34.7211
+  },
+  "counts": {
+    "258": 110600,
+    "256": 110601,
+    "257": 110601
+  },
+  "errors": {}
+}

@@ -112,6 +112,8 @@ typedef struct {
     void (*tick)(void *obj, uint32_t now_ms);
 } SRNOS_CANAdapterOps;
 
+/* Bounded, nonblocking callback: P0 RX worker on CAN1/2/3; the unified P1
+ * SRNOS_CAN4 service on CAN4. Called without the routing lock. */
 typedef void (*SRNOS_CANRouterRxHandler)(SRNOS_CANChannel ch,
                                         const SRNOS_CANFrame *frame,
                                         void *user);
@@ -169,6 +171,11 @@ bool SRNOS_CANRouterGetStats(SRNOS_CANChannel ch, SRNOS_CANRouterStats *out);
 /* Registration/removal is allowed only in ApplicationConfigure. Descriptors
  * and adapter objects must remain alive for the entire firmware lifetime. */
 #define SRNOS_CAN_FROZEN (-8)
+#define SRNOS_CAN_MODE_MISMATCH (-9)
+/* All APIs in this header carry Classic CAN frames only. Raw subscriptions
+ * may use any supported Classic nominal rate; adapters require Classic 1M.
+ * Final startup validation rejects registration/mode conflicts regardless of
+ * declaration order. FD raw traffic uses IO/CAN/FD/CANFD.h. */
 
 #ifdef __cplusplus
 }

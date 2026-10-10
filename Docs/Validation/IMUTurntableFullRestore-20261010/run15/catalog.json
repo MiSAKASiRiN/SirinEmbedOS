@@ -1,0 +1,194 @@
+{
+  "0": {
+    "name": "turntable.motor1.encoder_raw",
+    "type": 3,
+    "max_hz": 1000,
+    "unit": "count"
+  },
+  "1": {
+    "name": "turntable.motor1.angle_deg",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg"
+  },
+  "2": {
+    "name": "turntable.motor1.online",
+    "type": 4,
+    "max_hz": 100,
+    "unit": ""
+  },
+  "3": {
+    "name": "turntable.motor1.unwrapped_deg",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg"
+  },
+  "4": {
+    "name": "turntable.motor1.speed_dps",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg/s"
+  },
+  "5": {
+    "name": "turntable.motor1.voltage_raw",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "raw"
+  },
+  "6": {
+    "name": "turntable.motor1.feedback_rpm",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "rpm"
+  },
+  "7": {
+    "name": "turntable.motor1.current_raw",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "raw"
+  },
+  "8": {
+    "name": "turntable.motor1.temperature_c",
+    "type": 3,
+    "max_hz": 100,
+    "unit": "C"
+  },
+  "9": {
+    "name": "turntable.motor2.encoder_raw",
+    "type": 3,
+    "max_hz": 1000,
+    "unit": "count"
+  },
+  "10": {
+    "name": "turntable.motor2.angle_deg",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg"
+  },
+  "11": {
+    "name": "turntable.motor2.online",
+    "type": 4,
+    "max_hz": 100,
+    "unit": ""
+  },
+  "12": {
+    "name": "turntable.motor2.unwrapped_deg",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg"
+  },
+  "13": {
+    "name": "turntable.motor2.speed_dps",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg/s"
+  },
+  "14": {
+    "name": "turntable.motor2.voltage_raw",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "raw"
+  },
+  "15": {
+    "name": "turntable.motor2.feedback_rpm",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "rpm"
+  },
+  "16": {
+    "name": "turntable.motor2.current_raw",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "raw"
+  },
+  "17": {
+    "name": "turntable.motor2.temperature_c",
+    "type": 3,
+    "max_hz": 100,
+    "unit": "C"
+  },
+  "18": {
+    "name": "turntable.motor3.encoder_raw",
+    "type": 3,
+    "max_hz": 1000,
+    "unit": "count"
+  },
+  "19": {
+    "name": "turntable.motor3.angle_deg",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg"
+  },
+  "20": {
+    "name": "turntable.motor3.online",
+    "type": 4,
+    "max_hz": 100,
+    "unit": ""
+  },
+  "21": {
+    "name": "turntable.motor3.unwrapped_deg",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg"
+  },
+  "22": {
+    "name": "turntable.motor3.speed_dps",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": "deg/s"
+  },
+  "23": {
+    "name": "turntable.motor3.voltage_raw",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "raw"
+  },
+  "24": {
+    "name": "turntable.motor3.feedback_rpm",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "rpm"
+  },
+  "25": {
+    "name": "turntable.motor3.current_raw",
+    "type": 2,
+    "max_hz": 1000,
+    "unit": "raw"
+  },
+  "26": {
+    "name": "turntable.motor3.temperature_c",
+    "type": 3,
+    "max_hz": 100,
+    "unit": "C"
+  },
+  "27": {
+    "name": "turntable.phase",
+    "type": 3,
+    "max_hz": 1000,
+    "unit": ""
+  },
+  "28": {
+    "name": "turntable.fault",
+    "type": 3,
+    "max_hz": 1000,
+    "unit": ""
+  },
+  "29": {
+    "name": "turntable.fault_axis",
+    "type": 3,
+    "max_hz": 1000,
+    "unit": ""
+  },
+  "30": {
+    "name": "turntable.fault_measurement",
+    "type": 1,
+    "max_hz": 1000,
+    "unit": ""
+  },
+  "31": {
+    "name": "turntable.sequence_revision",
+    "type": 3,
+    "max_hz": 10,
+    "unit": ""
+  }
+}

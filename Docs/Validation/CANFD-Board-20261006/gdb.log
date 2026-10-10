@@ -1,0 +1,206 @@
+Remote debugging using localhost:2331
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+0x0800ed08 in ?? ()
+pc             0x800ed08           0x800ed08
+lr             0x80109ef           134285807
+sp             0x2001ffa0          0x2001ffa0
+xpsr           0x61000064          1627390052
+0xe000ed28:	0x00000000	0x00000000	0x00000001	0x00000000
+0xe000ed38:	0x00000000	0x00000000
+0x8000000:	0x20020000	0x08001ee1
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3ea in ?? ()
+Reading symbols from build/canfd-board-20261005/original.elf...
+(No debugging symbols found in build/canfd-board-20261005/original.elf)
+'uwTick' has unknown type; cast it to its declared type
+'xTickCount' has unknown type; cast it to its declared type
+'pxCurrentTCB' has unknown type; cast it to its declared type
+primask        0x0                 0
+basepri        0x0                 0
+Reading symbols from build/canfd-board-20261005/firmware/Classic.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x33104 lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x80333d8
+Loading section .ARM, size 0x10 lma 0x80367e0
+Loading section .preinit_array, size 0x4 lma 0x80367f0
+Loading section .data, size 0x490 lma 0x80367f4
+Loading section .itcm_text, size 0x120 lma 0x8036ca0
+Start address 0x08002994, load size 224668
+Transfer rate: 109701 KB/sec, 22466 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x80333d4: matched.
+Section .rodata, range 0x80333d8 -- 0x80367e0: matched.
+Section .ARM, range 0x80367e0 -- 0x80367f0: matched.
+Section .preinit_array, range 0x80367f0 -- 0x80367f4: matched.
+Section .data, range 0x80367f4 -- 0x8036c84: matched.
+Section .itcm_text, range 0x8036ca0 -- 0x8036dc0: matched.
+build/canfd-board-20261005/export.py:1: Error in sourced command file:
+Undefined command: "import".  Try "help".
+Hardware assisted breakpoint 1 at 0x80006dc: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp, line 146.
+Resetting target
+Continuing.
+
+Breakpoint 1, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp:146
+146	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$1 = 11880
+$2 = 1176
+$3 = 80
+$4 = 104
+$5 = 10692
+$6 = 3
+$7 = 0
+$8 = 9
+Reading symbols from build/canfd-board-20261005/firmware/FD8M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32e8c lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x8033160
+Loading section .ARM, size 0x10 lma 0x8036568
+Loading section .preinit_array, size 0x4 lma 0x8036578
+Loading section .data, size 0x490 lma 0x803657c
+Loading section .itcm_text, size 0x120 lma 0x8036a20
+Start address 0x080029fc, load size 224036
+Transfer rate: 109392 KB/sec, 22403 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x803315c: matched.
+Section .rodata, range 0x8033160 -- 0x8036568: matched.
+Section .ARM, range 0x8036568 -- 0x8036578: matched.
+Section .preinit_array, range 0x8036578 -- 0x803657c: matched.
+Section .data, range 0x803657c -- 0x8036a0c: matched.
+Section .itcm_text, range 0x8036a20 -- 0x8036b40: matched.
+Hardware assisted breakpoint 2 at 0x8000718: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp, line 146.
+Resetting target
+Continuing.
+
+Breakpoint 2, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp:146
+146	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$9 = 0
+$10 = 9
+Reading symbols from build/canfd-board-20261005/firmware/FD5M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32e8c lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x8033160
+Loading section .ARM, size 0x10 lma 0x8036568
+Loading section .preinit_array, size 0x4 lma 0x8036578
+Loading section .data, size 0x490 lma 0x803657c
+Loading section .itcm_text, size 0x120 lma 0x8036a20
+Start address 0x080029fc, load size 224036
+Transfer rate: 109392 KB/sec, 22403 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x803315c: matched.
+Section .rodata, range 0x8033160 -- 0x8036568: matched.
+Section .ARM, range 0x8036568 -- 0x8036578: matched.
+Section .preinit_array, range 0x8036578 -- 0x803657c: matched.
+Section .data, range 0x803657c -- 0x8036a0c: matched.
+Section .itcm_text, range 0x8036a20 -- 0x8036b40: matched.
+Hardware assisted breakpoint 3 at 0x8000718: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp, line 146.
+Resetting target
+Continuing.
+
+Breakpoint 3, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp:146
+146	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$11 = 0
+$12 = 9
+Reading symbols from build/canfd-board-20261005/firmware/FD4M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32e8c lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x8033160
+Loading section .ARM, size 0x10 lma 0x8036568
+Loading section .preinit_array, size 0x4 lma 0x8036578
+Loading section .data, size 0x490 lma 0x803657c
+Loading section .itcm_text, size 0x120 lma 0x8036a20
+Start address 0x080029fc, load size 224036
+Transfer rate: 109392 KB/sec, 22403 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x803315c: matched.
+Section .rodata, range 0x8033160 -- 0x8036568: matched.
+Section .ARM, range 0x8036568 -- 0x8036578: matched.
+Section .preinit_array, range 0x8036578 -- 0x803657c: matched.
+Section .data, range 0x803657c -- 0x8036a0c: matched.
+Section .itcm_text, range 0x8036a20 -- 0x8036b40: matched.
+Hardware assisted breakpoint 4 at 0x8000718: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp, line 146.
+Resetting target
+Continuing.
+
+Breakpoint 4, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp:146
+146	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$13 = 0
+$14 = 9
+Reading symbols from build/canfd-board-20261005/firmware/FD2M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32e8c lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x8033160
+Loading section .ARM, size 0x10 lma 0x8036568
+Loading section .preinit_array, size 0x4 lma 0x8036578
+Loading section .data, size 0x490 lma 0x803657c
+Loading section .itcm_text, size 0x120 lma 0x8036a20
+Start address 0x080029fc, load size 224036
+Transfer rate: 109392 KB/sec, 22403 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x803315c: matched.
+Section .rodata, range 0x8033160 -- 0x8036568: matched.
+Section .ARM, range 0x8036568 -- 0x8036578: matched.
+Section .preinit_array, range 0x8036578 -- 0x803657c: matched.
+Section .data, range 0x803657c -- 0x8036a0c: matched.
+Section .itcm_text, range 0x8036a20 -- 0x8036b40: matched.
+Hardware assisted breakpoint 5 at 0x8000718: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp, line 146.
+Resetting target
+Continuing.
+
+Breakpoint 5, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp:146
+146	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$15 = 0
+$16 = 9
+$17 = {phase = SRNOS_SYSTEM_RUNNING, native_can_ready = true, usb_ready = true, parameter_load_status = 0, identity_load_status = SRNOS_STORAGE_CORRUPT}
+$18 = 12
+$19 = 1
+$20 = 68
+Reading symbols from build/canfd-board-20261005/firmware/FD1M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32e7c lma 0x80002d0
+Loading section .rodata, size 0x3408 lma 0x8033150
+Loading section .ARM, size 0x10 lma 0x8036558
+Loading section .preinit_array, size 0x4 lma 0x8036568
+Loading section .data, size 0x490 lma 0x803656c
+Loading section .itcm_text, size 0x120 lma 0x8036a00
+Start address 0x080029f0, load size 224020
+Transfer rate: 109384 KB/sec, 22402 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x803314c: matched.
+Section .rodata, range 0x8033150 -- 0x8036558: matched.
+Section .ARM, range 0x8036558 -- 0x8036568: matched.
+Section .preinit_array, range 0x8036568 -- 0x803656c: matched.
+Section .data, range 0x803656c -- 0x80369fc: matched.
+Section .itcm_text, range 0x8036a00 -- 0x8036b20: matched.
+Hardware assisted breakpoint 6 at 0x800070c: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp, line 146.
+Resetting target
+Continuing.
+
+Breakpoint 6, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANFDLoad/app.cpp:146
+146	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$21 = 0
+$22 = 9
+Reading symbols from build/canfd-board-20261005/restore-full.elf...
+(No debugging symbols found in build/canfd-board-20261005/restore-full.elf)
+Loading section .flash, size 0x100000 lma 0x8000000
+Start address 0x08001ee0, load size 1048576
+Transfer rate: 170666 KB/sec, 61680 bytes/write.
+Section .flash, range 0x8000000 -- 0x8100000: matched.
+Reading symbols from build/canfd-board-20261005/original.elf...
+(No debugging symbols found in build/canfd-board-20261005/original.elf)
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3c0 in prvIdleTask ()
+pc             0x800e3c0           0x800e3c0 <prvIdleTask+12>
+xpsr           0x81000000          -2130706432
+0xe000ed28:	0x00000000	0x00000000	0x00000001
+$23 = 11481
+$24 = 11469
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/canfd-board-20261005/original.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

@@ -1,0 +1,75 @@
+Remote debugging using 127.0.0.1:2331
+0x0800e3be in __LDREXW (addr=0x0 <HAL_UART_MspInit>) at /Users/sirin/CLionProjects/SirinEmbedOS/Board/cmake/stm32cubemx/../../Drivers/CMSIS/Include/cmsis_gcc.h:480
+480	   __ASM volatile ("ldrex %0, %1" : "=r" (result) : "Q" (*addr) );
+pc             0x800e3be           0x800e3be <HAL_UART_IRQHandler+830>
+sp             0x24001f50          0x24001f50 <vApplicationGetIdleTaskMemory.idle_stack+192>
+xpsr           0x81000000          -2130706432
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x442b4 lma 0x80002d0
+Loading section .rodata, size 0x3410 lma 0x8044588
+Loading section .ARM, size 0x10 lma 0x8047998
+Loading section .preinit_array, size 0x4 lma 0x80479a8
+Loading section .init_array, size 0x4 lma 0x80479ac
+Loading section .data, size 0x488 lma 0x80479b0
+Loading section .itcm_text, size 0x120 lma 0x8047e40
+Start address 0x08002774, load size 294736
+Transfer rate: 57565 KB/sec, 24561 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8044584: matched.
+Section .rodata, range 0x8044588 -- 0x8047998: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+$1 = {phase = SRNOS_SYSTEM_RUNNING, native_can_ready = true, usb_ready = true, parameter_load_status = 0, identity_load_status = SRNOS_STORAGE_CORRUPT}
+$2 = {{rx_isr_cnt = 0, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}, {rx_isr_cnt = 0, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}, {rx_isr_cnt = 131988, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}}
+$3 = {rx_pops = 131988, rx_routed_raw = 0, rx_routed_adapter = 131988, rx_no_subscriber = 0, rx_dropped = 0, rx_wake_by_isr = 131988, rx_wake_by_timeout = 1, tx_oneshot_enqueue_ok = 0, tx_oneshot_enqueue_full = 0, tx_oneshot_expired = 0, tx_urgent_accepted = 0, tx_periodic_accepted = 0, tx_periodic_dropped = 0, tx_backend_busy = 0, tx_complete_events = 0, rx_route_count = 3, rx_route_high_water = 3, rx_route_lookup_steps = 395964, rx_route_capacity_rejects = 0, tx_adapter_count = 3, tx_adapter_high_water = 3, tx_oneshot_depth = 0, tx_oneshot_high_water = 0}
+$4 = {rx_filter_count = 0x8025f49 <SRNOS::Devices::(anonymous namespace)::gm6020_rx_filter_count(void*)>, rx_filter_at = 0x8025f51 <SRNOS::Devices::(anonymous namespace)::gm6020_rx_filter_at(void*, unsigned int, SRNOS_CANRxFilter*)>, on_rx = 0x8025f89 <SRNOS::Devices::(anonymous namespace)::gm6020_on_rx(void*, SRNOS_CANFrame const*, unsigned int)>, poll_tx = 0x0 <SRNOS::Devices::GM6020_ComposeTxFrames(SRNOS::Devices::DJI_GM6020* const*, unsigned int, SRNOS_CANDeviceFrame*, unsigned int&)>, commit_tx = 0x0 <SRNOS::Devices::GM6020_ComposeTxFrames(SRNOS::Devices::DJI_GM6020* const*, unsigned int, SRNOS_CANDeviceFrame*, unsigned int&)>, tick = 0x8026061 <SRNOS::Devices::(anonymous namespace)::gm6020_tick(void*, unsigned int)>}
+$5 = {rx_filter_count = 0x8025f49 <SRNOS::Devices::(anonymous namespace)::gm6020_rx_filter_count(void*)>, rx_filter_at = 0x8025f51 <SRNOS::Devices::(anonymous namespace)::gm6020_rx_filter_at(void*, unsigned int, SRNOS_CANRxFilter*)>, on_rx = 0x8025f89 <SRNOS::Devices::(anonymous namespace)::gm6020_on_rx(void*, SRNOS_CANFrame const*, unsigned int)>, poll_tx = 0x0 <SRNOS::Devices::GM6020_ComposeTxFrames(SRNOS::Devices::DJI_GM6020* const*, unsigned int, SRNOS_CANDeviceFrame*, unsigned int&)>, commit_tx = 0x0 <SRNOS::Devices::GM6020_ComposeTxFrames(SRNOS::Devices::DJI_GM6020* const*, unsigned int, SRNOS_CANDeviceFrame*, unsigned int&)>, tick = 0x8026061 <SRNOS::Devices::(anonymous namespace)::gm6020_tick(void*, unsigned int)>}
+$6 = {rx_filter_count = 0x8025f49 <SRNOS::Devices::(anonymous namespace)::gm6020_rx_filter_count(void*)>, rx_filter_at = 0x8025f51 <SRNOS::Devices::(anonymous namespace)::gm6020_rx_filter_at(void*, unsigned int, SRNOS_CANRxFilter*)>, on_rx = 0x8025f89 <SRNOS::Devices::(anonymous namespace)::gm6020_on_rx(void*, SRNOS_CANFrame const*, unsigned int)>, poll_tx = 0x0 <SRNOS::Devices::GM6020_ComposeTxFrames(SRNOS::Devices::DJI_GM6020* const*, unsigned int, SRNOS_CANDeviceFrame*, unsigned int&)>, commit_tx = 0x0 <SRNOS::Devices::GM6020_ComposeTxFrames(SRNOS::Devices::DJI_GM6020* const*, unsigned int, SRNOS_CANDeviceFrame*, unsigned int&)>, tick = 0x8026061 <SRNOS::Devices::(anonymous namespace)::gm6020_tick(void*, unsigned int)>}
+$7 = {{motor = {motor_id_ = 1 '\001', group_id_ = 511, rx_id_ = 517, give_cmd_raw_ = {<std::__2::__atomic_base<short, true>> = {<std::__2::__atomic_base<short, false>> = {__a_ = {<std::__2::__cxx_atomic_base_impl<short>> = {__a_value = 0}, <No data fields>}, static is_always_lock_free = <optimized out>}, <No data fields>}, <No data fields>}, state_ = {mech_angle_raw = 6843, mech_angle_deg = 300.717773, speed_raw = 0, iq_raw = -44, temp_C = 25 '\031', last_rx_ms = 44011, online = true, prev_angle_raw = 6842, prev_speed_raw = 0, prev_iq_raw = -60}, offline_ms_ = {<std::__2::__atomic_base<unsigned int, true>> = {<std::__2::__atomic_base<unsigned int, false>> = {__a_ = {<std::__2::__cxx_atomic_base_impl<unsigned int>> = {__a_value = 100}, <No data fields>}, static is_always_lock_free = <optimized out>}, <No data fields>}, <No data fields>}}, encoder = {handle_ = 0, status_ = SRNOS_TELEMETRY_OK}, angle = {handle_ = 1, status_ = SRNOS_TELEMETRY_OK}, online = {handle_ = 2, status_ = SRNOS_TELEMETRY_OK}}, {motor = {motor_id_ = 2 '\002', group_id_ = 511, rx_id_ = 518, give_cmd_raw_ = {<std::__2::__atomic_base<short, true>> = {<std::__2::__atomic_base<short, false>> = {__a_ = {<std::__2::__cxx_atomic_base_impl<short>> = {__a_value = 0}, <No data fields>}, static is_always_lock_free = <optimized out>}, <No data fields>}, <No data fields>}, state_ = {mech_angle_raw = 7820, mech_angle_deg = 343.652344, speed_raw = 0, iq_raw = -68, temp_C = 27 '\033', last_rx_ms = 44010, online = true, prev_angle_raw = 7820, prev_speed_raw = 0, prev_iq_raw = -85}, offline_ms_ = {<std::__2::__atomic_base<unsigned int, true>> = {<std::__2::__atomic_base<unsigned int, false>> = {__a_ = {<std::__2::__cxx_atomic_base_impl<unsigned int>> = {__a_value = 100}, <No data fields>}, static is_always_lock_free = <optimized out>}, <No data fields>}, <No data fields>}}, encoder = {handle_ = 3, status_ = SRNOS_TELEMETRY_OK}, angle = {handle_ = 4, status_ = SRNOS_TELEMETRY_OK}, online = {handle_ = 5, status_ = SRNOS_TELEMETRY_OK}}, {motor = {motor_id_ = 3 '\003', group_id_ = 511, rx_id_ = 519, give_cmd_raw_ = {<std::__2::__atomic_base<short, true>> = {<std::__2::__atomic_base<short, false>> = {__a_ = {<std::__2::__cxx_atomic_base_impl<short>> = {__a_value = 0}, <No data fields>}, static is_always_lock_free = <optimized out>}, <No data fields>}, <No data fields>}, state_ = {mech_angle_raw = 4045, mech_angle_deg = 177.758789, speed_raw = 0, iq_raw = -43, temp_C = 26 '\032', last_rx_ms = 44010, online = true, prev_angle_raw = 4045, prev_speed_raw = 0, prev_iq_raw = -23}, offline_ms_ = {<std::__2::__atomic_base<unsigned int, true>> = {<std::__2::__atomic_base<unsigned int, false>> = {__a_ = {<std::__2::__cxx_atomic_base_impl<unsigned int>> = {__a_value = 100}, <No data fields>}, static is_always_lock_free = <optimized out>}, <No data fields>}, <No data fields>}}, encoder = {handle_ = 6, status_ = SRNOS_TELEMETRY_OK}, angle = {handle_ = 7, status_ = SRNOS_TELEMETRY_OK}, online = {handle_ = 8, status_ = SRNOS_TELEMETRY_OK}}}
+$8 = 44011
+$9 = 43998
+$10 = 0x0
+$11 = 0x0
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvCheckTasksWaitingTermination () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3755
+3755	        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+Python scripting is not supported in this copy of GDB.
+$12 = {phase = SRNOS_SYSTEM_RUNNING, native_can_ready = true, usb_ready = true, parameter_load_status = 0, identity_load_status = SRNOS_STORAGE_CORRUPT}
+$13 = {{rx_isr_cnt = 0, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}, {rx_isr_cnt = 0, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}, {rx_isr_cnt = 392983, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 2, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}}
+$14 = {rx_pops = 392983, rx_routed_raw = 0, rx_routed_adapter = 392983, rx_no_subscriber = 0, rx_dropped = 0, rx_wake_by_isr = 392976, rx_wake_by_timeout = 1, tx_oneshot_enqueue_ok = 0, tx_oneshot_enqueue_full = 0, tx_oneshot_expired = 0, tx_urgent_accepted = 0, tx_periodic_accepted = 0, tx_periodic_dropped = 0, tx_backend_busy = 0, tx_complete_events = 0, rx_route_count = 3, rx_route_high_water = 3, rx_route_lookup_steps = 1178949, rx_route_capacity_rejects = 0, tx_adapter_count = 3, tx_adapter_high_water = 3, tx_oneshot_depth = 0, tx_oneshot_high_water = 0}
+$15 = {mech_angle_raw = 7478, mech_angle_deg = 328.623047, speed_raw = 0, iq_raw = -86, temp_C = 25 '\031', last_rx_ms = 131007, online = true, prev_angle_raw = 7478, prev_speed_raw = 0, prev_iq_raw = -96}
+$16 = {mech_angle_raw = 4417, mech_angle_deg = 194.106445, speed_raw = 0, iq_raw = 71, temp_C = 27 '\033', last_rx_ms = 131007, online = true, prev_angle_raw = 4417, prev_speed_raw = 0, prev_iq_raw = 81}
+$17 = {mech_angle_raw = 4044, mech_angle_deg = 177.714844, speed_raw = 0, iq_raw = -53, temp_C = 26 '\032', last_rx_ms = 131007, online = true, prev_angle_raw = 4044, prev_speed_raw = 0, prev_iq_raw = -45}
+$18 = 131007
+$19 = 130993
+$20 = 0x0
+$21 = 0x0
+$22 = {task = 0x20000008 <dtcm_heap+8>, generation = 1, refs = 0, flags = 0, allocated = true, system = false, deleting = false, stop = false, state = SRNOS_THREAD_RUNNING, init_result = SRNOS_OK, name = "TurntableView\000\000", config = {name = 0x200086ca <dtcm_heap+34506> "TurntableView", init = 0x0 <SRNOS_ThreadYield>, step = 0x8000401 <(anonymous namespace)::observe(void*, SRNOS_ThreadWake const*)>, cleanup = 0x0 <SRNOS_ThreadYield>, argument = 0x0 <SRNOS_ThreadYield>, stack_bytes = 2048, priority = 24, mode = SRNOS_TASK_PERIODIC, period_ms = 1, event_mask = 0, event_timeout_ms = 0}, entry = 0x0 <SRNOS_ThreadYield>, argument = 0x0 <SRNOS_ThreadYield>, storage = 0x20000008 <dtcm_heap+8>, exited = 0x20000078 <dtcm_heap+120>}
+$23 = (StackType_t *) 0x200000a0 <dtcm_heap+160>
+$24 = 1604
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08041e26 in memcpy ()
+FINAL_UNINTERRUPTED_WINDOW
+$25 = {phase = SRNOS_SYSTEM_RUNNING, native_can_ready = true, usb_ready = true, parameter_load_status = 0, identity_load_status = SRNOS_STORAGE_CORRUPT}
+$26 = {{rx_isr_cnt = 0, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}, {rx_isr_cnt = 0, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}, {rx_isr_cnt = 135171, rx_overrun_cnt = 0, tx_ok_cnt = 0, tx_busy_cnt = 0, bus_off_cnt = 0, last_err_code = 0, rx_error_cnt = 0, rx_hw_lost_cnt = 0, recovery_attempts = 0, recovery_completed = 0, recovery_errors = 0, recovery_faults = 0, recovery_state = 0}}
+$27 = {rx_pops = 135170, rx_routed_raw = 0, rx_routed_adapter = 135170, rx_no_subscriber = 0, rx_dropped = 0, rx_wake_by_isr = 135170, rx_wake_by_timeout = 1, tx_oneshot_enqueue_ok = 0, tx_oneshot_enqueue_full = 0, tx_oneshot_expired = 0, tx_urgent_accepted = 0, tx_periodic_accepted = 0, tx_periodic_dropped = 0, tx_backend_busy = 0, tx_complete_events = 0, rx_route_count = 3, rx_route_high_water = 3, rx_route_lookup_steps = 405510, rx_route_capacity_rejects = 0, tx_adapter_count = 3, tx_adapter_high_water = 3, tx_oneshot_depth = 0, tx_oneshot_high_water = 0}
+$28 = {mech_angle_raw = 7270, mech_angle_deg = 319.482422, speed_raw = 0, iq_raw = 63, temp_C = 26 '\032', last_rx_ms = 45071, online = true, prev_angle_raw = 7271, prev_speed_raw = 0, prev_iq_raw = 30}
+$29 = {mech_angle_raw = 4824, mech_angle_deg = 211.992188, speed_raw = 0, iq_raw = -93, temp_C = 27 '\033', last_rx_ms = 45070, online = true, prev_angle_raw = 4824, prev_speed_raw = 0, prev_iq_raw = -93}
+$30 = {mech_angle_raw = 4045, mech_angle_deg = 177.758789, speed_raw = 0, iq_raw = -52, temp_C = 26 '\032', last_rx_ms = 45071, online = true, prev_angle_raw = 4044, prev_speed_raw = 0, prev_iq_raw = -53}
+$31 = 45071
+$32 = 45059
+$33 = 0x0
+$34 = 0x0
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/IMUTurntableBringUp/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

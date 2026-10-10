@@ -8,6 +8,8 @@ set(SRNOS_DEVICES_SOURCES
     Source/IO/CAN/External/exfdcan_device.cpp
     Source/IO/CAN/External/exfdcan_rx_router.cpp
     Source/IO/CAN/External/exfdcan_tx_router.cpp
+    Source/IO/CAN/can_controller.c
+    Source/IO/CAN/FD/can_fd_core.cpp
     Source/IO/CAN/Native/FDCAN.c
     Source/IO/CAN/Router/can_router_core.cpp
     Source/IO/CAN/Router/native_can_rx.cpp
@@ -18,6 +20,7 @@ set(SRNOS_DEVICES_SOURCES
     Source/Devices/IMU/quaternion_ekf.cpp
     Source/Devices/EEPROM/ft24c128a.c
     Source/Devices/MCP2518FD/drv_canfdspi_api.c
+    Source/Devices/MCP2518FD/fifo.c
     Source/Devices/MCP2518FD/SPIAdapter.c
     Source/Devices/Motors/C610/C610.cpp
     Source/Devices/Motors/C620/C620.cpp
@@ -35,3 +38,22 @@ set(SRNOS_DEVICES_PRIVATE_INCLUDES
     Source/IO/CAN/Router
     Source/IO/CAN/External
 )
+
+# The communication hot path prioritizes bounded latency over minimum Flash
+# size. Keep Debug stepping and vendor compilation policy unchanged; -O2 does
+# not enable fast-math or move code/data into different memory banks.
+foreach(_srnos_communication_source IN ITEMS
+    Source/IO/CAN/can_controller.c
+    Source/IO/CAN/FD/can_fd_core.cpp
+    Source/IO/CAN/Native/FDCAN.c
+    Source/IO/CAN/Router/can_router_core.cpp
+    Source/IO/CAN/Router/native_can_rx.cpp
+    Source/IO/CAN/Router/native_can_tx.cpp
+    Source/IO/CAN/External/exfdcan_device.cpp
+    Source/IO/CAN/External/exfdcan_rx_router.cpp
+    Source/IO/CAN/External/exfdcan_tx_router.cpp
+    Source/Devices/MCP2518FD/fifo.c
+    Source/IO/SPI/SPI.c)
+    set_property(SOURCE "${SIRINEMBEDOS_ROOT}/${_srnos_communication_source}"
+        APPEND PROPERTY COMPILE_OPTIONS "$<$<CONFIG:Release>:-O2>")
+endforeach()

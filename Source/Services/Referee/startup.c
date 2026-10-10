@@ -11,6 +11,6 @@ int SRNOS_RefereeConfigure(SRNOS_SerialPortId port) {
 int SRNOS_RefereeStart(void) {
  if(!configured||started||osKernelGetState()!=osKernelReady)return -1;started=true;
  if(!enabled)return 0;
- const osThreadAttr_t attr={.name="SRNOS_Referee",.stack_size=3072,.priority=osPriorityHigh};
+ const osThreadAttr_t attr={.name="SRNOS_Referee",.stack_size=3072,.priority=osPriorityHigh7};
  return SRNOS_KernelThreadNew(SRNOS_RefereeTask,NULL,&attr)?0:-1;
 }

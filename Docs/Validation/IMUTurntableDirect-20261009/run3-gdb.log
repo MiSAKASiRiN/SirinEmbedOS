@@ -1,0 +1,21 @@
+Remote debugging using localhost:2331
+0x080143d6 in xTaskIncrementTick () at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:2869
+2869	                    prvAddTaskToReadyList( pxTCB );
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x45904 lma 0x80002d0
+Loading section .rodata, size 0x3700 lma 0x8045bd8
+Loading section .ARM, size 0x10 lma 0x80492d8
+Loading section .preinit_array, size 0x4 lma 0x80492e8
+Loading section .init_array, size 0x4 lma 0x80492ec
+Loading section .data, size 0x758 lma 0x80492f0
+Loading section .itcm_text, size 0x120 lma 0x8049a60
+Start address 0x08003da4, load size 301920
+Transfer rate: 147421 KB/sec, 25160 bytes/write.
+Section .text, range 0x80002d0 -- 0x8045bd4: matched.
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+Reading symbols from build/IMUTurntable27/board/run4.elf...

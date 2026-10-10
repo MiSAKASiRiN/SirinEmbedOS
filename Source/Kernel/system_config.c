@@ -12,6 +12,10 @@ void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *c)
 {
     if (!c) return;
     memset(c, 0, sizeof(*c));
+    for (unsigned i = 0; i < SRNOS_CAN_CONTROLLER_COUNT; ++i) {
+        c->can[i].mode = SRNOS_CAN_MODE_CLASSIC;
+        c->can[i].nominal_bitrate = 1000000u;
+    }
     c->ins.enabled=true;
     c->ins.board_to_robot_wxyz[0]=1;
     c->sensors.lsm_enabled=c->sensors.lis_enabled=c->sensors.spa_enabled=true;
@@ -47,18 +51,19 @@ static bool valid_priority(uint32_t p) { return p >= 1 && p < 40; }
 uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
 {
     if (!c || c->thread_count > SRNOS_SYSTEM_MAX_THREADS || c->serial_count > SRNOS_SYSTEM_MAX_SERIAL) return UINT32_MAX;
-    /* Base: eight CAN workers, IMU, two bus dispatch workers, indicators,
+    /* Base: seven CAN workers, IMU, two bus dispatch workers, indicators,
      * idle/timer, TCB/TLS and synchronization overhead, plus startup reserve.
      * Optional reserves deliberately exceed current queue/control-block sizes.
      * HostLink active/pending state and Serial RX/TX semaphore storage are
-     * fixed D1 objects, checked in the link map, not extra heap allocations. */
-    uint64_t bytes = 64u * 1024u + c->application_stack_bytes + 512u;
+     * fixed D1 objects, checked in the link map, not extra heap allocations.
+     * CAN FD raw contexts are also fixed D1 objects, with no heap reservation. */
+    uint64_t bytes = 60u * 1024u + c->application_stack_bytes + 512u;
     bytes += 3584u; /* INS/control worker including TCB/TLS. */
     bytes += 2560u; /* SPI/I2C request completion semaphores and startup reserve. */
     if (c->sensors.lsm_enabled) bytes += 2560u;
     if (c->sensors.lis_enabled || c->sensors.spa_enabled) bytes += 2560u;
     if (c->logging_enabled) bytes += 16u * 1024u;
-    if (c->host_link_enabled) bytes += 8u * 1024u;
+    if (c->host_link_enabled) bytes += 9u * 1024u; /* HostComm 3 KiB + HostCmd 2 KiB, queues/TCB/TLS. */
     if (c->system_monitor_enabled) bytes += 5u * 1024u;
     if (c->serial_count) bytes += 3u * 1024u + c->serial_count * 2560u;
     if (c->remote.dr16_port || c->remote.vt03_port) bytes += 4u * 1024u;
@@ -89,6 +94,9 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
         c->remote.primary < SRNOS_RC_SRC_DR16 || c->remote.primary > SRNOS_RC_SRC_VT03 ||
         c->remote.secondary < SRNOS_RC_SRC_DR16 || c->remote.secondary > SRNOS_RC_SRC_VT03 ||
         c->remote.primary == c->remote.secondary) return SRNOS_SYSTEM_INVALID;
+    for (unsigned i = 0; i < SRNOS_CAN_CONTROLLER_COUNT; ++i)
+        if (!SRNOS_CANControllerConfigValid((uint8_t)(i + 1u), &c->can[i]))
+            return SRNOS_SYSTEM_INVALID;
     double qnorm=0;
     for(unsigned i=0;i<4;i++) {
         if(!isfinite(c->ins.board_to_robot_wxyz[i])) return SRNOS_SYSTEM_INVALID;

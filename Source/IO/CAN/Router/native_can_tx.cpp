@@ -2,6 +2,8 @@
 #include "native_can_backend_internal.h"
 
 #include "IO/CAN/Native/fdcan_internal.h"
+#include "../can_controller_internal.h"
+#include "../FD/can_fd_internal.h"
 #include "cmsis_os2.h"
 #include "stm32h7xx_hal.h"
 
@@ -40,7 +42,7 @@ static bool SRNOS_NativeCANBackendStart(SRNOS_CANChannel ch)
 static uint8_t SRNOS_NativeCANBackendGetTxFree(SRNOS_CANChannel ch)
 {
     FDCAN_GlobalTypeDef *inst = fdcan_inst_of(ch);
-    if (!inst) {
+    if (!inst || !SRNOS_FDCANIsReady(ch)) {
         return 0u;
     }
     const uint32_t txfqs = inst->TXFQS;
@@ -63,30 +65,27 @@ static bool SRNOS_NativeCANBackendTryPush(SRNOS_CANChannel ch,
     return SRNOS_FDCANTxPush(ch, (uint16_t)frame->id, frame->data, frame->dlc);
 }
 
+/* Notification index 0 belongs to this SDK worker; managed-thread control
+ * uses index 1. ISR delivery wakes the worker directly, without TimerTask. */
+static void signal(TaskHandle_t *slot, uint32_t bits)
+{
+    TaskHandle_t thread=__atomic_load_n(slot,__ATOMIC_ACQUIRE);
+    if(!thread) return; /* Worker always drains once after publishing its handle. */
+    if(__get_IPSR()) {
+        BaseType_t higher=pdFALSE;
+        (void)xTaskNotifyFromISR(thread,bits,eSetBits,&higher);
+        portYIELD_FROM_ISR(higher);
+    } else (void)xTaskNotify(thread,bits,eSetBits);
+}
 extern "C" void SRNOS_NativeCANBackendSignalRx(SRNOS_CANChannel ch)
 {
-    SRNOS_NativeCANTaskCtx *ctx = SRNOS_NativeCANTaskCtxOf(ch);
-    if (!ctx) {
-        return;
-    }
-    if (ctx->rx_evt) {
-        (void)osEventFlagsSet(ctx->rx_evt, SRNOS_NATIVE_CAN_EVT_RX);
-    } else {
-        ctx->pending_rx |= SRNOS_NATIVE_CAN_EVT_RX;
-    }
+    auto *ctx=SRNOS_NativeCANTaskCtxOf(ch);
+    if(ctx) signal(&ctx->rx_thread,SRNOS_NATIVE_CAN_EVT_RX);
 }
-
 extern "C" void SRNOS_NativeCANBackendSignalTx(SRNOS_CANChannel ch)
 {
-    SRNOS_NativeCANTaskCtx *ctx = SRNOS_NativeCANTaskCtxOf(ch);
-    if (!ctx) {
-        return;
-    }
-    if (ctx->tx_evt) {
-        (void)osEventFlagsSet(ctx->tx_evt, SRNOS_NATIVE_CAN_EVT_TX);
-    } else {
-        ctx->pending_tx |= SRNOS_NATIVE_CAN_EVT_TX;
-    }
+    auto *ctx=SRNOS_NativeCANTaskCtxOf(ch);
+    if(ctx) signal(&ctx->tx_thread,SRNOS_NATIVE_CAN_EVT_TX);
 }
 
 static const SRNOS_CANRouterBackendOps s_backend_ops = {
@@ -98,53 +97,64 @@ static const SRNOS_CANRouterBackendOps s_backend_ops = {
     .retry_wait_ms = nullptr,
 };
 
+static const SRNOS_CANFDBackendOps s_fd_backend_ops = {
+    .get_tx_free = SRNOS_NativeCANBackendGetTxFree,
+    .try_push = SRNOS_FDCANTxPushFD,
+    .signal_tx = SRNOS_NativeCANBackendSignalTx,
+    .now_ms = SRNOS_NativeCANBackendNowMs,
+    .retry_wait_ms = nullptr,
+};
+
 extern "C" void SRNOS_NativeCANBackendEnsureBound(SRNOS_CANChannel ch)
 {
-    SRNOS_CANRouterCoreSetBackend(ch, &s_backend_ops);
+    if (SRNOS_CANControllerIsFD(ch)) SRNOS_CANFDCoreSetBackend(ch, &s_fd_backend_ops);
+    else SRNOS_CANRouterCoreSetBackend(ch, &s_backend_ops);
 }
 
 extern "C" void SRNOS_FDCANOnTxEvent(uint8_t bus)
 {
-    SRNOS_CANRouterCoreNoteTxComplete(bus);
-    SRNOS_NativeCANBackendSignalTx(bus);
+    if (SRNOS_CANControllerIsFD(bus)) SRNOS_CANFDCoreNoteTxComplete(bus);
+    else SRNOS_CANRouterCoreNoteTxComplete(bus);
 }
 
+extern "C" void SRNOS_FDCANOnTxReady(uint8_t bus)
+{
+    SRNOS_NativeCANBackendSignalTx(bus);
+}
+extern "C" void SRNOS_FDCANOnBusoff(uint8_t bus)
+{
+    SRNOS_NativeCANBackendSignalTx(bus);
+}
+static TickType_t wait_ticks(uint32_t ms)
+{
+    if(ms==UINT32_MAX) return portMAX_DELAY;
+    return (TickType_t)(((uint64_t)ms*configTICK_RATE_HZ+999u)/1000u);
+}
 extern "C" void SRNOS_NativeCANTxRouterWorker(void *argument)
 {
-    const SRNOS_CANChannel ch = (SRNOS_CANChannel)(uintptr_t)argument;
-    SRNOS_NativeCANTaskCtx *ctx = SRNOS_NativeCANTaskCtxOf(ch);
-    if (!ctx) {
-        return;
-    }
-
+    const SRNOS_CANChannel ch=(SRNOS_CANChannel)(uintptr_t)argument;
+    auto *ctx=SRNOS_NativeCANTaskCtxOf(ch);
+    if(!ctx) return;
     SRNOS_NativeCANBackendEnsureBound(ch);
-
-    if (!ctx->tx_evt) ctx->tx_evt = osEventFlagsNew(nullptr);
-    if (!ctx->tx_evt) {
-        return;
-    }
-
-    if (ctx->pending_tx) {
-        (void)osEventFlagsSet(ctx->tx_evt, ctx->pending_tx);
-        ctx->pending_tx = 0u;
-    }
-
-    if (s_backend_ops.start) {
-        (void)s_backend_ops.start(ch);
-    }
-
-    uint32_t flags=0;
+    __atomic_store_n(&ctx->tx_thread,xTaskGetCurrentTaskHandle(),__ATOMIC_RELEASE);
+    (void)SRNOS_FDCANStart(ch);
     auto wait=[&]()->bool {
-        flags = osEventFlagsWait(ctx->tx_evt,
-                                                SRNOS_NATIVE_CAN_EVT_TX,
-                                                osFlagsWaitAny,
-                                                SRNOS_CANRouterCoreNextTxWait(ch, SRNOS_NativeCANBackendNowMs()));
-
+        uint32_t now=SRNOS_NativeCANBackendNowMs();
+        uint32_t delay=SRNOS_CANControllerIsFD(ch) ? SRNOS_CANFDCoreNextTxWait(ch,now) :
+                                                  SRNOS_CANRouterCoreNextTxWait(ch,now);
+        uint32_t recovery=SRNOS_FDCANNextServiceWait(ch,now);
+        if(recovery<delay) delay=recovery;
+        uint32_t flags=0;
+        (void)xTaskNotifyWait(0,UINT32_MAX,&flags,wait_ticks(delay));
         return true;
     };
-    auto step=[&](){        (void)flags;
-        SRNOS_CANRouterCoreDrainTx(ch, SRNOS_NativeCANBackendNowMs());
-
+    auto step=[&](){
+        const uint32_t now=SRNOS_NativeCANBackendNowMs();
+        (void)SRNOS_FDCANService(ch,now);
+        /* Expiry and adapter ticks continue during recovery; the backend
+         * rejects hardware submissions until recovery is confirmed. */
+        if (SRNOS_CANControllerIsFD(ch)) SRNOS_CANFDCoreDrainTx(ch,now);
+        else SRNOS_CANRouterCoreDrainTx(ch,now);
     };
-    SRNOS_KernelRunCpp(step,wait);
+    SRNOS_KernelRunCpp(step,wait,0,false);
 }

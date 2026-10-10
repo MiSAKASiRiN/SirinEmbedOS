@@ -438,10 +438,10 @@ static void poll_telemetry_sources(uint32_t now)
 }
 
 
-static SRNOS_HostLinkResult enqueue_work(const work_item_t *input)
+static SRNOS_HostLinkResult enqueue_work(work_item_t *work)
 {
-    work_item_t item=*input; item.session=s_session;
-    const work_item_t *work=&item;
+    /* The caller owns this local item; the queue copies it before returning. */
+    work->session=s_session;
     if ((s_work_queue == NULL) ||
         (osMessageQueuePut(s_work_queue, work, 0u, 0u) != osOK)) {
         return SRNOS_HOST_LINK_ERR_FULL;
@@ -754,29 +754,29 @@ static void publish_snapshot_if_due(void)
     }
 }
 
-static bool worker_process(work_item_t work)
+static bool worker_process(const work_item_t *work)
 {
-    if(work.session!=s_session) return true;
+    if(work->session!=s_session) return true;
     completion_t completion;
     memset(&completion, 0, sizeof(completion));
-    completion.session=work.session;
-    completion.service = work.service;
-    completion.message = work.message;
-    completion.sequence = work.sequence;
+    completion.session=work->session;
+    completion.service = work->service;
+    completion.message = work->message;
+    completion.sequence = work->sequence;
     size_t body_len = 0u;
-    if (work.kind == SRNOS_HOST_LINK_WORK_EXEC) {
-        exec_entry_t *entry = find_exec(work.command_id);
+    if (work->kind == SRNOS_HOST_LINK_WORK_EXEC) {
+        exec_entry_t *entry = find_exec(work->command_id);
         if ((entry == NULL) || (entry->handler == NULL)) {
             completion.status = SRNOS_HOST_LINK_STATUS_NOT_FOUND;
         } else {
             completion.status = entry->handler(
-                entry->user, work.payload, work.payload_len,
+                entry->user, work->payload, work->payload_len,
                 completion.body, sizeof(completion.body), &body_len);
         }
-    } else if (work.deferred != NULL) {
-        completion.status = work.deferred(
-            work.user, work.service, work.message,
-            work.payload, work.payload_len,
+    } else if (work->deferred != NULL) {
+        completion.status = work->deferred(
+            work->user, work->service, work->message,
+            work->payload, work->payload_len,
             completion.body, sizeof(completion.body),
             &body_len, &completion.flags);
     } else {
@@ -802,7 +802,7 @@ static bool worker_process(work_item_t work)
 static bool worker_once(uint32_t timeout)
 {
  work_item_t work;if(osMessageQueueGet(s_work_queue,&work,NULL,timeout)!=osOK)return false;
- return worker_process(work);
+ return worker_process(&work);
 }
 #endif
 
@@ -896,7 +896,7 @@ static bool comm_wait(void *arg)
 }
 static void comm_step(void *arg){(void)arg;poll_once();publish_snapshot_if_due();}
 static bool command_wait(void *arg){return osMessageQueueGet(s_work_queue,arg,NULL,osWaitForever)==osOK;}
-static void command_step(void *arg){(void)worker_process(*(work_item_t *)arg);}
+static void command_step(void *arg){(void)worker_process((const work_item_t *)arg);}
 void SRNOS_HostLinkTask(void *argument)
 {
     (void)argument;

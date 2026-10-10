@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 2026-10-10：默认致命 Panic/Fault 输出至 USART1 PB14、115200/8N1；正常启动不占用，保留启动期自定义覆盖。板级 HSI/发送轮询有界且失败锁存，不依赖 RTOS/HAL/DMA。Core 主机测试及五个寄存器/超时场景通过，revision24 固件编译、烧录、USART1 实际 ExplicitPanic 报告和复位验证完成；不是所有硬件故障下输出的保证。见 Docs/Validation/IMUTurntableLatency-20261010。
+
 - 2026-09-29：增加 SRNOS_ITCM_BSS 与启动期 64 位清零/复制；代码/BSS/Watch 共同校验 ITCM 上界及对齐。MpuDcache Watch 增加 code/BSS 字节数（记录 size 72）；DMA/Fault 格式不变。边界/复位主机测试、最终反汇编与板端填充后软件复位验证通过；真断电及 CAN 负载待验，见 [记录](../../Docs/Validation/ITCM-20260929/README.md)。
 
 - 将 HostLink CRC32 提取为独立 Core 增量/一次性接口；Storage 共用，CRC 向量与原 Codec 全套主机测试通过，线协议不变。

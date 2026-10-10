@@ -1,0 +1,57 @@
+{
+  "fd1m": {
+    "formats": 64,
+    "stages": 11,
+    "all_imu_guards": true,
+    "unexplained_loss": 0,
+    "hardware_rx_overflow": 0,
+    "max_imu_period_us": 1135,
+    "max_imu_acquisition_us": 183,
+    "max_imu_queue_us": 91,
+    "recovery_pass": true
+  },
+  "fd2m": {
+    "formats": 64,
+    "stages": 11,
+    "all_imu_guards": true,
+    "unexplained_loss": 0,
+    "hardware_rx_overflow": 0,
+    "max_imu_period_us": 1137,
+    "max_imu_acquisition_us": 184,
+    "max_imu_queue_us": 115,
+    "recovery_pass": true
+  },
+  "fd4m": {
+    "formats": 64,
+    "stages": 11,
+    "all_imu_guards": true,
+    "unexplained_loss": 0,
+    "hardware_rx_overflow": 0,
+    "max_imu_period_us": 1146,
+    "max_imu_acquisition_us": 194,
+    "max_imu_queue_us": 115,
+    "recovery_pass": true
+  },
+  "fd5m": {
+    "formats": 64,
+    "stages": 11,
+    "all_imu_guards": true,
+    "unexplained_loss": 0,
+    "hardware_rx_overflow": 0,
+    "max_imu_period_us": 1134,
+    "max_imu_acquisition_us": 184,
+    "max_imu_queue_us": 144,
+    "recovery_pass": true
+  },
+  "fd8m": {
+    "formats": 64,
+    "stages": 11,
+    "all_imu_guards": true,
+    "unexplained_loss": 0,
+    "hardware_rx_overflow": 0,
+    "max_imu_period_us": 1138,
+    "max_imu_acquisition_us": 159,
+    "max_imu_queue_us": 102,
+    "recovery_pass": true
+  }
+}

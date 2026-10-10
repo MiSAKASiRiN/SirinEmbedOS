@@ -1,5 +1,6 @@
 // === GM6020.cpp ===
 
+#include "../state_guard.hpp"
 #include "SirinEmbedOS/Devices/Motors/GM6020/GM6020.hpp"
 #include "SirinEmbedOS/Core/Endian.hpp"
 #include <cstring>
@@ -37,69 +38,45 @@ void DJI_GM6020::set_give_cmd(int16_t cmd_raw) {
     give_cmd_raw_.store(cmd_raw, std::memory_order_relaxed);
 }
 
-// ---- 反馈解析（seqlock 写）----
+// ---- 反馈解析与有界发布 ----
 void DJI_GM6020::onRxFeedback(const CANFrame& f, uint32_t now_ms) {
     if (f.is_ext || f.dlc < 8 || f.id != rx_id_) return;
 
-    // 写开始：置奇数
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
-
-    GM6020State s = state_;
-
-    s.prev_angle_raw = s.mech_angle_raw;
-    s.prev_speed_raw = s.speed_raw;
-    s.prev_iq_raw    = s.iq_raw;
-
     const SRNOS::Memory::ByteSpan feedback(f.data);
-    uint16_t angle_raw = 0u;
-    uint16_t speed_raw = 0u;
-    uint16_t iq_raw = 0u;
+    uint16_t angle_raw = 0u, speed_raw = 0u, iq_raw = 0u;
     if (!SRNOS::Endian::loadBE16(feedback, 0u, angle_raw) ||
         !SRNOS::Endian::loadBE16(feedback, 2u, speed_raw) ||
         !SRNOS::Endian::loadBE16(feedback, 4u, iq_raw)) return;
-    s.mech_angle_raw = angle_raw & 0x1FFFu;
-    s.speed_raw      = static_cast<int16_t>(speed_raw);
-    s.iq_raw         = static_cast<int16_t>(iq_raw);
-    s.temp_C         = f.data[6];
-    s.mech_angle_deg = (static_cast<float>(s.mech_angle_raw) * 360.0f) / 8192.0f;
+    GM6020State next{};
+    next.mech_angle_raw = angle_raw & 0x1FFFu;
+    next.speed_raw = static_cast<int16_t>(speed_raw);
+    next.iq_raw = static_cast<int16_t>(iq_raw);
+    next.temp_C = f.data[6];
+    next.mech_angle_deg = (static_cast<float>(next.mech_angle_raw) * 360.0f) / 8192.0f;
+    next.last_rx_ms = now_ms;
+    next.online = true;
 
-    s.last_rx_ms = now_ms;
-    s.online     = true;
-
-    state_ = s;
-
-    // 写结束：置偶数
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
+    const Detail::StateGuard guard;
+    next.prev_angle_raw = state_.mech_angle_raw;
+    next.prev_speed_raw = state_.speed_raw;
+    next.prev_iq_raw = state_.iq_raw;
+    state_ = next;
 }
 
-// ---- 离线判定（seqlock 写 online=false）----
 void DJI_GM6020::tick(uint32_t now_ms) {
-    // 轻读不需锁，必要时再 seqlock 写
-    const uint32_t last = __atomic_load_n(&state_.last_rx_ms, __ATOMIC_RELAXED);
-    const bool was_online = __atomic_load_n(&state_.online, __ATOMIC_RELAXED);
-    if (was_online && (now_ms - last > offline_ms_)) {
-        __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
+    const Detail::StateGuard guard;
+    if (state_.online && Detail::feedbackExpired(now_ms, state_.last_rx_ms,
+                                                offline_ms_.load(std::memory_order_relaxed))) {
         state_.online = false;
-        __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
     }
 }
 
-// ---- 快照读取（无锁多任务读）----
 bool DJI_GM6020::snapshot(GM6020State& out) const {
-    for (int attempt = 0; attempt < 3; ++attempt) {
-        uint32_t s1 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-        if (s1 & 1u) continue; // 写入中，重试
-
-        GM6020State tmp;
-        std::memcpy(&tmp, &state_, sizeof(tmp));
-
-        uint32_t s2 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-        if (s1 == s2) { out = tmp; return true; }
-    }
-    return false;
+    const Detail::StateGuard guard;
+    out = state_;
+    return true;
 }
 
-// ---- 导出给 TX 路由器 ----
 bool DJI_GM6020::exportTx16(uint16_t* group_id, uint8_t* slot, int16_t* val) const {
     if (!group_id || !slot || !val) return false;
     if (!gm6020_map_group_slot(motor_id_, *group_id, *slot)) return false;

@@ -8,4 +8,4 @@ UI 布局属于应用，SDK 仅编码已有协议。C 公共头可独立按 C11/
 
 ## 托管线程
 
-SRNOS_Referee 接入托管单轮与原相对延时；初始化失败返回统一出口，无独立发送线程。 栈、优先级、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+SRNOS_Referee 接入托管单轮与原相对延时；初始化失败返回统一出口，无独立发送线程。 当前 SRNOS_Referee 为 P1（High7 / 47），与 CAN4/Serial 同级，低于 P0 CAN1/2/3 和 IMU/INS；栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。

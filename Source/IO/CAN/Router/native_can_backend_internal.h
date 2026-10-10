@@ -3,6 +3,8 @@
 
 #include "can_router_core_internal.h"
 #include "cmsis_os2.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,10 +14,8 @@ extern "C" {
 #define SRNOS_NATIVE_CAN_EVT_TX (1u << 1)
 
 typedef struct {
-    osEventFlagsId_t rx_evt;
-    osEventFlagsId_t tx_evt;
-    volatile uint32_t pending_rx;
-    volatile uint32_t pending_tx;
+    TaskHandle_t rx_thread;
+    TaskHandle_t tx_thread;
 } SRNOS_NativeCANTaskCtx;
 
 void SRNOS_NativeCANRxRouterWorker(void *argument);

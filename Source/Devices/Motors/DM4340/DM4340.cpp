@@ -1,3 +1,4 @@
+#include "../state_guard.hpp"
 #include "SirinEmbedOS/Devices/Motors/DM4340/DM4340.hpp"
 #include <cstring>
 
@@ -185,11 +186,7 @@ void DM4340::onRxFeedback(const CANFrame& f, uint32_t now_ms)
     return;
   }
 
-  __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
-
-  DM4340State s = state_;
-  const bool was_online = s.online;
-  (void)was_online;
+  DM4340State s{};
 
   const int16_t pos_q16 = static_cast<int16_t>(
     (static_cast<uint16_t>(d[1]) << 8) | d[2]
@@ -225,33 +222,22 @@ void DM4340::onRxFeedback(const CANFrame& f, uint32_t now_ms)
   s.last_rx_ms    = now_ms;
   s.online        = true;
 
+  const Detail::StateGuard guard;
   state_ = s;
-  __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
 }
 
-void DM4340::tick(uint32_t now_ms)
-{
-  const uint32_t last = __atomic_load_n(&state_.last_rx_ms, __ATOMIC_RELAXED);
-  const bool was_online = __atomic_load_n(&state_.online, __ATOMIC_RELAXED);
-
-  if (was_online && (now_ms - last > offline_ms_)) {
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
-    state_.online = false;
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
-  }
+void DM4340::tick(uint32_t now_ms) {
+    const Detail::StateGuard guard;
+    if (state_.online && Detail::feedbackExpired(now_ms, state_.last_rx_ms,
+                                                offline_ms_.load(std::memory_order_relaxed))) {
+        state_.online = false;
+    }
 }
 
-bool DM4340::snapshot(DM4340State& out) const
-{
-  for (int i = 0; i < 3; ++i) {
-    uint32_t s1 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-    if (s1 & 1u) continue;
-    DM4340State tmp = state_;
-    uint32_t s2 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-    if (s1 == s2) { out = tmp; return true; }
-  }
-  out = state_;
-  return false;
+bool DM4340::snapshot(DM4340State& out) const {
+    const Detail::StateGuard guard;
+    out = state_;
+    return true;
 }
 
 bool DM4340::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const

@@ -1,0 +1,46 @@
+Remote debugging using localhost:2331
+0x08015f8a in prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x47544 lma 0x80002d0
+Loading section .rodata, size 0x36e0 lma 0x8047818
+Loading section .ARM, size 0x10 lma 0x804aef8
+Loading section .preinit_array, size 0x4 lma 0x804af08
+Loading section .init_array, size 0x4 lma 0x804af0c
+Loading section .data, size 0x135c lma 0x804af10
+Loading section .itcm_text, size 0x120 lma 0x804c280
+Start address 0x08005aec, load size 312196
+Transfer rate: 152439 KB/sec, 26016 bytes/write.
+Section .text, range 0x80002d0 -- 0x8047814: matched.
+Hardware assisted breakpoint 1 at 0x8000be0: file /Users/sirin/CLionProjects/SirinEmbedOS/Examples/IMUTurntableBringUp/app_main.cpp, line 195.
+Resetting target
+Continuing.
+
+Breakpoint 1, SRNOS_ApplicationMain () at /Users/sirin/CLionProjects/SirinEmbedOS/Examples/IMUTurntableBringUp/app_main.cpp:195
+195	extern "C" void SRNOS_ApplicationMain(void) {}
+$1 = false
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x08015f8a in prvIdleTask (pvParameters=<optimized out>) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:3529
+3529	            if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) 1 )
+$2 = {magic = 1397314126, version = 2, size = 328, sequence = 1, reason = 19, line = 0, expression = 0, file = 0, function = 0, pc = 2779096485, lr = 2779096485, task = 604189056, ipsr = 6, cfsr = 16777216, hfsr = 0, dfsr = 0, afsr = 0, frame_type = 3, raw_sp = 604188672, frame_address = 604188744, msp = 537001952, psp = 604188672, exc_return = 4294967277, r0 = 0, r1 = 1, r2 = 2779096485, r3 = 2779096485, r12 = 2779096485, xpsr = 4294967277, control = 0, primask = 0, basepri = 0, faultmask = 0, mmfar = 0, bfar = 0, shcsr = 458760, ccr = 459280, icsr = 4196358, abfsr = 0, fpccr = 3221225593, task_name = "SRNOS_AppInit\000\000", task_stack_low = 604184952, task_stack_high = 604189044, task_stack_current = 604188672, task_stack_high_water_bytes = 3188, stack_snapshot_address = 604188672, stack_snapshot_count = 32, stack_snapshot = {0, 64, 164, 1341188397, 134279057, 39, 134279066, 1627389952, 0, 1, 604049080, 0, 0, 134415921, 60, 604188812, 604188808, 536905596, 0, 1, 2779096485, 2779096485, 2779096485, 2779096485, 2779096485, 4294967277, 0, 0, 0, 0, 432605248, 0}, checksum = 1417599642}
+$3 = (void (*)(const char *, const char *, uint32_t)) 0x0 <SRNOS_Fault_LastRecord>
+   0x0 <SRNOS_Fault_LastRecord>:	stmdb	sp!, {r4, r5, r6, r7, r8, r9, r10, r11, lr}
+   0x4 <SRNOS_Fault_LastRecord+4>:	sub	sp, #132	@ 0x84
+   0x6 <SRNOS_Fault_LastRecord+6>:	mov	r4, r1
+   0x8 <SRNOS_Fault_LastRecord+8>:	subs	r1, #1
+   0xa <SRNOS_Fault_LastRecord+10>:	movw	r2, #40968	@ 0xa008
+   0xe <SRNOS_Fault_LastRecord+14>:	str	r0, [sp, #20]
+   0x10 <SRNOS_Fault_LastRecord+16>:	uxtb	r1, r1
+   0x12 <SRNOS_Fault_LastRecord+18>:	movt	r2, #2052	@ 0x804
+   0x16 <SRNOS_Fault_LastRecord+22>:	ldr.w	r2, [r2, r1, lsl #2]
+   0x1a <SRNOS_Fault_LastRecord+26>:	movs	r1, #64	@ 0x40
+   0x1c <SRNOS_Fault_LastRecord+28>:	str	r2, [sp, #16]
+   0x1e <SRNOS_Fault_LastRecord+30>:	add.w	r5, r2, #13824	@ 0x3600
+$4 = 0
+$5 = false
+$6 = 1058009125
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/IMUTurntableLatency/SirinEmbedOS.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

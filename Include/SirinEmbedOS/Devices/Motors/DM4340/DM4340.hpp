@@ -85,9 +85,10 @@ public:
 
   // feedback handler / online timeout
   void onRxFeedback(const CANFrame& f, uint32_t now_ms);
-  void set_offline_timeout(uint32_t ms) { offline_ms_ = ms; }
+  void set_offline_timeout(uint32_t ms) { offline_ms_.store(ms, std::memory_order_relaxed); }
   void tick(uint32_t now_ms);
 
+  // Task context or IRQ priority 5..15; bounded copy, no spin.
   bool snapshot(DM4340State& out) const;
   DM4340State state() const noexcept {
     DM4340State s{};
@@ -132,9 +133,8 @@ private:
   std::atomic<uint32_t> vmax_u32_{0};
   std::atomic<uint32_t> tmax_u32_{0};
 
-  mutable volatile uint32_t state_seq_{0};
   DM4340State state_{};
-  uint32_t offline_ms_ = 100;
+  std::atomic<uint32_t> offline_ms_{100};
 };
 
 const SRNOS_CANAdapterOps* DM4340_CanOps();

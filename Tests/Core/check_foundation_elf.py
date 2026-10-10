@@ -27,7 +27,8 @@ def check(elf):
     # The fixed native CAN workers must override driver fallbacks. Weak
     # declarations once weakened both definitions and silently linked no-op
     # notifications: hardware RX succeeded while the worker slept forever.
-    for name in ("SRNOS_FDCANOnRxISR", "SRNOS_FDCANOnTxEvent"):
+    for name in ("SRNOS_FDCANOnRxISR", "SRNOS_FDCANOnTxEvent", "SRNOS_FDCANOnTxReady", "SRNOS_FDCANOnBusoff",
+                 "HAL_FDCAN_ErrorStatusCallback"):
         assert name in symbols and symbols[name][1] == "T", (
             f"{name}: native CAN notification must be a strong router definition")
 
@@ -52,7 +53,12 @@ def check(elf):
     # Linker and early-main initialization prerequisites: CPU-only context must live in
     # NOLOAD ITCM, with no DMA or Fault retained object inadvertently moved.
     symbol_table = run("starm-objdump", "-t", str(elf))
-    assert re.search(r"\bO\s+\.itcm_bss\s+[0-9a-f]+\s+_ZL5s_ctx$", symbol_table, re.M), "CAN Router context must reside in ITCM"
+    assert re.search(r"\bO\s+\.itcm_bss\s+0000ea10\s+_ZL5s_ctx$", symbol_table, re.M), "Classic CAN context must remain 59920 bytes in ITCM"
+    # FD's four bounded queues/routes use ordinary D1; do not consume the
+    # remaining ITCM or enlarge Classic frames, adapters and staging.
+    fd_context = re.search(r"^([0-9a-f]+)\s+\w\s+O\s+\.bss\s+00005b10\s+_ZN12_GLOBAL__N_18contextsE$", symbol_table, re.M)
+    assert fd_context, "FD context must remain 23312 bytes in D1 BSS"
+    assert 0x24000000 <= int(fd_context[1], 16) < int(fd_context[1], 16) + 23312 <= address("_ebss")
     for line in symbol_table.splitlines():
         fields = line.split()
         if len(fields) >= 6 and (fields[-1].startswith("SRNOS_DebugDbg") or fields[-1] in ("SRNOS_DebugHostLink", "SRNOS_DebugLog")) and fields[2] == "O":

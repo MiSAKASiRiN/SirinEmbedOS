@@ -140,7 +140,9 @@ bool SRNOS_HostLinkStart(void)
     if (!prepared || comm_thread || command_thread) return false;
     if (!SRNOS_HostLinkInitResources()) return false;
     const osThreadAttr_t command={.name="SRNOS_HostCmd",.stack_size=2048,.priority=osPriorityLow1};
-    const osThreadAttr_t comm={.name="SRNOS_HostComm",.stack_size=2048,.priority=osPriorityNormal};
+    /* RX codec -> application handler -> deferred queue includes FP context.
+     * Keep SRNOS_SystemHeapBudget's HostLink reserve in sync with this stack. */
+    const osThreadAttr_t comm={.name="SRNOS_HostComm",.stack_size=3072,.priority=osPriorityNormal};
     command_thread=SRNOS_KernelThreadNew(SRNOS_HostLinkWorkerTask,NULL,&command);
     if (!command_thread) return false;
     comm_thread=SRNOS_KernelThreadNew(SRNOS_HostLinkTask,NULL,&comm);

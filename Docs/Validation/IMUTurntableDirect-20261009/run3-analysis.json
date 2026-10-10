@@ -1,0 +1,382 @@
+{
+  "decoder_errors": {},
+  "sources": {
+    "turntable.motor1.encoder_raw": {
+      "count": 2899,
+      "min": 1739.0,
+      "max": 2263.0,
+      "last": 1753.0,
+      "invalid": 0
+    },
+    "turntable.motor1.angle_deg": {
+      "count": 2899,
+      "min": 76.4208984375,
+      "max": 99.4482421875,
+      "last": 77.0361328125,
+      "invalid": 0
+    },
+    "turntable.motor1.unwrapped_deg": {
+      "count": 2899,
+      "min": 0.0,
+      "max": 99.4482421875,
+      "last": 91.669921875,
+      "invalid": 603
+    },
+    "turntable.motor1.speed_dps": {
+      "count": 2899,
+      "min": -54.101234436035156,
+      "max": 0.4836019277572632,
+      "last": -54.101234436035156,
+      "invalid": 603
+    },
+    "turntable.motor1.voltage_raw": {
+      "count": 2899,
+      "min": -124.0,
+      "max": 4721.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor1.feedback_rpm": {
+      "count": 2899,
+      "min": -26.0,
+      "max": 11.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-26": 1,
+        "-21": 1,
+        "-20": 2,
+        "-19": 5,
+        "-17": 1,
+        "-16": 3,
+        "-15": 3,
+        "-14": 8,
+        "-13": 5,
+        "-12": 8,
+        "-11": 6,
+        "-10": 7,
+        "-9": 2,
+        "-8": 2,
+        "-7": 1,
+        "-6": 2,
+        "-5": 3,
+        "-4": 9,
+        "-3": 22,
+        "-2": 12,
+        "-1": 23,
+        "0": 2762,
+        "1": 2,
+        "2": 1,
+        "3": 2,
+        "8": 1,
+        "9": 3,
+        "10": 1,
+        "11": 1
+      }
+    },
+    "turntable.motor1.current_raw": {
+      "count": 2899,
+      "min": -1192.0,
+      "max": 2762.0,
+      "last": -119.0,
+      "invalid": 0
+    },
+    "turntable.motor2.encoder_raw": {
+      "count": 2899,
+      "min": 4855.0,
+      "max": 4866.0,
+      "last": 4858.0,
+      "invalid": 0
+    },
+    "turntable.motor2.angle_deg": {
+      "count": 2899,
+      "min": 213.3544921875,
+      "max": 213.837890625,
+      "last": 213.486328125,
+      "invalid": 0
+    },
+    "turntable.motor2.unwrapped_deg": {
+      "count": 2899,
+      "min": 0.0,
+      "max": 213.3984375,
+      "last": 213.3544921875,
+      "invalid": 603
+    },
+    "turntable.motor2.speed_dps": {
+      "count": 2899,
+      "min": -0.045800112187862396,
+      "max": 0.43514585494995117,
+      "last": -0.004282212816178799,
+      "invalid": 603
+    },
+    "turntable.motor2.voltage_raw": {
+      "count": 2899,
+      "min": -42.0,
+      "max": 7.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor2.feedback_rpm": {
+      "count": 2899,
+      "min": -7.0,
+      "max": 1.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-7": 1,
+        "-4": 1,
+        "-1": 1,
+        "0": 2895,
+        "1": 1
+      }
+    },
+    "turntable.motor2.current_raw": {
+      "count": 2899,
+      "min": -837.0,
+      "max": 221.0,
+      "last": -41.0,
+      "invalid": 0
+    },
+    "turntable.motor3.encoder_raw": {
+      "count": 2899,
+      "min": 4033.0,
+      "max": 5139.0,
+      "last": 4044.0,
+      "invalid": 0
+    },
+    "turntable.motor3.angle_deg": {
+      "count": 2899,
+      "min": 177.2314453125,
+      "max": 225.8349609375,
+      "last": 177.71484375,
+      "invalid": 0
+    },
+    "turntable.motor3.unwrapped_deg": {
+      "count": 2899,
+      "min": -6.8115234375,
+      "max": 41.2646484375,
+      "last": 41.2646484375,
+      "invalid": 603
+    },
+    "turntable.motor3.speed_dps": {
+      "count": 2899,
+      "min": -0.305867075920105,
+      "max": 18.875553131103516,
+      "last": 0.818447470664978,
+      "invalid": 603
+    },
+    "turntable.motor3.voltage_raw": {
+      "count": 2899,
+      "min": 0.0,
+      "max": 7427.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor3.feedback_rpm": {
+      "count": 2899,
+      "min": -57.0,
+      "max": 16.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-57": 3,
+        "-56": 2,
+        "-55": 2,
+        "-54": 2,
+        "-53": 4,
+        "-52": 1,
+        "-51": 3,
+        "-50": 1,
+        "-48": 1,
+        "-47": 1,
+        "-46": 3,
+        "-42": 1,
+        "-41": 1,
+        "-40": 1,
+        "-39": 1,
+        "-37": 1,
+        "-33": 1,
+        "-31": 1,
+        "-30": 1,
+        "-25": 2,
+        "-22": 1,
+        "-17": 1,
+        "-13": 2,
+        "-10": 1,
+        "-9": 2,
+        "-8": 2,
+        "-2": 2,
+        "-1": 5,
+        "0": 2349,
+        "1": 68,
+        "2": 290,
+        "3": 127,
+        "4": 14,
+        "13": 1,
+        "16": 1
+      }
+    },
+    "turntable.motor3.current_raw": {
+      "count": 2899,
+      "min": -948.0,
+      "max": 5941.0,
+      "last": -28.0,
+      "invalid": 0
+    },
+    "turntable.phase": {
+      "count": 2899,
+      "min": 0.0,
+      "max": 10.0,
+      "last": 10.0,
+      "invalid": 0
+    },
+    "turntable.fault": {
+      "count": 2899,
+      "min": 0.0,
+      "max": 11.0,
+      "last": 11.0,
+      "invalid": 0
+    },
+    "turntable.fault_axis": {
+      "count": 2899,
+      "min": 0.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.fault_measurement": {
+      "count": 2899,
+      "min": -19.0,
+      "max": 0.0,
+      "last": -19.0,
+      "invalid": 0
+    },
+    "turntable.motor1.online": {
+      "count": 1450,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor1.temperature_c": {
+      "count": 1450,
+      "min": 34.0,
+      "max": 34.0,
+      "last": 34.0,
+      "invalid": 0
+    },
+    "turntable.motor2.online": {
+      "count": 1450,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor2.temperature_c": {
+      "count": 1450,
+      "min": 29.0,
+      "max": 29.0,
+      "last": 29.0,
+      "invalid": 0
+    },
+    "turntable.motor3.online": {
+      "count": 1450,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor3.temperature_c": {
+      "count": 1450,
+      "min": 32.0,
+      "max": 35.0,
+      "last": 35.0,
+      "invalid": 0
+    },
+    "turntable.sequence_revision": {
+      "count": 145,
+      "min": 6.0,
+      "max": 6.0,
+      "last": 6.0,
+      "invalid": 0
+    }
+  },
+  "imu_quality": {
+    "256": {
+      "samples": 14486,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.0490000000000776
+    },
+    "257": {
+      "samples": 14490,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.0930000000008988
+    }
+  },
+  "phase_ranges_us_clock_seconds": {
+    "0": [
+      1.265765,
+      2.2708019999999998
+    ],
+    "1": [
+      2.276782,
+      3.380801
+    ],
+    "2": [
+      3.386781,
+      13.600800999999999
+    ],
+    "3": [
+      13.606781999999999,
+      13.750801
+    ],
+    "10": [
+      13.756781,
+      15.756782
+    ]
+  },
+  "id3_lift": {
+    "start_s": 2.276782,
+    "end_s": 13.506782,
+    "encoder_delta_deg": 47.9443359375,
+    "baseline_seconds": [
+      1.315765,
+      2.226782
+    ],
+    "scope": "ID3 monotonic lift; gyro integral vector magnitude; not ID1 sweep or calibration",
+    "BMI088": {
+      "integral_vector_deg": [
+        -48.247075849470974,
+        -0.17340136184072963,
+        2.464726843767566
+      ],
+      "magnitude_deg": 48.31030194970097,
+      "difference_deg": 0.36596601220097114,
+      "bias_rad_s": [
+        0.001427758379781089,
+        -0.0027491072526060526,
+        0.00026310042556861886
+      ]
+    },
+    "LSM6DS3": {
+      "integral_vector_deg": [
+        -0.08128026663689131,
+        -47.62924196831357,
+        -1.3911167358886296
+      ],
+      "magnitude_deg": 47.64962227269778,
+      "difference_deg": -0.2947136648022166,
+      "bias_rad_s": [
+        0.01038403861578881,
+        -0.04429342983133118,
+        -0.0021537861339011844
+      ]
+    }
+  },
+  "sequence": {
+    "revision": 6,
+    "complete": false,
+    "scope": "Bias-corrected gyro projection; axis inferred from first motion, not independent calibration",
+    "axes": {}
+  }
+}

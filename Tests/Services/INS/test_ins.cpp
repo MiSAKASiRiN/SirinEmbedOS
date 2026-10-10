@@ -73,8 +73,15 @@ int main() {
     assert(!(corrected.snapshot.attitude.flags&SRNOS_INS_UNCALIBRATED));
     assert(fabsf(corrected.snapshot.imu[0].accel_m_s2[1]+9.80665f)<1e-4f);
     assert(fabsf(corrected.snapshot.imu[1].gyro_rad_s[0])<1e-6f);
+    // v2 gyro gain applies in native sensor axes before board rotation.
+    calibration[0].model_version=2;calibration[1].model_version=2;
+    for(unsigned n=0;n<2;n++)for(unsigned j=0;j<3;j++)calibration[n].gyro_scale[j]=1.1f;
+    SRNOS_INSCoreSetCalibration(&corrected,calibration,3);fill(2701000);
+    for(unsigned n=0;n<2;n++)for(unsigned j=0;j<3;j++)samples[n].gyro_rad_s[j]=calibration[n].gyro_bias_rad_s[j]+.1f;
+    SRNOS_INSCoreStep(&corrected,samples,&mag,&pressure,&heat,2701000);
+    assert(fabsf(fabsf(corrected.snapshot.imu[0].gyro_rad_s[0])-.11f)<1e-5f);
     // One uncalibrated contributor makes the result explicitly degraded.
-    corrected.calibration_mask=1;advance(corrected,2701000,2702000);
+    corrected.calibration_mask=1;advance(corrected,2702000,2703000);
     assert(corrected.snapshot.status.phase==SRNOS_INS_DEGRADED&&!corrected.snapshot.status.calibrated);
     // Pending storage does not seed fusion or treat absent calibration as sensor failure.
     SRNOS_INSCoreInit(&corrected,&cfg,1000);corrected.calibration_pending=true;

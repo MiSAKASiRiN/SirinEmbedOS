@@ -1,0 +1,4 @@
+Source/IO/CAN/Router/native_can_rx.cpp:61:SRNOS_FDCANOnRxISR	0	static
+Source/IO/CAN/Router/native_can_rx.cpp:66:SRNOS_NativeCANRxRouterWorker	504	static
+Source/Kernel/thread_internal.h:53:_ZZL18SRNOS_KernelRunCppIZ29SRNOS_NativeCANRxRouterWorkerE3$_1Z29SRNOS_NativeCANRxRouterWorkerE3$_0EvT_T0_jbENUlPvE_8__invokeES4_	120	static
+Source/Kernel/thread_internal.h:54:_ZZL18SRNOS_KernelRunCppIZ29SRNOS_NativeCANRxRouterWorkerE3$_1Z29SRNOS_NativeCANRxRouterWorkerE3$_0EvT_T0_jbENUlPvE0_8__invokeES4_	16	static

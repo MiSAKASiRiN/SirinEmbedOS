@@ -1,0 +1,231 @@
+{
+  "decoder_errors": {},
+  "sources": {
+    "turntable.motor1.encoder_raw": {
+      "count": 6783,
+      "min": 7843.0,
+      "max": 7874.0,
+      "last": 7859.0,
+      "invalid": 0
+    },
+    "turntable.motor1.angle_deg": {
+      "count": 6783,
+      "min": 344.6630859375,
+      "max": 346.025390625,
+      "last": 345.3662109375,
+      "invalid": 0
+    },
+    "turntable.motor1.unwrapped_deg": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 345.146484375,
+      "last": 345.146484375,
+      "invalid": 200
+    },
+    "turntable.motor1.speed_dps": {
+      "count": 6783,
+      "min": -0.8851379156112671,
+      "max": 2.5291929244995117,
+      "last": 2.5035316944122314,
+      "invalid": 0
+    },
+    "turntable.motor1.voltage_raw": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor1.feedback_rpm": {
+      "count": 6783,
+      "min": -8.0,
+      "max": 8.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-8": 1,
+        "-5": 1,
+        "-4": 1,
+        "-3": 3,
+        "-2": 29,
+        "-1": 25,
+        "0": 6683,
+        "1": 31,
+        "2": 1,
+        "4": 1,
+        "5": 4,
+        "7": 2,
+        "8": 1
+      }
+    },
+    "turntable.motor2.encoder_raw": {
+      "count": 6783,
+      "min": 4846.0,
+      "max": 4854.0,
+      "last": 4851.0,
+      "invalid": 0
+    },
+    "turntable.motor2.angle_deg": {
+      "count": 6783,
+      "min": 212.958984375,
+      "max": 213.310546875,
+      "last": 213.1787109375,
+      "invalid": 0
+    },
+    "turntable.motor2.unwrapped_deg": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 213.1787109375,
+      "last": 213.0908203125,
+      "invalid": 200
+    },
+    "turntable.motor2.speed_dps": {
+      "count": 6783,
+      "min": -0.8101938962936401,
+      "max": 0.4351796507835388,
+      "last": -0.8101938962936401,
+      "invalid": 0
+    },
+    "turntable.motor2.voltage_raw": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor2.feedback_rpm": {
+      "count": 6783,
+      "min": -3.0,
+      "max": 11.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-3": 1,
+        "-2": 3,
+        "-1": 4,
+        "0": 6772,
+        "1": 1,
+        "2": 1,
+        "11": 1
+      }
+    },
+    "turntable.motor3.encoder_raw": {
+      "count": 6783,
+      "min": 4037.0,
+      "max": 4445.0,
+      "last": 4044.0,
+      "invalid": 0
+    },
+    "turntable.motor3.angle_deg": {
+      "count": 6783,
+      "min": 177.4072265625,
+      "max": 195.3369140625,
+      "last": 177.71484375,
+      "invalid": 0
+    },
+    "turntable.motor3.unwrapped_deg": {
+      "count": 6783,
+      "min": -6.85546875,
+      "max": 10.7666015625,
+      "last": 10.72265625,
+      "invalid": 200
+    },
+    "turntable.motor3.speed_dps": {
+      "count": 6783,
+      "min": -0.4251175820827484,
+      "max": 2.942356824874878,
+      "last": 1.6319500207901,
+      "invalid": 0
+    },
+    "turntable.motor3.voltage_raw": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 6118.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor3.feedback_rpm": {
+      "count": 6783,
+      "min": -37.0,
+      "max": 4.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-37": 1,
+        "-36": 2,
+        "-35": 3,
+        "-34": 1,
+        "-33": 2,
+        "-32": 1,
+        "-30": 1,
+        "-29": 1,
+        "-28": 2,
+        "-25": 1,
+        "-23": 1,
+        "-21": 1,
+        "-15": 2,
+        "-13": 2,
+        "-7": 1,
+        "-3": 3,
+        "-2": 2,
+        "-1": 6,
+        "0": 6747,
+        "1": 1,
+        "4": 2
+      }
+    },
+    "turntable.phase": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 10.0,
+      "last": 10.0,
+      "invalid": 0
+    },
+    "turntable.fault": {
+      "count": 6783,
+      "min": 0.0,
+      "max": 4.0,
+      "last": 4.0,
+      "invalid": 0
+    },
+    "turntable.motor1.online": {
+      "count": 3392,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor2.online": {
+      "count": 3392,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor3.online": {
+      "count": 3392,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    }
+  },
+  "phase_ranges_us_clock_seconds": {
+    "0": [
+      1.277637,
+      2.2736229999999997
+    ],
+    "1": [
+      2.278618,
+      26.333610999999998
+    ],
+    "2": [
+      26.338628,
+      33.183628
+    ],
+    "10": [
+      33.18861,
+      35.18861
+    ]
+  }
+}

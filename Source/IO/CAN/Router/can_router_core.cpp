@@ -1,5 +1,7 @@
 #include "can_router_core_internal.h"
 #include "can_router_collections.hpp"
+#include "../can_controller_internal.h"
+#include "../FD/can_fd_internal.h"
 #include "SirinEmbedOS/Core/Memory/MemorySections.h"
 
 #include "FreeRTOS.h"
@@ -145,6 +147,7 @@ static inline void exit_critical(void)
 extern "C" void SRNOS_CAN_FreezeConfiguration(void)
 {
     enter_critical();
+    SRNOS_CANFDCoreFreeze();
     s_configuration_frozen = true;
     exit_critical();
 }
@@ -159,6 +162,20 @@ static SRNOS_CANRouterCtx *ctx_of(SRNOS_CANChannel ch)
         return nullptr;
     }
     return &s_ctx[ch];
+}
+
+extern "C" bool SRNOS_CANRouterCoreConfigurationCompatible(SRNOS_CANChannel ch, const SRNOS_CANControllerConfig *config)
+{
+    const auto *ctx=ctx_of(ch);
+    if(!ctx || !config)return false;
+    if(config->mode==SRNOS_CAN_MODE_FD)
+        return ctx->adapter_count==0u && ctx->routes.count==0u && ctx->oneshot.depth==0u;
+    return config->mode==SRNOS_CAN_MODE_CLASSIC &&
+        (ctx->adapter_count==0u || config->nominal_bitrate==1000000u);
+}
+extern "C" void SRNOS_CANRouterCoreNoteRxRejected(SRNOS_CANChannel ch)
+{
+    auto *ctx=ctx_of(ch);if(ctx)++ctx->stats.rx_dropped;
 }
 
 static const SRNOS_CANRouterBackendOps *backend_of(SRNOS_CANChannel ch)
@@ -281,6 +298,7 @@ extern "C" int SRNOS_CANRouterSubscribeRaw(SRNOS_CANChannel ch,
                                          SRNOS_CANRouterRxHandler cb,
                                          void *user)
 {
+    if(!SRNOS_CANControllerIsClassic(ch))return SRNOS_CAN_MODE_MISMATCH;
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !cb || !normalize_filter(&filter)) {
@@ -336,6 +354,7 @@ extern "C" int SRNOS_CANRouterAttachAdapter(SRNOS_CANChannel ch,
                                           const SRNOS_CANAdapterOps *ops,
                                           uint32_t period_ms)
 {
+    if(!SRNOS_CANControllerAdapterAllowed(ch))return SRNOS_CAN_MODE_MISMATCH;
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !obj || !ops || (!ops->on_rx && !ops->poll_tx && !ops->tick)) {
@@ -442,6 +461,7 @@ extern "C" int SRNOS_CANRouterPostOneshot(SRNOS_CANChannel ch,
                                         uint8_t priority,
                                         uint32_t ttl_ms)
 {
+    if(!SRNOS_CANControllerIsClassic(ch))return SRNOS_CAN_MODE_MISMATCH;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !frame) {
         return -1;
@@ -500,10 +520,51 @@ extern "C" void SRNOS_CANRouterCoreNoteTxComplete(SRNOS_CANChannel ch)
     }
 }
 
+template<class Route>
+static void dispatch_rx_route(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch,
+                              const SRNOS_CANFrame *frame, uint32_t now_ms,
+                              const Route &route)
+{
+    if (route.kind == SRNOS_CANRouterDetail::route_kind_t::raw && route.callback.raw) {
+        route.callback.raw(ch, frame, route.target);
+        ctx->stats.rx_routed_raw++;
+    } else if (route.kind == SRNOS_CANRouterDetail::route_kind_t::adapter &&
+               route.target && route.callback.adapter) {
+        route.callback.adapter(route.target, frame, now_ms);
+        ctx->stats.rx_routed_adapter++;
+    }
+}
+
+/* Configuration-time test/bring-up path permits callbacks to edit routes.
+ * Keep its snapshot off the frozen runtime path and its task stack frame. */
+static __attribute__((noinline)) void dispatch_unfrozen_rx(
+    SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, const SRNOS_CANFrame *frame,
+    const SRNOS_CANRxFilter &key, uint32_t now_ms)
+{
+    uint32_t lookup_steps = 0u;
+    uint8_t count = 0u;
+    SRNOS_CANRouterDetail::route_target_t snapshot[SRNOS_CAN_ROUTER_ROUTE_CAPACITY];
+    enter_critical();
+    size_t index = SRNOS_CANRouterDetail::route_lower_bound(ctx->routes, key, &lookup_steps);
+    while (index < ctx->routes.count &&
+           SRNOS_CANRouterDetail::same_key(ctx->routes.entries[index].filter, key)) {
+        const auto &route = ctx->routes.entries[index++];
+        snapshot[count++] = {route.kind, route.target, route.callback};
+        lookup_steps++;
+    }
+    ctx->stats.rx_route_lookup_steps += lookup_steps;
+    exit_critical();
+    for (uint8_t i = 0u; i < count; ++i) {
+        dispatch_rx_route(ctx, ch, frame, now_ms, snapshot[i]);
+    }
+    if (count == 0u) ctx->stats.rx_no_subscriber++;
+}
+
 extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,
                                              const SRNOS_CANFrame *frame,
                                              uint32_t now_ms)
 {
+    if(!SRNOS_CANControllerIsClassic(ch)){SRNOS_CANRouterCoreNoteRxRejected(ch);return;}
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx || !frame) {
         return;
@@ -519,37 +580,23 @@ extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,
     SRNOS_CANRxFilter key = {};
     key.id = copy.id;
     key.flags = (uint8_t)(copy.flags & SRNOS_CAN_FRAME_FLAG_EXT);
+    if (!s_configuration_frozen) {
+        dispatch_unfrozen_rx(ctx, ch, &copy, key, now_ms);
+        return;
+    }
+    /* Freeze precedes scheduler start. Entries and callback lifetimes cannot
+     * change at runtime, so receive dispatch needs neither a copy nor a lock. */
     uint32_t lookup_steps = 0u;
-    uint8_t snapshot_count = 0u;
-    SRNOS_CANRouterDetail::route_target_t snapshot[SRNOS_CAN_ROUTER_ROUTE_CAPACITY];
-
-    enter_critical();
     size_t index = SRNOS_CANRouterDetail::route_lower_bound(ctx->routes, key, &lookup_steps);
+    bool matched = false;
     while (index < ctx->routes.count &&
            SRNOS_CANRouterDetail::same_key(ctx->routes.entries[index].filter, key)) {
         lookup_steps++;
-        const SRNOS_CANRouterDetail::route_entry_t &route = ctx->routes.entries[index++];
-        snapshot[snapshot_count].kind = route.kind;
-        snapshot[snapshot_count].target = route.target;
-        snapshot[snapshot_count].callback = route.callback;
-        snapshot_count++;
+        matched = true;
+        dispatch_rx_route(ctx, ch, &copy, now_ms, ctx->routes.entries[index++]);
     }
     ctx->stats.rx_route_lookup_steps += lookup_steps;
-    exit_critical();
-
-    for (uint8_t i = 0u; i < snapshot_count; ++i) {
-        const SRNOS_CANRouterDetail::route_target_t &route = snapshot[i];
-        if (route.kind == SRNOS_CANRouterDetail::route_kind_t::raw && route.callback.raw) {
-            route.callback.raw(ch, &copy, route.target);
-            ctx->stats.rx_routed_raw++;
-        } else if (route.kind == SRNOS_CANRouterDetail::route_kind_t::adapter &&
-                   route.target && route.callback.adapter) {
-            route.callback.adapter(route.target, &copy, now_ms);
-            ctx->stats.rx_routed_adapter++;
-        }
-    }
-
-    if (snapshot_count == 0u) {
+    if (!matched) {
         ctx->stats.rx_no_subscriber++;
     }
 }
@@ -862,7 +909,7 @@ static bool drain_adapter_urgent(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, u
                 }
             } else if (items[k].format == SRNOS_CAN_TX_FORMAT_GROUP_I16) {
                 group_acc_t *groups = ctx->tx_scratch.groups;
-                memset(groups, 0, sizeof(ctx->tx_scratch.groups));
+                for (auto &group : ctx->tx_scratch.groups) group.valid = false;
                 if (!add_group_item(groups, &adapter, &items[k], SRNOS_CAN_TX_KIND_URGENT)) {
                     continue;
                 }
@@ -910,7 +957,7 @@ static void drain_periodic(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_
     group_acc_t *groups = ctx->tx_scratch.groups;
     SRNOS_CANTxItem *items = ctx->tx_scratch.items;
 
-    memset(groups, 0, sizeof(ctx->tx_scratch.groups));
+    bool have_groups = false;
 
     for (uint32_t i = 0;; ++i) {
         adapter_entry_t adapter = {};
@@ -940,6 +987,10 @@ static void drain_periodic(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_
                 (void)transmit_raw_item(ctx, ch, &adapter, SRNOS_CAN_TX_KIND_PERIODIC, &items[k]);
                 attempts++;
             } else if (items[k].format == SRNOS_CAN_TX_FORMAT_GROUP_I16) {
+                if (!have_groups) {
+                    for (auto &group : ctx->tx_scratch.groups) group.valid = false;
+                    have_groups = true;
+                }
                 (void)add_group_item(groups, &adapter, &items[k], SRNOS_CAN_TX_KIND_PERIODIC);
             } else {
                 commit_item(&adapter, SRNOS_CAN_TX_KIND_PERIODIC, &items[k], SRNOS_CAN_TX_RESULT_DROPPED);
@@ -954,6 +1005,7 @@ static void drain_periodic(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_
         }
     }
 
+    if (!have_groups) return;
     for (uint32_t i = 0; i < SRNOS_CAN_ROUTER_GROUP_SHADOWS; ++i) {
         group_acc_t *g = &groups[i];
         if (!g->valid) {
@@ -977,16 +1029,20 @@ static void drain_periodic(SRNOS_CANRouterCtx *ctx, SRNOS_CANChannel ch, uint32_
 
 extern "C" void SRNOS_CANRouterCoreDrainTx(SRNOS_CANChannel ch, uint32_t now_ms)
 {
+    if(!SRNOS_CANControllerIsClassic(ch))return;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
     if (!ctx) {
         return;
     }
 
-    run_adapter_ticks(ctx, now_ms);
+    if (ctx->adapter_count != 0u) run_adapter_ticks(ctx, now_ms);
 
     if (!drain_oneshots(ctx, ch, now_ms)) {
         return;
     }
+    /* Raw/oneshot-only applications must not clear 24 group accumulators on
+     * every hardware completion. Registered adapters keep their 1 ms contract. */
+    if (ctx->adapter_count == 0u) return;
     if (!drain_adapter_urgent(ctx, ch, now_ms)) {
         return;
     }
@@ -1017,4 +1073,103 @@ extern "C" uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel ch, uint32_t 
         /* Full hardware FIFO wakes via TX completion; never spin at full. */
     }
     exit_critical();return wait;
+}
+
+/* CAN4's single worker interleaves RX between individual TX attempts. Cursor
+ * storage stays in ordinary BSS, leaving the ITCM queue layout unchanged.
+ * Polled items and group accumulators survive a scheduling budget boundary. */
+struct SRNOS_CANTxCursor {
+    uint8_t phase, adapter_index, item_index, item_count, group_index, oneshot_count;
+    uint32_t cycle_ms, tick_ms;
+    bool tick_valid;
+    adapter_entry_t adapter;
+};
+static SRNOS_CANTxCursor s_step[SRNOS_CAN_ROUTER_CHANNEL_COUNT+1u];
+extern "C" bool SRNOS_CANRouterCoreStepTx(SRNOS_CANChannel ch,uint32_t now_ms)
+{
+    auto *ctx=ctx_of(ch);
+    if(!ctx || !SRNOS_CANControllerIsClassic(ch))return false;
+    auto &s=s_step[ch];
+    if(ctx->adapter_count && (!s.tick_valid || s.tick_ms!=now_ms)) {
+        s.tick_valid=true;s.tick_ms=now_ms;run_adapter_ticks(ctx,now_ms);
+    }
+    /* Queued oneshots retain their priority and expiry semantics on every
+     * step; they can preempt a suspended adapter batch without overwriting it. */
+rescan:
+    SRNOS_CANRouterDetail::oneshot_slot_t one{};uint8_t index=0;
+    enter_critical();expire_oneshots_locked(ctx,now_ms);
+    bool found=(!ctx->adapter_count || (!s.phase && s.oneshot_count<SRNOS_CAN_ROUTER_URGENT_ATTEMPT_MAX)) &&
+        SRNOS_CANRouterDetail::oneshot_peek(ctx->oneshot,&index,&one);
+    exit_critical();
+    if(found) {
+        if(!backend_try_accept(ctx,ch,&one.frame,SRNOS_CAN_ROUTER_TX_CLASS_URGENT))return false;
+        enter_critical();
+        if(SRNOS_CANRouterDetail::oneshot_remove_if_seq(ctx->oneshot,index,one.seq)) {
+            ++ctx->stats.tx_urgent_accepted;ctx->stats.tx_oneshot_depth=ctx->oneshot.depth;
+        }
+        exit_critical();if(ctx->adapter_count)++s.oneshot_count;return true;
+    }
+    if(!ctx->adapter_count)return false;
+    if(!s.phase) {s.phase=1;s.adapter_index=s.item_count=s.item_index=0;s.cycle_ms=now_ms;}
+    /* Frozen registration bounds this traversal to 2*64 adapters and 24
+     * groups; each call submits at most one physical CAN frame. */
+    for(;;) {
+        if(s.phase==3) {
+            while(s.group_index<SRNOS_CAN_ROUTER_GROUP_SHADOWS) {
+                auto &g=ctx->tx_scratch.groups[s.group_index++];
+                if(!g.valid)continue;
+                SRNOS_CANFrame frame{};compose_group_frame(ctx,&g,&frame);
+                bool ok=backend_try_accept(ctx,ch,&frame,SRNOS_CAN_ROUTER_TX_CLASS_PERIODIC);
+                commit_group(ctx,&g,SRNOS_CAN_TX_KIND_PERIODIC,ok?SRNOS_CAN_TX_RESULT_ACCEPTED:SRNOS_CAN_TX_RESULT_DROPPED);
+                if(ok)++ctx->stats.tx_periodic_accepted;else ++ctx->stats.tx_periodic_dropped;
+                g.valid=false;return true;
+            }
+            s.phase=0;s.oneshot_count=0;
+            /* Budget boundaries must not turn retained oneshots into a
+             * synthetic idle/1ms wait after servicing adapters. */
+            enter_critical();bool queued=ctx->oneshot.depth!=0;exit_critical();
+            if(queued)goto rescan;
+            return false;
+        }
+        SRNOS_CANTxKind kind=s.phase==1?SRNOS_CAN_TX_KIND_URGENT:SRNOS_CAN_TX_KIND_PERIODIC;
+        if(s.item_index<s.item_count) {
+            auto &item=ctx->tx_scratch.items[s.item_index];
+            if(item.format==SRNOS_CAN_TX_FORMAT_RAW_FRAME) {
+                if(!transmit_raw_item(ctx,ch,&s.adapter,kind,&item))return false;
+                ++s.item_index;return true;
+            }
+            if(item.format==SRNOS_CAN_TX_FORMAT_GROUP_I16) {
+                if(s.phase==1) {
+                    auto *groups=ctx->tx_scratch.groups;
+                    for(auto &g:ctx->tx_scratch.groups)g.valid=false;
+                    if(add_group_item(groups,&s.adapter,&item,kind)) {
+                        SRNOS_CANFrame frame{};compose_group_frame(ctx,&groups[0],&frame);
+                        if(!backend_try_accept(ctx,ch,&frame,SRNOS_CAN_ROUTER_TX_CLASS_URGENT))return false;
+                        commit_group(ctx,&groups[0],kind,SRNOS_CAN_TX_RESULT_ACCEPTED);
+                        ++ctx->stats.tx_urgent_accepted;
+                    }
+                    ++s.item_index;return true;
+                }
+                (void)add_group_item(ctx->tx_scratch.groups,&s.adapter,&item,kind);
+            } else {
+                commit_item(&s.adapter,kind,&item,SRNOS_CAN_TX_RESULT_DROPPED);
+                if(s.phase==2)++ctx->stats.tx_periodic_dropped;
+            }
+            ++s.item_index;continue;
+        }
+        s.item_index=s.item_count=0;
+        if(s.adapter_index==ctx->adapter_count) {
+            if(s.phase==1) {
+                s.phase=2;s.adapter_index=0;
+                for(auto &g:ctx->tx_scratch.groups)g.valid=false;
+            } else {s.phase=3;s.group_index=0;}
+            continue;
+        }
+        auto &entry=ctx->adapters[s.adapter_index++];
+        if(!entry.ops.poll_tx || (s.phase==2 && !time_reached(now_ms,entry.next_due_ms)))continue;
+        if(s.phase==2)entry.next_due_ms=now_ms+entry.period_ms;
+        s.adapter=entry;
+        size_t n=entry.ops.poll_tx(entry.obj,kind,ctx->tx_scratch.items,SRNOS_CAN_ROUTER_POLL_TX_MAX,s.cycle_ms);
+        s.item_count=(uint8_t)(n>SRNOS_CAN_ROUTER_POLL_TX_MAX?SRNOS_CAN_ROUTER_POLL_TX_MAX:n);
+    }
 }

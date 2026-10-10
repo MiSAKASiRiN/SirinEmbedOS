@@ -8,7 +8,10 @@
 #include "cmsis_os2.h"
 #include "IO/can_board.h"
 #include "IO/SPI/spi_internal.h"
+#include "Devices/MCP2518FD/fifo_internal.h"
 #include "Devices/MCP2518FD/vendor/drv_canfdspi_defines.h"
+#include "IO/CAN/can_controller_internal.h"
+#include "IO/CAN/FD/can_fd_internal.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,31 +42,37 @@ extern "C" {
 // FSIZE is "size - 1", max 31 -> 32 objects per FIFO
 #define SRNOS_EXTERNAL_CAN_RXF_SIZE           (31u)
 #endif
-
-
+#define SRNOS_EXTERNAL_CAN_FD_RX_COUNT        (16u)
+#define SRNOS_EXTERNAL_CAN_FD_TX_COUNT        (12u)
+#define SRNOS_EXTERNAL_CAN_MODE_ATTEMPTS      (20u)
 
 typedef struct
 {
-    osEventFlagsId_t   evt;
-    volatile uint32_t  pending_isr;
+    osThreadId_t      task;
+    uint32_t          pending; /* Protected registration/ISR handoff. */
+    SRNOS_MCPFifo      rx_fifo, tx_fifo;
     volatile SRNOS_ExternalCANStats *stats;
     SRNOS_ExternalCANRxFrame rx_log[SRNOS_EXTERNAL_CAN_RX_LOG_DEPTH];
     volatile uint16_t  rx_head;
     volatile uint16_t  rx_tail;
     uint8_t            init_done;
     bool              tx_retry_pending; /* TX worker only; transient SPI error. */
+    uint32_t          wakeups, rounds, rx_service_us, tx_service_us, max_rx_us, max_tx_us;
     uint32_t          tx_retry_after_ms;
 } SRNOS_ExternalCANCtx;
 
 void SRNOS_ExternalCANOnExti(uint16_t gpio_pin);
-void SRNOS_ExternalCANRxRouterWorker(void *argument);
-void SRNOS_ExternalCANTxRouterWorker(void *argument);
+typedef struct {
+    uint32_t ok,mode,tec,rec,error_state,nbtp,dbtp,tdc,rx_status,tx_status;
+} SRNOS_ExternalCANHardware;
+bool SRNOS_ExternalCANReadHardware(uint8_t dev,SRNOS_ExternalCANHardware *out);
+void SRNOS_ExternalCANWorker(void *argument);
+void SRNOS_ExternalCANBackendBind(uint8_t dev);
 SRNOS_ExternalCANCtx* SRNOS_ExternalCANCtxOf(uint8_t dev);
 const SRNOS_ExternalCANDevCfg* SRNOS_ExternalCANCfgOf(uint8_t dev);
 int SRNOS_ExternalCANHwInit(uint8_t dev);
-void SRNOS_ExternalCANBusLockInit(void);
-void SRNOS_ExternalCANBusLock(void);
-void SRNOS_ExternalCANBusUnlock(void);
+void SRNOS_ExternalCANRegisterWorker(SRNOS_ExternalCANCtx *ctx);
+void SRNOS_ExternalCANNotify(SRNOS_ExternalCANCtx *ctx, uint32_t events);
 
 #ifdef __cplusplus
 }

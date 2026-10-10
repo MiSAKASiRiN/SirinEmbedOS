@@ -17,7 +17,11 @@ SRNOS_SPIStatus SRNOS_SPIDeviceInit(SRNOS_SPIDevice *d,SRNOS_SPIBusId bus,GPIO_T
     assert(bus==SRNOS_SPI_BUS_4); ++prepares; d->cs_port=port; d->cs_pin=pin; return SRNOS_SPI_OK;
 }
 SRNOS_SPIStatus SRNOS_SPITransferEx(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t *rx,size_t n,SRNOS_SPICallback cb,void *ctx,uint8_t blocking,uint32_t ms) {
+    assert(d->can_priority==1 && !d->imu_priority);
     assert(n==1 && ms==5 && !cb && !ctx && blocking==1); ++transfers; seen_port=d->cs_port; seen_pin=d->cs_pin; rx[0]=tx[0]; return SRNOS_SPI_OK;
+}
+SRNOS_SPIStatus SRNOS_SPITransferSequence(SRNOS_SPIDevice *d,SRNOS_SPISequencePrepare fn,void *ctx) {
+    assert(d->can_priority && fn && ctx);return SRNOS_SPI_OK;
 }
 void SRNOS_SPIGetStatistics(const SRNOS_SPIDevice *d,SRNOS_SPIStatistics *s) { (void)d; (void)s; }
 int main(void) {

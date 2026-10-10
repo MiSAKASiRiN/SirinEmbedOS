@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 typedef void *osEventFlagsId_t;
+typedef void *osThreadId_t;
 #define osFlagsWaitAny 0u
 #define osWaitForever UINT32_MAX
 #define osFlagsError 0x80000000u

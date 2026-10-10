@@ -1,0 +1,252 @@
+Reading symbols from build/canfd-board-20261005/original.elf...
+(No debugging symbols found in build/canfd-board-20261005/original.elf)
+Remote debugging using localhost:2331
+0x0800e3ea in prvIdleTask ()
+pc             0x800e3ea           0x800e3ea <prvIdleTask+54>
+lr             0x800df9d           134274973
+sp             0x24001f50          0x24001f50 <vApplicationGetIdleTaskMemory.idle_stack+504>
+xpsr           0x81000000          -2130706432
+primask        0x0                 0
+basepri        0x0                 0
+0xe000ed28:	0x00000000	0x00000000	0x00000001
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x802d6d0: matched.
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3be in prvIdleTask ()
+Reading symbols from build/can4-spi-board-20261006/firmware/Classic.elf...
+$1 = 26816
+$2 = 2320
+$3 = 124
+$4 = 84
+$5 = (struct SRNOS_TestCANStage (*)[11]) 0x68 <_rx_from_fifo+104>
+$6 = (SRNOS_TestCANStack (*)[48]) 0x641c <s_ctx+25340>
+$7 = (SRNOS_KernelResources *) 0x689c <s_ctx+26492>
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x3381c lma 0x80002d0
+Loading section .rodata, size 0x3428 lma 0x8033af0
+Loading section .ARM, size 0x10 lma 0x8036f18
+Loading section .preinit_array, size 0x4 lma 0x8036f28
+Loading section .data, size 0x490 lma 0x8036f2c
+Loading section .itcm_text, size 0x120 lma 0x80373c0
+Start address 0x08002d50, load size 226516
+Transfer rate: 73735 KB/sec, 22651 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8033aec: matched.
+Section .rodata, range 0x8033af0 -- 0x8036f18: matched.
+Section .ARM, range 0x8036f18 -- 0x8036f28: matched.
+Section .preinit_array, range 0x8036f28 -- 0x8036f2c: matched.
+Section .data, range 0x8036f2c -- 0x80373bc: matched.
+Section .itcm_text, range 0x80373c0 -- 0x80374e0: matched.
+Hardware assisted breakpoint 1 at 0x8000864: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 1, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$8 = 0
+$9 = 11
+Reading symbols from build/can4-spi-board-20261006/firmware/FD8M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x335a4 lma 0x80002d0
+Loading section .rodata, size 0x3428 lma 0x8033878
+Loading section .ARM, size 0x10 lma 0x8036ca0
+Loading section .preinit_array, size 0x4 lma 0x8036cb0
+Loading section .data, size 0x490 lma 0x8036cb4
+Loading section .itcm_text, size 0x120 lma 0x8037160
+Start address 0x08002da8, load size 225884
+Transfer rate: 55147 KB/sec, 22588 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8033874: matched.
+Section .rodata, range 0x8033878 -- 0x8036ca0: matched.
+Section .ARM, range 0x8036ca0 -- 0x8036cb0: matched.
+Section .preinit_array, range 0x8036cb0 -- 0x8036cb4: matched.
+Section .data, range 0x8036cb4 -- 0x8037144: matched.
+Section .itcm_text, range 0x8037160 -- 0x8037280: matched.
+Hardware assisted breakpoint 2 at 0x8000890: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 2, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$10 = 6
+$11 = 0
+$12 = 0
+$13 = 1
+$14 = 0
+$15 = {ok = 0, mode = 0, tec = 0, rec = 0, error_state = 0, nbtp = 0, dbtp = 0, tdc = 0, rx_status = 0, tx_status = 0}
+'SRNOS_DebugDbgExternalCAN' has unknown type; cast it to its declared type
+All variables matching regular expression "SRNOS_FDCAN":
+
+Non-debugging symbols:
+0x24012a4c  SRNOS_FDCANDiagnostics
+0x4000a444:	0x0000070f
+0x4000a440:	0x00000000
+0x4000a418:	0x00000000
+0x4000a41c:	0x18003b12
+0x4000a40c:	0x00000a33
+0x4000a448:	0x00000000
+$16 = {h = {magic = 1330468932, version = 1, size = 124, module_id = 7, instance = 0, seq = 3, flags = 0, last_tick = 14, last_status = 0}, rx_irq = 1, tx_irq = 1, int_irq = 1, rx_frames = 0, tx_frames = 0, rx_overflow = 0, tx_full = 0, rx_errors = 0, tx_errors = 0, rx_drain_limit = 0, tx_drain_limit = 0, init_errors = 0, module_events = 9, isr_int0 = 1, isr_int1 = 0, rx_irq_no_rxif = 1, tx_irq_no_txif = 0, int_master_wake = 1, last_int_flags = 9, last_rx_status = 0, last_tx_status = 0, rx_hw_overflow = 0, rx_status_errors = 0, rx_read_errors = 0}
+0x24012a4c <SRNOS_FDCANDiagnostics>:	0x00000000	0x00000000	0x00000001	0x00000000
+0x24012a5c <SRNOS_FDCANDiagnostics+16>:	0x00000001	0x00000005	0x00000000	0x00000000
+0x24012a6c <SRNOS_FDCANDiagnostics+32>:	0x00000001	0x00000001	0x00000000	0x00000000
+0x4000a044:	0x0000070f
+0x4000a040:	0x00200000
+0x4000a018:	0x00000300
+0x4000a00c:	0x00800611
+0x4000a048:	0x00000700
+Reading symbols from build/can4-spi-board-20261006/firmware/FD5M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x335a4 lma 0x80002d0
+Loading section .rodata, size 0x3428 lma 0x8033878
+Loading section .ARM, size 0x10 lma 0x8036ca0
+Loading section .preinit_array, size 0x4 lma 0x8036cb0
+Loading section .data, size 0x490 lma 0x8036cb4
+Loading section .itcm_text, size 0x120 lma 0x8037160
+Start address 0x08002da8, load size 225884
+Transfer rate: 110294 KB/sec, 22588 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8033874: matched.
+Section .rodata, range 0x8033878 -- 0x8036ca0: matched.
+Section .ARM, range 0x8036ca0 -- 0x8036cb0: matched.
+Section .preinit_array, range 0x8036cb0 -- 0x8036cb4: matched.
+Section .data, range 0x8036cb4 -- 0x8037144: matched.
+Section .itcm_text, range 0x8037160 -- 0x8037280: matched.
+Hardware assisted breakpoint 3 at 0x8000890: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 3, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$17 = 0
+$18 = 11
+There is no member named format_expected.
+There is no member named format_received.
+Reading symbols from /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8MProbe.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32bf4 lma 0x80002d0
+Loading section .rodata, size 0x3420 lma 0x8032ec8
+Loading section .ARM, size 0x10 lma 0x80362e8
+Loading section .preinit_array, size 0x4 lma 0x80362f8
+Loading section .data, size 0x48c lma 0x80362fc
+Loading section .itcm_text, size 0x120 lma 0x80367a0
+Start address 0x08002698, load size 223392
+Transfer rate: 72718 KB/sec, 22339 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8032ec4: matched.
+Section .rodata, range 0x8032ec8 -- 0x80362e8: matched.
+Section .ARM, range 0x80362e8 -- 0x80362f8: matched.
+Section .preinit_array, range 0x80362f8 -- 0x80362fc: matched.
+Section .data, range 0x80362fc -- 0x8036788: matched.
+Section .itcm_text, range 0x80367a0 -- 0x80368c0: matched.
+Hardware assisted breakpoint 4 at 0x80007ec: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 4, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$19 = 6
+$20 = 0
+$21 = {ok = 1, mode = 0, tec = 0, rec = 32, error_state = 0, nbtp = 1967879, dbtp = 131072, tdc = 131841, rx_status = 0, tx_status = 7}
+$22 = {rx_isr = 0, rx_overrun = 0, rx_hw_lost = 0, tx_enqueued = 1, tx_busy = 0, bus_off = 1, tec = 0, rec = 0, error_logging = 32, tx_pending = 0, rx_fifo_lost = 0, kernel_hz = 80000000, nominal_bps = 1000000, data_bps = 8000000, frame_format = 768, nbtp = 402668306, dbtp = 8390161, tdcr = 1792, cccr = 768, psr = 1807}
+Reading symbols from /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8MAlignedProbe.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x32c54 lma 0x80002d0
+Loading section .rodata, size 0x3420 lma 0x8032f28
+Loading section .ARM, size 0x10 lma 0x8036348
+Loading section .preinit_array, size 0x4 lma 0x8036358
+Loading section .data, size 0x48c lma 0x803635c
+Loading section .itcm_text, size 0x120 lma 0x8036800
+Start address 0x080026f4, load size 223488
+Transfer rate: 72750 KB/sec, 22348 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8032f24: matched.
+Section .rodata, range 0x8032f28 -- 0x8036348: matched.
+Section .ARM, range 0x8036348 -- 0x8036358: matched.
+Section .preinit_array, range 0x8036358 -- 0x803635c: matched.
+Section .data, range 0x803635c -- 0x80367e8: matched.
+Section .itcm_text, range 0x8036800 -- 0x8036920: matched.
+Hardware assisted breakpoint 5 at 0x8000848: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 5, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$23 = 0
+$24 = 64
+$25 = {ok = 1, mode = 0, tec = 0, rec = 0, error_state = 0, nbtp = 1967879, dbtp = 131072, tdc = 131841, rx_status = 0, tx_status = 7}
+$26 = {rx_isr = 32, rx_overrun = 0, rx_hw_lost = 0, tx_enqueued = 32, tx_busy = 0, bus_off = 0, tec = 0, rec = 0, error_logging = 0, tx_pending = 0, rx_fifo_lost = 0, kernel_hz = 80000000, nominal_bps = 1000000, data_bps = 8000000, frame_format = 768, nbtp = 402669071, dbtp = 8390161, tdcr = 1792, cccr = 768, psr = 1126415}
+Reading symbols from /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8MAligned.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x33634 lma 0x80002d0
+Loading section .rodata, size 0x3428 lma 0x8033908
+Loading section .ARM, size 0x10 lma 0x8036d30
+Loading section .preinit_array, size 0x4 lma 0x8036d40
+Loading section .data, size 0x490 lma 0x8036d44
+Loading section .itcm_text, size 0x120 lma 0x80371e0
+Start address 0x08002e34, load size 226028
+Transfer rate: 73576 KB/sec, 22602 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8033904: matched.
+Section .rodata, range 0x8033908 -- 0x8036d30: matched.
+Section .ARM, range 0x8036d30 -- 0x8036d40: matched.
+Section .preinit_array, range 0x8036d40 -- 0x8036d44: matched.
+Section .data, range 0x8036d44 -- 0x80371d4: matched.
+Section .itcm_text, range 0x80371e0 -- 0x8037300: matched.
+Hardware assisted breakpoint 6 at 0x80008ec: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 6, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$27 = 0
+$28 = 11
+Reading symbols from /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD2M.elf...
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x335d4 lma 0x80002d0
+Loading section .rodata, size 0x3428 lma 0x80338a8
+Loading section .ARM, size 0x10 lma 0x8036cd0
+Loading section .preinit_array, size 0x4 lma 0x8036ce0
+Loading section .data, size 0x490 lma 0x8036ce4
+Loading section .itcm_text, size 0x120 lma 0x8037180
+Start address 0x08002dd8, load size 225932
+Transfer rate: 110318 KB/sec, 22593 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x80338a4: matched.
+Section .rodata, range 0x80338a8 -- 0x8036cd0: matched.
+Section .ARM, range 0x8036cd0 -- 0x8036ce0: matched.
+Section .preinit_array, range 0x8036ce0 -- 0x8036ce4: matched.
+Section .data, range 0x8036ce4 -- 0x8037174: matched.
+Section .itcm_text, range 0x8037180 -- 0x80372a0: matched.
+Hardware assisted breakpoint 7 at 0x8000890: file /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp, line 177.
+Resetting target
+Continuing.
+
+Breakpoint 7, SRNOS_TestCANDone () at /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CAN4SPILoad/app.cpp:177
+177	extern "C" __attribute__((noinline)) void SRNOS_TestCANDone(void) {__asm volatile("nop" ::: "memory");}
+$29 = 0
+$30 = 11
+$31 = 26816
+0xe000ed28:	0x00000000
+0xe000ed2c:	0x00000000
+Reading symbols from /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/restore-full.elf...
+(No debugging symbols found in /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/restore-full.elf)
+Loading section .flash, size 0x100000 lma 0x8000000
+Start address 0x08001ee0, load size 1048576
+Transfer rate: 113777 KB/sec, 61680 bytes/write.
+Section .flash, range 0x8000000 -- 0x8100000: matched.
+Reading symbols from /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/original.elf...
+(No debugging symbols found in /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/original.elf)
+Resetting target
+Continuing.
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x0800e3ea in prvIdleTask ()
+No breakpoints, watchpoints, tracepoints, or catchpoints.
+$32 = 15487
+$33 = 15475
+0xe000ed28:	0x00000000
+0xe000ed2c:	0x00000000
+primask        0x0                 0
+basepri        0x0                 0

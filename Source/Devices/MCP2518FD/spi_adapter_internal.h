@@ -22,6 +22,8 @@ extern "C" {
 typedef uint8_t CANFDSPI_MODULE_ID;
 #endif
 
+SRNOS_SPIStatus SRNOS_MCP2518FDSequence(CANFDSPI_MODULE_ID index,
+    SRNOS_SPISequencePrepare prepare, void *ctx);
 void SRNOS_MCP2518FDGetSPIStatistics(CANFDSPI_MODULE_ID index, SRNOS_SPIStatistics *out);
 int8_t SRNOS_MCP2518FDAttachSPI(CANFDSPI_MODULE_ID index,
                             SRNOS_SPIBusId bus_id,

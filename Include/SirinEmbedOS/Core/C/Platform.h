@@ -15,7 +15,8 @@ void SRNOS_Platform_Initialize(void);
  * Unaligned trapping is opt-in (SRNOS_TRAP_UNALIGNED) to match the runtime ABI. */
 void SRNOS_Platform_EnableFaultTraps(void);
 
-/** Reserved before scheduler start, once; callbacks must work with interrupts
+/** Override the default fatal-only USART1 PB14/115200/8N1 polling output.
+ * Reserved before scheduler start, once; callbacks must work with interrupts
  * disabled, must not allocate or call RTOS, and must return within bounded time.
  * The owner must also reserve the physical transport in system configuration. */
 typedef bool (*SRNOS_EmergencyWriteByte)(void *user, uint8_t byte);

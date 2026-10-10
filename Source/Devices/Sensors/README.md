@@ -10,12 +10,16 @@ LIS/SPA 的 I2C4 请求使用各自保留槽，在 EEPROM 背景读写期间可�
 
 ## 板级边界
 
-固定绑定与坐标关系移入 Board/Support/Devices；采样、总线优先级和发布路径不变。
+固定绑定与坐标关系移入 Board/Support/Devices；采样与发布路径保持；当前总线策略为 IMU 优先、低层 CAN4/普通请求有界防饥饿。
 
 ## 托管线程
 
-BMI/LSM/环境采样拆为单轮和私有等待，统一 SRNOS_ 名称；保持周期超期重置及 BMI DMA 等待。 栈、优先级、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+BMI/LSM/环境采样拆为单轮和私有等待，统一 SRNOS_ 名称；保持周期超期重置及 BMI DMA 等待。 BMI/LSM 当前为 P0 / Realtime（48），与 CAN1/2/3、INS 同级；环境任务优先级、栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
 
 ## 公开依赖与观测
 
 公共接口只含 SDK 类型，固定 BMI088 寄存器、初始化和 SPI 片选移为私有实现。父项目通过 `SRNOS_SensorGetBMI088SPIStatistics()` 获得两颗片选的 SPI 统计副本，不引用驱动私有头；其他采样快照与频率保持。名称/路径迁移见 `Docs/SDKMigration.md`。
+
+## 共享SPI压力观测（2026-10-06）
+
+CAN1/CAN4短接的Classic/FD真实负载，包括CAN4 RX FIFO溢出的过载窗口，双IMU与INS仍保持1kHz，INS missing/missed无增长。测试observer逐样本统计完成间隔和采集耗时，未改变驱动、优先级或温控；具体峰值、环境传感器与未测边界见 [实板报告](../../../Docs/Validation/CAN4-SPI-20261006/README.md)。此结果不是CAN4吞吐、温稳或姿态精度验收。

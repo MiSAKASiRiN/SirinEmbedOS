@@ -64,7 +64,7 @@ extern "C" int SRNOS_RS485Start(uint32_t timeout){
  frozen=true;response_timeout_ms=timeout;
  if(!channel)return 0;
  queue=osMessageQueueNew(8,sizeof(request),nullptr);if(!queue)return SRNOS_RS485_ROUTER_ERR_FULL;
- const osThreadAttr_t attr={"SRNOS_RS485",0,nullptr,0,nullptr,3072,osPriorityAboveNormal,0,0};
+ const osThreadAttr_t attr={"SRNOS_RS485",0,nullptr,0,nullptr,3072,osPriorityHigh7,0,0};
  return SRNOS_KernelThreadNew(SRNOS_RS485RouterTask,nullptr,&attr)?0:SRNOS_RS485_ROUTER_ERR_FULL;
 }
 extern "C" void SRNOS_RS485RouterTask(void *arg){

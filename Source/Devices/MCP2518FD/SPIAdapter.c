@@ -107,6 +107,7 @@ static SRNOS_SPIStatus spi_adapter_prepare(CANFDSPI_MODULE_ID index)
                                               slot->cs_pin);
     if (st == SRNOS_SPI_OK)
     {
+        slot->dev.can_priority = 1u;
         slot->ready = 1u;
     }
 
@@ -202,4 +203,11 @@ int8_t DRV_SPI_TransferData(CANFDSPI_MODULE_ID index,
 
 void SRNOS_MCP2518FDGetSPIStatistics(CANFDSPI_MODULE_ID index, SRNOS_SPIStatistics *out) {
     if(index<SRNOS_MCP2518FD_MAX_DEVICES) SRNOS_SPIGetStatistics(&s_slots[index].dev,out);
+}
+
+SRNOS_SPIStatus SRNOS_MCP2518FDSequence(CANFDSPI_MODULE_ID index,
+    SRNOS_SPISequencePrepare prepare, void *ctx)
+{
+    if(spi_adapter_prepare(index)!=SRNOS_SPI_OK) return SRNOS_SPI_ERROR;
+    return SRNOS_SPITransferSequence(&s_slots[index].dev,prepare,ctx);
 }

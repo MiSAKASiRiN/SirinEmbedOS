@@ -1,0 +1,8 @@
+{
+  "build/IMUTurntable27/board/run24.elf": "ef25b155a9d6cdc09c2b6d37e16e496e8dc3ec7ae5cde4895bc0fdd4564bfce2",
+  "build/IMUTurntableSaveFix/SirinEmbedOS.elf": "5f9545ded7fccf0a780db744ba19e0298ee3721ea1f6d79f6a7d1c784b4235b2",
+  "Source/Services/HostLink/HostLink.c": "df2ef60722fd2eb5d1ff66c67b2d2f30c8405a4dbb5a190a9857224df8eb653e",
+  "Source/Services/HostLink/host_link_service.c": "2206e8b3b0d79e6684fcda82586cab6d3d69bc10dd1af755ce5bc652f5045150",
+  "Source/Kernel/system_config.c": "809f8fc04ca68bc4755abf58eb42ec9c3b57c3880d751c8e3536ec13356af631",
+  "Examples/IMUTurntableBringUp/control.hpp": "d73f5449190e0142904f4a10cb8244fe119be4b81336019f551e224a083bc7f2"
+}

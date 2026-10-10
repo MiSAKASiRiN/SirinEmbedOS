@@ -1,5 +1,6 @@
 // === C610.cpp ===
 
+#include "../state_guard.hpp"
 #include "SirinEmbedOS/Devices/Motors/C610/C610.hpp"
 #include "SirinEmbedOS/Core/Endian.hpp"
 #include <cstring>
@@ -35,55 +36,39 @@ void DJI_C610::set_give_cmd(int16_t cmd_raw) {
 void DJI_C610::onRxFeedback(const CANFrame& f, uint32_t now_ms) {
     if (f.is_ext || f.dlc < 6 || f.id != rx_id_) return;
 
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
-    C610State s = state_;
-
-    s.prev_angle_raw = s.mech_angle_raw;
-    s.prev_speed_raw = s.speed_raw;
-    s.prev_iq_raw    = s.iq_raw;
-
     const SRNOS::Memory::ByteSpan feedback(f.data);
-    uint16_t angle_raw = 0u;
-    uint16_t speed_raw = 0u;
-    uint16_t iq_raw = 0u;
+    uint16_t angle_raw = 0u, speed_raw = 0u, iq_raw = 0u;
     if (!SRNOS::Endian::loadBE16(feedback, 0u, angle_raw) ||
         !SRNOS::Endian::loadBE16(feedback, 2u, speed_raw) ||
         !SRNOS::Endian::loadBE16(feedback, 4u, iq_raw)) return;
-    s.mech_angle_raw = angle_raw & 0x1FFFu;
-    s.speed_raw      = static_cast<int16_t>(speed_raw);
-    s.iq_raw         = static_cast<int16_t>(iq_raw);
-    s.temp_C         = 0; // C610 无温度反馈
-    s.mech_angle_deg = (static_cast<float>(s.mech_angle_raw) * 360.0f) / 8192.0f;
+    C610State next{};
+    next.mech_angle_raw = angle_raw & 0x1FFFu;
+    next.speed_raw = static_cast<int16_t>(speed_raw);
+    next.iq_raw = static_cast<int16_t>(iq_raw);
+    next.temp_C = 0;
+    next.mech_angle_deg = (static_cast<float>(next.mech_angle_raw) * 360.0f) / 8192.0f;
+    next.last_rx_ms = now_ms;
+    next.online = true;
 
-    s.last_rx_ms = now_ms;
-    s.online     = true;
-
-    state_ = s;
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
+    const Detail::StateGuard guard;
+    next.prev_angle_raw = state_.mech_angle_raw;
+    next.prev_speed_raw = state_.speed_raw;
+    next.prev_iq_raw = state_.iq_raw;
+    state_ = next;
 }
 
 void DJI_C610::tick(uint32_t now_ms) {
-    const uint32_t last = __atomic_load_n(&state_.last_rx_ms, __ATOMIC_RELAXED);
-    const bool was_online = __atomic_load_n(&state_.online, __ATOMIC_RELAXED);
-    if (was_online && (now_ms - last > offline_ms_)) {
-        __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
+    const Detail::StateGuard guard;
+    if (state_.online && Detail::feedbackExpired(now_ms, state_.last_rx_ms,
+                                                offline_ms_.load(std::memory_order_relaxed))) {
         state_.online = false;
-        __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
     }
 }
 
 bool DJI_C610::snapshot(C610State& out) const {
-    for (int attempt = 0; attempt < 3; ++attempt) {
-        uint32_t s1 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-        if (s1 & 1u) continue;
-
-        C610State tmp;
-        std::memcpy(&tmp, &state_, sizeof(tmp));
-
-        uint32_t s2 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-        if (s1 == s2) { out = tmp; return true; }
-    }
-    return false;
+    const Detail::StateGuard guard;
+    out = state_;
+    return true;
 }
 
 bool DJI_C610::exportTx16(uint16_t* group_id, uint8_t* slot, int16_t* val) const {

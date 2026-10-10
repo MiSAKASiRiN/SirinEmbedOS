@@ -69,6 +69,15 @@ int main(void) {
  SRNOS_IMUCalibrationPrepare(true);now=0;read_delay=0;data[0][0]=1;
  SRNOS_IMUCalibrationLoadStartup(SRNOS_IMUCalibrationStartupBegin(now));
  assert(SRNOS_IMUCalibrationGetStatus(&s)&&!s.active_mask&&s.load_status[0]==SRNOS_STORAGE_INCOMPATIBLE);
+ // v2 adds gyro gains; v1 still roundtrips as 48 bytes and identity gain.
+ v=value(0);assert(SRNOS_IMUCalibrationSave(&v,0)==SRNOS_STORAGE_OK);assert(lengths[0]==48);
+ SRNOS_IMUCalibrationPrepare(true);now=0;read_delay=0;SRNOS_IMUCalibrationLoadStartup(SRNOS_IMUCalibrationStartupBegin(now));
+ assert(SRNOS_IMUCalibrationGet(SRNOS_SENSOR_BMI088,&out)&&out.gyro_scale[0]==1);
+ v.model_version=2;v.gyro_scale[0]=1.01f;v.gyro_scale[1]=.99f;v.gyro_scale[2]=1.02f;
+ assert(SRNOS_IMUCalibrationSave(&v,0)==SRNOS_STORAGE_OK&&lengths[0]==60);
+ SRNOS_IMUCalibrationPrepare(true);now=0;SRNOS_IMUCalibrationLoadStartup(SRNOS_IMUCalibrationStartupBegin(now));
+ assert(SRNOS_IMUCalibrationGet(SRNOS_SENSOR_BMI088,&out)&&out.model_version==2&&out.gyro_scale[2]==1.02f);
+ v.gyro_scale[0]=0;assert(SRNOS_IMUCalibrationValidate(&v)==SRNOS_STORAGE_INVALID_ARGUMENT);
  task_context=false;assert(!SRNOS_IMUCalibrationGetStatus(&s));assert(SRNOS_IMUCalibrationSave(&v,0)==SRNOS_STORAGE_CONTEXT_ERROR);
  puts("IMU calibration: validation, serialized persistence, independent failure, startup deadline/wrap, next-boot activation passed");
 }

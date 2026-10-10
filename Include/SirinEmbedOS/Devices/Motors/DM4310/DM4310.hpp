@@ -113,10 +113,11 @@ public:
 
   // feedback handler / online timeout
   void onRxFeedback(const CANFrame& f, uint32_t now_ms);
-  void set_offline_timeout(uint32_t ms) { offline_ms_ = ms; }
+  void set_offline_timeout(uint32_t ms) { offline_ms_.store(ms, std::memory_order_relaxed); }
   void tick(uint32_t now_ms);
 
-  // snapshot read (seqlock style)
+  // Consistent bounded snapshot; task context or IRQ priority 5..15.
+  // Task context or IRQ priority 5..15; bounded copy, no spin.
   bool snapshot(DM4310State& out) const;
   DM4310State state() const noexcept {
     DM4310State s{};
@@ -166,11 +167,11 @@ private:
   std::atomic<uint8_t>  mit_cmd_valid_{0};
   mutable std::atomic<uint8_t> pending_cmd_{0};
 
-  // state (seqlock: even = stable, odd = being written)
-  mutable volatile uint32_t state_seq_{0};
+  // Feedback state; private implementation serializes RX, tick and snapshots.
+
   DM4310State state_{};
 
-  uint32_t offline_ms_ = 100;    // offline threshold in ms
+  std::atomic<uint32_t> offline_ms_{100};    // offline threshold in ms
 };
 
 /**

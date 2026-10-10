@@ -9,6 +9,8 @@ typedef struct {const char *name;uint32_t attr_bits;void *cb_mem;uint32_t cb_siz
 #define osMutexRecursive 1u
 #define osMutexPrioInherit 2u
 #define osPriorityAboveNormal 32
+#define osPriorityHigh5 45
+#define osPriorityHigh7 47
 #define osFlagsWaitAny 0u
 osKernelState_t osKernelGetState(void);
 uint32_t osKernelGetTickCount(void);uint32_t osKernelGetTickFreq(void);

@@ -20,7 +20,7 @@ static SRNOS_SerialPortId port(UART_HandleTypeDef *h) {
 }
 static void rx_callback(UART_HandleTypeDef *h,uint16_t size) {
  SRNOS_SerialPortId p=port(h);if(!p||!initialized[p])return;
- /* UART IDLE IRQ can preempt its lower-priority DMA IRQ on this IOC. */
+ /* UART IDLE and DMA IRQs share priority 6; serialize their shared cursor. */
  UBaseType_t mask=taskENTER_CRITICAL_FROM_ISR();
  /* HAL emits HT, TC and IDLE positions. Keeping HT enabled disambiguates full laps. */
  (void)size;

@@ -62,9 +62,10 @@ public:
         (void)snapshot(s);
         return s;
     }
+    // Task context or IRQ priority 5..15; bounded copy, no spin.
     bool snapshot(C610State& out) const;
 
-    void set_offline_timeout(uint32_t ms) { offline_ms_ = ms; }
+    void set_offline_timeout(uint32_t ms) { offline_ms_.store(ms, std::memory_order_relaxed); }
     void tick(uint32_t now_ms);
 
     // 导出到 TX 路由：一个对象 -> (group_id, slot, 16-bit)
@@ -77,9 +78,9 @@ private:
 
     std::atomic<int16_t> give_cmd_raw_{0};
     volatile int16_t dbg_cmd_shadow_{0};
-    mutable uint32_t state_seq_{0};
+
     mutable C610State state_{};
-    uint32_t  offline_ms_ = 100;
+    std::atomic<uint32_t> offline_ms_{100};
 };
 
 void C610_ComposeTxFrames(DJI_C610* const motors[],

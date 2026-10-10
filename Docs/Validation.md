@@ -1,5 +1,53 @@
 # 迁移验证记录
 
+- 2026-10-10～11：[默认 USART1 Panic、转台时延和 CPU](Validation/IMUTurntableLatency-20261010/README.md)：Panic 物理输出通过；高频记录 CPU 中位34.69%，低流量承重23.94%；六段 ID2 运动相对时延和局限见记录。
+
+- 2026-10-10：[恢复三轴直接双环全行程](Validation/IMUTurntableFullRestore-20261010/README.md)：回默认、ID1/2整圈往返、ID3端点扫转完成；完整电机/双IMU数据，最终默认位闭环保持。
+
+## 2026-10-09：直接双环、ID1 54°/s与超速抗抖动
+
+按用户要求取消虚拟轨迹，直接位置P→速度PI，速度限幅54/27/27°/s、输出25000；低阈值超速改为连续50ms确认。最终仅做针对性检查及编译，上板完成三轴回位和ID1约54°/s部分正转；raw3787处满输出仍停滞，3秒13raw触发全零。完整行程未完成，板端保持Fault7且探针/串口释放。详见[直接双环记录](Validation/IMUTurntableDirect-20261009/README.md)。
+
+## 2026-10-09：转台25000上限、9°/s实测
+
+已烧录三轴25000/9°/s，保留3°/s²加速度、15°/s估计超速及原5rpm等保护。修复虚拟轨迹在提速后停止距离过大导致跟随误差的问题。最终ID3约18.45s回位、三轴回位成功；ID1约151.7°在25000仍停滞，3秒2raw触发全轴归零，温度采集末49°C。完整扫转未完成；双IMU部分比较、固件/测试与释放证据见[本轮记录](Validation/IMUTurntableFast-20261009/README.md)。
+
+## 2026-10-09：转台完整扫转与输出上限尝试
+
+三轴3°/s、ID1/2各361°往返、ID3内缩4264/2096跨零往返已实现。ID3实板回位约42～45秒，比前版94秒快2.1～2.3倍，三轴回位成功；ID1两轮均在约150°受阻，8000提高至10000后仍未通过，新3秒净位移堵转保护已实板归零。完整整圈/ID2/ID3扫转未完成；双IMU部分段比较及全零释放证据见[本轮记录](Validation/IMUTurntableFullSweep-20261009/README.md)。
+
+## 2026-10-09 IMU 转台自动回位与运动尝试
+
+只接收示例已扩展为上电自动回位/低速观测，默认350/4850/5140，ID3跨零限位及首次启动恢复。主机模拟、故障注入、Debug构建和十二目标父工程检查通过；板端确认启动可抬升和越界/速度故障后全轴归零，ID1方向已用小输出正反核验修正。ID3已到5140并保持，ID1回位时仍触发超速保护，尚未完成三轴到位及ID1往返；双IMU已有ID3抬升和ID1部分回位段的初步对比，不能宣称校准完成。过程与证据见[运动记录](Validation/IMUTurntableMotion-20261009/README.md)。
+
+## 2026-10-09 IMU 转台编码器 BringUp
+
+新增 CAN3 三个 GM6020（ID 1/2/3）只接收示例和 9 个 HostComm 只读源。主机回归、Debug/ELF/结构及完整十二目标父工程通过；授权烧录后两段 30 秒采集全有效、三颗全程在线，最终不中断窗口发送/溢出/Bus-Off=0。中途角度变化由用户确认是手动转台。新固件留板运行，GDB/J-Link/串口已释放；校准算法尚未实现。详见 [原始证据与限制](Validation/IMUTurntable-20261009/README.md)。
+
+## 2026-10-06 CAN4 CPU与丢帧优化最终验收
+
+Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。29组主机/完整SDK/Debug与Release通过；原Flash完整恢复、运行验证完成、探针释放。实现、全部分档、失败中间版本、哈希与原始数据见 [完整记录](Validation/CAN4-Optimization-20261006/README.md)。
+
+## 2026-10-06 CAN1 / CAN4 共享 SPI 与 IMU 压力
+
+保持SPI10MHz、P0/P1及正式传感器负载。Classic单向3k通过，双向各2k CPU91.54%，请求各3k时生产者错过周期；FD5M/8M对齐配置64B双向各3k均有MCP RX FIFO溢出，不能验收CAN4 3k收＋3k发。双IMU/INS保持1kHz、SPI未报错或超时。默认FD8M首帧失败，测试专用CAN1仲裁采样点80%对照通过，生产时序未改。完整分档、对照、原始证据及恢复记录见 [CAN4/SPI板测](Validation/CAN4-SPI-20261006/README.md)。
+
+## 2026-10-06 CAN1 / CAN3 Classic 与 FD 实板负载
+
+用户短接CAN1/3后完成六模式、356功能帧与54负载窗口。Classic8B、FD8M64B每路同时3k收＋3k发连续60秒零丢帧/数据错误，整板CPU32.00%/35.13%；FD5M64B同档10秒通过，4M及以下64B背压/TTL未达标。双IMU/INS各1kHz连续，原生RX最小栈余3092 B。身份记录CORRUPT、LIS部分窗口低于100Hz另记待查；未写EEPROM，原Flash1MiB完整恢复并读回一致、探针释放。CAN2/4、UART混合负载及物理Bus-Off未测。见 [完整报告及原始数据](Validation/CANFD-Board-20261006/README.md)。
+
+## 2026-10-03 CAN Classic / FD 互斥配置
+
+四路控制器支持应用在初始化显式选择Classic或FD并冻结，现有adapter仅Classic1M。新增独立FD原始路由/64B发送、原生80MHz时序与共享RAM规划、CAN4 FD FIFO；修复原生RX栈批量搬运余量不足。29套主机、11父项目、93公共头/162编译单元、Debug/Release和ELF布局检查通过，FD静态池23312B在D1，ITCM/heap不变。PCB离线，吞吐、电气速率和混合负载仍待板测。见 [完整记录](Validation/CANFD-20261003/README.md)。
+
+## 2026-10-03 P0/P1 优先级调整
+
+P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及 UART 的 Serial/RC/Referee/RS485 worker（High7 / 47）。共享 SPI4 分发者保持 Realtime1（49），I2C4 保持 High6（46）。NVIC 的 FDCAN1–3、IMU EXTI9_5、SPI4 及其 DMA 为 5；MCP EXTI15_10、五路 UART IRQ 及十路 UART DMA IRQ 为 6。共享 SPI 改为 IMU 优先并保留两级防饥饿；完整离线证据见 [记录](Validation/Priority-20261003/README.md)。PCB 离线未烧录，实际组合负载待验。
+
+## 2026-10-03 CAN Router 离线优化
+
+基线已提交为 820b777；按每路同时 3 kHz RX＋3 kHz TX 优化通知、路由、SPI 仲裁与优先级，并修复满环竞争、Bus-Off 和电机快照并发。28 套主机测试、十个父项目、91 公共头/158 编译单元、Debug/Release 及 ELF 布局通过；Release 命名工具保留 13 条既有标准库/TLS 误报。CubeMX 优先级生成成功，415 个 USER CODE 区保留。PCB 离线未烧录；四路虚拟负载只验证数据/计数，真实吞吐和混合负载时延待测。见 [完整记录](Validation/CANRouter-20261002/README.md)。
+
 ## 2026-09-29 ITCM RAM 迁移
 
 CAN Router 上下文和 Debug Watch 正式迁入 ITCM，Release 释放 D1 59904 B、D2 2848 B；ITCM 余 2528 B，heap/线程/队列容量不变。25 套主机、十个父项目与 Debug/Release 通过。板端预填后软件复位清零、代码复制、Watch 读取、CDC 监测及五流短测通过；CAN 未短接，收发压力与实际断电未验。新 Release 留板运行，EEPROM 未改，调试连接释放。见 [记录](Validation/ITCM-20260929/README.md)。
@@ -367,3 +415,16 @@ init/step/cleanup、协作生命周期和有界运行期线程/同步池已实�
 ## 2026-09-29：上位机触发静态 IMU 校准
 
 实现任意静止姿态陀螺零偏估计、异常拒绝、单份 EEPROM 校验保存及 CONFIG 0x09/0x0A 命令和状态查询；新值下次启动生效。25 组主机套件、91 个公共头/158 编译单元、父项目十种固件、命名/结构/内存与 Debug/Release 通过；没有烧录。静态内存增量、栈帧说明与板端待测见 [StaticIMU-20260929](Validation/StaticIMU-20260929/README.md)。
+
+## 2026-10-10 IMUTurntable revision14制动与重力补偿
+
+ID3双向40000raw/s、80%静止拟合重力前馈、回算抗饱和5/s；不恢复虚拟轨迹。增量构建、烧录及132.3秒完整流程完成，双IMU各132278样本无间断；ID3正/返编码器峰值75.2/118.4降至35.3/34.8°/s，目标27仍有误差。ID1低频起伏、ID2短促启动尖峰仍存在。未运行主机测试。探针退出后独立确认Hold继续承重，CDC1释放。见[详细记录](Validation/IMUTurntableGravity-20261010/README.md)。
+
+## 2026-10-10 转台多姿态坐标辨识
+
+revision16增量构建烧录通过，run18完整180秒/31步，无故障；双IMU各约18万样本无间断。24个分轴段辨识出外→内ID1→ID3→ID2，轴向RMS0.47/0.60°；两个留出的联动段向量速度误差RMS0.9～2.0°/s，但仍有约2.3°积分残差，不是精密校准验收。未写SDK安装矩阵/EEPROM，最终默认闭环承重、探针/CDC1释放；未运行主机测试。详见[坐标辨识记录](Validation/IMUTurntableAxes-20261010/README.md)。
+
+
+## 2026-10-10 转台保存栈溢出修复
+
+revision22 单独重放真实校准保存请求，捕获 HostComm 栈溢出且 EEPROM 尚未写入。revision23 去除工作项重复栈拷贝、HostComm 增至 3 KiB，已烧录；并行遥测下双 IMU 保存、重启加载逐位核对及相同数据去重通过，未重跑运动。见 [完整记录](Validation/IMUTurntableSaveFault-20261010/README.md)。

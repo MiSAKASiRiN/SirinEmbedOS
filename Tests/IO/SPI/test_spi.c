@@ -30,7 +30,7 @@ void SRNOS_TestPreempt(void) {
 static SPI_HandleTypeDef hw;
 static DMA_HandleTypeDef txdma,rxdma;
 static GPIO_TypeDef gpio;
-static unsigned selected, launches, completions, aborts, callbacks;
+static unsigned selected, launches, completions, aborts, callbacks, fail_launch, releases, transfer_delay;
 static bool abort_ok=true, auto_complete=true, early_complete=false;
 static bool complete_on_wait;
 static uint32_t pending_flags, waited_ticks, observed_flags;
@@ -53,13 +53,14 @@ HAL_StatusTypeDef HAL_SPI_TransmitReceive_DMA(SPI_HandleTypeDef *h,uint8_t *t,ui
     assert(selected); ++launches; observed_len=n; memcpy(observed_tx,t,n);
     for(unsigned i=0;i<n;i++) r[i]=t[i]^0x55;
     h->State=HAL_SPI_STATE_BUSY;
+    if(launches==fail_launch) { bus.completion=2;return HAL_ERROR; }
     if(early_complete) complete();
     return HAL_OK;
 }
 uint32_t osKernelGetTickFreq(void) { return 1000; }
 int osKernelGetState(void) { return osKernelRunning; }
 osThreadId_t osThreadGetId(void) { return (void*)2; }
-osThreadId_t osThreadNew(void(*f)(void*),void*a,const osThreadAttr_t*b) { (void)f;(void)a;(void)b; return (void*)1; }
+osThreadId_t osThreadNew(void(*f)(void*),void*a,const osThreadAttr_t*b) { (void)f;(void)a;assert(b->priority==49); return (void*)1; }
 uint32_t osThreadFlagsSet(osThreadId_t t,uint32_t f) { (void)t;return pending_flags|=f; }
 uint32_t osThreadFlagsWait(uint32_t a,uint32_t b,uint32_t c) {
     (void)b; waited_ticks=c;
@@ -70,33 +71,70 @@ uint32_t osThreadFlagsWait(uint32_t a,uint32_t b,uint32_t c) {
     return observed_flags;
 }
 osSemaphoreId_t osSemaphoreNew(uint32_t a,uint32_t b,const void*c) { (void)a;(void)c; assert(sem_count<8); semaphores[sem_count]=b; return &semaphores[sem_count++]; }
-int osSemaphoreRelease(osSemaphoreId_t s) { ++*(int*)s; return osOK; }
+int osSemaphoreRelease(osSemaphoreId_t s) { ++releases; ++*(int*)s; return osOK; }
 int osSemaphoreAcquire(osSemaphoreId_t s,uint32_t timeout) {
     uint64_t end=clock_us+(timeout==osWaitForever?100000:(uint64_t)timeout*1000);
     while(!*(int*)s && clock_us<end) {
         service_once();
-        if(auto_complete && bus.active && !bus.active->cancel) { clock_us+=10; complete(); }
+        if(auto_complete && bus.active && !bus.completion && !bus.active->cancel) { clock_us+=transfer_delay; complete(); }
         clock_us+=10;
     }
     if(*(int*)s) { --*(int*)s; return osOK; }
     assert(timeout!=osWaitForever); return -1;
 }
 static void cb(SRNOS_SPIDevice *d,void *c,SRNOS_SPIStatus s) { (void)d;(void)c; ++callbacks; callback_result=s; }
-static SRNOS_SPIDevice a,b,mcp;
+static SRNOS_SPIDevice a,b,mcp,ordinary;
 static void reset(void) {
     selected=launches=completions=aborts=callbacks=sem_count=0;
+    fail_launch=releases=0;transfer_delay=10;
     clock_us=100; abort_ok=auto_complete=true; early_complete=false;
     inject_reservation=complete_on_wait=false;reservation_delay_us=0;
     pending_flags=waited_ticks=observed_flags=0;
     memset(&a,0,sizeof(a)); memset(&b,0,sizeof(b)); memset(&mcp,0,sizeof(mcp));
+    memset(&ordinary,0,sizeof(ordinary));
     hw.State=HAL_SPI_STATE_READY; SRNOS_SPIInitPre(); SRNOS_SPIInitRtos();
     assert(SRNOS_SPIDeviceInit(&a,0,&gpio,1)==SRNOS_SPI_OK);
     assert(SRNOS_SPIDeviceInit(&b,0,&gpio,2)==SRNOS_SPI_OK);
     assert(SRNOS_SPIDeviceInit(&mcp,0,&gpio,3)==SRNOS_SPI_OK);
+    assert(SRNOS_SPIDeviceInit(&ordinary,0,&gpio,4)==SRNOS_SPI_OK);
     a.imu_priority=b.imu_priority=1;
 }
 static void submit(SRNOS_SPIDevice *d) { uint8_t v=0x80; assert(SRNOS_SPITransferAsync(d,&v,NULL,1,cb,NULL)==SRNOS_SPI_OK); }
+typedef struct {unsigned calls, inject, cancel_at, bad_at;uint8_t rx[74];} Sequence;
+static int sequence_prepare(void *context,unsigned completed,uint8_t *tx,uint8_t **rx) {
+    Sequence *s=context;++s->calls;assert(!selected && !SRNOS_TestPrimask);
+    if(completed)assert(s->rx[0]==(uint8_t)((completed-1)^0x55));
+    if(completed==s->cancel_at)assert(SRNOS_SPICancel(&mcp)==SRNOS_SPI_BUSY);
+    if(completed==4)return 0;
+    if(s->inject)submit(&a); /* simulate IMU arrival at this exact boundary */
+    memset(tx,(int)completed,74);*rx=s->rx;
+    return completed==s->bad_at?75:74;
+}
+static void sequences(void) {
+    reset();mcp.can_priority=1;Sequence s={.inject=1,.cancel_at=99,.bad_at=99};
+    assert(SRNOS_SPITransferSequence(&mcp,sequence_prepare,&s)==SRNOS_SPI_OK);
+    assert(s.calls==5 && launches==8 && releases==1 && callbacks==4);
+    assert(mcp.statistics.accepted==4 && mcp.statistics.completed==4 && a.statistics.completed==4);
+    assert(!selected && !bus.active);
+    for(unsigned n=1;n<=4;++n) {
+        reset();s=(Sequence){.cancel_at=99,.bad_at=99};fail_launch=n;
+        assert(SRNOS_SPITransferSequence(&mcp,sequence_prepare,&s)==SRNOS_SPI_ERROR);
+        assert(launches==n && mcp.statistics.completed==n-1 && releases==1 && aborts==1);
+        HAL_SPI_TxRxCpltCallback(&hw);service_once();assert(SRNOS_SPI_DBG.spurious_complete==1);
+        reset();s=(Sequence){.cancel_at=n,.bad_at=99};
+        SRNOS_SPIStatus st=SRNOS_SPITransferSequence(&mcp,sequence_prepare,&s);
+        assert(st==(n==4?SRNOS_SPI_OK:SRNOS_SPI_CANCELLED));
+        assert(launches==n && releases==1);
+    }
+    reset();s=(Sequence){.cancel_at=99,.bad_at=2};
+    assert(SRNOS_SPITransferSequence(&mcp,sequence_prepare,&s)==SRNOS_SPI_INVALID_PARAM);
+    assert(launches==2 && releases==1);
+    reset();s=(Sequence){.cancel_at=99,.bad_at=99};transfer_delay=1700;
+    assert(SRNOS_SPITransferSequence(&mcp,sequence_prepare,&s)!=SRNOS_SPI_OK);
+    assert(launches==3 && !bus.active && !selected && releases==1);
+}
 int main(void) {
+    sequences();
     reset();
     assert(next_wait()==osWaitForever);
     uint8_t large[512]={0};inject_reservation=true;
@@ -129,6 +167,50 @@ int main(void) {
         assert(selected==expect[i]); clock_us+=20; complete(); service_once();
         if(i<8) { if(i==0 || i==2 || i==5 || i==7) submit(&a); else if(i==1 || i==3 || i==6) submit(&b); }
     }
+    /* IMU outranks earlier MCP/ordinary requests. Two-level arbitration gives
+     * waiting lower classes one boundary per four IMU transactions, then an
+     * ordinary request one lower-class boundary per four MCP transactions.
+     * Keep the 4+4 capacity and FIFO order within each class. */
+    reset();mcp.can_priority=1;
+    submit(&ordinary);submit(&mcp);submit(&mcp);submit(&mcp);
+    submit(&a);submit(&b);submit(&a);submit(&b);
+    assert(SRNOS_SPITransferAsync(&mcp,tx,rx,1,cb,NULL)==SRNOS_SPI_BUSY);
+    service_once();assert(selected==1);
+    unsigned imu_run=0,can_run=0,imu_turn=0,ordinary_turn=0,can_turn=0;
+    for(unsigned i=0;i<100;i++) {
+        SRNOS_SPIDevice *finished=bus.active->dev;
+        if(finished==&a || finished==&b) {
+            assert(++imu_run<=4);
+            assert(selected==(imu_turn%2?2u:1u));++imu_turn;
+        }
+        else {
+            assert(imu_run==4);imu_run=0;
+            if(finished==&mcp) {assert(++can_run<=4);++can_turn;}
+            else {assert(finished==&ordinary && can_run==4);can_run=0;++ordinary_turn;}
+        }
+        clock_us+=10;complete();service_once();submit(finished);
+    }
+    assert(imu_turn==80 && can_turn==16 && ordinary_turn==4);
+    assert(!a.statistics.queue_expired && !b.statistics.queue_expired &&
+           !mcp.statistics.queue_expired && !ordinary.statistics.queue_expired);
+    /* Bounds here use the simulator's 10 us service duration, not a hardware
+     * latency guarantee: at most 4 IMU, 4 CAN lower turns, then ordinary. */
+    assert(a.statistics.max_queue_us<=50 && b.statistics.max_queue_us<=50);
+    assert(mcp.statistics.max_queue_us<=200 && ordinary.statistics.max_queue_us<=250);
+    /* Without queued IMU work, all boundaries remain available to the lower
+     * classes; MCP still wins over earlier ordinary work without starvation. */
+    reset();mcp.can_priority=1;
+    submit(&ordinary);submit(&mcp);submit(&mcp);submit(&mcp);
+    service_once();assert(selected==3);can_run=can_turn=ordinary_turn=0;
+    for(unsigned i=0;i<25;i++) {
+        SRNOS_SPIDevice *finished=bus.active->dev;
+        if(finished==&mcp) {assert(++can_run<=4);++can_turn;}
+        else {assert(finished==&ordinary && can_run==4);can_run=0;++ordinary_turn;}
+        clock_us+=10;complete();service_once();submit(finished);
+    }
+    assert(can_turn==20 && ordinary_turn==5);
+    reset();mcp.can_priority=mcp.imu_priority=1;
+    assert(SRNOS_SPITransferAsync(&mcp,tx,rx,1,cb,NULL)==SRNOS_SPI_INVALID_PARAM);
     /* Waiting expiry cannot assert another CS; cancellation acknowledges RX lifetime. */
     reset(); submit(&mcp); service_once(); submit(&a); clock_us+=1001; service_once();
     assert(a.statistics.queue_expired==1 && selected==3);
@@ -177,5 +259,5 @@ int main(void) {
     assert(launches==1 && mcp.statistics.max_queue_us==UINT32_MAX);
     complete();service_once();assert(callback_result==SRNOS_SPI_OK);
     reset();submit(&mcp);assert(bus.slots[4].deadline_us==5000);
-    puts("SPI actual dispatcher: unmasked copy/preemption, total deadline, event race, lifetime, 8 slots, FIFO, fairness, expiry, cancellation, quarantine and IRQ passed");
+    puts("SPI actual dispatcher: IMU priority, bounded 4:1 IMU/lower and CAN/ordinary fairness, 8 slots, unmasked copy/preemption, total deadline, event race, lifetime, FIFO, expiry, cancellation, quarantine and IRQ passed");
 }

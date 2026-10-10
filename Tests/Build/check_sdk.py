@@ -173,7 +173,7 @@ def main():
         check_parent_compile_commands(commands, source)
         print(run('python3', str(SDK / 'Tests/Build/check_runtime_names.py'),
                   '--compile-commands', str(build / 'compile_commands.json')).strip())
-        for name in ("RobotFirmware", "ManualFirmware", "PrototypeBindings", "ParameterExample", "BringUpExample", "SensorBringUpExample", "INSBringUpExample", "EEPROMBringUpExample", "RawBinding", "AllComponents"):
+        for name in ("RobotFirmware", "ManualFirmware", "PrototypeBindings", "ParameterExample", "CANFDExample", "BringUpExample", "SensorBringUpExample", "INSBringUpExample", "IMUTurntableBringUpExample", "EEPROMBringUpExample", "RawBinding", "AllComponents"):
             check_elf(build / f"{name}.elf")
             run("python3", str(SDK / "Tests/Core/check_foundation_elf.py"), str(build / f"{name}.elf"))
             print(f"PASS: {name}")
@@ -188,7 +188,7 @@ def main():
                                   text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         assert overflow.returncode != 0 and "D1 heap/libc/data overflow" in overflow.stdout
         print("PASS: MSP/libc capacity overrides and rejected arena overflow")
-    print("PASS: vendor hashes, parent project, ten firmware targets, C++/TLS linkage, config overrides, IRQ and heap layout")
+    print("PASS: vendor hashes, parent project, twelve firmware targets, C++/TLS linkage, config overrides, IRQ and heap layout")
     print("Build/static checks only; no board execution was performed.")
 
 

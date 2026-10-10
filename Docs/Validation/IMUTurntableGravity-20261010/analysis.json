@@ -1,0 +1,827 @@
+{
+  "decoder_errors": {},
+  "sources": {
+    "turntable.motor1.encoder_raw": {
+      "count": 26457,
+      "min": 2.0,
+      "max": 8191.0,
+      "last": 350.0,
+      "invalid": 0
+    },
+    "turntable.motor1.angle_deg": {
+      "count": 26457,
+      "min": 0.087890625,
+      "max": 359.9560546875,
+      "last": 15.380859375,
+      "invalid": 0
+    },
+    "turntable.motor1.unwrapped_deg": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 737.1826171875,
+      "last": 375.380859375,
+      "invalid": 253
+    },
+    "turntable.motor1.speed_dps": {
+      "count": 26457,
+      "min": -59.27134704589844,
+      "max": 58.58163833618164,
+      "last": -7.3618334681668784e-06,
+      "invalid": 253
+    },
+    "turntable.motor1.voltage_raw": {
+      "count": 26457,
+      "min": -3466.0,
+      "max": 3826.0,
+      "last": 542.0,
+      "invalid": 0
+    },
+    "turntable.motor1.feedback_rpm": {
+      "count": 26457,
+      "min": -15.0,
+      "max": 12.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-15": 1,
+        "-14": 1,
+        "-13": 4,
+        "-12": 14,
+        "-11": 147,
+        "-10": 485,
+        "-9": 511,
+        "-8": 110,
+        "-7": 24,
+        "-6": 11,
+        "-5": 9,
+        "-4": 11,
+        "-3": 34,
+        "-2": 43,
+        "-1": 80,
+        "0": 23328,
+        "1": 44,
+        "2": 49,
+        "3": 50,
+        "4": 16,
+        "5": 16,
+        "6": 29,
+        "7": 165,
+        "8": 743,
+        "9": 403,
+        "10": 112,
+        "11": 16,
+        "12": 1
+      }
+    },
+    "turntable.motor1.current_raw": {
+      "count": 26457,
+      "min": -2286.0,
+      "max": 2487.0,
+      "last": 361.0,
+      "invalid": 0
+    },
+    "turntable.motor2.encoder_raw": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 8191.0,
+      "last": 4850.0,
+      "invalid": 0
+    },
+    "turntable.motor2.angle_deg": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 359.9560546875,
+      "last": 213.134765625,
+      "invalid": 0
+    },
+    "turntable.motor2.unwrapped_deg": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 574.4091796875,
+      "last": 213.134765625,
+      "invalid": 253
+    },
+    "turntable.motor2.speed_dps": {
+      "count": 26457,
+      "min": -33.94165802001953,
+      "max": 37.51966857910156,
+      "last": -0.022472789511084557,
+      "invalid": 253
+    },
+    "turntable.motor2.voltage_raw": {
+      "count": 26457,
+      "min": -1753.0,
+      "max": 1965.0,
+      "last": -159.0,
+      "invalid": 0
+    },
+    "turntable.motor2.feedback_rpm": {
+      "count": 26457,
+      "min": -18.0,
+      "max": 20.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-18": 1,
+        "-17": 1,
+        "-16": 1,
+        "-15": 1,
+        "-14": 1,
+        "-12": 1,
+        "-11": 1,
+        "-10": 2,
+        "-9": 1,
+        "-8": 2,
+        "-7": 6,
+        "-6": 450,
+        "-5": 1569,
+        "-4": 589,
+        "-3": 78,
+        "-2": 53,
+        "-1": 92,
+        "0": 20867,
+        "1": 36,
+        "2": 63,
+        "3": 586,
+        "4": 1538,
+        "5": 487,
+        "6": 11,
+        "7": 1,
+        "8": 1,
+        "9": 2,
+        "10": 2,
+        "11": 2,
+        "12": 1,
+        "13": 3,
+        "15": 2,
+        "16": 1,
+        "17": 3,
+        "19": 1,
+        "20": 1
+      }
+    },
+    "turntable.motor2.current_raw": {
+      "count": 26457,
+      "min": -649.0,
+      "max": 807.0,
+      "last": -169.0,
+      "invalid": 0
+    },
+    "turntable.motor3.encoder_raw": {
+      "count": 26457,
+      "min": 1.0,
+      "max": 8191.0,
+      "last": 5140.0,
+      "invalid": 0
+    },
+    "turntable.motor3.angle_deg": {
+      "count": 26457,
+      "min": 0.0439453125,
+      "max": 359.9560546875,
+      "last": 225.87890625,
+      "invalid": 0
+    },
+    "turntable.motor3.unwrapped_deg": {
+      "count": 26457,
+      "min": -6.767578125,
+      "max": 267.802734375,
+      "last": 41.30859375,
+      "invalid": 253
+    },
+    "turntable.motor3.speed_dps": {
+      "count": 26457,
+      "min": -34.77021789550781,
+      "max": 35.27412796020508,
+      "last": 0.20411762595176697,
+      "invalid": 253
+    },
+    "turntable.motor3.voltage_raw": {
+      "count": 26457,
+      "min": -7364.0,
+      "max": 7363.0,
+      "last": 6580.0,
+      "invalid": 0
+    },
+    "turntable.motor3.feedback_rpm": {
+      "count": 26457,
+      "min": -9.0,
+      "max": 7.0,
+      "last": 0.0,
+      "invalid": 0,
+      "histogram": {
+        "-9": 1,
+        "-8": 10,
+        "-7": 94,
+        "-6": 394,
+        "-5": 625,
+        "-4": 653,
+        "-3": 281,
+        "-2": 87,
+        "-1": 106,
+        "0": 21798,
+        "1": 72,
+        "2": 344,
+        "3": 547,
+        "4": 776,
+        "5": 552,
+        "6": 102,
+        "7": 15
+      }
+    },
+    "turntable.motor3.current_raw": {
+      "count": 26457,
+      "min": -5535.0,
+      "max": 5605.0,
+      "last": 5144.0,
+      "invalid": 0
+    },
+    "turntable.phase": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 20.0,
+      "last": 9.0,
+      "invalid": 0
+    },
+    "turntable.fault": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.fault_axis": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.fault_measurement": {
+      "count": 26457,
+      "min": 0.0,
+      "max": 0.0,
+      "last": 0.0,
+      "invalid": 0
+    },
+    "turntable.motor1.online": {
+      "count": 13229,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor1.temperature_c": {
+      "count": 13229,
+      "min": 25.0,
+      "max": 25.0,
+      "last": 25.0,
+      "invalid": 0
+    },
+    "turntable.motor2.online": {
+      "count": 13229,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor2.temperature_c": {
+      "count": 13229,
+      "min": 26.0,
+      "max": 26.0,
+      "last": 26.0,
+      "invalid": 0
+    },
+    "turntable.motor3.online": {
+      "count": 13229,
+      "min": 1.0,
+      "max": 1.0,
+      "last": 1.0,
+      "invalid": 0
+    },
+    "turntable.motor3.temperature_c": {
+      "count": 13229,
+      "min": 30.0,
+      "max": 34.0,
+      "last": 34.0,
+      "invalid": 0
+    },
+    "turntable.sequence_revision": {
+      "count": 1323,
+      "min": 14.0,
+      "max": 14.0,
+      "last": 14.0,
+      "invalid": 0
+    }
+  },
+  "imu_quality": {
+    "257": {
+      "samples": 132278,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.1089999999995825
+    },
+    "256": {
+      "samples": 132278,
+      "sequence_discontinuities": 0,
+      "max_sample_interval_ms": 1.0860000000008085
+    }
+  },
+  "phase_ranges_us_clock_seconds": {
+    "0": [
+      1.010778,
+      2.270784
+    ],
+    "1": [
+      2.2767649999999997,
+      3.266765
+    ],
+    "2": [
+      3.270784,
+      6.886763999999999
+    ],
+    "3": [
+      6.890784999999999,
+      11.210803
+    ],
+    "4": [
+      11.216783,
+      14.136782
+    ],
+    "5": [
+      14.140801999999999,
+      19.136764
+    ],
+    "6": [
+      19.140784999999997,
+      31.610802
+    ],
+    "7": [
+      31.616781999999997,
+      34.611782
+    ],
+    "8": [
+      34.616765,
+      43.4358
+    ],
+    "9": [
+      127.290786,
+      133.290798
+    ],
+    "11": [
+      43.441790999999995,
+      48.441784999999996
+    ],
+    "12": [
+      48.446774,
+      64.18177299999999
+    ],
+    "13": [
+      64.186793,
+      67.181789
+    ],
+    "14": [
+      67.186771,
+      83.166777
+    ],
+    "15": [
+      83.171764,
+      88.166778
+    ],
+    "16": [
+      88.171765,
+      91.81678199999999
+    ],
+    "17": [
+      91.821764,
+      94.816779
+    ],
+    "18": [
+      94.821765,
+      107.551778
+    ],
+    "19": [
+      107.556765,
+      110.55176499999999
+    ],
+    "20": [
+      110.556778,
+      127.285771
+    ]
+  },
+  "id3_lift": {
+    "start_s": 2.2767649999999997,
+    "end_s": 6.790785,
+    "encoder_delta_deg": 48.0322265625,
+    "baseline_seconds": [
+      1.060778,
+      2.226765
+    ],
+    "scope": "ID3 monotonic lift; gyro integral vector magnitude; not ID1 sweep or calibration",
+    "LSM6DS3": {
+      "integral_vector_deg": [
+        0.7429139084983541,
+        -47.759914681522936,
+        6.7079497127916845
+      ],
+      "magnitude_deg": 48.2344064005263,
+      "difference_deg": 0.20217983802629647,
+      "bias_rad_s": [
+        0.008835018395388732,
+        -0.04577507707729654,
+        -0.0027829469822580393
+      ]
+    },
+    "BMI088": {
+      "integral_vector_deg": [
+        -47.877424794178616,
+        0.2828244181087316,
+        -5.666752238705409
+      ],
+      "magnitude_deg": 48.2124452346962,
+      "difference_deg": 0.18021867219619736,
+      "bias_rad_s": [
+        0.0013329509580204356,
+        -0.0029463789227704546,
+        0.00025124161697502405
+      ]
+    }
+  },
+  "sequence": {
+    "revision": 14,
+    "complete": true,
+    "scope": "Bias-corrected gyro projection; axis inferred from first motion, not independent calibration",
+    "axes": {
+      "1": {
+        "baseline_seconds": [
+          14.140801999999999,
+          19.136764
+        ],
+        "segments": {
+          "forward": {
+            "completed": true,
+            "start_s": 19.140784999999997,
+            "end_s": 31.616781999999997,
+            "encoder_delta_deg": 361.23046875,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": 360.68392821272744,
+                "encoder_delta_deg": 361.23046875,
+                "difference_deg": -0.5465405372725627,
+                "rmse_deg": 2.7989133172627443,
+                "bias_rad_s": [
+                  0.008993015137287832,
+                  -0.045779771729323675,
+                  -0.003033629548992891
+                ],
+                "axis_in_sensor_frame": [
+                  0.06107683718447576,
+                  -0.052275135378573805,
+                  0.9967632267397774
+                ],
+                "samples": 12476,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0919999999998709
+              },
+              "BMI088": {
+                "gyro_delta_deg": 362.4350581720718,
+                "encoder_delta_deg": 361.23046875,
+                "difference_deg": 1.2045894220718196,
+                "rmse_deg": 2.601238420613926,
+                "bias_rad_s": [
+                  0.0015024712693627,
+                  -0.0030158795559782634,
+                  3.4724995187910183e-05
+                ],
+                "axis_in_sensor_frame": [
+                  -0.054552731841940295,
+                  0.057605509578899955,
+                  -0.9968478342830146
+                ],
+                "samples": 12476,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0550000000009163
+              }
+            },
+            "at_least_one_turn": true
+          },
+          "return": {
+            "completed": true,
+            "start_s": 34.616765,
+            "end_s": 43.441790999999995,
+            "encoder_delta_deg": -361.2744140625,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": -360.0908149833453,
+                "encoder_delta_deg": -361.2744140625,
+                "difference_deg": 1.1835990791547033,
+                "rmse_deg": 2.6649730686565247,
+                "bias_rad_s": [
+                  0.008993015137287832,
+                  -0.045779771729323675,
+                  -0.003033629548992891
+                ],
+                "axis_in_sensor_frame": [
+                  0.06107683718447576,
+                  -0.052275135378573805,
+                  0.9967632267397774
+                ],
+                "samples": 8825,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.1030000000005202
+              },
+              "BMI088": {
+                "gyro_delta_deg": -362.01811940329236,
+                "encoder_delta_deg": -361.2744140625,
+                "difference_deg": -0.74370534079236,
+                "rmse_deg": 3.1088525828171067,
+                "bias_rad_s": [
+                  0.0015024712693627,
+                  -0.0030158795559782634,
+                  3.4724995187910183e-05
+                ],
+                "axis_in_sensor_frame": [
+                  -0.054552731841940295,
+                  0.057605509578899955,
+                  -0.9968478342830146
+                ],
+                "samples": 8825,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0860000000008085
+              }
+            }
+          }
+        },
+        "baseline_encoder_span_deg": 0.087890625,
+        "completed": true,
+        "loop_scope": "Sum of motion segments; excludes intervening stationary dwells",
+        "encoder_loop_delta_deg": -0.0439453125,
+        "gyro_loop_delta_deg": {
+          "LSM6DS3": 0.5931132293821406,
+          "BMI088": 0.4169387687794597
+        }
+      },
+      "2": {
+        "baseline_seconds": [
+          43.441790999999995,
+          48.441784999999996
+        ],
+        "segments": {
+          "forward": {
+            "completed": true,
+            "start_s": 48.446774,
+            "end_s": 64.186793,
+            "encoder_delta_deg": 361.23046875,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": 360.81903276825665,
+                "encoder_delta_deg": 361.23046875,
+                "difference_deg": -0.4114359817433524,
+                "rmse_deg": 0.630491134265219,
+                "bias_rad_s": [
+                  0.009506629528209137,
+                  -0.0455439198060403,
+                  -0.002360445955642857
+                ],
+                "axis_in_sensor_frame": [
+                  -0.9966117536805553,
+                  -0.018953604872447342,
+                  0.08003607491692377
+                ],
+                "samples": 15740,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.1080000000021073
+              },
+              "BMI088": {
+                "gyro_delta_deg": 361.19006319010094,
+                "encoder_delta_deg": 361.23046875,
+                "difference_deg": -0.0404055598990567,
+                "rmse_deg": 0.48821356799779386,
+                "bias_rad_s": [
+                  0.0015481843137874817,
+                  -0.0026527816018997097,
+                  -0.0005692336108917609
+                ],
+                "axis_in_sensor_frame": [
+                  -0.01279361939782999,
+                  -0.9958359111606504,
+                  -0.09026162720414789
+                ],
+                "samples": 15740,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0809999999992215
+              }
+            },
+            "at_least_one_turn": true
+          },
+          "return": {
+            "completed": true,
+            "start_s": 67.186771,
+            "end_s": 83.171764,
+            "encoder_delta_deg": -361.318359375,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": -358.6395792492124,
+                "encoder_delta_deg": -361.318359375,
+                "difference_deg": 2.6787801257876254,
+                "rmse_deg": 1.5863965990862812,
+                "bias_rad_s": [
+                  0.009506629528209137,
+                  -0.0455439198060403,
+                  -0.002360445955642857
+                ],
+                "axis_in_sensor_frame": [
+                  -0.9966117536805553,
+                  -0.018953604872447342,
+                  0.08003607491692377
+                ],
+                "samples": 15985,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.1069999999904212
+              },
+              "BMI088": {
+                "gyro_delta_deg": -360.32102076573653,
+                "encoder_delta_deg": -361.318359375,
+                "difference_deg": 0.9973386092634655,
+                "rmse_deg": 0.5768347430550957,
+                "bias_rad_s": [
+                  0.0015481843137874817,
+                  -0.0026527816018997097,
+                  -0.0005692336108917609
+                ],
+                "axis_in_sensor_frame": [
+                  -0.01279361939782999,
+                  -0.9958359111606504,
+                  -0.09026162720414789
+                ],
+                "samples": 15985,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0679999999894108
+              }
+            }
+          }
+        },
+        "baseline_encoder_span_deg": 0.0439453125,
+        "completed": true,
+        "loop_scope": "Sum of motion segments; excludes intervening stationary dwells",
+        "encoder_loop_delta_deg": -0.087890625,
+        "gyro_loop_delta_deg": {
+          "LSM6DS3": 2.179453519044273,
+          "BMI088": 0.8690424243644088
+        }
+      },
+      "3": {
+        "baseline_seconds": [
+          83.171764,
+          88.166778
+        ],
+        "segments": {
+          "to_lower": {
+            "completed": true,
+            "start_s": 88.171765,
+            "end_s": 91.821764,
+            "encoder_delta_deg": -38.3642578125,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": -38.4932298918022,
+                "encoder_delta_deg": -38.35615777883755,
+                "difference_deg": -0.1370721129646526,
+                "rmse_deg": 0.23593314070168542,
+                "bias_rad_s": [
+                  0.008560268744223767,
+                  -0.044308824299754565,
+                  -0.0016225960903677884
+                ],
+                "axis_in_sensor_frame": [
+                  -0.004074039342329395,
+                  -0.9996464580865273,
+                  -0.0262747224247577
+                ],
+                "samples": 3650,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.0910000000023956
+              },
+              "BMI088": {
+                "gyro_delta_deg": -38.81556360480452,
+                "encoder_delta_deg": -38.35565810143631,
+                "difference_deg": -0.4599055033682049,
+                "rmse_deg": 0.4448467527172196,
+                "bias_rad_s": [
+                  0.0016029563205213846,
+                  -0.0034949972350461185,
+                  -2.379409481074293e-05
+                ],
+                "axis_in_sensor_frame": [
+                  -0.9986217782596108,
+                  -0.012526168167415657,
+                  0.0509670393161514
+                ],
+                "samples": 3650,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.036999999996624
+              }
+            }
+          },
+          "lower_to_upper": {
+            "completed": true,
+            "start_s": 94.821765,
+            "end_s": 107.556765,
+            "encoder_delta_deg": 264.90234375,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": 263.50702698503517,
+                "encoder_delta_deg": 264.90234375,
+                "difference_deg": -1.3953167649648321,
+                "rmse_deg": 1.0358965604834953,
+                "bias_rad_s": [
+                  0.008560268744223767,
+                  -0.044308824299754565,
+                  -0.0016225960903677884
+                ],
+                "axis_in_sensor_frame": [
+                  -0.004074039342329395,
+                  -0.9996464580865273,
+                  -0.0262747224247577
+                ],
+                "samples": 12735,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.093000000011557
+              },
+              "BMI088": {
+                "gyro_delta_deg": 264.8713259142365,
+                "encoder_delta_deg": 264.90234375,
+                "difference_deg": -0.031017835763520907,
+                "rmse_deg": 0.2678766236185107,
+                "bias_rad_s": [
+                  0.0016029563205213846,
+                  -0.0034949972350461185,
+                  -2.379409481074293e-05
+                ],
+                "axis_in_sensor_frame": [
+                  -0.9986217782596108,
+                  -0.012526168167415657,
+                  0.0509670393161514
+                ],
+                "samples": 12735,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.040999999986525
+              }
+            }
+          },
+          "return": {
+            "completed": true,
+            "start_s": 110.556778,
+            "end_s": 127.290786,
+            "encoder_delta_deg": -226.6259765625,
+            "sensors": {
+              "LSM6DS3": {
+                "gyro_delta_deg": -224.57020010347605,
+                "encoder_delta_deg": -226.61795766649533,
+                "difference_deg": 2.0477575630192746,
+                "rmse_deg": 1.661915740689866,
+                "bias_rad_s": [
+                  0.008560268744223767,
+                  -0.044308824299754565,
+                  -0.0016225960903677884
+                ],
+                "axis_in_sensor_frame": [
+                  -0.004074039342329395,
+                  -0.9996464580865273,
+                  -0.0262747224247577
+                ],
+                "samples": 16734,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.1089999999995825
+              },
+              "BMI088": {
+                "gyro_delta_deg": -226.31903066764357,
+                "encoder_delta_deg": -226.61752587978748,
+                "difference_deg": 0.29849521214390506,
+                "rmse_deg": 0.3255616399916601,
+                "bias_rad_s": [
+                  0.0016029563205213846,
+                  -0.0034949972350461185,
+                  -2.379409481074293e-05
+                ],
+                "axis_in_sensor_frame": [
+                  -0.9986217782596108,
+                  -0.012526168167415657,
+                  0.0509670393161514
+                ],
+                "samples": 16734,
+                "sequence_discontinuities": 0,
+                "max_sample_interval_ms": 1.068999999986886
+              }
+            }
+          }
+        },
+        "baseline_encoder_span_deg": 0.0439453125,
+        "completed": true,
+        "loop_scope": "Sum of motion segments; excludes intervening stationary dwells",
+        "encoder_loop_delta_deg": -0.087890625,
+        "gyro_loop_delta_deg": {
+          "LSM6DS3": 0.4435969897569123,
+          "BMI088": -0.26326835821161154
+        }
+      }
+    }
+  }
+}

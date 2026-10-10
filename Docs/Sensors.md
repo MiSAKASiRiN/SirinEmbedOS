@@ -6,7 +6,7 @@
 
 公共头为 `SirinEmbedOS/Devices/Sensors.h`。在 `SRNOS_ApplicationConfigure()` 中设置 `config->sensors`，系统检查并复制后冻结；恢复仅用冻结配置。默认四颗传感器采样及正式 [INS](INS.md) 服务启用。BMI 始终发布未用户校准的器件坐标数据，不再有 RAW/legacy 分支。SensorBringUp 设置 `ins.enabled=false`，保留原始采样与统一温控。加热统一由 INS worker 控制：`heater_enabled=true`、`heater_target_c=60` 默认，目标允许20..75°C。反馈 LSM 优先、BMI 回退；低于目标10°C满功率，附近连续 PI，80°C保护及75°C以下5秒恢复详见 INS 合同。`SRNOS_SensorGetHeaterStatus` 仍提供一致状态副本。
 
-`imu_observer` / `imu_observer_user` 在配置阶段声明并冻结，完整 BMI/LSM 样本发布后调用一次。回调参数仅在调用期间有效，需自行复制；回调在对应任务（BMI High5、LSM SPI dispatcher High6）执行，禁止等待、打印或编码整包 USB 数据。SDK 提供静态缓存适配 `SRNOS_IMUTelemetryObserve`，接入见 [HostLink.md](HostLink.md)。
+`imu_observer` / `imu_observer_user` 在配置阶段声明并冻结，完整 BMI/LSM 样本发布后调用一次。回调参数仅在调用期间有效，需自行复制；回调在对应任务（BMI P0 / 48、LSM SPI dispatcher Realtime1 / 49）执行，禁止等待、打印或编码整包 USB 数据。SDK 提供静态缓存适配 `SRNOS_IMUTelemetryObserve`，接入见 [HostLink.md](HostLink.md)。
 
 | 器件 | 固定绑定 | 首版配置 | 任务周期 |
 |---|---|---|---|
@@ -29,12 +29,12 @@ LIS 多字节读设置 SUB[7]，磁场六字节与温度两字节分别读取；
 
 ## SPI4 所有权与调度
 
-所有同步/异步调用共用 IO 层唯一队列和 DMA 通路。固定八个静态请求槽：四个 IMU、四个普通事务；同类 FIFO。正在传输的命令及数据不抢占且保持同一 CS；最多连续四个 IMU 事务后，如普通队列有请求，执行一个普通事务。MCP 每笔寄存器事务重新参与仲裁，不跨 CAN drain 循环占用 SPI。
+所有同步/异步调用共用 IO 层唯一队列和 DMA 通路。固定八个静态请求槽：四个 IMU、四个共享事务；同类 FIFO。正在传输的命令及数据不抢占且保持同一 CS；IMU 优先，最多连续四笔后服务一笔等待的低层请求，低层内最多四笔 CAN4 后服务一笔普通事务。MCP 每笔寄存器事务重新参与仲裁，不跨 CAN drain 循环占用 SPI。
 
 - 接纳时复制 TX；单事务最多 512 B，包括命令与 dummy 字节。调用返回后 TX 可复用，RX/设备描述/回调 context 必须存活到完成通知或取消确认。
 - 异步 `SRNOS_SPI_OK` 仅表示已接纳。同步接口等待完成信号；发生等待超时后仍等到 dispatcher 确认取消才归还 RX 所有权。旧 direct 名称也遵循复制及 512 B 合同。
 - `SRNOS_SPICancel()` 返回 BUSY 时仍持有 buffer/context；重复调用直到 OK 才可销毁或复用。它也覆盖正在执行的回调。
-- 回调在 High6 dispatcher 运行，只可更新状态、提交短异步后续事务或通知任务；不得等待、延时或调用同步 SPI。全部提交/取消 API 仅限任务上下文。
+- 回调在 Realtime1 / 49 dispatcher 运行，只可更新状态、提交短异步后续事务或通知任务；不得等待、延时或调用同步 SPI。全部提交/取消 API 仅限任务上下文。
 - IMU 队列期限 1 ms；活动 DMA 超时检测上限 5 ms。后者是故障阈值，不是正常采样预算，也不是 HAL abort 的墙钟时间保证。恢复须确认 DMA/SPI 停止、清除 pending IRQ 后才释放 CS 并继续；abort 失败隔离总线，不放行另一个 CS。
 - 每颗 IMU 最多一轮采样在途，慢事务只记超期并跳过发起，不积压或追赶。BMI 仍由原采样线程持有，DMA完成通知唤醒后在当前周期发布，不再将已完成样本拖至下一任务周期；单周期只发起一轮，超时保留在途状态并跳过后续发起。
 
@@ -44,7 +44,7 @@ LIS 多字节读设置 SUB[7]，磁场六字节与温度两字节分别读取；
 
 ## 线程、内存与 I²C
 
-SPI dispatcher High6/3 KiB；BMI High5/2 KiB、LSM High5/2 KiB；MCP RX/TX 各 High4/4 KiB。LIS/SPA 共用 Normal/2 KiB 线程，等待芯片转换时释放 I²C，不增加每器件线程。新增线程与八个完成信号已计入保守启动预算；请求及采样 buffer 静态分配，采样循环不分配内存。RTOS 线程/信号资源仍在启动时从 heap_5 创建。
+SPI dispatcher Realtime1 / 49 / 3 KiB；BMI P0 / 48 / 2 KiB、LSM P0 / 48 / 2 KiB；MCP RX/TX 各 P1 / 47 / 4 KiB。LIS/SPA 共用 Normal/2 KiB 线程，等待芯片转换时释放 I²C，不增加每器件线程。新增线程与八个完成信号已计入保守启动预算；请求及采样 buffer 静态分配，采样循环不分配内存。RTOS 线程/信号资源仍在启动时从 heap_5 创建。
 
 I²C4 复用原 High6/3 KiB 回调线程作为唯一分发者，LIS/SPA 各有一个保留槽，EEPROM 等后台有两个槽。周期类优先，最多连续四个周期事务后放行一个等待后台事务。活动事务不可抢占、单笔最多 64 B；EEPROM 自行将读写/校验限制为 32 B，内部写周期不占总线。环境任务使用 30 ms 完成信号量等待，另一个设备占用总线不再使提交立即 BUSY。所有权、取消、期限与统计见 [I2C 模块说明](../Source/IO/I2C/README.md)。共享负载板测见 [验证记录](Validation/I2C-20260928/README.md)，板端断线/卡 SDA/掉电恢复仍未验收。
 
@@ -55,3 +55,5 @@ I²C4 复用原 High6/3 KiB 回调线程作为唯一分发者，LIS/SPA 各有�
 - [ST LSM6DS3TR-C 数据手册](https://www.st.com/resource/en/datasheet/lsm6ds3tr-c.pdf)
 - [ST LIS2MDL 数据手册](https://www.st.com/resource/en/datasheet/lis2mdl.pdf)
 - [SPA06-003 原厂手册镜像](https://files.seeedstudio.com/wiki/Grove-Barometer_Sensor-SPA06-003/res/Datasheet.PDF)
+
+当前 BMI/LSM 仍由周期 worker 发起采样，经 SPI4 完成通知/回调交付；LSM EXTI9_5 虽配置为 NVIC 5，尚未用于采样唤醒，本轮未引入 DRDY 驱动。

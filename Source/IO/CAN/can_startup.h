@@ -9,8 +9,7 @@ bool SRNOS_CAN_ConfigurationFrozen(void);
 void SRNOS_CAN_PrepareResources(void);
 void SRNOS_NativeCANRxRouterWorker(void *argument);
 void SRNOS_NativeCANTxRouterWorker(void *argument);
-void SRNOS_ExternalCANRxRouterWorker(void *argument);
-void SRNOS_ExternalCANTxRouterWorker(void *argument);
+void SRNOS_ExternalCANWorker(void *argument);
 #ifdef __cplusplus
 }
 #endif

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 2026-10-10：板端复现转台保存请求在 HostComm 入队时触发栈溢出（尚未写 EEPROM）。去除工作项入队/执行的重复栈副本，HostComm 栈 2→3 KiB，HostCmd 保持 2 KiB；队列复制所有权、协议和优先级不变。 已完成相关主机检查、Debug 构建及双 IMU 无运动保存/重启加载板测，见 [验证记录](../../../Docs/Validation/IMUTurntableSaveFault-20261010/README.md)。
+
 - 2026-09-29：静态校准阈值调整后，CONFIG 09双IMU最终OK及2.5秒活动重试ACCEPTED/不重复执行完成实板验证；协议实现和遥测行为未改变，见 [复测](../../../Docs/Validation/StaticThreshold-20260929/README.md)。
 
 - 2026-09-29：实测CONFIG参数保存/加载与代次隔离、SOURCE V2及CDC重连；8路1kHz订阅仅实收约7284标量/s，未达完整接收目标；静态校准回报MOVING，未验证成功长事务去重。见 [板测](../../../Docs/Validation/PersistenceBoard-20260929/README.md)。

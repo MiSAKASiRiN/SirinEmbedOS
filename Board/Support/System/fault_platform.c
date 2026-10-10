@@ -2,6 +2,7 @@
 #include "SirinEmbedOS/Core/C/Memory.h"
 #include "SirinEmbedOS/Core/C/Platform.h"
 #include "System/fault_platform.h"
+#include "System/fault_usart1.h"
 #include "SirinEmbedOS/Kernel/System.h"
 
 #ifdef SRNOS_CONFIG_HEADER
@@ -50,9 +51,8 @@ static SRNOS_STM32H7_TaskMetadata
     s_task_metadata[SRNOS_STM32H7_MAX_TRACKED_TASKS];
 static SRNOS_Fault_Context s_exception_context;
 
-/* A sink is an explicitly reserved, bounded polling transport. No UART is
- * configured, reset, or borrowed by Fault. Without a sink the retained record
- * is the only output, including faults before application configuration. */
+/* Applications may override the default fatal-only USART1 polling sink during
+ * configuration. Normal Serial and logging ownership is unchanged. */
 static SRNOS_EmergencyWriteByte s_emergency_write;
 static SRNOS_EmergencyFlush s_emergency_flush;
 static void *s_emergency_user;
@@ -73,7 +73,8 @@ bool SRNOS_Platform_ReserveEmergencyOutput(SRNOS_EmergencyWriteByte write_byte,
 
 bool SRNOS_Platform_Emergency_WriteByte(uint8_t byte)
 {
-    return s_emergency_write != NULL && s_emergency_write(s_emergency_user, byte);
+    return s_emergency_write != NULL ? s_emergency_write(s_emergency_user, byte) :
+        SRNOS_FaultUSART1WriteByte(byte);
 }
 
 size_t SRNOS_Platform_Emergency_Write(const void *data, size_t size)
@@ -121,6 +122,7 @@ void SRNOS_Platform_Emergency_WriteHexU32(uint32_t value)
 void SRNOS_Platform_Emergency_Flush(void)
 {
     if (s_emergency_flush != NULL) s_emergency_flush(s_emergency_user);
+    else if (s_emergency_write == NULL) SRNOS_FaultUSART1Flush();
 }
 
 void SRNOS_Platform_Emergency_DumpWords(const char *tag,
@@ -537,7 +539,6 @@ static void reportCfsrCauses(uint32_t cfsr)
 void SRNOS_Platform_FaultReport(const SRNOS_Fault_Record *record)
 {
     __disable_irq();
-    if (s_emergency_write == NULL) return;
     if (record == NULL) {
         (void)SRNOS_Platform_Emergency_WriteString(
             "\r\n[SRNOS::Fault] missing record\r\n");

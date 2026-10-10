@@ -35,10 +35,11 @@ ABI_SYMBOLS = {
         'HAL_I2C_MemRxCpltCallback', 'HAL_I2C_MemTxCpltCallback',
     },
     'Source/IO/CAN/Native/FDCAN.c': {
-        'HAL_FDCAN_ErrorCallback', 'HAL_FDCAN_RxFifo0Callback',
+        'HAL_FDCAN_ErrorCallback', 'HAL_FDCAN_ErrorStatusCallback', 'HAL_FDCAN_RxFifo0Callback',
         'HAL_FDCAN_TxBufferCompleteCallback', 'HAL_FDCAN_TxEventFifoCallback',
     },
     'Source/Devices/MCP2518FD/SPIAdapter.c': {'DRV_SPI_TransferData'},
+    'Source/Services/Parameters/Parameters.cpp': {'thread-local wrapper routine for errno'},
     'Source/Services/Logging/logging_service.c': {'__io_getchar', '__io_putchar'},
     'Source/Kernel/hooks.c': {
         'vApplicationGetIdleTaskMemory', 'vApplicationGetTimerTaskMemory',
@@ -216,7 +217,12 @@ def check_objects(database):
             continue
         for line in result.stdout.splitlines():
             fields = line.split(None, 2)
-            if len(fields) == 3 and not symbol_allowed(relative, fields[2]):
+            # ST Arm Clang's libc++ instantiations include the return type in
+            # demangled weak definitions. They are compiler/library ABI, not
+            # SDK exports; retain strict checking of every strong definition.
+            library_weak = len(fields) == 3 and fields[1] in ('W', 'V') and bool(
+                re.match(r'^(?:[^()]+ )?std::__2::', fields[2]))
+            if len(fields) == 3 and not library_weak and not symbol_allowed(relative, fields[2]):
                 failures.append(f'{relative}: external definition {fields[2]}')
     actual_sources = {(Path(c['directory']) / c['file']).resolve()
                       for c in json.loads(database.read_text())}

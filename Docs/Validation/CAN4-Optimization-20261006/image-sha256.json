@@ -1,0 +1,12 @@
+{
+  "build/can4-opt-20261006/images/fd2m-final.elf": "babb048bcbd1ae121f56510c30a9f2c3891bbbb99b485f369a081ec4a6b12112",
+  "build/can4-opt-20261006/images/fd8mprobe-final.elf": "b2d14103882a1e33b5ee07de82363bbe0ad1cc0f4f9bc7fcdad89c975a99da21",
+  "build/can4-opt-20261006/images/classic-profile.elf": "e7d2cc53e46a08e6092bfc2835fdaa7e836dcf61b04c6b7bf2fa21a2f62d1336",
+  "build/can4-opt-20261006/images/fd8m-final.elf": "6a0d3ce41c262a7cc35e6cbd605bebb2a9a648f51fefe050d2ea4eda247ad4f8",
+  "build/can4-opt-20261006/images/fd5m-final.elf": "0518cc18ac60c88f1b105f54511084a4aeeb2b063636cfc59359c0816b26ee13",
+  "build/can4-opt-20261006/images/classic-final.elf": "e55bc76da52933a1fb536666d998ddb9287f10a261a4b3504d58ceec256ee79d",
+  "build/can4-opt-20261006/images/classic-acceptance.elf": "604f6f868e97ab68b4a0d937ace56d873f256b82ffc2c3226e35f95f3e110764",
+  "build/can4-opt-20261006/images/fd4m-final.elf": "7d6cf80f0e3d0eafb174a2f3e842916a8d6a4a449ee80d9a0f7585996cac7065",
+  "build/can4-opt-20261006/images/classic-v2.elf": "0614eb94e259e8c46d7c7f609c7967cd0cc8a95ed8afddcbd4a8667e690067e2",
+  "build/can4-opt-20261006/images/fd1m-final.elf": "64b4b8eaf0ca92ec8a00112ee50dcb36bd84c9a96faf25045669153248c32d92"
+}

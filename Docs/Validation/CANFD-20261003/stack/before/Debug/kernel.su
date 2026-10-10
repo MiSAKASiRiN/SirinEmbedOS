@@ -1,0 +1,8 @@
+Source/Kernel/kernel.c:60:SRNOS_ApplicationConfigure	0	static
+Source/Kernel/kernel.c:62:SRNOS_SystemGetStatus	0	static
+Source/Kernel/kernel.c:124:SRNOS_KernelStart	664	static
+Source/Kernel/kernel.c:41:setup_host	16	static
+Source/Kernel/kernel.c:34:observe_imu	16	static
+Source/Kernel/kernel.c:89:make_thread	64	static
+Source/Kernel/kernel.c:115:system_thread_entry	8	static
+Source/Kernel/kernel.c:70:application_thread	32	static

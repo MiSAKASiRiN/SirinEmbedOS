@@ -5,15 +5,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define SRNOS_IMU_CALIBRATION_MODEL_VERSION 1u
+#define SRNOS_IMU_CALIBRATION_MODEL_VERSION 2u
 #define SRNOS_IMU_CALIBRATION_SENSOR_AXES_VERSION 1u
 /* SENSOR axes, SI units. v1 is diagonal acceleration correction, not a
- * cross-axis matrix or temperature compensation model. No packed ABI on disk. */
+ * cross-axis matrix or temperature compensation model. v2 adds diagonal gyro scale;
+ * v1 records remain readable with identity gyro scale. No packed ABI on disk. */
 typedef struct {
     SRNOS_SensorId sensor;
     uint16_t model_version, axes_version;
     float gyro_bias_rad_s[3], accel_bias_m_s2[3], accel_scale[3];
     float temperature_c;
+    float gyro_scale[3]; /* v2 only: (raw gyro - bias) * scale; v1 ignores this field. */
 } SRNOS_IMUCalibration;
 typedef struct {
     SRNOS_StorageStatus load_status[2], save_status[2];

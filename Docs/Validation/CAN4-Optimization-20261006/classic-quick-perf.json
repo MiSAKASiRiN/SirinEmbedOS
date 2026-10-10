@@ -1,0 +1,660 @@
+[
+  {
+    "index": 0,
+    "cpu_10s_percent": [],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 11.003,
+      "SRNOS_I2C4": 0.761,
+      "SRNOS_Monitor": 0.049,
+      "SRNOS_Log": 0.059,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.016,
+      "SRNOS_CAN1_RX": 0.0,
+      "SRNOS_CAN1_TX": 0.0,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 0.443,
+      "SRNOS_BMI": 2.338,
+      "SRNOS_INS": 3.46,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.209,
+      "SRNOS_Env": 0.529,
+      "SRNOS_AppInit": 0.016,
+      "SRNOS_Idle": 79.78,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 0.302
+    },
+    "wakeups": 1000,
+    "rounds": 1000,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 1000,
+    "spi_transactions_per_frame": null,
+    "imu_guard_pass": true,
+    "can_pass": true,
+    "cpu_pass": null,
+    "requested_fps": [
+      0,
+      0
+    ],
+    "seconds": 5,
+    "cpu_percent": 20.2605,
+    "producer_ticks": 4999,
+    "max_imu_period_us": [
+      1006,
+      1004
+    ],
+    "max_imu_acquisition_us": [
+      85,
+      51
+    ]
+  },
+  {
+    "index": 1,
+    "cpu_10s_percent": [
+      56.8108
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 29.927,
+      "SRNOS_I2C4": 0.918,
+      "SRNOS_Monitor": 0.051,
+      "SRNOS_Log": 0.069,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.016,
+      "SRNOS_CAN1_RX": 0.0,
+      "SRNOS_CAN1_TX": 2.891,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 10.129,
+      "SRNOS_BMI": 2.331,
+      "SRNOS_INS": 3.575,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.236,
+      "SRNOS_Env": 0.571,
+      "SRNOS_AppInit": 0.019,
+      "SRNOS_Idle": 46.819,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 1.435
+    },
+    "wakeups": 10012,
+    "rounds": 10012,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 119978,
+    "spi_transactions_per_frame": 4.0,
+    "imu_guard_pass": true,
+    "can_pass": true,
+    "cpu_pass": true,
+    "requested_fps": [
+      3000,
+      0
+    ],
+    "seconds": 10,
+    "cpu_percent": 56.8108,
+    "producer_ticks": 9999,
+    "max_imu_period_us": [
+      1004,
+      1004
+    ],
+    "max_imu_acquisition_us": [
+      84,
+      50
+    ]
+  },
+  {
+    "index": 2,
+    "cpu_10s_percent": [
+      52.8975
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 29.55,
+      "SRNOS_I2C4": 0.844,
+      "SRNOS_Monitor": 0.064,
+      "SRNOS_Log": 0.072,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.016,
+      "SRNOS_CAN1_RX": 1.541,
+      "SRNOS_CAN1_TX": 0.0,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 9.73,
+      "SRNOS_BMI": 2.344,
+      "SRNOS_INS": 3.564,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.249,
+      "SRNOS_Env": 0.529,
+      "SRNOS_AppInit": 0.017,
+      "SRNOS_Idle": 48.683,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 1.785
+    },
+    "wakeups": 12216,
+    "rounds": 12216,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 113357,
+    "spi_transactions_per_frame": 3.779,
+    "imu_guard_pass": true,
+    "can_pass": true,
+    "cpu_pass": true,
+    "requested_fps": [
+      0,
+      3000
+    ],
+    "seconds": 10,
+    "cpu_percent": 52.8975,
+    "producer_ticks": 9999,
+    "max_imu_period_us": [
+      1004,
+      1004
+    ],
+    "max_imu_acquisition_us": [
+      84,
+      50
+    ]
+  },
+  {
+    "index": 3,
+    "cpu_10s_percent": [
+      44.7658
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 24.796,
+      "SRNOS_I2C4": 0.824,
+      "SRNOS_Monitor": 0.065,
+      "SRNOS_Log": 0.059,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.017,
+      "SRNOS_CAN1_RX": 0.574,
+      "SRNOS_CAN1_TX": 1.043,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 7.498,
+      "SRNOS_BMI": 2.348,
+      "SRNOS_INS": 3.595,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.247,
+      "SRNOS_Env": 0.548,
+      "SRNOS_AppInit": 0.019,
+      "SRNOS_Idle": 56.072,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 1.296
+    },
+    "wakeups": 9999,
+    "rounds": 9999,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 79992,
+    "spi_transactions_per_frame": 4.0,
+    "imu_guard_pass": true,
+    "can_pass": true,
+    "cpu_pass": true,
+    "requested_fps": [
+      1000,
+      1000
+    ],
+    "seconds": 10,
+    "cpu_percent": 44.7659,
+    "producer_ticks": 9999,
+    "max_imu_period_us": [
+      1006,
+      1035
+    ],
+    "max_imu_acquisition_us": [
+      120,
+      50
+    ]
+  },
+  {
+    "index": 4,
+    "cpu_10s_percent": [
+      62.4011
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 34.689,
+      "SRNOS_I2C4": 0.992,
+      "SRNOS_Monitor": 0.073,
+      "SRNOS_Log": 0.059,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.017,
+      "SRNOS_CAN1_RX": 1.031,
+      "SRNOS_CAN1_TX": 2.238,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 11.614,
+      "SRNOS_BMI": 2.34,
+      "SRNOS_INS": 3.609,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.269,
+      "SRNOS_Env": 0.603,
+      "SRNOS_AppInit": 0.017,
+      "SRNOS_Idle": 39.549,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 1.887
+    },
+    "wakeups": 11133,
+    "rounds": 11133,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 142972,
+    "spi_transactions_per_frame": 3.575,
+    "imu_guard_pass": true,
+    "can_pass": true,
+    "cpu_pass": false,
+    "requested_fps": [
+      2000,
+      2000
+    ],
+    "seconds": 10,
+    "cpu_percent": 62.4011,
+    "producer_ticks": 9999,
+    "max_imu_period_us": [
+      1007,
+      1077
+    ],
+    "max_imu_acquisition_us": [
+      86,
+      52
+    ]
+  },
+  {
+    "index": 5,
+    "cpu_10s_percent": [
+      76.2166
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 41.578,
+      "SRNOS_I2C4": 1.008,
+      "SRNOS_Monitor": 0.078,
+      "SRNOS_Log": 0.072,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.017,
+      "SRNOS_CAN1_RX": 1.382,
+      "SRNOS_CAN1_TX": 2.914,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 14.909,
+      "SRNOS_BMI": 2.317,
+      "SRNOS_INS": 3.629,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.286,
+      "SRNOS_Env": 0.632,
+      "SRNOS_AppInit": 0.019,
+      "SRNOS_Idle": 27.226,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 2.928
+    },
+    "wakeups": 10854,
+    "rounds": 10854,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 190531,
+    "spi_transactions_per_frame": 3.424,
+    "imu_guard_pass": true,
+    "can_pass": false,
+    "cpu_pass": false,
+    "requested_fps": [
+      3000,
+      3000
+    ],
+    "seconds": 10,
+    "cpu_percent": 76.2166,
+    "producer_ticks": 9274,
+    "max_imu_period_us": [
+      1021,
+      1044
+    ],
+    "max_imu_acquisition_us": [
+      129,
+      54
+    ]
+  },
+  {
+    "index": 6,
+    "cpu_10s_percent": [
+      76.2049
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 42.243,
+      "SRNOS_I2C4": 1.001,
+      "SRNOS_Monitor": 0.077,
+      "SRNOS_Log": 0.069,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.017,
+      "SRNOS_CAN1_RX": 1.416,
+      "SRNOS_CAN1_TX": 2.907,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 15.035,
+      "SRNOS_BMI": 2.28,
+      "SRNOS_INS": 3.672,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.27,
+      "SRNOS_Env": 0.643,
+      "SRNOS_AppInit": 0.018,
+      "SRNOS_Idle": 26.358,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 2.978
+    },
+    "wakeups": 10850,
+    "rounds": 10850,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 189132,
+    "spi_transactions_per_frame": 3.426,
+    "imu_guard_pass": true,
+    "can_pass": false,
+    "cpu_pass": false,
+    "requested_fps": [
+      3000,
+      3000
+    ],
+    "seconds": 10,
+    "cpu_percent": 76.2049,
+    "producer_ticks": 9200,
+    "max_imu_period_us": [
+      1020,
+      1035
+    ],
+    "max_imu_acquisition_us": [
+      131,
+      53
+    ]
+  },
+  {
+    "index": 7,
+    "cpu_10s_percent": [
+      76.1003
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 42.079,
+      "SRNOS_I2C4": 1.014,
+      "SRNOS_Monitor": 0.08,
+      "SRNOS_Log": 0.069,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.017,
+      "SRNOS_CAN1_RX": 1.405,
+      "SRNOS_CAN1_TX": 2.888,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 14.958,
+      "SRNOS_BMI": 2.272,
+      "SRNOS_INS": 3.675,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.27,
+      "SRNOS_Env": 0.653,
+      "SRNOS_AppInit": 0.019,
+      "SRNOS_Idle": 26.64,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 2.963
+    },
+    "wakeups": 10916,
+    "rounds": 10916,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 188417,
+    "spi_transactions_per_frame": 3.431,
+    "imu_guard_pass": true,
+    "can_pass": false,
+    "cpu_pass": false,
+    "requested_fps": [
+      3000,
+      3000
+    ],
+    "seconds": 10,
+    "cpu_percent": 76.1003,
+    "producer_ticks": 9154,
+    "max_imu_period_us": [
+      1017,
+      1040
+    ],
+    "max_imu_acquisition_us": [
+      131,
+      53
+    ]
+  },
+  {
+    "index": 8,
+    "cpu_10s_percent": [
+      93.4567
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 52.213,
+      "SRNOS_I2C4": 0.993,
+      "SRNOS_Monitor": 0.101,
+      "SRNOS_Log": 0.108,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.02,
+      "SRNOS_CAN1_RX": 1.996,
+      "SRNOS_CAN1_TX": 3.991,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 19.421,
+      "SRNOS_BMI": 2.068,
+      "SRNOS_INS": 3.957,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.444,
+      "SRNOS_Env": 0.602,
+      "SRNOS_AppInit": 0.019,
+      "SRNOS_Idle": 9.684,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 3.339
+    },
+    "wakeups": 11742,
+    "rounds": 11769,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 245579,
+    "spi_transactions_per_frame": 3.41,
+    "imu_guard_pass": false,
+    "can_pass": false,
+    "cpu_pass": false,
+    "requested_fps": [
+      4000,
+      4000
+    ],
+    "seconds": 10,
+    "cpu_percent": 93.4567,
+    "producer_ticks": 9003,
+    "max_imu_period_us": [
+      1122,
+      1108
+    ],
+    "max_imu_acquisition_us": [
+      213,
+      140
+    ]
+  },
+  {
+    "index": 9,
+    "cpu_10s_percent": [
+      45.049
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 26.021,
+      "SRNOS_I2C4": 0.835,
+      "SRNOS_Monitor": 0.068,
+      "SRNOS_Log": 0.107,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.017,
+      "SRNOS_CAN1_RX": 0.594,
+      "SRNOS_CAN1_TX": 1.225,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 7.914,
+      "SRNOS_BMI": 2.245,
+      "SRNOS_INS": 3.639,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.287,
+      "SRNOS_Env": 0.553,
+      "SRNOS_AppInit": 0.02,
+      "SRNOS_Idle": 54.17,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 1.356
+    },
+    "wakeups": 9999,
+    "rounds": 9999,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 79992,
+    "spi_transactions_per_frame": 4.0,
+    "imu_guard_pass": true,
+    "can_pass": true,
+    "cpu_pass": true,
+    "requested_fps": [
+      1000,
+      1000
+    ],
+    "seconds": 10,
+    "cpu_percent": 45.049,
+    "producer_ticks": 9999,
+    "max_imu_period_us": [
+      1006,
+      1035
+    ],
+    "max_imu_acquisition_us": [
+      121,
+      50
+    ]
+  },
+  {
+    "index": 10,
+    "cpu_10s_percent": [
+      76.2148
+    ],
+    "task_cpu_percent": {
+      "SRNOS_SPI4": 42.408,
+      "SRNOS_I2C4": 1.004,
+      "SRNOS_Monitor": 0.077,
+      "SRNOS_Log": 0.07,
+      "SRNOS_HostCmd": 0.0,
+      "SRNOS_HostComm": 0.016,
+      "SRNOS_CAN1_RX": 1.419,
+      "SRNOS_CAN1_TX": 2.923,
+      "SRNOS_CAN2_RX": 0.0,
+      "SRNOS_CAN2_TX": 0.0,
+      "SRNOS_CAN3_RX": 0.0,
+      "SRNOS_CAN3_TX": 0.0,
+      "SRNOS_CAN4": 15.102,
+      "SRNOS_BMI": 2.274,
+      "SRNOS_INS": 3.677,
+      "SRNOS_Indic": 0.0,
+      "SRNOS_LSM": 1.271,
+      "SRNOS_Env": 0.648,
+      "SRNOS_AppInit": 0.018,
+      "SRNOS_Idle": 26.087,
+      "SRNOS_Timer": 0.0,
+      "CANLoad": 2.992
+    },
+    "wakeups": 10869,
+    "rounds": 10869,
+    "rx_service_us": 0,
+    "tx_service_us": 0,
+    "max_rx_service_us": 0,
+    "max_tx_service_us": 0,
+    "dma_launch_attempts": null,
+    "spi_all_completed": null,
+    "uncertain_rx": 0,
+    "uncertain_tx": 0,
+    "physical_spi_transactions": 189017,
+    "spi_transactions_per_frame": 3.428,
+    "imu_guard_pass": true,
+    "can_pass": false,
+    "cpu_pass": false,
+    "requested_fps": [
+      3000,
+      3000
+    ],
+    "seconds": 10,
+    "cpu_percent": 76.2148,
+    "producer_ticks": 9191,
+    "max_imu_period_us": [
+      1017,
+      1044
+    ],
+    "max_imu_acquisition_us": [
+      129,
+      54
+    ]
+  }
+]

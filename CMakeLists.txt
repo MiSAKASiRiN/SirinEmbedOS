@@ -25,8 +25,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 enable_language(C CXX ASM)
 
 option(SIRINEMBEDOS_BUILD_EXAMPLE "Build the selected SDK example firmware" ${_sirinos_standalone})
-set(SIRINEMBEDOS_EXAMPLE "Minimal" CACHE STRING "SDK example: Minimal, BringUp, SensorBringUp, INSBringUp or EEPROMBringUp")
-set_property(CACHE SIRINEMBEDOS_EXAMPLE PROPERTY STRINGS Minimal BringUp SensorBringUp INSBringUp EEPROMBringUp)
+set(SIRINEMBEDOS_EXAMPLE "Minimal" CACHE STRING "SDK example: Minimal, BringUp, SensorBringUp, INSBringUp, EEPROMBringUp or IMUTurntableBringUp")
+set_property(CACHE SIRINEMBEDOS_EXAMPLE PROPERTY STRINGS Minimal BringUp SensorBringUp INSBringUp EEPROMBringUp IMUTurntableBringUp)
 set(SIRINEMBEDOS_CONFIG_HEADER "" CACHE FILEPATH "Absolute path to application SDK configuration")
 add_library(sirinos_config INTERFACE)
 target_include_directories(sirinos_config INTERFACE
@@ -104,10 +104,14 @@ set_property(TARGET sirinos_platform PROPERTY INTERFACE_LINK_DEPENDS
 include(CMake/Firmware.cmake)
 
 if(SIRINEMBEDOS_BUILD_EXAMPLE)
-    if(NOT SIRINEMBEDOS_EXAMPLE STREQUAL "Minimal" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "BringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "SensorBringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "INSBringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "EEPROMBringUp")
-        message(FATAL_ERROR "Unknown SIRINEMBEDOS_EXAMPLE: ${SIRINEMBEDOS_EXAMPLE}; use Minimal, BringUp, SensorBringUp, INSBringUp or EEPROMBringUp")
+    if(NOT SIRINEMBEDOS_EXAMPLE STREQUAL "Minimal" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "BringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "SensorBringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "INSBringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "EEPROMBringUp" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "IMUTurntableBringUp")
+        message(FATAL_ERROR "Unknown SIRINEMBEDOS_EXAMPLE: ${SIRINEMBEDOS_EXAMPLE}; use Minimal, BringUp, SensorBringUp, INSBringUp, EEPROMBringUp or IMUTurntableBringUp")
     endif()
-    sirinos_add_firmware(SirinEmbedOS "Examples/${SIRINEMBEDOS_EXAMPLE}/app_main.c")
+    if(SIRINEMBEDOS_EXAMPLE STREQUAL "IMUTurntableBringUp")
+        sirinos_add_firmware(SirinEmbedOS "Examples/${SIRINEMBEDOS_EXAMPLE}/app_main.cpp")
+    else()
+        sirinos_add_firmware(SirinEmbedOS "Examples/${SIRINEMBEDOS_EXAMPLE}/app_main.c")
+    endif()
     if(SIRINEMBEDOS_EXAMPLE STREQUAL "EEPROMBringUp")
         _srnos_attach_kernel_test_adapter(SirinEmbedOS
                 "${CMAKE_CURRENT_SOURCE_DIR}/Examples/EEPROMBringUp/kernel_test_adapter.c")

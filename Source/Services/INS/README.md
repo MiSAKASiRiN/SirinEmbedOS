@@ -14,7 +14,7 @@ SirinEmbedOS 固定板载惯性服务：统一坐标，使用 BMI088 与 LSM6DS3
 |---|---|
 | `ins_core.c` | 输入选择、双路权重、Mahony、启动/降级/恢复状态机；不访问 HAL/RTOS |
 | `ins_heater.cpp` | 温度反馈选择、PI、温稳与过温保护状态 |
-| `ins_service.c` | High5、3 KiB、1 ms worker，读取采样快照、执行温控、发布结果 |
+| `ins_service.c` | P0 / Realtime（48）、3 KiB、1 ms worker，读取采样快照、执行温控、发布结果 |
 | `ins_snapshot.c` | 多任务一致复制、有效性检查与复制耗时统计 |
 | `ins_internal.h` | 模块内部状态及接线，业务代码不包含此头 |
 
@@ -116,7 +116,7 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
 
 ## 托管线程
 
-SRNOS_INS 接入托管单轮与原 1 ms 超期重置等待；初始化不纳入循环统计。 栈、优先级、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+SRNOS_INS 接入托管单轮与原 1 ms 超期重置等待；初始化不纳入循环统计。 当前 INS 为 P0 / Realtime（48），与 BMI/LSM 和 CAN1/2/3 同级；栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
 
 ## 遥测快照边界
 
@@ -170,4 +170,8 @@ SRNOS_IMUStaticResult rc = SRNOS_IMUCalibrationRunStatic(
 
 不新增线程、运行期内存分配或高优先级采样 hook。固定整数/浮点累计器在 HostCmd 中运行，仅进度副本使用短保护；等待时让出 CPU。主机回归、固件资源及尚未板测的范围见 [本轮验证](../../../Docs/Validation/StaticIMU-20260929/README.md)。
 
-分区、48 B 校准记录正文、启动解析和单份失败语义统一见 [EEPROM 设计](../../../Docs/Storage.md)。
+分区、v1 48 B / v2 60 B校准记录正文、启动解析和单份失败语义统一见 [EEPROM 设计](../../../Docs/Storage.md)。
+
+### 转台生成的v2记录
+
+v2在既有零偏/加速度对角修正之外加入`gyro_scale[3]`，范围0.8..1.2；INS在传感器轴上先减陀螺零偏再乘比例，随后做板/安装旋转。v1存量记录继续加载并使用比例1；保存v1仍输出48字节，v2为60字节。静态陀螺校准保留已存v2比例，不自动重估。SDK仅验证、持久化和应用系数；转台动作与拟合属于Examples/IMUTurntableBringUp和Studio插件。跨轴矩阵、温度曲线和绝对航向仍不包含。保存后下一次启动生效，不在承重状态自动复位。

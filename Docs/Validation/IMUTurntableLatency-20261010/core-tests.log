@@ -1,0 +1,12 @@
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+SirinOS host tests passed
+Time actual implementation: exact fractional carry, repeated DWT wraps, long gap, reinit/frequency and interrupt mask: PASS
+ready
+divided
+clock_timeout
+tx_timeout
+flush_timeout

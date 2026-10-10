@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "SirinEmbedOS/IO/CAN/FD/CANFD.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,15 +44,23 @@ typedef struct {
     volatile uint32_t tx_busy_cnt;
     volatile uint32_t bus_off_cnt;
     volatile uint32_t last_err_code;   /* FDCAN_PSR.LEC mirror */
+    volatile uint32_t rx_error_cnt;
+    volatile uint32_t rx_hw_lost_cnt;
+    volatile uint32_t recovery_attempts;
+    volatile uint32_t recovery_completed;
+    volatile uint32_t recovery_errors;
+    volatile uint32_t recovery_faults;
+    volatile uint32_t recovery_state; /* 0 healthy, 1 backoff, 2 abort, 3 verify, 4 latched */
 } SRNOS_FDCANDiag;
 
 extern volatile SRNOS_FDCANDiag SRNOS_FDCANDiagnostics[SRNOS_FDCAN_BUS_COUNT];
 
 /* ===== API ===== */
 
-/* Call after CubeMX's MX_FDCANx_Init() has been executed.
- * The default policy disables all hardware filter slots and routes every
- * standard/extended data or remote frame to RX FIFO0.
+/* Call once after CubeMX init and controller configuration freeze. Applies
+ * the frozen board timing/RAM profile before Start; a failure remains latched
+ * until reset and workers cannot start CubeMX's fallback Classic defaults.
+ * Disables hardware filter slots and routes standard/extended data to FIFO0.
  */
 bool SRNOS_FDCANInitAll(void);
 bool SRNOS_FDCANStartAll(void);
@@ -59,6 +68,12 @@ bool SRNOS_FDCANStartAll(void);
 /* Start/stop single bus (bus = 1/2/3). */
 bool SRNOS_FDCANStart(uint8_t bus);
 void SRNOS_FDCANStop(uint8_t bus);
+/* TX worker only. Recovery never changes the frozen bit timing or filters.
+ * Three attempts, each with 100 ms backoff and bounded hardware confirmation;
+ * a latched failure needs a system restart. No blocking recovery in ISR. */
+bool SRNOS_FDCANService(uint8_t bus, uint32_t now_ms);
+uint32_t SRNOS_FDCANNextServiceWait(uint8_t bus, uint32_t now_ms);
+bool SRNOS_FDCANIsReady(uint8_t bus);
 
 /* Non-blocking TX. Returns true if enqueued to Tx FIFO/Q. */
 bool SRNOS_FDCANTryTx(uint8_t               bus,
@@ -91,15 +106,19 @@ SRNOS_FDCANDiag SRNOS_FDCANGetDiag(uint8_t bus);
 void SRNOS_FDCANOnRxISR(uint8_t bus);
 void SRNOS_FDCANOnBusoff(uint8_t bus);
 void SRNOS_FDCANOnTxEvent(uint8_t bus);
+/* One notification after a batch; OnTxEvent remains one accounting call/frame. */
+void SRNOS_FDCANOnTxReady(uint8_t bus);
 
 /* Utility: DLC to byte length (0..64). */
 uint8_t SRNOS_FDCANDlcToLen(uint32_t dlc);
 
-// 经典 CAN（标准 ID）非阻塞发送；len > 8 会被夹成 8；无 RTOS 依赖
+// 经典 CAN（标准 ID）非阻塞发送；len > 8 或非 Classic 模式被拒绝；无 RTOS 依赖
 bool SRNOS_FDCANTxPush(uint8_t bus, uint16_t std_id, const uint8_t* data, uint8_t len);
 
 // 经典 CAN（扩展 ID）非阻塞发送；无 RTOS 依赖
 bool SRNOS_FDCANTxPushExt(uint8_t bus, uint32_t ext_id, const uint8_t* data, uint8_t len);
+/* FD raw path only; exact wire length, BRS matches the frozen policy. */
+bool SRNOS_FDCANTxPushFD(uint8_t bus, const SRNOS_CANFDFrame *frame);
 
 
 #ifdef __cplusplus

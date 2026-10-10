@@ -1,0 +1,4 @@
+0x08013a14 in prvAddCurrentTaskToDelayedList (xTicksToWait=30, xCanBlockIndefinitely=1) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:5404
+5404	    if( uxListRemove( &( pxCurrentTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
+Resetting target
+[Inferior 1 (Remote target) detached]

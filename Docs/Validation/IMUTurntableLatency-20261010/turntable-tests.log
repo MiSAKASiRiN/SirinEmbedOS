@@ -1,0 +1,3 @@
+PASS: CAN3 IDs, coherent telemetry, motor bypass, stale-command zero and STOP
+Assertion failed: (c.fault==Fault::None&&c.phase!=Phase::Home3), function main, file test_control.cpp, line 25.
+Tests/Examples/IMUTurntableBringUp/run_host_tests.sh: line 21: 69056 Abort trap: 6              "$BUILD/test_control" "$@"

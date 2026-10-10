@@ -85,7 +85,8 @@ bool SRNOS_INSCoreStep(SRNOS_INSCore *c,const SRNOS_IMUSample input[2],
     for(unsigned n=0;n<2;n++) {
         s->imu[n]=input[n];
         if(c->calibration_mask&(1u<<n)) for(unsigned i=0;i<3;i++) {
-            s->imu[n].gyro_rad_s[i]-=c->calibration[n].gyro_bias_rad_s[i];
+            s->imu[n].gyro_rad_s[i]=(s->imu[n].gyro_rad_s[i]-c->calibration[n].gyro_bias_rad_s[i]) *
+                (c->calibration[n].model_version>=2 ? c->calibration[n].gyro_scale[i] : 1.0f);
             s->imu[n].accel_m_s2[i]=(s->imu[n].accel_m_s2[i]-c->calibration[n].accel_bias_m_s2[i])*c->calibration[n].accel_scale[i];
         }
         transform(c,(SRNOS_SensorId)n,s->imu[n].accel_m_s2);transform(c,(SRNOS_SensorId)n,s->imu[n].gyro_rad_s);

@@ -1,0 +1,4 @@
+Debug 00000004 A __tls_align
+Debug 00000000 A __tls_size
+Release 00000004 A __tls_align
+Release 00000000 A __tls_size

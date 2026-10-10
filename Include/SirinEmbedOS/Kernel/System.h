@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "SirinEmbedOS/Kernel/Thread.h"
+#include "SirinEmbedOS/IO/CAN/Controller.h"
 #include <stdint.h>
 #include "SirinEmbedOS/Devices/Sensors.h"
 #include "SirinEmbedOS/Services/INS.h"
@@ -18,6 +19,9 @@ extern "C" {
 #define SRNOS_SYSTEM_MAX_THREADS 8u
 
 typedef struct {
+    /* Indices 0..3 map to CAN1..4. Only startup configuration; frozen after
+     * ApplicationConfigure/bind_channels. Default: Classic CAN at 1 Mbit/s. */
+    SRNOS_CANControllerConfig can[SRNOS_CAN_CONTROLLER_COUNT];
     SRNOS_SensorConfig sensors;
     SRNOS_INSConfig ins;
     SRNOS_SerialConfig serial[SRNOS_SYSTEM_MAX_SERIAL];

@@ -8,7 +8,17 @@
 
 2026-09-28 全面命名与事件等待改造后已重新烧录：两组统计开关对照、托管任务生命周期、ADC 软件故障注入及 CDC 背压/DTR 重连通过。统计开销约 0.99 个百分点，接近目标边界；当时实际 CAN 负载、串口、仪表精度和长期压力仍未验收。当前证据见 [SRNOS 板端记录](Docs/Validation/SRNOSBoard-20260928/README.md)，后续功能缺口与优化顺序见 [开发清单](Docs/Development.md#当前底层开发与优化优先级)。
 
-后续已完成 CAN1↔CAN3 外接负载短测并修复通知 weak 链接错误：合计 8000 帧/s 全部交付，但整板 CPU 95.21%，业务余量不足；CAN2/CAN4 与故障恢复仍待测。ADC 24 V 仪表单点读到均值 24.641 V，保持标称倍率待进一步核对。详见 [最新实测](Docs/Validation/CAN13-ADC-20260928/README.md)。
+2026-09-28 曾完成 CAN1↔CAN3 外接负载短测并修复通知 weak 链接错误：合计 8000 帧/s 全部交付，但整板 CPU 95.21%，业务余量不足；CAN2/CAN4 与故障恢复仍待测。ADC 24 V 仪表单点读到均值 24.641 V，保持标称倍率待进一步核对。详见 [早期实测](Docs/Validation/CAN13-ADC-20260928/README.md)。
+
+2026-10-03 按每路 CAN 同时 3 kHz RX＋3 kHz TX 目标优化：P0 CAN1/2/3＋BMI/LSM/INS 为 48，P1 CAN4＋UART 服务为 47，SPI4 共享依赖为 49、事务优先 IMU；直接任务通知、冻结路由少复制、MCP 减少重复 SPI 事务，并修复原生 RX 满环竞争、Bus-Off 接入与电机反馈并发。公共 CAN API、八个收发线程、栈/队列容量保持；电机对象私有布局变化，父项目须重新编译。当时 PCB 离线，仅验证软件及构建，见 [优化记录](Docs/Validation/CANRouter-20261002/README.md) 与 [当前优先级验证](Docs/Validation/Priority-20261003/README.md)。
+
+随后接入四路独立的启动期 Classic/FD 选择，默认仍为 Classic 1 Mbit/s；新增公开 FD 原始订阅/one-shot API，业务协议由应用定义。原生 FDCAN 改用 80 MHz 及按模式检查的固定 Message RAM 窗口，MCP 使用 16 RX＋12 TX 的 64 B FD FIFO；P0/P1保持；CAN4优化后合并为一个4KiB服务，CAN总计七个worker。原生 RX 每轮最多处理 32 帧、每次搬运 4 帧，避免 64 B 帧批次挤占回调栈。FD 配置、长度、资源和离线限制见 [CAN](Source/IO/CAN/README.md)；历史 Classic 实测不能证明新时钟/FD 运行效果。
+
+2026-10-06 已完成当前优化/FD固件的 CAN1↔CAN3 板测：356格式用例通过；Classic8B和FD8M64B各3k收＋3k发持续60秒、零数据错误/接收丢帧，整板CPU32.00%和35.13%，FD5M64B同档10秒通过；FD4M及以下64B同档受带宽/仲裁限制。双IMU/INS保持1kHz；LIS采样率、身份记录与未测四路/故障边界见 [完整报告](Docs/Validation/CANFD-Board-20261006/README.md)。本次结束恢复测试前的原固件并完整读回校验，未将测试镜像留板。
+
+2026-10-06优化前的CAN1↔CAN4共享SPI基线：Classic双向各2k时CPU约91.5%，各3k请求因生产周期不足未达标；FD5M及8M对齐测试在64B各3k时出现MCP硬件RX溢出。双IMU/INS保持1kHz。默认FD8M首帧失败，测试中将CAN1仲裁采样点对齐到80%后功能通过，生产配置仍待修正；见 [CAN4/SPI实测](Docs/Validation/CAN4-SPI-20261006/README.md)。
+
+2026-10-06 CAN4单服务/SPI序列优化已完成：Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。原测试前Flash已恢复，优化代码未永久留板。详细边界、资源、原始结果和恢复证明见 [最终验收](Docs/Validation/CAN4-Optimization-20261006/README.md)。
 
 ## 文档入口
 
@@ -83,7 +93,7 @@ void SRNOS_ApplicationMain()
 }
 ```
 
-`Examples/Minimal` 验证公开启动入口；[BringUp](Examples/BringUp/README.md) 提供首次上板的启动/堆/任务栈/IMU 观测；[SensorBringUp](Examples/SensorBringUp/README.md) 验证 2613 原始传感器与共享总线，关闭融合和业务参数加载/主机存储命令（启动仍读取身份与 IMU 校准），默认使用统一60°C温控，并提供 [CDC1 双 IMU 遥测 CLI](Docs/HostLink.md)；[Parameters](Examples/Parameters/README.md) 展示显式业务 PID 参数和一致快照；[PrototypeBindings](Examples/PrototypeBindings/README.md) 展示 prototype 的 DR16、VT03、裁判与日志端口映射。选择一个应用入口，可按说明组合串口绑定文件。迁移收尾顺序见 [后续开发清单](Docs/Development.md)。
+`Examples/Minimal` 验证公开启动入口；[IMUTurntableBringUp](Examples/IMUTurntableBringUp/README.md) 在 CAN3 对三个 GM6020（ID 1/2/3）执行限位回默认位置和低速转台观测，并提供 HostComm 电机/双 IMU 遥测；[BringUp](Examples/BringUp/README.md) 提供首次上板的启动/堆/任务栈/IMU 观测；[SensorBringUp](Examples/SensorBringUp/README.md) 验证 2613 原始传感器与共享总线，关闭融合和业务参数加载/主机存储命令（启动仍读取身份与 IMU 校准），默认使用统一60°C温控，并提供 [CDC1 双 IMU 遥测 CLI](Docs/HostLink.md)；[Parameters](Examples/Parameters/README.md) 展示显式业务 PID 参数和一致快照；[PrototypeBindings](Examples/PrototypeBindings/README.md) 展示 prototype 的 DR16、VT03、裁判与日志端口映射。选择一个应用入口，可按说明组合串口绑定文件。迁移收尾顺序见 [后续开发清单](Docs/Development.md)。
 
 ## 托管任务与父项目内核接口
 
@@ -118,6 +128,10 @@ void SRNOS_ApplicationMain()
 
 CAN、UART、IMU、服务选择、资源预算和绑定均在初始化时冻结。配置 hook 不做阻塞 I/O，不创建线程；初始应用任务可通过 `SRNOS_SystemConfig::threads` 声明，就绪后也允许通过 `SRNOS_ThreadCreate` 创建有界运行期对象。`bind_channels` 在内置协议完成声明后用于原始串口、H12H 或 RS485 设备的所有权登记。没有运行时重绑定、端口切换或系统配置重载。
 
+CAN1–4 对应 `config->can[0..3]`，每路 Classic/FD 互斥，默认 `{Classic, 1000000, 0, false}`。仲裁支持 125/250/500 kbit/s、1 Mbit/s。使用 FD 时，应用必须显式填写模式、仲裁速率、数据速率和 BRS：开启 BRS 时数据支持 500 kbit/s、1/2/4/5/8 Mbit/s 且不低于仲裁；关闭 BRS 时数据等于仲裁。现有电机等 adapter 仍只允许 Classic 1 Mbit/s，不能放入 FD 通道。配置与注册类型不符会拒绝启动，`SRNOS_CANControllerGetConfig()` 只在冻结后返回副本。
+
+FD 公共头为 `SirinEmbedOS/IO/CAN/FD/CANFD.h`，初始化注册订阅、任务上下文提交 one-shot；每路固定 32 个订阅和 64 个 TX 槽在 D1，业务协议由父项目定义。长度必须精确取 0..8/12/16/20/24/32/48/64 B；短帧也是 FD。TX BRS 固定采用冻结策略，RX 保留实际 BRS/ESI，ESI 不可由应用发送。TTL 只约束进入 backend 前的软件队列等待，不取消已经开始的 SPI/HAL 提交或限定线缆交付时间。配置片段见 [Minimal](Examples/Minimal/README.md#can-启动模式)，完整收发见 [CANFD 示例](Examples/CANFD/README.md)。64 B、4 Mbit/s 下合计 6000 帧/s 仅数据字段已占 76.8% 总线时间，还需加仲裁、CRC 等开销；该示例不承诺每路 3 kHz RX＋3 kHz TX，仍需按实际配置验算及板测。
+
 默认集成三路原生 CAN、外置 CAN、板载 IMU、EEPROM、板级指示器和诊断；USB 默认提供 CDC0 日志与 CDC1 HostLink。普通 USART1/USART6/UART8/UART9 默认未绑定，不会自动占用遥控或日志用途。UART7 是板载固定 RS485 通路，外接设备仍由应用显式声明。H12H 默认未绑定。默认包含总线能力不代表上电自动使能电机或执行运动。
 
 Serial 统一拥有 HAL 收发、DMA 缓冲与回调。端口只能被一个 owner 占用；协议、原始接口和日志不可绕过占用管理并发使用同一端口。`GetChannel()` 仅在初始化时返回未占用通道，成功声明后由所有者保留该指针；配置了但未声明 owner 的端口会阻止启动。具体缓冲、超时、线程/ISR 限制以公开接口为准。
@@ -151,11 +165,11 @@ FT24C128A 采用单份身份/逐器件校准/参数记录，CRC32 校验与最�
 父项目配置头可覆盖 `SRNOS_APP_STACK_BYTES`、`SRNOS_APP_PRIORITY`、`SRNOS_HEAP_DTCM_BYTES`、`SRNOS_HEAP_D1_BYTES`，默认分别为 4096 字节、CMSIS Normal（24）、64 KiB、128 KiB。配置 hook 可进一步声明初始应用线程预算。`SRNOS_SystemHeapBudget()` 提供保守启动预算校验，应用运行期额外分配仍需自行预留容量。不同 SDK 配置使用不同构建目录。
 
 - FreeRTOS 10.6.2 / CMSIS-RTOS2 / heap_5 固定快照随 SDK 管理，Kernel tick 为 1 kHz；HAL tick 使用 TIM7。SVC/PendSV/SysTick 由 FreeRTOS/CMSIS 持有；调用 FromISR API 的 IRQ 数值优先级必须在 5～15。
-- 普通 data/TLS/BSS 放在 D1；CAN Router 的 CPU 专用上下文和 `.debug_watch` 放在 ITCM，DMA 缓冲不进入 TCM。DTCM 保留热数据、heap_5 首区和 MSP。默认 MSP 与独立 libc arena 各 8 KiB，可通过同名 CMake 缓存项 `SRNOS_MSP_BYTES` / `SRNOS_LIBC_BYTES` 调整。libc arena 与 RTOS heap 分离。
+- 普通 data/TLS/BSS 放在 D1；Classic CAN Router 的 CPU 专用上下文和 `.debug_watch` 放在 ITCM，FD 四路固定上下文在 D1 BSS（默认合计 23312 B），不占 RTOS heap，DMA 缓冲不进入 TCM。DTCM 保留原生 RX ring、其他热数据、heap_5 首区和 MSP。默认 MSP 与独立 libc arena 各 8 KiB，可通过同名 CMake 缓存项 `SRNOS_MSP_BYTES` / `SRNOS_LIBC_BYTES` 调整。libc arena 与 RTOS heap 分离。
 - DMA 专用段在非缓存 D2，BDMA 缓冲在 D3。ITCM BSS/Watch 在配置回调前以 64 位写入清零，代码按 64 位复制；禁止全局构造函数访问这些尚未初始化的专用段。NOLOAD DMA/BSS/Watch 段由早期启动显式初始化；Fault retained 区不清零。普通 heap_5 分配不是 DMA 分配器，payload 不保证清零。
-- 当前 Minimal Release：D1 空余 73344 B，D2 空余 25920 B，ITCM 空余 2528 B。迁移释放 D1 59904 B、D2 2848 B，未扩大 RTOS heap，也未迁入 Monitor/遥测缓存；完整预算及板测边界见 [ITCM 迁移记录](Docs/Validation/ITCM-20260929/README.md)。
+- 当前 FD 接入后的 Minimal Release：D1 占用 277888 B、空余 49792 B，较此前 CAN 优化基线增加 23456 B；ITCM 占用 63104 B、空余 2432 B，Classic Router 的 59920 B 保持。未扩大 RTOS heap 或改变 DMA/BDMA 银行；最终构建证据见 [验证记录](Docs/Validation.md)，此前迁移的板测边界见 [ITCM 迁移记录](Docs/Validation/ITCM-20260929/README.md)。
 - Picolibc TLS 占用线程栈，栈预算须包含 TLS。libc 锁由静态递归 RTOS mutex 接入，ISR 不可调用分配器或阻塞 stdio；该适配不代表任意共享 `FILE` 操作都线程安全。
-- Fault 默认记录 RAM 并按策略 halt/reset，不抢占或复位 USART1。紧急输出只能在配置阶段显式预留；正常日志走自身队列和 Serial/USB sink。
+- Fault 默认保存 RAM 记录并通过 USART1 TX（PB14，115200/8N1）有界轮询输出，再按策略 halt/reset；仅不可恢复异常阶段接管端口，正常启动不预留。配置阶段可显式注册紧急输出覆盖；正常日志走自身队列和 Serial/USB sink。
 
 具体内存段、异常和锁规则见 [基础层说明](Source/Core/README.md)。各第三方目录保留来源、许可证和哈希；AL94 1.0.3 仅纳入 Core、COMPOSITE、CDC_ACM，双 CDC class 使用静态存储。
 
@@ -167,7 +181,7 @@ python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_co
 python3 Tests/Build/check_sdk.py
 ```
 
-构建回归检查十种父项目固件接入、C11/C++17 公共头独立及联合编译、依赖闭包、真实应用编译命令、命名、配置覆盖、第三方哈希、链接符号和内存布局；能力主机测试位于 `Tests/`。命令、结果与硬件待测项集中在 [验证记录](Docs/Validation.md)。编译、静态检查和主机仿真不替代 USB 枚举、UART DMA/IDLE/错误恢复、CAN 收发、IMU 采样、Cache、Fault 和实际调度验证。
+构建回归检查十一种父项目固件接入（含 CANFDExample）、C11/C++17 公共头独立及联合编译、依赖闭包、真实应用编译命令、命名、配置覆盖、第三方哈希、链接符号和内存布局；能力主机测试位于 `Tests/`。命令、结果与硬件待测项集中在 [验证记录](Docs/Validation.md)。编译、静态检查和主机仿真不替代 USB 枚举、UART DMA/IDLE/错误恢复、CAN 收发、IMU 采样、Cache、Fault 和实际调度验证。
 
 ## 正式 INS
 

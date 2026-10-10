@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/Users/sirin/CLionProjects/SirinEmbedOS/build/hostlink-venv/lib/python3.14/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+              ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/dev/cu.usbmodem355C343932333'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/sirin/CLionProjects/SirinEmbedOS/Examples/IMUTurntableBringUp/capture.py", line 27, in <module>
+    with (a.output/'rx.bin').open('wb') as raw,open_port(a.port) as port:
+                                               ~~~~~~~~~^^^^^^^^
+  File "/Users/sirin/CLionProjects/SirinEmbedOS/Tools/HostLink/imu_telemetry.py", line 271, in open_port
+    port = serial.Serial(path, 115200, timeout=0.05, write_timeout=1, exclusive=True)
+  File "/Users/sirin/CLionProjects/SirinEmbedOS/build/hostlink-venv/lib/python3.14/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+    ~~~~~~~~~^^
+  File "/Users/sirin/CLionProjects/SirinEmbedOS/build/hostlink-venv/lib/python3.14/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 2] could not open port /dev/cu.usbmodem355C343932333: [Errno 2] No such file or directory: '/dev/cu.usbmodem355C343932333'

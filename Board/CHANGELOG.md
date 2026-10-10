@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- 2026-10-06：实板CAN1/3验证80MHz基线、Classic1M及FD数据1/2/4/5/8M收发；所有合法DLC、STD/EXT通过，3k负载边界按帧长/速率记录。未修改生成配置或生产驱动；六个测试镜像逐段下载校验，最后完整恢复原1MiB Flash并读回一致，释放GDB/J-Link。CAN2/4、物理信号裕量和Bus-Off仍未验，见 [记录](../Docs/Validation/CANFD-Board-20261006/README.md)。
+
+- 2026-10-03：FDCAN IOC/生成基线改用 PLL2Q 80 MHz，默认 Classic 1 Mbit/s；新增自维护 can_native_board 在 Start 前应用每路冻结的 Classic/FD 格式、速率/TDC 和 RAM 布局。固定窗口 0/0x300/0x600 word，Classic 各 232 word、FD 各 676 word，显式检查共享 2560 word 和通道窗口边界。P0/P1 IRQ、DMA bank、MCP 40 MHz/SPI 10 MHz 保持；PCB 离线，新增基线未烧录，位时序/物理通信待测。
+
+- 2026-10-03：按 P0 CAN1/2/3＋IMU、P1 CAN4＋UART 更新 IOC 并实际 Generate：IMU EXTI9_5=5、MCP EXTI15_10=6、UART十路DMA=6；本轮仅 gpio.c/dma.c 生成差异，其他高优先级通路保持5。证据见 Priority-20261003，未烧录。
+
+- 2026-10-03：按 CAN 最高通信优先级调整 IOC，并于 2026-10-02 用 generate.py 实际生成；FDCAN1–3/MCP EXTI/SPI4 IRQ 为 5。仅三个生成文件对应优先级变化，415 个 USER CODE 保留，I2C 时序一致；未改硬件时钟、DMA 缓冲或链接脚本，板端延迟待验。
+
 - 2026-09-29：自维护 linker 增加 ITCM BSS，将 Watch 移入 ITCM，检查代码/BSS/Watch 合并容量与 64 位初始化对齐；D2 Fault retained 随段重排，但清零排除合同不变。生成源码、IOC/HAL 未改。Debug/Release、父项目及板端范围见 [记录](../Docs/Validation/ITCM-20260929/README.md)。
 
 - 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。主机与构建验证见Docs/Validation.md，未烧录/板测。

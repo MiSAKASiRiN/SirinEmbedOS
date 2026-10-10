@@ -29,4 +29,24 @@
 
 只实现一份 ApplicationMain/ApplicationConfigure，不复制另一个 main 或再次启动调度器。旧 ThreadConfig.entry 已删除；一般业务代码通过 SDK 使用通知、Delay/DelayUntil 和同步对象，不再直接调用 FreeRTOS/CMSIS API，也无需统计 hook。默认 32 KiB 应用池由线程栈和同步对象共用，数量与容量限制见 Kernel 文档。
 
-根 [接入示例](../../README.md#父项目接入) 说明 CMake 子模块接入；[板测记录](../../Docs/Validation/ManagedTasksBoard-20260928/README.md) 记录已执行的正常 Release 与专用测试固件验证。本轮仅补充文档，不重新烧录或改变示例运行行为。
+根 [接入示例](../../README.md#父项目接入) 说明 CMake 子模块接入；[板测记录](../../Docs/Validation/ManagedTasksBoard-20260928/README.md) 记录已执行的正常 Release 与专用测试固件验证。本示例应用源码保持心跳行为；新增 SDK FD 能力未重新烧录或板测。
+
+## CAN 启动模式
+
+当前 Minimal 沿用四路 Classic 1 Mbit/s 默认值，不主动发送 CAN 业务帧。父项目可在自己唯一一份 `SRNOS_ApplicationConfigure()` 中加入下列声明，选择 CAN4 FD；其他三路保留默认值。四项配置必须一并显式填写，不能在 ApplicationMain 或运行期切换：
+
+```c
+#include <SirinEmbedOS/Kernel/Startup.h>
+
+void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
+{
+    config->can[3].mode = SRNOS_CAN_MODE_FD;
+    config->can[3].nominal_bitrate = 1000000u;
+    config->can[3].data_bitrate = 4000000u;
+    config->can[3].brs = true;
+}
+```
+
+该片段只配置硬件模式。FD 业务协议由父项目通过 `SirinEmbedOS/IO/CAN/FD/CANFD.h` 定义，初始化注册订阅、运行期提交 one-shot；每路固定 32 个订阅/64 个 TX 槽在 D1 BSS，不新建系统线程。FD 长度只允许 0..8、12、16、20、24、32、48、64 B；TX BRS 必须符合配置，RX 保留真实 BRS/ESI。现有电机等 adapter 只支持 Classic 1 Mbit/s，不能注册到 FD 通道。完整合同与原始收发示例见 [CAN](../../Source/IO/CAN/README.md#启动模式与-fd-接口) 和 [CANFD 示例](../CANFD/README.md)。
+
+P0 CAN1/2/3＋IMU/INS、P1 CAN4＋UART、共享 SPI49/IMU 优先保持。上述 1 Mbit/s＋4 Mbit/s 仅为配置示例，不保证 64 B 下每路 3 kHz RX＋3 kHz TX；需按帧长和总线开销验算，并在 PCB 在线后验证位时序、吞吐与延迟。

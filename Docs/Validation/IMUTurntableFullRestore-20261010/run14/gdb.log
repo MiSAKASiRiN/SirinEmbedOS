@@ -1,0 +1,18 @@
+Remote debugging using localhost:2331
+0x08013a6e in prvAddCurrentTaskToDelayedList (xTicksToWait=604180600, xCanBlockIndefinitely=603990468) at /Users/sirin/CLionProjects/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:5438
+5438	                vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x45814 lma 0x80002d0
+Loading section .rodata, size 0x36d0 lma 0x8045ae8
+Loading section .ARM, size 0x10 lma 0x80491b8
+Loading section .preinit_array, size 0x4 lma 0x80491c8
+Loading section .init_array, size 0x4 lma 0x80491cc
+Loading section .data, size 0x74c lma 0x80491d0
+Loading section .itcm_text, size 0x120 lma 0x8049920
+Start address 0x08003cb4, load size 301620
+Transfer rate: 73637 KB/sec, 25135 bytes/write.
+Section .text, range 0x80002d0 -- 0x8045ae4: matched.
+Resetting target
+Detaching from program: /Users/sirin/CLionProjects/SirinEmbedOS/build/IMUTurntable27/board/run14.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]

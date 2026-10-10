@@ -48,17 +48,17 @@ Storage 拥有地址、格式、CRC、提交页、互斥与状态；Parameters/I
 
 ### IMU 校准
 
-BMI088 类别=2，LSM6DS3 类别=3；owner_id=`0x53494D55`，schema=1。正文恰好 48 B，全部小端，浮点为 IEEE754 float32：
+BMI088 类别=2，LSM6DS3 类别=3；owner_id=`0x53494D55`，schema=1。v1正文48 B，v2正文60 B（兼容加载v1），全部小端，浮点为 IEEE754 float32：
 
 | 偏移 | 类型 | 内容 |
 |---|---|---|
-| 0 / 2 / 4 / 6 | u16 各一 | sensor：0 BMI / 1 LSM；model_version=1；axes_version=1；保留 0 |
+| 0 / 2 / 4 / 6 | u16 各一 | sensor：0 BMI / 1 LSM；model_version=1或2；axes_version=1；保留 0 |
 | 8 | float32[3] | SENSOR 轴 gyro bias，rad/s |
 | 20 | float32[3] | SENSOR 轴 accel bias，m/s² |
 | 32 | float32[3] | accel 对角比例，无量纲 |
 | 44 | float32 | 校准温度，°C |
 
-`gyro = measured - bias`；`accel = (measured - bias) × scale`，在板级/安装旋转前应用。原始 Sensors 快照不变。范围与降级见 [INS](../Source/Services/INS/README.md#校准持久化)。静止校准只生成陀螺 bias/温度，保留有效的 accel 系数；新值保存后不立即改变当前融合，两个记录不具备组合原子性。触发/结果见 [CONFIG 校准协议](HostLink.md#手动静态-imu-校准)。
+v2在48追加float32[3]陀螺对角比例（0.8..1.2）；v1隐含比例1。`gyro = (measured - bias) × gyro_scale`；`accel = (measured - bias) × scale`，在板级/安装旋转前应用。原始 Sensors 快照不变。范围与降级见 [INS](../Source/Services/INS/README.md#校准持久化)。静止校准只生成陀螺 bias/温度，保留有效的 accel 系数；新值保存后不立即改变当前融合，两个记录不具备组合原子性。触发/结果见 [CONFIG 校准协议](HostLink.md#手动静态-imu-校准)。
 
 ### 业务参数
 

@@ -1,0 +1,103 @@
+build/can4-opt-20261006/firmware/sdk/CMakeFiles/sirinos_components.dir/Source/IO/CAN/External/exfdcan_rx_router.cpp.su
+Source/IO/CAN/External/exfdcan_rx_router.cpp:111:SRNOS_ExternalCANReadHardware	24	static
+Source/IO/CAN/External/exfdcan_rx_router.cpp:225:SRNOS_ExternalCANWorker	72	static
+Source/Kernel/thread_internal.h:53:_ZZL18SRNOS_KernelRunCppIZ23SRNOS_ExternalCANWorkerE3$_0Z23SRNOS_ExternalCANWorkerE3$_1EvT_T0_jbENUlPvE_8__invokeES4_	240	static
+Source/Kernel/thread_internal.h:54:_ZZL18SRNOS_KernelRunCppIZ23SRNOS_ExternalCANWorkerE3$_0Z23SRNOS_ExternalCANWorkerE3$_1EvT_T0_jbENUlPvE0_8__invokeES4_	16	static
+
+build/can4-opt-20261006/firmware/sdk/CMakeFiles/sirinos_components.dir/Source/IO/CAN/External/exfdcan_tx_router.cpp.su
+Source/IO/CAN/External/exfdcan_tx_router.cpp:142:SRNOS_ExternalCANBackendBind	8	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:41:_ZL33SRNOS_ExternalCANBackendGetTxFreeh	8	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:84:_ZL33SRNOS_ExternalCANFDBackendTryPushhPK16SRNOS_CANFDFrame	32	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:107:_ZL32SRNOS_ExternalCANBackendSignalTxh	8	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:120:_ZL29SRNOS_ExternalCANBackendNowMsv	0	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:97:_ZL28SRNOS_ExternalCANTxRetryWaithj	8	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:50:_ZL28SRNOS_ExternalCANBackendLoadhjbPKhhbb	48	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:33:_ZL29SRNOS_ExternalCANBackendStarth	8	static
+Source/IO/CAN/External/exfdcan_tx_router.cpp:72:_ZL31SRNOS_ExternalCANBackendTryPushhPK14SRNOS_CANFrame22SRNOS_CANRouterTxClass	32	static
+
+build/can4-opt-20261006/firmware/sdk/CMakeFiles/sirinos_components.dir/Source/Devices/MCP2518FD/fifo.c.su
+Source/Devices/MCP2518FD/fifo.c:69:SRNOS_MCPFifoInit	40	static
+Source/Devices/MCP2518FD/fifo.c:75:SRNOS_MCPFifoReconcile	8	static
+Source/Devices/MCP2518FD/fifo.c:58:SRNOS_MCPFifoReconcilePrepare	8	static
+Source/Devices/MCP2518FD/fifo.c:83:SRNOS_MCPFifoReceive	16	static
+Source/Devices/MCP2518FD/fifo.c:22:SRNOS_MCPFifoPrepare	24	static
+Source/Devices/MCP2518FD/fifo.c:95:SRNOS_MCPFifoTransmit	24	static
+
+build/can4-opt-20261006/firmware/sdk/CMakeFiles/sirinos_components.dir/Source/IO/SPI/SPI.c.su
+Source/IO/SPI/SPI.c:231:SRNOS_SPIInitPre	16	static
+Source/IO/SPI/SPI.c:239:SRNOS_SPIInitRtos	56	static
+Source/IO/SPI/SPI.c:227:dispatch	40	static
+Source/IO/SPI/SPI.c:248:SRNOS_SPIDeviceInit	8	static
+Source/IO/SPI/SPI.c:298:SRNOS_SPITransferEx	40	static
+Source/IO/SPI/SPI.c:258:transfer	40	static
+Source/IO/SPI/SPI.c:303:SRNOS_SPITransferSequence	120	static
+Source/IO/SPI/SPI.c:311:SRNOS_SPITransferDMA	32	static
+Source/IO/SPI/SPI.c:312:SRNOS_SPITransferDMABlocking	32	static
+Source/IO/SPI/SPI.c:313:SRNOS_SPIIsBusBusy	0	static
+Source/IO/SPI/SPI.c:324:SRNOS_SPICancel	32	static
+Source/IO/SPI/SPI.c:49:wake	24	static
+Source/IO/SPI/SPI.c:333:SRNOS_SPIRecoverBus	24	static
+Source/IO/SPI/SPI.c:342:SRNOS_SPIGetStatistics	8	static
+Source/IO/SPI/SPI.c:343:SRNOS_SPIGetSnapshot	24	static
+Source/IO/SPI/SPI.c:361:HAL_SPI_TxRxCpltCallback	0	static
+Source/IO/SPI/SPI.c:355:completion	32	static
+Source/IO/SPI/SPI.c:362:HAL_SPI_TxCpltCallback	0	static
+Source/IO/SPI/SPI.c:363:HAL_SPI_RxCpltCallback	0	static
+Source/IO/SPI/SPI.c:364:HAL_SPI_ErrorCallback	0	static
+Source/IO/SPI/SPI.c:197:dispatch_step	56	static
+Source/IO/SPI/SPI.c:222:dispatch_wait	64	static
+Source/IO/SPI/SPI.c:61:finish	24	static
+
+build/can4-opt-20261006/firmware/sdk/CMakeFiles/sirinos_components.dir/Source/IO/CAN/Router/can_router_core.cpp.su
+Source/IO/CAN/Router/can_router_core.cpp:147:SRNOS_CAN_FreezeConfiguration	8	static
+Source/IO/CAN/Router/can_router_core.cpp:137:_ZL13exit_criticalv	8	static
+Source/IO/CAN/Router/can_router_core.cpp:154:SRNOS_CAN_ConfigurationFrozen	0	static
+Source/IO/CAN/Router/can_router_core.cpp:167:SRNOS_CANRouterCoreConfigurationCompatible	0	static
+Source/IO/CAN/Router/can_router_core.cpp:176:SRNOS_CANRouterCoreNoteRxRejected	0	static
+Source/IO/CAN/Router/can_router_core.cpp:278:SRNOS_CANRouterCoreSetBackend	0	static
+Source/IO/CAN/Router/can_router_core.cpp:286:SRNOS_CANRouterGetStats	16	static
+Source/IO/CAN/Router/can_router_core.cpp:296:SRNOS_CANRouterSubscribeRaw	48	static
+Source/IO/CAN/Router/can_router_core.cpp:331:SRNOS_CANRouterUnsubscribeRaw	40	static
+Source/IO/CAN/Router/can_router_core.cpp:352:SRNOS_CANRouterAttachAdapter	192	static
+Source/IO/CAN/Router/can_router_core.cpp:426:SRNOS_CANRouterDetachAdapter	48	static
+Source/IO/CAN/Router/can_router_core.cpp:459:SRNOS_CANRouterPostOneshot	56	static
+Source/IO/CAN/Router/can_router_collections.hpp:372:_ZN21SRNOS_CANRouterDetail15oneshot_enqueueERNS_15oneshot_queue_tERK14SRNOS_CANFramehjj	32	static
+Source/IO/CAN/Router/can_router_core.cpp:502:SRNOS_CANRouterCoreNoteRxWake	0	static
+Source/IO/CAN/Router/can_router_core.cpp:515:SRNOS_CANRouterCoreNoteTxComplete	0	static
+Source/IO/CAN/Router/can_router_core.cpp:563:SRNOS_CANRouterCoreOnRxFrame	80	static
+Source/IO/CAN/Router/can_router_core.cpp:540:_ZL20dispatch_unfrozen_rxP18SRNOS_CANRouterCtxhPK14SRNOS_CANFrameRK17SRNOS_CANRxFilterj	816	static
+Source/IO/CAN/Router/can_router_core.cpp:1030:SRNOS_CANRouterCoreDrainTx	168	static
+Source/IO/CAN/Router/can_router_core.cpp:935:_ZL17run_adapter_ticksP18SRNOS_CANRouterCtxj	40	static
+Source/IO/CAN/Router/can_router_core.cpp:1052:SRNOS_CANRouterCoreNextTxWait	24	static
+Source/IO/CAN/Router/can_router_core.cpp:1088:SRNOS_CANRouterCoreStepTx	248	static
+Source/IO/CAN/Router/can_router_core.cpp:641:_ZL22expire_oneshots_lockedP18SRNOS_CANRouterCtxj	48	static
+Source/IO/CAN/Router/can_router_core.cpp:786:_ZL19compose_group_frameP18SRNOS_CANRouterCtxPK11group_acc_tP14SRNOS_CANFrame	36	static
+Source/IO/CAN/Router/can_router_core.cpp:816:_ZL12commit_groupP18SRNOS_CANRouterCtxP11group_acc_t15SRNOS_CANTxKind17SRNOS_CANTxResult	56	static
+Source/IO/CAN/Router/can_router_core.cpp:838:_ZL17transmit_raw_itemP18SRNOS_CANRouterCtxhPK15adapter_entry_t15SRNOS_CANTxKindPK15SRNOS_CANTxItem	64	static
+Source/IO/CAN/Router/can_router_core.cpp:749:_ZL14add_group_itemP11group_acc_tPK15adapter_entry_tPK15SRNOS_CANTxItem15SRNOS_CANTxKind	40	static
+Source/IO/CAN/Router/can_router_collections.hpp:328:_ZN21SRNOS_CANRouterDetail18priority_remove_atERNS_15oneshot_queue_tEh	32	static
+Source/IO/CAN/Router/can_router_collections.hpp:345:_ZN21SRNOS_CANRouterDetail16expiry_remove_atERNS_15oneshot_queue_tEh	36	static
+
+build/can4-opt-20261006/firmware/sdk/CMakeFiles/sirinos_components.dir/Source/Diagnostics/Time/Time.c.su
+Source/Diagnostics/Time/Time.c:84:SRNOS_TimeInit	24	static
+Source/Diagnostics/Time/Time.c:47:SRNOS_TimeDebugInitOnce	8	static
+Source/Diagnostics/Time/Time.c:128:SRNOS_TimeIsReady	0	static
+Source/Diagnostics/Time/Time.c:136:SRNOS_TimeGetCpuHz	0	static
+Source/Diagnostics/Time/Time.c:141:SRNOS_TimeGetCounter	8	static
+Source/Diagnostics/Time/Time.c:380:SRNOS_TimeEnsureReady	24	static
+Source/Diagnostics/Time/Time.c:151:SRNOS_TimeGetElapsedCycles	0	static
+Source/Diagnostics/Time/Time.c:156:SRNOS_TimeCyclesToSeconds	8	static
+Source/Diagnostics/Time/Time.c:166:SRNOS_TimeCyclesToSeconds64	8	static
+Source/Diagnostics/Time/Time.c:176:SRNOS_TimeCyclesToUs	8	static
+Source/Diagnostics/Time/Time.c:187:SRNOS_TimeDeltaTimerInit	16	static
+Source/Diagnostics/Time/Time.c:202:SRNOS_TimeDeltaTimerSeed	8	static
+Source/Diagnostics/Time/Time.c:220:SRNOS_TimeDeltaTimerIsSeeded	0	static
+Source/Diagnostics/Time/Time.c:225:SRNOS_TimeDeltaTimerElapsedS	24	static
+Source/Diagnostics/Time/Time.c:353:SRNOS_TimeDeltaTimerElapsedCycles	32	static
+Source/Diagnostics/Time/Time.c:236:SRNOS_TimeDeltaTimerElapsedS64	24	static
+Source/Diagnostics/Time/Time.c:247:SRNOS_TimeDeltaTimerElapsedUs	16	static
+Source/Diagnostics/Time/Time.c:258:SRNOS_TimeGetUptimeCycles64	8	static
+Source/Diagnostics/Time/Time.c:272:SRNOS_TimeGetUptimeUs	32	static
+Source/Diagnostics/Time/Time.c:308:SRNOS_TimeGetUptimeS	8	static
+Source/Diagnostics/Time/Time.c:313:SRNOS_TimeDelayUs	16	static
+Source/Diagnostics/Time/Time.c:338:SRNOS_TimeDelayMs	32	static

@@ -168,7 +168,7 @@ SRNOS_Result send_value(uint32_t value) {
 
 启动时一次预留默认 32 KiB 父项目对象池，运行期只从固定 256 B 块分配栈、静态 TCB、完成事件和同步对象存储，通过 RTOS 静态创建装配。父项目线程上限 8，mutex/semaphore/queue/event 各 8；`SRNOS_APP_OBJECT_POOL_BYTES`、`SRNOS_APP_THREAD_LIMIT` 和各 `SRNOS_APP_*_LIMIT` 可编译期覆盖。数量上限不保证全部最大对象能同时放下，连续块不足也会返回 RESOURCE。池扫描和清零不覆盖全局关中断。
 
-KernelGetResources 报告池容量、当前/峰值、池分配失败及对象创建资源失败次数、父项目线程数以及 heap_5 空闲/最低空闲；池中空闲并不等于可满足任意连续分配。SDK 静态登记表和可选循环统计累加器在调度前各分配一次，保守预算各 8 KiB；32 KiB 父项目池另计。SystemHeapBudget 包含这些预留和原有服务栈/队列/TCB/TLS，不代表运行期实测余量。其他业务分配仍应单独预留。
+KernelGetResources 报告池容量、当前/峰值、池分配失败及对象创建资源失败次数、父项目线程数以及 heap_5 空闲/最低空闲；池中空闲并不等于可满足任意连续分配。SDK 静态登记表和可选循环统计累加器在调度前各分配一次，保守预算各 8 KiB；32 KiB 父项目池另计。HostLink 启用时预留 9 KiB，包含 HostComm 3 KiB、HostCmd 2 KiB 及队列/TCB/TLS。SystemHeapBudget 包含这些预留和原有服务栈/队列/TCB/TLS，不代表运行期实测余量。其他业务分配仍应单独预留。
 
 ## 旧业务线程迁移
 
@@ -186,7 +186,7 @@ KernelGetResources 报告池容量、当前/峰值、池分配失败及对象创
 
 ## SDK 迁移与统计
 
-所有 SDK 创建均走私有 KernelThreadNew；服务初始化后由 KernelRunLoop 统一调用 step 和私有 wait。周期传感器/INS 保留原超期重置，Indicators/RC/Referee 保留相对延时；CAN/SPI/I2C/Serial/Log/HostComm 保留通知、队列、超时、批处理；BMI DMA 等处理内等待仍在本轮耗时内。普通 wait 在统计边界外，init/cleanup 不计入稳定周期。SDK 优先级、栈和常驻线程数保留；名称统一 SRNOS_（15 字节以内），Idle/Timer 仅配置为 SRNOS_Idle/SRNOS_Timer，不包装上游内核循环。
+所有 SDK 创建均走私有 KernelThreadNew；服务初始化后由 KernelRunLoop 统一调用 step 和私有 wait。周期传感器/INS 保留原超期重置，Indicators/RC/Referee 保留相对延时；CAN/SPI/I2C/Serial/Log/HostComm 保留通知、队列、超时、批处理；BMI DMA 等处理内等待仍在本轮耗时内。普通 wait 在统计边界外，init/cleanup 不计入稳定周期。托管迁移保持栈和常驻线程数；当前优先级见下文通信策略；名称统一 SRNOS_（15 字节以内），Idle/Timer 仅配置为 SRNOS_Idle/SRNOS_Timer，不包装上游内核循环。
 
 `cycle_statistics_enabled` 默认启用，启动冻结，关闭不改变等待策略或 Fault。hook 只记 DWT 整数计数，SystemMonitor 每批最多四槽、批间阻塞一个 tick 后换算/发布。墙钟执行时间包含抢占、同步阻塞和中断，与 CPU 占比分开。事件/相对等待无固定周期时不发布虚构抖动；详见 Diagnostics/Runtime 和 SystemMonitor。基础流 0x0001、ADC 0x0002 不变，新增 0x0003 循环统计。
 
@@ -205,3 +205,17 @@ Kernel 的 RTOS/CMSIS、Board 与 Source include 都是 SDK 私有编译依赖�
 ## 持久化启动屏障
 
 SystemConfig包含`storage.enabled`（默认true）、`storage.factory_identity_write`（默认false）、`parameter_application_id`与兼容版本（默认1）。AppInit先解析身份和逐IMU校准，再加载业务参数，共享2秒期限；超时或损坏使用规定的默认/降级状态后放行应用。INS等待校准期间继续温控，存储没有新增worker。注册了持久参数的父项目必须声明非零应用ID；HostLink禁用时本地加载/保存仍可用。整片EEPROM维护示例显式设置storage.enabled=false；普通业务不要使用维护模式绕过分区。
+
+## CAN 模式与启动冻结
+
+`SRNOS_SystemConfig.can[4]` 在 ApplicationConfigure/bind_channels 返回后校验、复制并与注册表一起冻结，均早于 `osKernelInitialize()`。四路分别选择 Classic 或 FD，默认全部 Classic 1 Mbit/s；FD 仲裁/数据速率/BRS 必须显式声明。注册类型和最终模式不一致会拒绝启动。现有 adapter 仅允许 Classic 1 Mbit/s，配置不进入可远程写入的业务参数表。公开接口与速率/帧合同见 [CAN](../IO/CAN/README.md#启动模式与-fd-接口)。
+
+原生模式选择复用每路RX/TX worker；CAN4合并为单个P1服务，总计七个CAN线程；父项目无需为 FD 新建驱动线程。FD 每路 32 个订阅、64 个待发槽固定分配在 D1 BSS，四路合计默认 23312 B，不从 RTOS heap 分配，也不占用 Classic Router 的 ITCM 上下文。软件资源准备与冻结不等于设备就绪；原生在启动阶段应用冻结配置，CAN4 由 worker 完成模式握手，成功后才发布通知句柄。初始化失败保留失败状态，不把已退出任务句柄暴露给中断。
+
+## 固定通信优先级
+
+P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及 UART 的 Serial/RC/Referee/RS485 worker（High7 / 47）。共享 SPI4 分发者保持 Realtime1（49），I2C4 保持 High6（46）。父项目仍限 1..39，CAN4由两个4KiB栈合并为一个4KiB栈，启动保守基础预算由64KiB降至60KiB。CAN 私有收发通知使用 index 0，生命周期控制使用 index 1。删除七个 CAN EventFlags 对象后保守启动同步预算仍保留，不将其当作业务内存保证。该策略优先保障 CAN1/2/3 与 IMU/INS，有界 batch/Yield 仅让出同级任务，不承诺持续过载下低优先级任务获得 CPU；实际余量按 [当前优先级与组合负载验收](../../Docs/Validation/CAN4-Optimization-20261006/README.md) 检查。
+
+## 2026-10-06 优化后验证
+
+Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。实测仅CAN1/CAN4短接，CAN2/3/UART同时满载与物理故障尚未覆盖；原Flash恢复并释放探针。详见 [最终验证与原始证据](../../Docs/Validation/CAN4-Optimization-20261006/README.md)。

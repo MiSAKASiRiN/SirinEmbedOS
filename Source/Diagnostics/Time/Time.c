@@ -24,6 +24,10 @@ static uint8_t s_dwt_dbg_initialized;
 static uint8_t s_timeline_initialized;
 static uint32_t s_timeline_last_counter;
 static uint64_t s_timeline_cycles64;
+/* Exact integer-MHz quotient/remainder cache. Updated only by UptimeUs under
+ * the same short interrupt mask as the DWT extension; no per-tick work. */
+static uint64_t s_us_cycles, s_us_value;
+static uint32_t s_us_remainder, s_us_frequency;
 
 SRNOS_DEBUG_WATCH_BSS volatile SRNOS_DbgTime SRNOS_DebugDbgTime;
 
@@ -272,11 +276,33 @@ uint64_t SRNOS_TimeGetUptimeUs(void)
         return 0u;
     }
 
-    uint64_t cycles = SRNOS_TimeGetUptimeCycles64();
-    uint64_t seconds = cycles / (uint64_t)s_cpu_freq_hz;
-    uint64_t remainder = cycles - seconds * (uint64_t)s_cpu_freq_hz;
-
-    return seconds * 1000000ULL + (remainder * 1000000ULL) / (uint64_t)s_cpu_freq_hz;
+    uint32_t key=SRNOS_TimeIrqSave();
+    SRNOS_TimeTimelineUpdate(DWT->CYCCNT);
+    uint64_t cycles=s_timeline_cycles64;
+    uint32_t mhz=s_cpu_freq_hz/1000000u;
+    uint64_t value;
+    if(mhz && s_cpu_freq_hz%1000000u==0u) {
+        uint64_t delta=cycles-s_us_cycles;
+        if(s_us_frequency==s_cpu_freq_hz && delta<=UINT32_MAX) {
+            uint32_t whole=(uint32_t)delta/mhz;
+            uint32_t remainder=(uint32_t)delta-whole*mhz+s_us_remainder;
+            s_us_value+=whole;
+            if(remainder>=mhz) {++s_us_value;remainder-=mhz;}
+            s_us_remainder=remainder;
+        } else {
+            s_us_value=cycles/mhz;
+            s_us_remainder=(uint32_t)(cycles-s_us_value*mhz);
+            s_us_frequency=s_cpu_freq_hz;
+        }
+        s_us_cycles=cycles;value=s_us_value;
+    } else {
+        /* Preserve the original conversion even for an overflowed/noninteger
+         * legacy frequency. The fixed board always uses integer MHz. */
+        uint64_t seconds=cycles/s_cpu_freq_hz;
+        value=seconds*1000000ULL+(cycles-seconds*s_cpu_freq_hz)*1000000ULL/s_cpu_freq_hz;
+    }
+    SRNOS_TimeIrqRestore(key);
+    return value;
 }
 
 float SRNOS_TimeGetUptimeS(void)

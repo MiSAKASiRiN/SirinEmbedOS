@@ -46,13 +46,13 @@ void MX_FDCAN1_Init(void)
   hfdcan1.Init.TransmitPause = DISABLE;
   hfdcan1.Init.ProtocolException = ENABLE;
   hfdcan1.Init.NominalPrescaler = 1;
-  hfdcan1.Init.NominalSyncJumpWidth = 4;
-  hfdcan1.Init.NominalTimeSeg1 = 18;
-  hfdcan1.Init.NominalTimeSeg2 = 6;
-  hfdcan1.Init.DataPrescaler = 1;
-  hfdcan1.Init.DataSyncJumpWidth = 2;
-  hfdcan1.Init.DataTimeSeg1 = 16;
-  hfdcan1.Init.DataTimeSeg2 = 8;
+  hfdcan1.Init.NominalSyncJumpWidth = 13;
+  hfdcan1.Init.NominalTimeSeg1 = 60;
+  hfdcan1.Init.NominalTimeSeg2 = 19;
+  hfdcan1.Init.DataPrescaler = 2;
+  hfdcan1.Init.DataSyncJumpWidth = 4;
+  hfdcan1.Init.DataTimeSeg1 = 29;
+  hfdcan1.Init.DataTimeSeg2 = 10;
   hfdcan1.Init.MessageRAMOffset = 0;
   hfdcan1.Init.StdFiltersNbr = 4;
   hfdcan1.Init.ExtFiltersNbr = 4;
@@ -94,14 +94,14 @@ void MX_FDCAN2_Init(void)
   hfdcan2.Init.TransmitPause = DISABLE;
   hfdcan2.Init.ProtocolException = ENABLE;
   hfdcan2.Init.NominalPrescaler = 1;
-  hfdcan2.Init.NominalSyncJumpWidth = 4;
-  hfdcan2.Init.NominalTimeSeg1 = 18;
-  hfdcan2.Init.NominalTimeSeg2 = 6;
-  hfdcan2.Init.DataPrescaler = 1;
-  hfdcan2.Init.DataSyncJumpWidth = 2;
-  hfdcan2.Init.DataTimeSeg1 = 16;
-  hfdcan2.Init.DataTimeSeg2 = 8;
-  hfdcan2.Init.MessageRAMOffset = 0x400;
+  hfdcan2.Init.NominalSyncJumpWidth = 13;
+  hfdcan2.Init.NominalTimeSeg1 = 60;
+  hfdcan2.Init.NominalTimeSeg2 = 19;
+  hfdcan2.Init.DataPrescaler = 2;
+  hfdcan2.Init.DataSyncJumpWidth = 4;
+  hfdcan2.Init.DataTimeSeg1 = 29;
+  hfdcan2.Init.DataTimeSeg2 = 10;
+  hfdcan2.Init.MessageRAMOffset = 0x300;
   hfdcan2.Init.StdFiltersNbr = 4;
   hfdcan2.Init.ExtFiltersNbr = 4;
   hfdcan2.Init.RxFifo0ElmtsNbr = 8;
@@ -142,14 +142,14 @@ void MX_FDCAN3_Init(void)
   hfdcan3.Init.TransmitPause = DISABLE;
   hfdcan3.Init.ProtocolException = ENABLE;
   hfdcan3.Init.NominalPrescaler = 1;
-  hfdcan3.Init.NominalSyncJumpWidth = 4;
-  hfdcan3.Init.NominalTimeSeg1 = 18;
-  hfdcan3.Init.NominalTimeSeg2 = 6;
-  hfdcan3.Init.DataPrescaler = 1;
-  hfdcan3.Init.DataSyncJumpWidth = 2;
-  hfdcan3.Init.DataTimeSeg1 = 16;
-  hfdcan3.Init.DataTimeSeg2 = 8;
-  hfdcan3.Init.MessageRAMOffset = 0x800;
+  hfdcan3.Init.NominalSyncJumpWidth = 13;
+  hfdcan3.Init.NominalTimeSeg1 = 60;
+  hfdcan3.Init.NominalTimeSeg2 = 19;
+  hfdcan3.Init.DataPrescaler = 2;
+  hfdcan3.Init.DataSyncJumpWidth = 4;
+  hfdcan3.Init.DataTimeSeg1 = 29;
+  hfdcan3.Init.DataTimeSeg2 = 10;
+  hfdcan3.Init.MessageRAMOffset = 0x600;
   hfdcan3.Init.StdFiltersNbr = 4;
   hfdcan3.Init.ExtFiltersNbr = 4;
   hfdcan3.Init.RxFifo0ElmtsNbr = 8;
@@ -203,9 +203,9 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* FDCAN1 interrupt Init */
-    HAL_NVIC_SetPriority(FDCAN1_IT0_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(FDCAN1_IT0_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(FDCAN1_IT0_IRQn);
-    HAL_NVIC_SetPriority(FDCAN1_IT1_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(FDCAN1_IT1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(FDCAN1_IT1_IRQn);
   /* USER CODE BEGIN FDCAN1_MspInit 1 */
 
@@ -235,9 +235,9 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* FDCAN2 interrupt Init */
-    HAL_NVIC_SetPriority(FDCAN2_IT0_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(FDCAN2_IT0_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(FDCAN2_IT0_IRQn);
-    HAL_NVIC_SetPriority(FDCAN2_IT1_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(FDCAN2_IT1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(FDCAN2_IT1_IRQn);
   /* USER CODE BEGIN FDCAN2_MspInit 1 */
 
@@ -267,9 +267,9 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* FDCAN3 interrupt Init */
-    HAL_NVIC_SetPriority(FDCAN3_IT0_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(FDCAN3_IT0_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(FDCAN3_IT0_IRQn);
-    HAL_NVIC_SetPriority(FDCAN3_IT1_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(FDCAN3_IT1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(FDCAN3_IT1_IRQn);
   /* USER CODE BEGIN FDCAN3_MspInit 1 */
 

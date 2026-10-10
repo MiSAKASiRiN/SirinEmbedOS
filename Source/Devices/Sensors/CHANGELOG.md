@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- 2026-10-06：在CAN1/CAN4真实共享SPI负载中逐样本观测双IMU；包含CAN4过载窗口，双IMU/INS仍为1kHz，无INS missing/missed。记录最大样本完成间隔和采集耗时，未改驱动、采样周期或优先级；不替代姿态精度/温稳及UART混合负载验证。见 [报告](../../../Docs/Validation/CAN4-SPI-20261006/README.md)。
+
+- 2026-10-03：BMI/LSM 采样提升至 P0 / Realtime（48），SPI 仲裁优先 IMU；环境线程不变，采样周期/栈/发布合同保持。离线回归与构建结果见 Priority-20261003，实时延迟待板测。
+
 - 2026-09-28：公共接口只含 SDK 类型，固定 BMI088 寄存器、初始化和 SPI 片选移为私有实现。父项目通过 `SRNOS_SensorGetBMI088SPIStatistics()` 获得两颗片选的 SPI 统计副本，不引用驱动私有头；其他采样快照与频率保持。名称/路径迁移见 `Docs/SDKMigration.md`。 本轮主机/构建范围见 `Docs/Validation/SRNOSBoundary-20260928/README.md`；未重新烧录。
 
 - 2026-09-28：BMI/LSM/环境采样拆为单轮和私有等待，统一 SRNOS_ 名称；保持周期超期重置及 BMI DMA 等待。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。

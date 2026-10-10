@@ -7,7 +7,7 @@
 //
 // 线程安全：
 // - set_give_cmd() 使用 atomic
-// - onRxFeedback()/tick() 通过 seqlock 保护 state_
+// - onRxFeedback()/tick()/snapshot() 通过短临界区保护 state_
 // - 其他任务读取请用 snapshot()
 
 #ifndef SRNOS_MOTOR_GM6020_HPP
@@ -62,11 +62,12 @@ public:
 
     // === feedback ===
     void onRxFeedback(const CANFrame& f, uint32_t now_ms);
-    void set_offline_timeout(uint32_t ms) { offline_ms_ = ms; }
+    void set_offline_timeout(uint32_t ms) { offline_ms_.store(ms, std::memory_order_relaxed); }
     void tick(uint32_t now_ms);
 
     // ---- 快照读取（推荐给其他任务用）----
-    // 读端无锁；返回 true 表示读到一致快照
+    // 短临界区复制，无自旋；任务或 IRQ 优先级 5..15 调用。
+    // Task context or IRQ priority 5..15; bounded copy, no spin.
     bool snapshot(GM6020State& out) const;
     GM6020State state() const noexcept {
         GM6020State s{};
@@ -87,11 +88,10 @@ private:
     std::atomic<int16_t> give_cmd_raw_{0};
 
     // 状态 & 并发保护
-    // seqlock：偶数=稳定，奇数=写入中
-    mutable volatile uint32_t state_seq_ = 0;
+    // RX、超时与快照由实现内的短临界区串行。
     GM6020State state_{};
 
-    uint32_t    offline_ms_ = 100;
+    std::atomic<uint32_t> offline_ms_{100};
 };
 
 /**

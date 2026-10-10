@@ -60,16 +60,17 @@ public:
 
     // === feedback ===
     void onRxFeedback(const CANFrame& f, uint32_t now_ms);
-    // 与 GM6020 一致：提供按值返回的“快照”访问器（内部用 seqlock 保障一致性）
+    // 按值返回一致快照；内部仅短临界区复制，不自旋。
     C620State state() const noexcept {
         C620State s{};
         (void)snapshot(s);
         return s;
     }
-        // 无锁多读快照；最多尝试 3 次
+        // 一次有界复制；任务或 IRQ 优先级 5..15 调用。
+    // Task context or IRQ priority 5..15; bounded copy, no spin.
     bool snapshot(C620State& out) const;
 
-    void set_offline_timeout(uint32_t ms) { offline_ms_ = ms; }
+    void set_offline_timeout(uint32_t ms) { offline_ms_.store(ms, std::memory_order_relaxed); }
     void tick(uint32_t now_ms);
 
     // === TX 路由导出接口：一个对象 -> (group_id, slot, 16-bit) ===
@@ -83,10 +84,9 @@ private:
 
     std::atomic<int16_t> give_cmd_raw_{0};  // [-16384, 16384] 原子读写
     volatile int16_t dbg_cmd_shadow_{0};    // 调试影子，供 Ozone 直接采样
-    // seqlock 计数器：偶数=稳定快照，奇数=写入中
-    mutable uint32_t state_seq_{0};
+    // RX、超时与快照由实现内的短临界区串行。
     mutable C620State state_{};
-    uint32_t  offline_ms_ = 100;
+    std::atomic<uint32_t> offline_ms_{100};
 };
 
 /**

@@ -123,6 +123,6 @@ static void remote_worker(void *arg) {
 int SRNOS_RemoteControlStart(void) {
  if(started||!configured||osKernelGetState()!=osKernelReady)return -1;started=true;
  if(!dr16.channel&&!vt03.channel)return 0;
- const osThreadAttr_t attr={.name="SRNOS_RC",.stack_size=3072,.priority=osPriorityAboveNormal};
+ const osThreadAttr_t attr={.name="SRNOS_RC",.stack_size=3072,.priority=osPriorityHigh7};
  return SRNOS_KernelThreadNew(remote_worker,NULL,&attr)?0:-1;
 }

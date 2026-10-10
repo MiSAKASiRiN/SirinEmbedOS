@@ -12,7 +12,9 @@
 
 六个异常向量由 `Board/Support/System/fault_handlers.c` 的 naked 汇编入口拥有。生成的同名 handler 由构建适配改名，其他中断保持 CubeMX 所有权。入口先读取原 MSP/PSP/LR，再跳转到解码器。Fault 可以解析基本/扩展/惰性 FPU 栈帧，并写入保留记录。异常处理时不调用分配器或 RTOS 锁。
 
-默认紧急输出为空，只保留记录并执行配置的 reset/halt。应用可以在配置阶段调用 `SRNOS_Platform_ReserveEmergencyOutput` 一次，注册已明确独占的传输，系统配置冻结后拒绝注册；回调必须在关中断状态下有界返回，不能使用 DMA 完成等待、RTOS 或动态内存。Fault 不初始化或复位 USART1，也不抢占其他协议端口。正常日志不可调用紧急通路。
+默认 Panic/Fault 在保存 retained 记录后，经 USART1 TX（PB14 AF4，115200、8N1）轮询输出报告，再执行配置的 reset/halt。正常启动不预留或占用 USART1；进入不可恢复的 Fault 后才复位 USART1 并接管 TX，无需应用绑定或提前初始化。实现位于 `Board/Support/System/fault_usart1.c`，使用 HSI、保留 HSI 分频，并对时钟/发送就绪进行有界轮询，不依赖 HAL tick、DMA、RTOS 或动态内存；超时停止串口输出，仍继续 Fault 处理。此时会将 USART1/6、UART9/10 共享内核时钟切到 HSI，不恢复被中断的协议，随后终止或复位。时钟、电源、引脚或 MCU 本身失效时不保证串口可用。
+
+应用仍可在配置阶段调用 `SRNOS_Platform_ReserveEmergencyOutput` 一次覆盖默认输出，系统配置冻结后拒绝注册；自定义回调须在关中断状态下有界返回，不能等待 DMA、RTOS 或动态内存。注册自定义 writer 后不再接管 USART1。正常日志不可调用紧急通路。物理串口 Panic 输出与主机超时测试见 [2026-10-10 记录](../../Docs/Validation/IMUTurntableLatency-20261010/README.md)。
 
 ## 链接布局
 

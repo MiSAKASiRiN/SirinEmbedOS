@@ -1,0 +1,18 @@
+{
+  "brake_seconds": 7.999998999999999,
+  "first_support_neighbourhood_seconds": 0.28000000000000114,
+  "constant_voltage_minmax": [
+    2500.0,
+    2500.0
+  ],
+  "imu": {
+    "257": {
+      "gyro_peak_dps": 259.8441919127214,
+      "acceleration_peak_m_s2": 56.62720642291921
+    },
+    "256": {
+      "gyro_peak_dps": 233.3308904619114,
+      "acceleration_peak_m_s2": 43.54134408350421
+    }
+  }
+}

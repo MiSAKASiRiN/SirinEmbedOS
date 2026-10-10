@@ -11,6 +11,7 @@
 #include "IO/I2C/i2c_internal.h"
 #include "IO/CAN/Native/fdcan_internal.h"
 #include "IO/CAN/can_startup.h"
+#include "IO/CAN/can_controller_internal.h"
 #include "SirinEmbedOS/IO/RS485/RS485.h"
 #include "../Services/INS/ins_internal.h"
 #include "../Services/INS/imu_calibration_internal.h"
@@ -99,16 +100,15 @@ typedef struct {
     bool wait_board;
 } system_thread_t;
 static const system_thread_t system_threads[] = {
-    {"SRNOS_CAN1_RX",SRNOS_NativeCANRxRouterWorker,(void *)1,4096,osPriorityHigh,true},
-    {"SRNOS_CAN1_TX",SRNOS_NativeCANTxRouterWorker,(void *)1,4096,osPriorityHigh,true},
-    {"SRNOS_CAN2_RX",SRNOS_NativeCANRxRouterWorker,(void *)2,4096,osPriorityHigh,true},
-    {"SRNOS_CAN2_TX",SRNOS_NativeCANTxRouterWorker,(void *)2,4096,osPriorityHigh,true},
-    {"SRNOS_CAN3_RX",SRNOS_NativeCANRxRouterWorker,(void *)3,4096,osPriorityHigh,true},
-    {"SRNOS_CAN3_TX",SRNOS_NativeCANTxRouterWorker,(void *)3,4096,osPriorityHigh,true},
-    {"SRNOS_CAN4_RX",SRNOS_ExternalCANRxRouterWorker,NULL,4096,osPriorityHigh4,false},
-    {"SRNOS_CAN4_TX",SRNOS_ExternalCANTxRouterWorker,NULL,4096,osPriorityHigh4,false},
-    {"SRNOS_BMI",SRNOS_BMIWorker,NULL,2048,osPriorityHigh5,false},
-    {"SRNOS_INS",SRNOS_INSWorker,NULL,3072,osPriorityHigh5,false},
+    {"SRNOS_CAN1_RX",SRNOS_NativeCANRxRouterWorker,(void *)1,4096,osPriorityRealtime,true},
+    {"SRNOS_CAN1_TX",SRNOS_NativeCANTxRouterWorker,(void *)1,4096,osPriorityRealtime,true},
+    {"SRNOS_CAN2_RX",SRNOS_NativeCANRxRouterWorker,(void *)2,4096,osPriorityRealtime,true},
+    {"SRNOS_CAN2_TX",SRNOS_NativeCANTxRouterWorker,(void *)2,4096,osPriorityRealtime,true},
+    {"SRNOS_CAN3_RX",SRNOS_NativeCANRxRouterWorker,(void *)3,4096,osPriorityRealtime,true},
+    {"SRNOS_CAN3_TX",SRNOS_NativeCANTxRouterWorker,(void *)3,4096,osPriorityRealtime,true},
+    {"SRNOS_CAN4",SRNOS_ExternalCANWorker,NULL,4096,osPriorityHigh7,false},
+    {"SRNOS_BMI",SRNOS_BMIWorker,NULL,2048,osPriorityRealtime,false},
+    {"SRNOS_INS",SRNOS_INSWorker,NULL,3072,osPriorityRealtime,false},
     {"SRNOS_Indic",SRNOS_IndicatorsWorker,NULL,1024,osPriorityLow,false},
 };
 static void system_thread_entry(void *arg)
@@ -152,6 +152,7 @@ void SRNOS_KernelStart(void)
     SRNOS_ParametersConfigure(draft.parameter_application_id,draft.parameter_compatibility_version);
     configASSERT(SRNOS_TelemetryFreeze());
     configASSERT(SRNOS_ParametersFreeze() == SRNOS_PARAMETERS_STATUS_OK);
+    configASSERT(SRNOS_CANControllerPrepare(draft.can));
     SRNOS_CAN_FreezeConfiguration();
     configASSERT(SRNOS_SystemFreeze(&draft) == SRNOS_SYSTEM_OK);
     status.phase = SRNOS_SYSTEM_CONFIG_FROZEN;
@@ -173,13 +174,14 @@ void SRNOS_KernelStart(void)
     configASSERT(SRNOS_SystemMonitorStart());
     if (c->logging_enabled) configASSERT(SRNOS_LoggingStart());
     if (c->host_link_enabled) configASSERT(SRNOS_HostLinkStart());
-    /* Preserve the prototype's bounded shared-SPI worker priority ordering:
-     * SPI callback High6 > IMU High5 > external CAN High4 > native CAN High. */
+    /* P0: native CAN and IMU/INS Realtime (48). P1: CAN4 and UART High7
+     * (47). Shared SPI stays Realtime1 (49) to complete either class, with
+     * IMU-first bounded arbitration. I2C remains High6 (46). */
     for (size_t i=0; i<sizeof(system_threads)/sizeof(system_threads[0]); ++i) {
         const system_thread_t *t=&system_threads[i];
         make_thread(t->name, system_thread_entry, (void *)t, t->stack, t->priority);
     }
-    if(c->sensors.lsm_enabled) make_thread("SRNOS_LSM", SRNOS_LSMWorker, NULL, 2048, osPriorityHigh5);
+    if(c->sensors.lsm_enabled) make_thread("SRNOS_LSM", SRNOS_LSMWorker, NULL, 2048, osPriorityRealtime);
     if(c->sensors.lis_enabled || c->sensors.spa_enabled) make_thread("SRNOS_Env", SRNOS_EnvironmentWorker, NULL, 2048, osPriorityNormal);
     for (size_t i=0; i<c->thread_count; ++i) {
         const SRNOS_ThreadConfig *t = &c->threads[i];

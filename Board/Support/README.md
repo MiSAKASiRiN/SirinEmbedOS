@@ -6,8 +6,8 @@
 
 | 目录 | 文件与用途 |
 |---|---|
-| System | `board_startup.h` 声明生成入口；`memory_early.c` 早期内存；`kernel_board.c` heap_5 区域与启动；`fault_platform.c/.h` 和 `fault_handlers.c` 捕获及异常入口；`libc_memory.c`、`libc_arena.h`、`libc_locks.c` 支撑 Picolibc |
-| IO | `spi_board.c/.h` SPI4 HAL/DMA、模式和 abort；`i2c_board.c/.h` I2C4 handle、空闲检查与时序；`i2c_timing.h` 固定 TIMING；`can_board.cpp/.h` 三路 FDCAN 和 MCP 单一绑定；`serial_board.c` UART DMA、RS485 电气与回调 |
+| System | `board_startup.h` 声明生成入口；`memory_early.c` 早期内存；`kernel_board.c` heap_5 区域与启动；`fault_platform.c/.h` 和 `fault_handlers.c` 捕获及异常入口；`fault_usart1.c/.h` 提供默认致命异常 USART1 轮询输出；`libc_memory.c`、`libc_arena.h`、`libc_locks.c` 支撑 Picolibc |
+| IO | `spi_board.c/.h` SPI4 HAL/DMA、模式和 abort；`i2c_board.c/.h` I2C4 handle、空闲检查与时序；`i2c_timing.h` 固定 TIMING；`can_board.cpp/.h` 三路 FDCAN 和 MCP 单一绑定，`can_native_board.c` 应用冻结的 Classic/FD 时序与 Message RAM；`serial_board.c` UART DMA、RS485 电气与回调 |
 | Devices | `sensors_board.c/.h` 总线/片选/地址；`sensor_frames.c/.h` 固定安装坐标；`heater_board.c/.h` 加热 PWM；`indicators_board.c/.h` 指示器初始化和 IRQ；三个 `*_hardware.h` 固定蜂鸣器/WS2812 硬件常量 |
 | USB | `usb_board.c/.h` 检查 PCD 并准备 PA11/12；`usb_device_board.c` USBD_LL、FIFO、PCD 回调与端点接入 |
 
@@ -64,3 +64,20 @@ Devices/monitor_adc_board独占hadc3、BDMA_Channel2和五个halfword的32字节
 ADC3 停止在 HAL 停止请求源后显式关闭 BDMA Channel2，并核验硬件使能位；适配 HAL normal 完成 READY 但 EN 保留的行为，不修改 HAL 或 CubeMX 生成文件。
 
 2026-09-29：System 早期入口继续在 MPU/cache 前调用 Core 内存初始化；Core 现负责 ITCM CAN Router BSS/Watch 的 64 位清零和代码复制。Support 不接管服务初始化；生成文件、DMA/BDMA 绑定不变。见 [ITCM 迁移记录](../../Docs/Validation/ITCM-20260929/README.md)。
+
+
+## CAN Classic / FD 板级配置
+
+`IO/can_native_board.c` 是三路原生控制器的固定板级实现：检查 PLL2Q 80 MHz、CCU 无额外分频和 HAL READY，然后应用冻结配置；HAL/滤波/TDC 失败由 Native 驱动闩锁，禁止 worker 启动默认 Classic 配置。CubeMX 保留 Classic 1 Mbit/s 初始化输入，应用选择 FD 时在启动控制器前重新初始化。窗口偏移为 0/0x300/0x600 word，Classic/FD 分别占 232/676 words；不更改 MCU linker 段或 DMA buffer。数据相位高于 1 Mbit/s 且 BRS 开启时启用 TDC，TDCO=DataTimeSeg1×DataPrescaler、TDCF=0。
+
+新增 FD 的路由和调度属于 `Source/IO/CAN`，MCP 配置经原 backend 完成；Support 不理解应用协议。速率、冻结与 adapter 合同见 [CAN README](../../Source/IO/CAN/README.md)，离线验证见 [CAN FD 记录](../../Docs/Validation/CANFD-20261003/README.md)。
+
+原生FD时序由自维护can_native_board.c对齐MCP：仲裁80%，数据≤4M80%/5M75%/8M80%；Classic时序和IOC不变。
+
+## 2026-10-06 优化后验证
+
+Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。实测仅CAN1/CAN4短接，CAN2/3/UART同时满载与物理故障尚未覆盖；原Flash恢复并释放探针。详见 [最终验证与原始证据](../../Docs/Validation/CAN4-Optimization-20261006/README.md)。
+
+## 默认 Panic 串口
+
+未注册自定义 Emergency writer 时，`System/fault_platform.c` 将完整 Fault 报告交给 `fault_usart1.c`：PB14 AF4、USART1 TX、115200/8N1。仅在不可恢复异常时复位 USART1、启用 HSI 并切换 USART1/6、UART9/10 共享内核时钟；正常启动和 Serial 资源分配不变。寄存器轮询有界、失败锁存，未初始化时 Flush 不接管端口；不使用 HAL tick、DMA、中断完成、RTOS 或堆。应用启动期自定义 Emergency writer 覆盖此默认。CubeMX 生成内容、链接段和 Fault retained 格式不变。物理串口与故障超时验证见 [记录](../../Docs/Validation/IMUTurntableLatency-20261010/README.md)。

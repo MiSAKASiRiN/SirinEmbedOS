@@ -1,0 +1,44 @@
+{
+  "identical": true,
+  "bytes": 1048576,
+  "original_sha256": "b5731bd2d67c16d0b1ef66a50cf234b712d1b512d07b6f115209b6d350d08b2a",
+  "restored_sha256": "b5731bd2d67c16d0b1ef66a50cf234b712d1b512d07b6f115209b6d350d08b2a",
+  "ticks": [
+    [
+      16305,
+      16293,
+      0,
+      0
+    ],
+    [
+      23181,
+      23168,
+      0,
+      0
+    ]
+  ],
+  "runtime_verified": true,
+  "probe_released": true,
+  "probe": "10114514",
+  "hostlink_metadata": {
+    "complete": true,
+    "port": "/dev/cu.usbmodem355C343932333",
+    "units": "A,V,\u00b0C,us,CPU ppm",
+    "stack": "not measured",
+    "timing": "CPU includes ISR attribution; cycle wall time includes preemption, blocking and ISR; waits/init/cleanup excluded",
+    "hook_cost": "diagnostic estimate excluding final accounting; board benchmark required",
+    "reports": {
+      "tasks": 9,
+      "adc": 9,
+      "cycles": 9
+    },
+    "decode_errors": {},
+    "supported_streams": [
+      "tasks",
+      "adc",
+      "cycles"
+    ]
+  },
+  "restored_image": "test-entry original full Flash; optimization/test images not left running",
+  "eeprom_written": false
+}

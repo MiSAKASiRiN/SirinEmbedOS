@@ -1,0 +1,38 @@
+{
+  "build/IMUTurntableFullSweep/board/run1.elf": {
+    "sha256": "8810f8769da1cbcfe81ce8dfb41ad367e22ed02ce4e38664fb3b66eb2c6f62f2",
+    "bytes": 3392136
+  },
+  "build/IMUTurntableFullSweep/board/run2.elf": {
+    "sha256": "5dcd825048295125f1b95aaaa8d932d121e81e38ff4ae7f4fd977d5f698547f1",
+    "bytes": 3392820
+  },
+  "build/IMUTurntableFullSweep/board/run1/rx.bin": {
+    "sha256": "5bc1e98022a42e4ec5546330808b140953f300a45becf8de74ad32c3f149cf16",
+    "bytes": 58852877
+  },
+  "build/IMUTurntableFullSweep/board/run2/rx.bin": {
+    "sha256": "0d4541e2a49b6359a756242249c7914889c67e350450648b1be8422398f502fe",
+    "bytes": 52068945
+  },
+  "Examples/IMUTurntableBringUp/control.hpp": {
+    "sha256": "d34dfee2bee5d8f20223fc55ebe01807989edf7fbd40550728fe29df23e1b772",
+    "bytes": 11665
+  },
+  "Examples/IMUTurntableBringUp/app_main.cpp": {
+    "sha256": "e8742365dda7d5fcbe84c3fb191381a7a626942a959ed9fa975e20a971ba127b",
+    "bytes": 8548
+  },
+  "Examples/IMUTurntableBringUp/capture.py": {
+    "sha256": "9a0bc7bfe65c8065564c1ee5303968a8eee6be7640b1eeb44f6054b119b76fa4",
+    "bytes": 5143
+  },
+  "Examples/IMUTurntableBringUp/analyze.py": {
+    "sha256": "e47790ae98968e57ac5c145c4a9c35df4f91ff2547572d6141e16bde6ed95f90",
+    "bytes": 9245
+  },
+  "Examples/IMUTurntableBringUp/sequence_analysis.py": {
+    "sha256": "7faf104d1197644515b1cee3aca0180c11c2ca064f3e81340980358c75f7a238",
+    "bytes": 5581
+  }
+}

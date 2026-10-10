@@ -1,3 +1,4 @@
+#include "../state_guard.hpp"
 #include "SirinEmbedOS/Devices/Motors/DM4310/DM4310.hpp"
 #include <cstring>
 #include <cstddef>
@@ -162,111 +163,56 @@ void DM4310::set_mit_torque_nm(float torque_nm)
 }
 
 void DM4310::onRxFeedback(const CANFrame& f, uint32_t now_ms) {
-    if (f.is_ext || f.dlc < 8 || f.id != fb_master_sid_) {
-        return;
-    }
-
+    if (f.is_ext || f.dlc < 8 || f.id != fb_master_sid_) return;
     const uint8_t* d = f.data;
     const uint8_t id_in = dm4310_payload_id(d[0]);
-    const uint8_t err   = dm4310_payload_err(d[0]);
+    if (id_in != (SRNOS_CANId & 0x0F)) return;
 
-    // If you use 8-bit ID in protocol, change this to: if (d[0] == SRNOS_CANId) ...
-    if (id_in != (SRNOS_CANId & 0x0F)) {
-        return;
-    }
+    const uint16_t pos_u16 = static_cast<uint16_t>((static_cast<uint16_t>(d[1]) << 8) | d[2]);
+    const uint16_t vel_u12 = static_cast<uint16_t>((static_cast<uint16_t>(d[3]) << 4) | (d[4] >> 4));
+    const uint16_t tq_u12 = static_cast<uint16_t>((static_cast<uint16_t>(d[4] & 0x0F) << 8) | d[5]);
+    DM4310State next{};
+    next.motor_id = id_in;
+    next.error_code = dm4310_payload_err(d[0]);
+    next.pos_raw = static_cast<int16_t>(pos_u16);
+    next.pos_rad = uint_to_float(pos_u16, P_MIN, P_MAX, 16);
+    next.speed_rpm = static_cast<int16_t>(vel_u12);
+    next.speed_rad_s = uint_to_float(vel_u12, V_MIN, V_MAX, 12);
+    next.torque_raw = static_cast<int16_t>(tq_u12);
+    next.temp_mos_C = d[6];
+    next.temp_rotor_C = d[7];
+    next.last_rx_ms = now_ms;
+    next.online = true;
 
-    // begin write: make seq odd
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
-
-    DM4310State s = state_;
-
-    // keep previous values
-    s.prev_pos_raw    = s.pos_raw;
-    s.prev_speed_raw  = s.speed_rpm;
-    s.prev_torque_raw = s.torque_raw;
-    const bool was_online = s.online;
-
-    // POS 16b; VEL/TQ 12b (unsigned, mapped to ranges)
-    const uint16_t pos_u16 = static_cast<uint16_t>(
-        (static_cast<uint16_t>(d[1]) << 8) | d[2]
-    );
-    const uint16_t vel_u12 = static_cast<uint16_t>(
-        (static_cast<uint16_t>(d[3]) << 4) | (d[4] >> 4)
-    );
-    const uint16_t tq_u12  = static_cast<uint16_t>(
-        (static_cast<uint16_t>(d[4] & 0x0F) << 8) | d[5]
-    );
-
-    // ===== multi-turn accumulator =====
-    if (!was_online) {
-        // First valid frame (or re-online after timeout):
-        // initialize accumulator from current single-turn value.
-        s.pos_raw_total = static_cast<int32_t>(pos_u16);
+    const Detail::StateGuard guard;
+    next.prev_pos_raw = state_.pos_raw;
+    next.prev_speed_raw = state_.speed_rpm;
+    next.prev_torque_raw = state_.torque_raw;
+    if (!state_.online) {
+        next.pos_raw_total = static_cast<int32_t>(pos_u16);
     } else {
-        // Compute step with wrap-around compensation.
-        const uint16_t prev_pos_u16 = static_cast<uint16_t>(s.prev_pos_raw);
         int32_t delta = static_cast<int32_t>(pos_u16) -
-                        static_cast<int32_t>(prev_pos_u16);
-
-        // When 16-bit wraps through ±32768, the raw difference will be ~±65536.
-        if (delta > 32767) {
-            delta -= 65536;
-        } else if (delta < -32768) {
-            delta += 65536;
-        }
-
-        s.pos_raw_total += delta;
+                        static_cast<int32_t>(static_cast<uint16_t>(state_.pos_raw));
+        if (delta > 32767) delta -= 65536;
+        else if (delta < -32768) delta += 65536;
+        next.pos_raw_total = state_.pos_raw_total + delta;
     }
-
-    // fill feedback (single-turn + multi-turn)
-    s.motor_id     = id_in;
-    s.error_code   = err;
-    s.pos_raw      = static_cast<int16_t>(pos_u16);
-    s.pos_rad      = static_cast<float>(uint_to_float(pos_u16, P_MIN, P_MAX, 16));
-    s.pos_rad_total= static_cast<float>(static_cast<float>(s.pos_raw_total) * POS_RAW_STEP + P_MIN);
-    s.speed_rpm    = static_cast<int16_t>(vel_u12);
-    s.speed_rad_s  = static_cast<float>(uint_to_float(vel_u12, V_MIN, V_MAX, 12));
-    s.torque_raw   = static_cast<int16_t>(tq_u12);
-    s.temp_mos_C   = d[6];
-    s.temp_rotor_C = d[7];
-    s.last_rx_ms   = now_ms;
-    s.online       = true;
-
-    state_ = s;
-
-    // end write: make seq even
-    __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
+    next.pos_rad_total = static_cast<float>(next.pos_raw_total) * POS_RAW_STEP + P_MIN;
+    state_ = next;
 }
 
 void DM4310::tick(uint32_t now_ms) {
-    const uint32_t last = __atomic_load_n(&state_.last_rx_ms, __ATOMIC_RELAXED);
-    const bool was_online = __atomic_load_n(&state_.online, __ATOMIC_RELAXED);
-
-    if (was_online && (now_ms - last > offline_ms_)) {
-        __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_ACQ_REL);
+    const Detail::StateGuard guard;
+    if (state_.online && Detail::feedbackExpired(now_ms, state_.last_rx_ms,
+                                                offline_ms_.load(std::memory_order_relaxed))) {
         state_.online = false;
-        __atomic_fetch_add(&state_seq_, 1u, __ATOMIC_RELEASE);
     }
 }
 
 bool DM4310::snapshot(DM4310State& out) const {
-    for (int i = 0; i < 3; ++i) {
-        uint32_t s1 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-        if (s1 & 1u) {
-            // writer in progress
-            continue;
-        }
-
-        DM4310State tmp;
-        std::memcpy(&tmp, &state_, sizeof(tmp));
-
-        uint32_t s2 = __atomic_load_n(&state_seq_, __ATOMIC_ACQUIRE);
-        if (s1 == s2) {
-            out = tmp;
-            return true;
-        }
-    }
-    return false;
+    const Detail::StateGuard guard;
+    out = state_;
+    return true;
 }
 
 bool DM4310::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const {

@@ -2,6 +2,7 @@
 // Created by sirin on 2025/10/4.
 //
 #include "IO/CAN/Native/fdcan_internal.h"
+#include "IO/CAN/can_controller_internal.h"
 #include <string.h>
 
 #include "SirinEmbedOS/Core/Memory/MemorySections.h"
@@ -26,10 +27,11 @@ uint8_t SRNOS_FDCANDlcToLen(uint32_t dlc) {
 /* ==== RX rings (one per bus) ==== */
 typedef struct {
     SRNOS_FDCANRxFrame buf[SRNOS_FDCAN_RX_RING_SIZE];
-    volatile uint16_t     w;  /* ISR writer */
-    volatile uint16_t     r;  /* task reader */
+    uint16_t w; /* ISR is the only writer; release-publishes complete frames. */
+    uint16_t r; /* Worker is the only writer; release-publishes consumed slots. */
 } rx_ring_t;
 
+_Static_assert(SRNOS_FDCAN_RX_RING_SIZE > 1u && SRNOS_FDCAN_RX_RING_SIZE <= UINT16_MAX, "RX ring index range");
 static rx_ring_t s_rx1 SRNOS_DTCM_BSS;
 static rx_ring_t s_rx2 SRNOS_DTCM_BSS;
 static rx_ring_t s_rx3 SRNOS_DTCM_BSS;
@@ -53,6 +55,55 @@ SRNOS_FDCANDiag SRNOS_FDCANGetDiag(uint8_t bus) {
         z = *d;
     }
     return z;
+}
+
+enum { SRNOS_FDCAN_RECOVERY_HEALTHY, SRNOS_FDCAN_RECOVERY_BACKOFF,
+       SRNOS_FDCAN_RECOVERY_ABORT, SRNOS_FDCAN_RECOVERY_VERIFY, SRNOS_FDCAN_RECOVERY_FAULT };
+typedef struct {
+    uint32_t pending, state, deadline_ms, attempts;
+} recovery_t;
+static recovery_t s_recovery[SRNOS_FDCAN_BUS_COUNT];
+static bool s_init_attempted;
+static bool s_config_applied[SRNOS_FDCAN_BUS_COUNT];
+static bool reached(uint32_t now,uint32_t due) { return (int32_t)(now-due)>=0; }
+static void recovery_state(uint8_t bus,uint32_t state)
+{
+    __atomic_store_n(&s_recovery[bus-1u].state,state,__ATOMIC_RELEASE);
+    SRNOS_FDCANDiagnostics[bus-1u].recovery_state=state;
+}
+bool SRNOS_FDCANIsReady(uint8_t bus)
+{
+    FDCAN_HandleTypeDef *h=_handle(bus);
+    if(!h || bus<1u || bus>SRNOS_FDCAN_BUS_COUNT ||
+       !__atomic_load_n(&s_config_applied[bus-1u],__ATOMIC_ACQUIRE)) return false;
+    recovery_t *r=&s_recovery[bus-1u];
+    return __atomic_load_n(&r->state,__ATOMIC_ACQUIRE)==SRNOS_FDCAN_RECOVERY_HEALTHY &&
+        !__atomic_load_n(&r->pending,__ATOMIC_ACQUIRE) && h->State==HAL_FDCAN_STATE_BUSY &&
+        !(h->Instance->PSR & FDCAN_PSR_BO) && !(h->Instance->CCCR & FDCAN_CCCR_INIT);
+}
+static void recovery_failed(uint8_t bus,uint32_t now)
+{
+    recovery_t *r=&s_recovery[bus-1u];
+    ++SRNOS_FDCANDiagnostics[bus-1u].recovery_errors;
+    if(r->attempts>=3u) {
+        ++SRNOS_FDCANDiagnostics[bus-1u].recovery_faults;
+        recovery_state(bus,SRNOS_FDCAN_RECOVERY_FAULT);
+    } else {
+        r->deadline_ms=now+100u;
+        recovery_state(bus,SRNOS_FDCAN_RECOVERY_BACKOFF);
+    }
+}
+uint32_t SRNOS_FDCANNextServiceWait(uint8_t bus,uint32_t now)
+{
+    if(bus<1u || bus>SRNOS_FDCAN_BUS_COUNT) return UINT32_MAX;
+    recovery_t *r=&s_recovery[bus-1u];
+    if(__atomic_load_n(&r->pending,__ATOMIC_ACQUIRE)) return 0;
+    uint32_t state=__atomic_load_n(&r->state,__ATOMIC_ACQUIRE);
+    if(state==SRNOS_FDCAN_RECOVERY_HEALTHY || state==SRNOS_FDCAN_RECOVERY_FAULT) return UINT32_MAX;
+    if(reached(now,r->deadline_ms)) return 0;
+    uint32_t remaining=r->deadline_ms-now;
+    /* Abort acknowledgement has no required enabled interrupt. */
+    return state==SRNOS_FDCAN_RECOVERY_ABORT && remaining>1u?1u:remaining;
 }
 
 /* ==== Public: init/start ==== */
@@ -99,19 +150,27 @@ static bool _configure_accept_all(FDCAN_HandleTypeDef* h) {
 
 bool SRNOS_FDCANInitAll(void) {
     bool ok = true;
+    if (s_init_attempted) {
+        for (uint8_t i = 0u; i < SRNOS_FDCAN_BUS_COUNT; ++i) ok = ok && s_config_applied[i];
+        return ok;
+    }
+    s_init_attempted = true;
     for (uint8_t bus = 1u; bus <= SRNOS_FDCAN_BUS_COUNT; ++bus) {
-        if (!_configure_accept_all(_handle(bus))) {
-            ok = false;
-        }
+        SRNOS_CANControllerConfig config;
+        const bool applied = SRNOS_CANControllerGetConfig(bus, &config) &&
+                             SRNOS_BoardCANApplyConfig(bus, &config) &&
+                             _configure_accept_all(_handle(bus));
+        __atomic_store_n(&s_config_applied[bus-1u], applied, __ATOMIC_RELEASE);
+        if (!applied) ok = false;
     }
     return ok;
 }
 
 static bool _activate_notifications(FDCAN_HandleTypeDef* h) {
     uint32_t its = 0;
-    its |= FDCAN_IT_RX_FIFO0_NEW_MESSAGE;
+    its |= FDCAN_IT_RX_FIFO0_NEW_MESSAGE | FDCAN_IT_RX_FIFO0_MESSAGE_LOST;
 #if SRNOS_FDCAN_ENABLE_RXFIFO1
-    its |= FDCAN_IT_RX_FIFO1_NEW_MESSAGE;
+    its |= FDCAN_IT_RX_FIFO1_NEW_MESSAGE | FDCAN_IT_RX_FIFO1_MESSAGE_LOST;
 #endif
     its |= FDCAN_IT_TX_EVT_FIFO_NEW_DATA;
     its |= FDCAN_IT_BUS_OFF;
@@ -122,7 +181,8 @@ static bool _activate_notifications(FDCAN_HandleTypeDef* h) {
 
 bool SRNOS_FDCANStart(uint8_t bus) {
     FDCAN_HandleTypeDef* h = _handle(bus);
-    if (!h) return false;
+    if (!h || bus < 1u || bus > SRNOS_FDCAN_BUS_COUNT ||
+        !__atomic_load_n(&s_config_applied[bus-1u],__ATOMIC_ACQUIRE)) return false;
 
     if (h->State == HAL_FDCAN_STATE_BUSY) {
         return _activate_notifications(h);
@@ -134,6 +194,58 @@ bool SRNOS_FDCANStart(uint8_t bus) {
     if (!_activate_notifications(h)) return false;
     if (HAL_FDCAN_Start(h) != HAL_OK) return false;
     return true;
+}
+
+/* Called only by the TX worker. HAL_Stop has two register acknowledgement
+ * loops bounded by FDCAN_TIMEOUT_COUNT (50 in the pinned HAL); HAL_Start has
+ * no wait. Hardware cancellation and bus integration are checked on later
+ * worker passes, never by an ISR or a busy-wait loop. */
+bool SRNOS_FDCANService(uint8_t bus,uint32_t now)
+{
+    FDCAN_HandleTypeDef *h=_handle(bus);
+    if(!h || bus<1u || bus>SRNOS_FDCAN_BUS_COUNT ||
+       !__atomic_load_n(&s_config_applied[bus-1u],__ATOMIC_ACQUIRE)) return false;
+    recovery_t *r=&s_recovery[bus-1u];
+    if(__atomic_exchange_n(&r->pending,0u,__ATOMIC_ACQ_REL) &&
+       r->state==SRNOS_FDCAN_RECOVERY_HEALTHY) {
+        r->attempts=0;
+        r->deadline_ms=now+100u;
+        recovery_state(bus,SRNOS_FDCAN_RECOVERY_BACKOFF);
+    }
+    if(r->state==SRNOS_FDCAN_RECOVERY_HEALTHY) return SRNOS_FDCANIsReady(bus);
+    if(r->state==SRNOS_FDCAN_RECOVERY_FAULT) return false;
+    if(r->state==SRNOS_FDCAN_RECOVERY_BACKOFF) {
+        if(!reached(now,r->deadline_ms)) return false;
+        ++r->attempts;
+        ++SRNOS_FDCANDiagnostics[bus-1u].recovery_attempts;
+        /* Never replay a pre-fault hardware command after reconnecting. */
+        uint32_t pending=h->Instance->TXBRP;
+        if(pending && HAL_FDCAN_AbortTxRequest(h,pending)!=HAL_OK) {
+            recovery_failed(bus,now); return false;
+        }
+        r->deadline_ms=now+10u;
+        recovery_state(bus,SRNOS_FDCAN_RECOVERY_ABORT);
+    }
+    if(r->state==SRNOS_FDCAN_RECOVERY_ABORT) {
+        if(h->Instance->TXBRP) {
+            if(reached(now,r->deadline_ms)) recovery_failed(bus,now);
+            return false;
+        }
+        if(HAL_FDCAN_Stop(h)!=HAL_OK || !_activate_notifications(h) || HAL_FDCAN_Start(h)!=HAL_OK) {
+            recovery_failed(bus,now); return false;
+        }
+        r->deadline_ms=now+100u;
+        recovery_state(bus,SRNOS_FDCAN_RECOVERY_VERIFY);
+    }
+    if(r->state==SRNOS_FDCAN_RECOVERY_VERIFY) {
+        if(!(h->Instance->PSR & FDCAN_PSR_BO) && !(h->Instance->CCCR & FDCAN_CCCR_INIT)) {
+            ++SRNOS_FDCANDiagnostics[bus-1u].recovery_completed;
+            recovery_state(bus,SRNOS_FDCAN_RECOVERY_HEALTHY);
+            return true;
+        }
+        if(reached(now,r->deadline_ms)) recovery_failed(bus,now);
+    }
+    return false;
 }
 
 bool SRNOS_FDCANStartAll(void) {
@@ -159,15 +271,31 @@ bool SRNOS_FDCANTryTx(uint8_t bus,
                       const uint8_t* payload)
 {
     FDCAN_HandleTypeDef* h = _handle(bus);
-    if (!h) return false;
+    const SRNOS_CANControllerConfig *config = SRNOS_CANControllerConfigOf(bus);
+    if (!h || !config || !tx_hdr || !SRNOS_FDCANIsReady(bus) || tx_hdr->DataLength > 15u ||
+        tx_hdr->TxFrameType != FDCAN_DATA_FRAME || tx_hdr->ErrorStateIndicator != FDCAN_ESI_ACTIVE)
+        return false;
+    const uint8_t length = SRNOS_CANFDDlcToLength((uint8_t)tx_hdr->DataLength);
+    const bool fd = config->mode == SRNOS_CAN_MODE_FD;
+    if (length == 0xffu || (!payload && length != 0u) ||
+        tx_hdr->FDFormat != (fd ? FDCAN_FD_CAN : FDCAN_CLASSIC_CAN) ||
+        tx_hdr->BitRateSwitch != ((fd && config->brs) ? FDCAN_BRS_ON : FDCAN_BRS_OFF) ||
+        (!fd && length > 8u) ||
+        (tx_hdr->IdType != FDCAN_STANDARD_ID && tx_hdr->IdType != FDCAN_EXTENDED_ID) ||
+        tx_hdr->Identifier > (tx_hdr->IdType == FDCAN_EXTENDED_ID ? 0x1fffffffu : 0x7ffu)) return false;
 
     /* Quick check: if no free element, return immediately */
     if (HAL_FDCAN_GetTxFifoFreeLevel(h) == 0) {
         SRNOS_FDCANDiagnostics[bus-1].tx_busy_cnt++;
         return false;
     }
-    if (HAL_FDCAN_AddMessageToTxFifoQ(h, (FDCAN_TxHeaderTypeDef*)tx_hdr,
-                                      (uint8_t*)payload) == HAL_OK) {
+    /* HAL writes complete words, including the final partial word of lengths
+     * 1..3 and 5..7. Never read past the caller's exact payload extent. */
+    uint8_t staged[64];
+    if (length) memcpy(staged, payload, length);
+    const uint8_t padded = (uint8_t)((length + 3u) & ~3u);
+    if (padded > length) memset(staged + length, 0, padded - length);
+    if (HAL_FDCAN_AddMessageToTxFifoQ(h, (FDCAN_TxHeaderTypeDef*)tx_hdr, staged) == HAL_OK) {
         SRNOS_FDCANDiagnostics[bus-1].tx_ok_cnt++;
         return true;
     } else {
@@ -186,15 +314,15 @@ size_t SRNOS_FDCANRxPop(uint8_t bus,
     if (!ring || !out || max_count == 0) return 0;
 
     size_t n = 0;
-    uint16_t r = ring->r;
-    uint16_t w = ring->w;
+    uint16_t r = __atomic_load_n(&ring->r,__ATOMIC_RELAXED);
+    uint16_t w = __atomic_load_n(&ring->w,__ATOMIC_ACQUIRE);
 
     while ((r != w) && (n < max_count)) {
         out[n] = ring->buf[r];
         r = (uint16_t)((r + 1u) % SRNOS_FDCAN_RX_RING_SIZE);
         n++;
     }
-    ring->r = r;
+    __atomic_store_n(&ring->r,r,__ATOMIC_RELEASE);
     return n;
 }
 
@@ -252,27 +380,33 @@ static void _rx_from_fifo(FDCAN_HandleTypeDef* h, uint8_t bus, uint32_t fifo) {
     rx_ring_t* ring = _ring(bus);
     if (!ring) return;
 
-    /* Drain all pending messages in the FIFO */
-    while (HAL_FDCAN_GetRxFifoFillLevel(h, fifo) > 0) {
-        uint16_t next_w = (uint16_t)((ring->w + 1u) % SRNOS_FDCAN_RX_RING_SIZE);
-        if (next_w == ring->r) {
-            /* overrun: drop oldest by advancing r */
-            ring->r = (uint16_t)((ring->r + 1u) % SRNOS_FDCAN_RX_RING_SIZE);
-            SRNOS_FDCANDiagnostics[bus-1].rx_overrun_cnt++;
+    /* Snapshot the current hardware batch. Newly arriving frames re-pend the
+     * IRQ; continuous traffic cannot extend this ISR indefinitely. */
+    uint32_t available=HAL_FDCAN_GetRxFifoFillLevel(h,fifo);
+    bool published=false;
+    while(available--) {
+        uint16_t w=__atomic_load_n(&ring->w,__ATOMIC_RELAXED);
+        uint16_t next_w=(uint16_t)((w+1u)%SRNOS_FDCAN_RX_RING_SIZE);
+        bool full=next_w==__atomic_load_n(&ring->r,__ATOMIC_ACQUIRE);
+        /* Drop new frames when full. The producer never modifies the reader
+         * index or a slot that the reader might still be copying. */
+        SRNOS_FDCANRxFrame discard;
+        SRNOS_FDCANRxFrame *dst=full?&discard:&ring->buf[w];
+        if(HAL_FDCAN_GetRxMessage(h,fifo,&dst->hdr,dst->data)!=HAL_OK) {
+            ++SRNOS_FDCANDiagnostics[bus-1u].rx_error_cnt;
+            break;
         }
-        SRNOS_FDCANRxFrame* dst = &ring->buf[ring->w];
-        if (fifo == FDCAN_RX_FIFO0) {
-            (void)HAL_FDCAN_GetRxMessage(h, FDCAN_RX_FIFO0, &dst->hdr, dst->data);
-        } else {
-            (void)HAL_FDCAN_GetRxMessage(h, FDCAN_RX_FIFO1, &dst->hdr, dst->data);
+        ++SRNOS_FDCANDiagnostics[bus-1u].rx_isr_cnt;
+        if(full) ++SRNOS_FDCANDiagnostics[bus-1u].rx_overrun_cnt;
+        else {
+            dst->ts_us=_now_us();
+            __atomic_store_n(&ring->w,next_w,__ATOMIC_RELEASE);
+            published=true;
         }
-        dst->ts_us = _now_us();
-        ring->w = next_w;
-        SRNOS_FDCANDiagnostics[bus-1].rx_isr_cnt++;
     }
 
     /* Light hook for upper layer (e.g., task notify) */
-    SRNOS_FDCANOnRxISR(bus);
+    if(published) SRNOS_FDCANOnRxISR(bus);
 }
 
 /* ==== HAL callbacks (ISR context) ==== */
@@ -285,23 +419,24 @@ static uint8_t _bus_of(FDCAN_HandleTypeDef* h) {
 }
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *h, uint32_t RxFifo0ITs) {
-    (void)RxFifo0ITs;
     uint8_t bus = _bus_of(h);
+    if(bus && (RxFifo0ITs & FDCAN_IT_RX_FIFO0_MESSAGE_LOST)) ++SRNOS_FDCANDiagnostics[bus-1u].rx_hw_lost_cnt;
     if (bus) _rx_from_fifo(h, bus, FDCAN_RX_FIFO0);
 }
 
 #if SRNOS_FDCAN_ENABLE_RXFIFO1
 void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *h, uint32_t RxFifo1ITs) {
-    (void)RxFifo1ITs;
     uint8_t bus = _bus_of(h);
+    if(bus && (RxFifo1ITs & FDCAN_IT_RX_FIFO1_MESSAGE_LOST)) ++SRNOS_FDCANDiagnostics[bus-1u].rx_hw_lost_cnt;
     if (bus) _rx_from_fifo(h, bus, FDCAN_RX_FIFO1);
 }
 #endif
 
 void HAL_FDCAN_TxBufferCompleteCallback(FDCAN_HandleTypeDef *h, uint32_t BufferIndexes) {
-    (void)BufferIndexes;
     uint8_t bus = _bus_of(h);
-    if (bus) SRNOS_FDCANOnTxEvent(bus);
+    if(!bus || !BufferIndexes) return;
+    while(BufferIndexes) { BufferIndexes&=BufferIndexes-1u; SRNOS_FDCANOnTxEvent(bus); }
+    SRNOS_FDCANOnTxReady(bus);
 }
 
 void HAL_FDCAN_TxEventFifoCallback(FDCAN_HandleTypeDef *h, uint32_t TxEventFifoITs) {
@@ -309,30 +444,41 @@ void HAL_FDCAN_TxEventFifoCallback(FDCAN_HandleTypeDef *h, uint32_t TxEventFifoI
     uint8_t bus = _bus_of(h);
     if (!bus) return;
 
-    while ((h->Instance->TXEFS & FDCAN_TXEFS_EFFL_Msk) != 0u) {
+    uint32_t remaining=h->Instance->TXEFS & FDCAN_TXEFS_EFFL_Msk;
+    bool completed=false;
+    while (remaining--) {
         FDCAN_TxEventFifoTypeDef event;
         if (HAL_FDCAN_GetTxEvent(h, &event) != HAL_OK) {
             break;
         }
         SRNOS_FDCANOnTxEvent(bus);
+        completed=true;
     }
+    if(completed) SRNOS_FDCANOnTxReady(bus);
 }
 
-void HAL_FDCAN_ErrorCallback(FDCAN_HandleTypeDef *h) {
-    uint8_t bus = _bus_of(h);
-    if (!bus) return;
-
-    uint32_t lec = (h->Instance->PSR & FDCAN_PSR_LEC_Msk) >> FDCAN_PSR_LEC_Pos;
-    SRNOS_FDCANDiagnostics[bus-1].last_err_code = lec;
-
-    FDCAN_ProtocolStatusTypeDef ps;
-    if (HAL_FDCAN_GetProtocolStatus(h, &ps) == HAL_OK) {
-        /* ps.BusOff == 1 则处于 Bus-Off */
-        if (ps.BusOff) {
-            SRNOS_FDCANDiagnostics[bus-1].bus_off_cnt++;
-            SRNOS_FDCANOnBusoff(bus);
-        }
+static void note_busoff(FDCAN_HandleTypeDef *h,uint8_t bus)
+{
+    if(h->Instance->PSR & FDCAN_PSR_BO) {
+        if(!__atomic_exchange_n(&s_recovery[bus-1u].pending,1u,__ATOMIC_ACQ_REL))
+            ++SRNOS_FDCANDiagnostics[bus-1u].bus_off_cnt;
     }
+    SRNOS_FDCANOnBusoff(bus); /* Also wakes verification when BO clears. */
+}
+void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *h,uint32_t status)
+{
+    uint8_t bus=_bus_of(h);
+    if(!bus) return;
+    SRNOS_FDCANDiagnostics[bus-1u].last_err_code=(h->Instance->PSR & FDCAN_PSR_LEC_Msk)>>FDCAN_PSR_LEC_Pos;
+    if(status & FDCAN_IT_BUS_OFF) note_busoff(h,bus);
+}
+void HAL_FDCAN_ErrorCallback(FDCAN_HandleTypeDef *h)
+{
+    uint8_t bus=_bus_of(h);
+    if(!bus) return;
+    SRNOS_FDCANDiagnostics[bus-1u].last_err_code=(h->Instance->PSR & FDCAN_PSR_LEC_Msk)>>FDCAN_PSR_LEC_Pos;
+    /* Generic errors can stay latched across unrelated IRQs. Only the BO
+     * status-transition callback counts/re-arms a Bus-Off episode. */
 }
 
 /* ==== TX convenience wrappers (classic CAN, 0..8B, RTOS-free) ==== */
@@ -353,31 +499,9 @@ static inline uint32_t _len_to_dlc_classic(uint8_t len) {
     }
 }
 
-static bool _try_add_tx(FDCAN_HandleTypeDef* h,
-                        const FDCAN_TxHeaderTypeDef* hdr,
-                        const uint8_t* payload,
-                        uint8_t bus)
-{
-    if (!h) return false;
-
-    if (HAL_FDCAN_GetTxFifoFreeLevel(h) == 0) {
-        SRNOS_FDCANDiagnostics[bus-1].tx_busy_cnt++;
-        return false;
-    }
-    if (HAL_FDCAN_AddMessageToTxFifoQ(h,
-            (FDCAN_TxHeaderTypeDef*)hdr, (uint8_t*)payload) == HAL_OK) {
-        SRNOS_FDCANDiagnostics[bus-1].tx_ok_cnt++;
-        return true;
-    } else {
-        SRNOS_FDCANDiagnostics[bus-1].tx_busy_cnt++;
-        return false;
-    }
-}
-
 bool SRNOS_FDCANTxPush(uint8_t bus, uint16_t std_id, const uint8_t* data, uint8_t len)
 {
-    FDCAN_HandleTypeDef* h = _handle(bus);
-    if (!h || !data) return false;
+    if (!SRNOS_CANControllerIsClassic(bus) || len > 8u || (!data && len)) return false;
 
     FDCAN_TxHeaderTypeDef tx = {0};
     tx.Identifier          = std_id;
@@ -390,13 +514,12 @@ bool SRNOS_FDCANTxPush(uint8_t bus, uint16_t std_id, const uint8_t* data, uint8_
     tx.TxEventFifoControl  = FDCAN_STORE_TX_EVENTS;
     tx.MessageMarker       = 0;
 
-    return _try_add_tx(h, &tx, data, bus);
+    return SRNOS_FDCANTryTx(bus, &tx, data);
 }
 
 bool SRNOS_FDCANTxPushExt(uint8_t bus, uint32_t ext_id, const uint8_t* data, uint8_t len)
 {
-    FDCAN_HandleTypeDef* h = _handle(bus);
-    if (!h || !data) return false;
+    if (!SRNOS_CANControllerIsClassic(bus) || len > 8u || ext_id > 0x1fffffffu || (!data && len)) return false;
 
     FDCAN_TxHeaderTypeDef tx = {0};
     tx.Identifier          = (ext_id & 0x1FFFFFFFu);
@@ -409,7 +532,25 @@ bool SRNOS_FDCANTxPushExt(uint8_t bus, uint32_t ext_id, const uint8_t* data, uin
     tx.TxEventFifoControl  = FDCAN_STORE_TX_EVENTS;
     tx.MessageMarker       = 0;
 
-    return _try_add_tx(h, &tx, data, bus);
+    return SRNOS_FDCANTryTx(bus, &tx, data);
+}
+
+bool SRNOS_FDCANTxPushFD(uint8_t bus, const SRNOS_CANFDFrame *frame)
+{
+    if (!frame || !SRNOS_CANControllerIsFD(bus) ||
+        (frame->flags & ~(SRNOS_CANFD_FRAME_FLAG_EXT | SRNOS_CANFD_FRAME_FLAG_BRS))) return false;
+    const uint8_t dlc = SRNOS_CANFDLengthToDlc(frame->length);
+    if (dlc == 0xffu) return false;
+    FDCAN_TxHeaderTypeDef tx = {0};
+    tx.Identifier = frame->id;
+    tx.IdType = (frame->flags & SRNOS_CANFD_FRAME_FLAG_EXT) ? FDCAN_EXTENDED_ID : FDCAN_STANDARD_ID;
+    tx.TxFrameType = FDCAN_DATA_FRAME;
+    tx.DataLength = dlc;
+    tx.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    tx.BitRateSwitch = (frame->flags & SRNOS_CANFD_FRAME_FLAG_BRS) ? FDCAN_BRS_ON : FDCAN_BRS_OFF;
+    tx.FDFormat = FDCAN_FD_CAN;
+    tx.TxEventFifoControl = FDCAN_STORE_TX_EVENTS;
+    return SRNOS_FDCANTryTx(bus, &tx, frame->data);
 }
 
 
@@ -426,3 +567,5 @@ void __attribute__((weak)) SRNOS_FDCANOnBusoff(uint8_t bus) {
 void __attribute__((weak)) SRNOS_FDCANOnTxEvent(uint8_t bus) {
     (void)bus;
 }
+
+void __attribute__((weak)) SRNOS_FDCANOnTxReady(uint8_t bus) { (void)bus; }

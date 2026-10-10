@@ -1,0 +1,149 @@
+{"seconds": 0.0, "phase": 0, "revision": null, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 4045], "speed": [0.0, 0.0, 0.0], "rpm": [0, 0, 0], "current": [124, -51, -46], "temperature": [32, 29, 31], "voltage": [0, 0, 0], "imu_counts": {}}
+{"seconds": 1.0, "phase": 0, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 4045], "speed": [0.0, 0.0, 0.0], "rpm": [0, 0, 0], "current": [108, -40, -20], "temperature": [32, 29, 31], "voltage": [0, 0, 0], "imu_counts": {"256": 998, "257": 997}}
+{"seconds": 2.01, "phase": 1, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 4078], "speed": [0.00401172274723649, 0.0007743536261841655, 3.653582811355591], "rpm": [0, 0, 0], "current": [123, -15, 3522], "temperature": [32, 29, 31], "voltage": [0, 1, 4753], "imu_counts": {"256": 1999, "257": 1998}}
+{"seconds": 3.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 4320], "speed": [-0.004124216735363007, 1.1318795259285253e-05, 13.361150741577148], "rpm": [0, 0, 2], "current": [124, -58, 4221], "temperature": [32, 29, 31], "voltage": [-4, 1, 5426], "imu_counts": {"256": 2999, "257": 2998}}
+{"seconds": 4.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 4659], "speed": [0.0008832879248075187, 0.0016799499280750751, 17.57925796508789], "rpm": [0, 0, 3], "current": [123, -40, 4492], "temperature": [32, 29, 31], "voltage": [0, 1, 6204], "imu_counts": {"256": 4004, "257": 3998}}
+{"seconds": 5.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 5050], "speed": [0.00039223520434461534, 0.016663553193211555, 13.707122802734375], "rpm": [0, 0, 1], "current": [122, -31, 5157], "temperature": [32, 29, 31], "voltage": [0, -1, 6591], "imu_counts": {"256": 5004, "257": 4998}}
+{"seconds": 6.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 5122], "speed": [-0.0009862763108685613, 0.028899719938635826, 0.9486156702041626], "rpm": [0, 0, 0], "current": [109, -40, 5505], "temperature": [32, 29, 31], "voltage": [0, -2, 6746], "imu_counts": {"256": 6004, "257": 5998}}
+{"seconds": 7.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 5129], "speed": [0.0004307477211114019, 0.013667791150510311, -0.028309017419815063], "rpm": [0, 0, 0], "current": [109, -40, 5524], "temperature": [32, 29, 32], "voltage": [0, 0, 6846], "imu_counts": {"256": 7004, "257": 7003}}
+{"seconds": 8.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 5133], "speed": [0.002816530177369714, 0.009585268795490265, 0.21768172085285187], "rpm": [0, 0, 0], "current": [124, -56, 5612], "temperature": [32, 29, 32], "voltage": [0, 2, 7006], "imu_counts": {"256": 8004, "257": 8003}}
+{"seconds": 9.01, "phase": 2, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3023, 4854, 5135], "speed": [1.2606270502146799e-05, 0.011460653506219387, -0.04813342168927193], "rpm": [0, 0, 0], "current": [123, -33, 5591], "temperature": [32, 29, 32], "voltage": [0, 2, 6978], "imu_counts": {"256": 9004, "257": 9003}}
+{"seconds": 10.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [2986, 4854, 5137], "speed": [-12.863551139831543, 0.015684008598327637, 0.18367911875247955], "rpm": [-8, 0, 0], "current": [2118, -31, 5664], "temperature": [32, 29, 32], "voltage": [3154, 1, 7084], "imu_counts": {"256": 10004, "257": 10003}}
+{"seconds": 11.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [1804, 4854, 5139], "speed": [-54.97997283935547, 1.6573825632804073e-05, -0.058843184262514114], "rpm": [-10, 0, 0], "current": [-364, -40, 5566], "temperature": [32, 29, 33], "voltage": [270, 5, 6994], "imu_counts": {"256": 11004, "257": 11003}}
+{"seconds": 12.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [585, 4854, 5141], "speed": [-55.710933685302734, 0.003322562901303172, 0.12286427617073059], "rpm": [-9, 0, 0], "current": [-566, -56, 5604], "temperature": [32, 29, 33], "voltage": [-607, 4, 7016], "imu_counts": {"256": 12004, "257": 12003}}
+{"seconds": 13.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [382, 4854, 5141], "speed": [-0.5039919018745422, 0.002390158362686634, 0.14221274852752686], "rpm": [0, 0, 0], "current": [1047, -30, 5614], "temperature": [32, 29, 33], "voltage": [1447, 4, 7010], "imu_counts": {"256": 13003, "257": 13002}}
+{"seconds": 14.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [371, 4854, 5141], "speed": [-0.24428819119930267, 5.85552356824337e-07, 0.14516481757164001], "rpm": [0, 0, 0], "current": [1183, -40, 5568], "temperature": [32, 29, 34], "voltage": [1654, 5, 6985], "imu_counts": {"256": 14003, "257": 14002}}
+{"seconds": 15.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [357, 4854, 5141], "speed": [-0.8897169232368469, 0.00568609731271863, 0.09832748770713806], "rpm": [0, 0, 0], "current": [1123, -48, 5585], "temperature": [32, 29, 34], "voltage": [1531, 4, 6998], "imu_counts": {"256": 15003, "257": 15002}}
+{"seconds": 16.01, "phase": 3, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [349, 4854, 5141], "speed": [-0.0625409260392189, 0.005198428872972727, 0.11280500888824463], "rpm": [0, 0, 0], "current": [1027, -2, 5558], "temperature": [32, 29, 34], "voltage": [1451, 4, 6968], "imu_counts": {"256": 16003, "257": 16002}}
+{"seconds": 17.01, "phase": 4, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [349, 4853, 5141], "speed": [-2.983593731187284e-06, -0.1110081821680069, 0.05895165726542473], "rpm": [0, 0, 0], "current": [991, -76, 5577], "temperature": [32, 29, 35], "voltage": [1436, -91, 6990], "imu_counts": {"256": 17008, "257": 17002}}
+{"seconds": 18.01, "phase": 5, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [348, 4853, 5141], "speed": [-0.3523973822593689, -0.0005551952635869384, 0.04062695428729057], "rpm": [0, 0, 0], "current": [965, -143, 5540], "temperature": [32, 29, 35], "voltage": [1382, -166, 6977], "imu_counts": {"256": 18008, "257": 18002}}
+{"seconds": 19.01, "phase": 5, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [349, 4852, 5140], "speed": [0.3370167315006256, -0.023035578429698944, -0.40317511558532715], "rpm": [0, 0, 0], "current": [925, -107, 5540], "temperature": [32, 29, 35], "voltage": [1375, -166, 6972], "imu_counts": {"256": 19008, "257": 19002}}
+{"seconds": 20.01, "phase": 5, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [348, 4852, 5141], "speed": [-0.17723342776298523, -0.00014502876729238778, 0.03738711029291153], "rpm": [0, 0, 0], "current": [907, -198, 5540], "temperature": [32, 29, 35], "voltage": [1279, -206, 6939], "imu_counts": {"256": 20008, "257": 20002}}
+{"seconds": 21.01, "phase": 5, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [349, 4851, 5141], "speed": [0.2866629958152771, -0.023337364196777344, 0.034843649715185165], "rpm": [0, 0, 0], "current": [898, -181, 5512], "temperature": [32, 29, 36], "voltage": [1297, -188, 6933], "imu_counts": {"256": 21008, "257": 21007}}
+{"seconds": 22.01, "phase": 5, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [348, 4851, 5140], "speed": [-0.1652395874261856, -0.006160947028547525, -0.38769224286079407], "rpm": [0, 0, 0], "current": [834, -206, 5485], "temperature": [32, 29, 36], "voltage": [1228, -209, 6927], "imu_counts": {"256": 22008, "257": 22007}}
+{"seconds": 23.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [558, 4851, 5141], "speed": [38.023155212402344, -7.715773790550884e-06, 0.014041583053767681], "rpm": [5, 0, 0], "current": [-181, -197, 5503], "temperature": [32, 29, 36], "voltage": [-712, -228, 6915], "imu_counts": {"256": 23008, "257": 23007}}
+{"seconds": 24.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [1579, 4851, 5141], "speed": [46.96708297729492, 0.0014318396570160985, 0.016130000352859497], "rpm": [8, 0, 0], "current": [-513, -191, 5496], "temperature": [32, 29, 36], "voltage": [-1132, -246, 6881], "imu_counts": {"256": 24008, "257": 24007}}
+{"seconds": 25.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [2727, 4850, 5142], "speed": [50.12702178955078, -0.022780440747737885, -0.09431623667478561], "rpm": [7, 0, 0], "current": [-516, -188, 5341], "temperature": [32, 29, 37], "voltage": [-1487, -208, 6740], "imu_counts": {"256": 25013, "257": 25007}}
+{"seconds": 26.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3928, 4850, 5142], "speed": [52.5881462097168, -2.2889562387717888e-05, -0.06986081600189209], "rpm": [8, 0, 0], "current": [-987, -180, 5433], "temperature": [32, 29, 37], "voltage": [-1423, -212, 6751], "imu_counts": {"256": 26013, "257": 26007}}
+{"seconds": 27.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3825, 4850, 5142], "speed": [22.24534797668457, -1.0920361281918645e-09, -0.046078022569417953], "rpm": [4, 0, 0], "current": [-7353, -180, 5323], "temperature": [32, 29, 37], "voltage": [-9625, -212, 6733], "imu_counts": {"256": 27013, "257": 27007}}
+{"seconds": 28.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3756, 4850, 5142], "speed": [-1.2721604108810425, -5.210779317798078e-14, -0.006560692563652992], "rpm": [0, 0, 0], "current": [-13533, -206, 5266], "temperature": [32, 29, 36], "voltage": [-18072, -212, 6744], "imu_counts": {"256": 28013, "257": 28007}}
+{"seconds": 29.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3774, 4850, 5142], "speed": [2.029155969619751, -2.486358096775673e-18, 0.012945128604769707], "rpm": [0, 0, 0], "current": [-16148, -180, 5146], "temperature": [33, 29, 36], "voltage": [-22855, -212, 6691], "imu_counts": {"256": 29013, "257": 29007}}
+{"seconds": 30.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3793, 4850, 5141], "speed": [-0.03962218761444092, -1.1864041398546474e-22, 0.020326493307948112], "rpm": [0, 0, 0], "current": [-16298, -188, 5116], "temperature": [33, 29, 36], "voltage": [-28398, -212, 6694], "imu_counts": {"256": 30013, "257": 30012}}
+{"seconds": 31.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3794, 4850, 5140], "speed": [0.09377255290746689, -5.606940202609127e-27, 0.007806736975908279], "rpm": [0, 0, 0], "current": [-16131, -170, 5143], "temperature": [35, 29, 36], "voltage": [-30000, -212, 6730], "imu_counts": {"256": 31013, "257": 31012}}
+{"seconds": 32.01, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3794, 4850, 5140], "speed": [0.03187300264835358, -2.701160710491819e-31, 0.013037219643592834], "rpm": [0, 0, 0], "current": [-15956, -198, 5143], "temperature": [36, 29, 36], "voltage": [-30000, -212, 6721], "imu_counts": {"256": 32013, "257": 32012}}
+{"seconds": 33.02, "phase": 6, "revision": 7, "fault": 0, "fault_axis": 0, "fault_measurement": 0.0, "raw": [3794, 4850, 5140], "speed": [0.0045072524808347225, -1.2888902386048456e-35, 0.0020781601779162884], "rpm": [0, 0, 0], "current": [-15816, -188, 5144], "temperature": [38, 29, 36], "voltage": [-30000, -212, 6731], "imu_counts": {"256": 33013, "257": 33012}}
+{"seconds": 34.02, "phase": 10, "revision": 7, "fault": 7, "fault_axis": 1, "fault_measurement": 0.0439453125, "raw": [3771, 4853, 4045], "speed": [0.003478617174550891, -0.004010102711617947, 0.005924374330788851], "rpm": [0, 0, 0], "current": [110, -22, -46], "temperature": [40, 29, 36], "voltage": [0, 0, 0], "imu_counts": {"256": 34013, "257": 34012}}
+{"seconds": 35.02, "phase": 10, "revision": 7, "fault": 7, "fault_axis": 1, "fault_measurement": 0.0439453125, "raw": [3771, 4853, 4045], "speed": [0.003478617174550891, -0.004010102711617947, 0.005924374330788851], "rpm": [0, 0, 0], "current": [91, -40, -38], "temperature": [41, 29, 36], "voltage": [0, 0, 0], "imu_counts": {"256": 35013, "257": 35012}}
+{
+  "status": "fault",
+  "elapsed_seconds": 35.0421015410102,
+  "latest": {
+    "turntable.motor1.encoder_raw": 3771,
+    "turntable.motor1.angle_deg": 165.7177734375,
+    "turntable.motor1.unwrapped_deg": 166.728515625,
+    "turntable.motor1.speed_dps": 0.003478617174550891,
+    "turntable.motor1.voltage_raw": 0,
+    "turntable.motor1.feedback_rpm": 0,
+    "turntable.motor1.current_raw": 102,
+    "turntable.motor2.encoder_raw": 4853,
+    "turntable.motor2.angle_deg": 213.2666015625,
+    "turntable.motor2.unwrapped_deg": 213.134765625,
+    "turntable.motor2.speed_dps": -0.004010102711617947,
+    "turntable.motor2.voltage_raw": 0,
+    "turntable.motor2.feedback_rpm": 0,
+    "turntable.motor2.current_raw": -40,
+    "turntable.motor3.encoder_raw": 4045,
+    "turntable.motor3.angle_deg": 177.7587890625,
+    "turntable.motor3.unwrapped_deg": 41.30859375,
+    "turntable.motor3.speed_dps": 0.005924374330788851,
+    "turntable.motor3.voltage_raw": 0,
+    "turntable.motor3.feedback_rpm": 0,
+    "turntable.motor3.current_raw": -20,
+    "turntable.phase": 10,
+    "turntable.fault": 7,
+    "turntable.fault_axis": 1,
+    "turntable.fault_measurement": 0.0439453125,
+    "turntable.motor1.online": true,
+    "turntable.motor1.temperature_c": 41,
+    "turntable.motor2.online": true,
+    "turntable.motor2.temperature_c": 29,
+    "turntable.motor3.online": true,
+    "turntable.motor3.temperature_c": 36,
+    "turntable.sequence_revision": 7
+  },
+  "scalar_counts": {
+    "turntable.motor1.encoder_raw": 7009,
+    "turntable.motor1.angle_deg": 7009,
+    "turntable.motor1.unwrapped_deg": 7009,
+    "turntable.motor1.speed_dps": 7009,
+    "turntable.motor1.voltage_raw": 7009,
+    "turntable.motor1.feedback_rpm": 7009,
+    "turntable.motor1.current_raw": 7009,
+    "turntable.motor2.encoder_raw": 7009,
+    "turntable.motor2.angle_deg": 7009,
+    "turntable.motor2.unwrapped_deg": 7009,
+    "turntable.motor2.speed_dps": 7009,
+    "turntable.motor2.voltage_raw": 7009,
+    "turntable.motor2.feedback_rpm": 7009,
+    "turntable.motor2.current_raw": 7009,
+    "turntable.motor3.encoder_raw": 7009,
+    "turntable.motor3.angle_deg": 7009,
+    "turntable.motor3.unwrapped_deg": 7009,
+    "turntable.motor3.speed_dps": 7009,
+    "turntable.motor3.voltage_raw": 7009,
+    "turntable.motor3.feedback_rpm": 7009,
+    "turntable.motor3.current_raw": 7009,
+    "turntable.phase": 7009,
+    "turntable.fault": 7009,
+    "turntable.fault_axis": 7009,
+    "turntable.fault_measurement": 7009,
+    "turntable.motor1.online": 3505,
+    "turntable.motor1.temperature_c": 3505,
+    "turntable.motor2.online": 3505,
+    "turntable.motor2.temperature_c": 3505,
+    "turntable.motor3.online": 3505,
+    "turntable.motor3.temperature_c": 3505,
+    "turntable.sequence_revision": 351
+  },
+  "invalid": {
+    "turntable.motor1.encoder_raw": 0,
+    "turntable.motor1.angle_deg": 0,
+    "turntable.motor1.unwrapped_deg": 604,
+    "turntable.motor1.speed_dps": 604,
+    "turntable.motor1.voltage_raw": 0,
+    "turntable.motor1.feedback_rpm": 0,
+    "turntable.motor1.current_raw": 0,
+    "turntable.motor2.encoder_raw": 0,
+    "turntable.motor2.angle_deg": 0,
+    "turntable.motor2.unwrapped_deg": 604,
+    "turntable.motor2.speed_dps": 604,
+    "turntable.motor2.voltage_raw": 0,
+    "turntable.motor2.feedback_rpm": 0,
+    "turntable.motor2.current_raw": 0,
+    "turntable.motor3.encoder_raw": 0,
+    "turntable.motor3.angle_deg": 0,
+    "turntable.motor3.unwrapped_deg": 604,
+    "turntable.motor3.speed_dps": 604,
+    "turntable.motor3.voltage_raw": 0,
+    "turntable.motor3.feedback_rpm": 0,
+    "turntable.motor3.current_raw": 0,
+    "turntable.phase": 0,
+    "turntable.fault": 0,
+    "turntable.fault_axis": 0,
+    "turntable.fault_measurement": 0,
+    "turntable.motor1.online": 0,
+    "turntable.motor1.temperature_c": 0,
+    "turntable.motor2.online": 0,
+    "turntable.motor2.temperature_c": 0,
+    "turntable.motor3.online": 0,
+    "turntable.motor3.temperature_c": 0,
+    "turntable.sequence_revision": 0
+  },
+  "imu_counts": {
+    "256": 35038,
+    "257": 35037
+  },
+  "imu_gaps": {},
+  "imu_duplicates": {},
+  "decoder_errors": {}
+}

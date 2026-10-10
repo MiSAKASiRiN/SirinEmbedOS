@@ -1,0 +1,12 @@
+{
+  "build/IMUTurntableBringUp/SirinEmbedOS.elf": "66070b9a10fe99e70b7ebbe997452114269eca8be3411ca47ac9f4483aa21a3e",
+  "build/IMUTurntableBringUp/board-validation/flash-before.bin": "b5731bd2d67c16d0b1ef66a50cf234b712d1b512d07b6f115209b6d350d08b2a",
+  "Examples/IMUTurntableBringUp/app_main.cpp": "4a4dab5daacc69081f7ff5621cfa17901f9616a15f71446bbc095cad7eafa8fd",
+  "Docs/Validation/IMUTurntable-20261009/capture.py": "b87ac8c0a29b75cbcb74efd5051adb0170971162e8ad32eef6a5a78e9bc822a9",
+  "Docs/Validation/IMUTurntable-20261009/capture-after-detach.json": "9668787e9944ae0a35ed8547027fa138f03c95a64c35385157bf5ad9167d463a",
+  "Docs/Validation/IMUTurntable-20261009/capture-complete.json": "fdf669fc705d3c6b9f27e74a2ab1ab57d7148cfe716e9796f4c9030ce2ac3dd9",
+  "Docs/Validation/IMUTurntable-20261009/capture-uninterrupted.json": "434c7310f73253c058bb49a90a2c0fe3ddc1aebb2e72309da183bcf60c4cac84",
+  "build/IMUTurntableBringUp/board-validation/capture-after-detach/rx.bin": "9f6b3a8ffe1c9cda9bcdfa0e311c6e2bbe88a1e575c9171bccd3b8c247a4b159",
+  "build/IMUTurntableBringUp/board-validation/capture-complete/rx.bin": "f8870fd4c326e4418ce74806699d83dfc14ee6c5a9e8bc2b0b42588d956fe28b",
+  "build/IMUTurntableBringUp/board-validation/capture-uninterrupted/rx.bin": "eb0bab059e22cdee7993d253d94d987c7933b51cca1767462e859e7877702148"
+}

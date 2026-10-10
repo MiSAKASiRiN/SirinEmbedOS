@@ -76,9 +76,10 @@ public:
   uint8_t  id()   const { return motor_id_; }
   uint16_t rxId() const { return static_cast<uint16_t>(0x140u + motor_id_); }
 
-  void set_offline_timeout(uint32_t ms) { offline_ms_ = ms; }
-  void set_torque_current_max_A(float max_A) { torque_current_max_A_ = max_A; }
+  void set_offline_timeout(uint32_t ms) { offline_ms_.store(ms, std::memory_order_relaxed); }
+  void set_torque_current_max_A(float max_A) { torque_current_max_A_.store(max_A, std::memory_order_relaxed); }
   void tick(uint32_t now_ms);
+  // Task context or IRQ priority 5..15; bounded copy, no spin.
   bool snapshot(LK8016EState& out) const;
   LK8016EState state() const noexcept {
     LK8016EState s{};
@@ -150,11 +151,10 @@ private:
   std::atomic<uint16_t> pos_inc_maxspd_{0};
   mutable std::atomic<uint8_t>  pending_cmd_{0};
 
-  mutable volatile uint32_t state_seq_{0};
   LK8016EState state_{};
 
-  uint32_t offline_ms_ = 100;
-  float torque_current_max_A_ = 33.0f;
+  std::atomic<uint32_t> offline_ms_{100};
+  std::atomic<float> torque_current_max_A_{33.0f};
 };
 
 void LK8016E_CollectTxFrames(LK8016E* const motors[],

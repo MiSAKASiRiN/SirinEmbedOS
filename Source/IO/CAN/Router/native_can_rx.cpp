@@ -2,6 +2,8 @@
 #include "native_can_backend_internal.h"
 
 #include "IO/CAN/Native/fdcan_internal.h"
+#include "../can_controller_internal.h"
+#include "../FD/can_fd_internal.h"
 #include "cmsis_os2.h"
 #include "stm32h7xx_hal.h"
 
@@ -13,43 +15,43 @@
 #endif
 static_assert(SRNOS_NATIVE_CAN_RX_BATCH>0 && SRNOS_NATIVE_CAN_RX_BATCH<=32, "native RX batch limit");
 
-static uint8_t decode_fdcan_dlc(uint32_t data_length)
-{
-    static const uint8_t lut[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
-    const uint8_t code_hi = (uint8_t)((data_length >> 16) & 0x0Fu);
-    const uint8_t code_lo = (uint8_t)(data_length & 0x0Fu);
-
-    if (code_hi < 16u && code_hi != 0u) {
-        return lut[code_hi];
-    }
-    if (code_lo < 16u && code_lo != 0u) {
-        return lut[code_lo];
-    }
-    if (data_length <= 64u) {
-        return (uint8_t)data_length;
-    }
-    return 8u;
-}
-
 static void route_rx_frame(SRNOS_CANChannel ch, const SRNOS_FDCANRxFrame *in)
 {
     if (!in) {
         return;
     }
 
+    const bool fd = SRNOS_CANControllerIsFD(ch);
+    /* The pinned HAL returns the unshifted 4-bit DLC. FDF is required even
+     * for 0..8-byte FD frames; never reinterpret them as a Classic protocol. */
+    const uint8_t length = in->hdr.DataLength <= 15u ?
+        SRNOS_CANFDDlcToLength((uint8_t)in->hdr.DataLength) : 0xffu;
+    if (length == 0xffu || (!fd && length > 8u) ||
+        in->hdr.RxFrameType != FDCAN_DATA_FRAME ||
+        in->hdr.FDFormat != (fd ? FDCAN_FD_CAN : FDCAN_CLASSIC_CAN)) {
+        if (fd) SRNOS_CANFDCoreNoteRxRejected(ch);
+        else SRNOS_CANRouterCoreNoteRxRejected(ch);
+        return;
+    }
+    if (fd) {
+        SRNOS_CANFDFrame frame = {};
+        frame.id = in->hdr.Identifier;
+        frame.length = length;
+        if (in->hdr.IdType == FDCAN_EXTENDED_ID) frame.flags |= SRNOS_CANFD_FRAME_FLAG_EXT;
+        if (in->hdr.BitRateSwitch == FDCAN_BRS_ON) frame.flags |= SRNOS_CANFD_FRAME_FLAG_BRS;
+        if (in->hdr.ErrorStateIndicator == FDCAN_ESI_PASSIVE) frame.flags |= SRNOS_CANFD_FRAME_FLAG_ESI;
+        for (uint8_t i = 0u; i < length; ++i) frame.data[i] = in->data[i];
+        SRNOS_CANFDCoreOnRxFrame(ch, &frame, SRNOS_NativeCANBackendNowMs());
+        return;
+    }
+
     SRNOS_CANFrame frame = {};
     frame.id = in->hdr.Identifier;
-    frame.dlc = decode_fdcan_dlc(in->hdr.DataLength);
+    frame.dlc = length;
     if (in->hdr.IdType == FDCAN_EXTENDED_ID) {
         frame.flags |= SRNOS_CAN_FRAME_FLAG_EXT;
     }
-    if (in->hdr.RxFrameType == FDCAN_REMOTE_FRAME) {
-        frame.flags |= SRNOS_CAN_FRAME_FLAG_RTR;
-    }
-
-    const uint8_t copy_len = (frame.dlc > SRNOS_CAN_ROUTER_MAX_DATA_BYTES) ?
-                             SRNOS_CAN_ROUTER_MAX_DATA_BYTES : frame.dlc;
-    for (uint8_t i = 0; i < copy_len; ++i) {
+    for (uint8_t i = 0; i < length; ++i) {
         frame.data[i] = in->data[i];
     }
 
@@ -71,41 +73,42 @@ extern "C" void SRNOS_NativeCANRxRouterWorker(void *argument)
 
     SRNOS_NativeCANBackendEnsureBound(ch);
 
-    if (!ctx->rx_evt) ctx->rx_evt = osEventFlagsNew(nullptr);
-    if (!ctx->rx_evt) {
-        return;
-    }
-
-    if (ctx->pending_rx) {
-        (void)osEventFlagsSet(ctx->rx_evt, ctx->pending_rx);
-        ctx->pending_rx = 0u;
-    }
+    __atomic_store_n(&ctx->rx_thread,xTaskGetCurrentTaskHandle(),__ATOMIC_RELEASE);
 
     (void)SRNOS_FDCANStart(ch);
 
-    SRNOS_FDCANRxFrame frames[SRNOS_NATIVE_CAN_RX_BATCH];
+    /* Keep the scheduling budget at 32 without reserving 32 * 108 bytes on
+     * the 4 KiB worker stack. Four-frame pop chunks leave room for callbacks,
+     * TLS and the RTOS exception context; the ring remains the queue owner. */
+    SRNOS_FDCANRxFrame frames[4];
     uint32_t flags=0;
     auto wait=[&]()->bool {
-        flags = osEventFlagsWait(ctx->rx_evt,
-                                                SRNOS_NATIVE_CAN_EVT_RX,
-                                                osFlagsWaitAny,
-                                                osWaitForever);
-
+        (void)xTaskNotifyWait(0,UINT32_MAX,&flags,portMAX_DELAY);
         return true;
     };
-    auto step=[&](){        const bool by_isr = ((flags & osFlagsError) == 0u) &&
+    auto step=[&](){
+        const bool by_isr = ((flags & osFlagsError) == 0u) &&
                             ((flags & SRNOS_NATIVE_CAN_EVT_RX) != 0u);
-        SRNOS_CANRouterCoreNoteRxWake(ch, by_isr);
+        if (SRNOS_CANControllerIsFD(ch)) SRNOS_CANFDCoreNoteRxWake(ch, by_isr);
+        else SRNOS_CANRouterCoreNoteRxWake(ch, by_isr);
 
-        const size_t n = SRNOS_FDCANRxPop(ch, frames, SRNOS_NATIVE_CAN_RX_BATCH);
-        for (size_t i = 0; i < n; ++i) route_rx_frame(ch, &frames[i]);
-        if(n == SRNOS_NATIVE_CAN_RX_BATCH) {
+        size_t total = 0u;
+        while (total < SRNOS_NATIVE_CAN_RX_BATCH) {
+            const size_t remaining = SRNOS_NATIVE_CAN_RX_BATCH - total;
+            const size_t capacity = remaining < 4u ? remaining : 4u;
+            const size_t n = SRNOS_FDCANRxPop(ch, frames, capacity);
+            for (size_t i = 0; i < n; ++i) route_rx_frame(ch, &frames[i]);
+            total += n;
+            if (n < capacity) break;
+        }
+        if(total == SRNOS_NATIVE_CAN_RX_BATCH) {
             /* Retain readiness after the bounded batch, including level IRQs
              * which need not produce another edge while data remains. */
-            (void)osEventFlagsSet(ctx->rx_evt, SRNOS_NATIVE_CAN_EVT_RX);
+            SRNOS_NativeCANBackendSignalRx(ch);
             (void)osThreadYield();
         }
 
     };
-    SRNOS_KernelRunCpp(step,wait);
+    /* Initial pass consumes frames accepted before this worker was registered. */
+    SRNOS_KernelRunCpp(step,wait,0,false);
 }

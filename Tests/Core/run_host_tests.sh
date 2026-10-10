@@ -62,3 +62,17 @@ fi
 "$out/test_memory_regions"
 
 echo "SirinOS host tests passed"
+
+"$cc_bin" -std=c11 -Wall -Wextra -Werror -O1 -g $sanitizers \
+ -I"$root/Tests/Core/time_stubs" -I"$root/Tests/Support" -I"$root/Include" -I"$root/Source" \
+ "$root/Tests/Core/test_time.c" -o "$out/test_time"
+"$out/test_time"
+
+# Fixed-board emergency USART: real register bit values, bounded failure paths.
+"$cc_bin" -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g $sanitizers \
+    -I"$root/Tests/Core/fault_usart_stubs" -I"$root/Board/Support" \
+    "$root/Tests/Core/test_fault_usart1.c" "$root/Board/Support/System/fault_usart1.c" \
+    -o "$out/test_fault_usart1"
+for mode in ready divided clock_timeout tx_timeout flush_timeout; do
+    "$out/test_fault_usart1" "$mode"
+done

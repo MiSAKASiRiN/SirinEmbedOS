@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- 2026-10-10：新增 fault_usart1.c/.h 并登记显式清单，致命异常默认接管 USART1 TX、HSI 和 PB14；应用自定义 Emergency writer 优先。正常 UART 所有权、生成区及链接段不变。五个寄存器模拟场景、固件编译与物理 USART1 Panic 输出通过，见 Docs/Validation/IMUTurntableLatency-20261010。
+
+- 2026-10-06：自维护原生FD配置对齐MCP仲裁80%、数据≤4M80%/5M75%/8M80%；Classic、IOC和生成文件保持。 Classic目标3×60s＋600s通过，最高十秒CPU53.9632%，IMU保护线通过；FD格式/负载/恢复、资源及原Flash恢复见 [最终记录](../../Docs/Validation/CAN4-Optimization-20261006/README.md)。
+
+- 2026-10-03：新增原生 CAN 冻结时序/RAM 适配，校验 80 MHz 与 CCU，按 Classic/FD 配置 TDC。固定窗口避免三路混合模式相互覆盖；主机寄存器替身、构建与内存检查通过范围见 [记录](../../Docs/Validation/CANFD-20261003/README.md)，PCB 离线未验证总线。
+
 - 2026-09-29：同步说明早期初始化的 ITCM BSS/Watch 合同，保留现有 System 入口及生成边界；Core 完成 64 位初始化。构建、软件复位与实板 Watch 检查见 [记录](../../Docs/Validation/ITCM-20260929/README.md)。
 
 - 2026-09-28：配合公共依赖隔离，SPI/I2C/CAN、WS2812/BMI/MCP 等板级装配引用私有头；自维护跨文件符号统一 SRNOS，CubeMX 与 HAL 规定入口保留，未改变固定硬件时序或内存段。验证边界见本轮总记录；没有 Generate 或烧录。
