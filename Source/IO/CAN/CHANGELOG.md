@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — CAN 时间基准修复
+
+- 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。
+- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 MSwerve Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。记录：../../../Docs/Validation/CANClock-20261012/README.md。
+
 ## Unreleased
 
 - 2026-10-06：CAN4合并为P1/4KiB单线程，4RX/4TX及半满8RX/1TX，32帧或1ms有界轮次；私有TX步进保留adapter游标/group/TTL，回调在该线程执行；CAN4停止逐唤醒读取CiINT，其旧派生调试字段与tx_complete_events保留但不累计，交付由端到端确认。FD原生采样点与MCP对齐，Classic时序不变。 Classic目标3×60s＋600s通过，最高十秒CPU53.9632%，IMU保护线通过；FD格式/负载/恢复、资源及原Flash恢复见 [最终记录](../../../Docs/Validation/CAN4-Optimization-20261006/README.md)。

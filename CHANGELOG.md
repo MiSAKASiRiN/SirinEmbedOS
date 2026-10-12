@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — CAN 时间基准修复
+
+- 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。
+- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 MSwerve Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。记录：Docs/Validation/CANClock-20261012/README.md。
+
 ## Unreleased — 转台直接双环与抗抖动
 
 - 2026-10-10：整个 SDK 的 Panic/Fault 默认从 USART1 PB14、115200/8N1 输出，保留自定义紧急输出覆盖；仅致命异常接管端口。转台 revision24 启用现有 SystemMonitor，增加同步电机/双 IMU/CPU 采集与相对时延分析脚本，控制参数不变。Core主机、固件构建、烧录和串口 Panic 板测通过；旧转台控制测试默认角度夹具失败见记录。运动数据用于延迟/占用估计，不作为校准验收。见 [记录](Docs/Validation/IMUTurntableLatency-20261010/README.md)。

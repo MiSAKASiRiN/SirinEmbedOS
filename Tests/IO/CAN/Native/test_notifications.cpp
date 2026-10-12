@@ -11,6 +11,7 @@ static size_t checked_pop(uint8_t bus,SRNOS_FDCANRxFrame *frames,size_t max)
 #include "../../../../Source/IO/CAN/Router/native_can_rx.cpp"
 #undef SRNOS_FDCANRxPop
 static uint32_t notifications[2];
+extern "C" uint32_t SRNOS_TimeMs(void) {return HAL_GetTick()-12u;}
 static TaskHandle_t current;
 static unsigned notify_task,notify_isr,rx_yields,routed,rx_batch,max_batch,tx_steps,tx_completed;
 static unsigned rx_waits;
@@ -39,9 +40,9 @@ BaseType_t xTaskNotifyWait(uint32_t clear_entry,uint32_t clear_exit,uint32_t *bi
  *bits=*value;*value=0;return pdTRUE;
 }
 int osThreadYield(void) {++rx_yields;return 0;}
-extern "C" void SRNOS_CANRouterCoreSetBackend(SRNOS_CANChannel ch,const SRNOS_CANRouterBackendOps *ops) {assert(ch==1&&ops);}
-extern "C" uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel ch,uint32_t) {assert(ch==1);return UINT32_MAX;}
-extern "C" void SRNOS_CANRouterCoreDrainTx(SRNOS_CANChannel ch,uint32_t) {assert(ch==1);++tx_steps;}
+extern "C" void SRNOS_CANRouterCoreSetBackend(SRNOS_CANChannel ch,const SRNOS_CANRouterBackendOps *ops) {assert(ch==1&&ops&&ops->now_ms()==SRNOS_TimeMs());}
+extern "C" uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel ch,uint32_t stamp) {assert(ch==1&&stamp==SRNOS_TimeMs());return UINT32_MAX;}
+extern "C" void SRNOS_CANRouterCoreDrainTx(SRNOS_CANChannel ch,uint32_t stamp) {assert(ch==1&&stamp==SRNOS_TimeMs());++tx_steps;}
 extern "C" void SRNOS_CANRouterCoreNoteTxComplete(SRNOS_CANChannel ch) {assert(ch==1);++tx_completed;}
 extern "C" void SRNOS_CANRouterCoreNoteRxWake(SRNOS_CANChannel ch,bool) {assert(ch==1);}
 extern "C" void SRNOS_CANRouterCoreNoteRxRejected(SRNOS_CANChannel) {assert(false);}
@@ -52,7 +53,8 @@ extern "C" void SRNOS_CANFDCoreNoteTxComplete(SRNOS_CANChannel) {assert(false);}
 extern "C" void SRNOS_CANFDCoreNoteRxWake(SRNOS_CANChannel,bool) {assert(false);}
 extern "C" void SRNOS_CANFDCoreNoteRxRejected(SRNOS_CANChannel) {assert(false);}
 extern "C" void SRNOS_CANFDCoreOnRxFrame(SRNOS_CANChannel,const SRNOS_CANFDFrame *,uint32_t) {assert(false);}
-extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,const SRNOS_CANFrame *frame,uint32_t) {
+extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,const SRNOS_CANFrame *frame,uint32_t stamp) {
+ assert(stamp==SRNOS_TimeMs());
  assert(ch==1&&frame->id==routed&&frame->dlc==8);++routed;++rx_batch;
 }
 int main() {

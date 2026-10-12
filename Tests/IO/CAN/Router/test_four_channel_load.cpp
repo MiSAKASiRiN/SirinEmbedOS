@@ -16,7 +16,8 @@ static uint32_t frame_sequence(const SRNOS_CANFrame *f)
     std::memcpy(&result, f->data, sizeof(result));
     return result;
 }
-extern "C" uint32_t HAL_GetTick(void) { return now_ms; }
+extern "C" uint32_t HAL_GetTick(void) { return now_ms + 12u; }
+extern "C" uint32_t SRNOS_TimeMs(void) { return now_ms; }
 static uint32_t now() { return now_ms; }
 static uint8_t tx_free(SRNOS_CANChannel ch) { return free_slots[ch]; }
 static bool push(SRNOS_CANChannel ch, const SRNOS_CANFrame *f, SRNOS_CANRouterTxClass kind)

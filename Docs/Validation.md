@@ -1,5 +1,9 @@
 # 迁移验证记录
 
+## 2026-10-12 CAN 与应用毫秒时钟统一
+
+MSwerve 父项目发现原生 CAN HAL 时间领先公开 RTOS 时钟约 12 ms，导致反馈年龄回绕。CAN1–4 Classic/FD 回调、TTL 与重试已统一到 `SRNOS_TimeMs()`，父项目移除重打时间戳包装。Router/Native/External/FD/Motors 主机套件、公共头与父项目 Debug/Release 构建通过；板上 CAN1–3 Classic 连续 20 组报告 13/13 在线，DJI 年龄 0..1 ms、DM 查询年龄 50 ms，无回绕。CAN4/FD 本轮仅主机模型验证，未做物理断线/回绕注入。固件仅状态查询，GDB/J-Link 已释放，未提交/推送。详见 [完整记录](Validation/CANClock-20261012/README.md)。
+
 - 2026-10-10～11：[默认 USART1 Panic、转台时延和 CPU](Validation/IMUTurntableLatency-20261010/README.md)：Panic 物理输出通过；高频记录 CPU 中位34.69%，低流量承重23.94%；六段 ID2 运动相对时延和局限见记录。
 
 - 2026-10-10：[恢复三轴直接双环全行程](Validation/IMUTurntableFullRestore-20261010/README.md)：回默认、ID1/2整圈往返、ID3端点扫转完成；完整电机/双IMU数据，最终默认位闭环保持。

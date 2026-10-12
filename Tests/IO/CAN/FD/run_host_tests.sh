@@ -11,6 +11,6 @@ COMMON=(-Wall -Wextra -Werror -O1 -g -fsanitize=undefined
 "${CXX:-c++}" -std=c++17 "${COMMON[@]}" "$ROOT/Source/IO/CAN/FD/can_fd_core.cpp" \
  "$ROOT/Source/IO/CAN/Router/can_router_core.cpp" "$ROOT/Tests/IO/CAN/FD/test_fd_core.cpp" \
  "$OUT/controller.o" "$OUT/system.o" "$OUT/thread_config.o" -o "$OUT/test_fd"
-for scenario in registration lengths invalid queue expiry stress system fd_on_classic classic_on_fd queued_classic adapter_bitrate; do
+for scenario in registration lengths invalid queue expiry unbound_clock stress system fd_on_classic classic_on_fd queued_classic adapter_bitrate; do
  "$OUT/test_fd" "$scenario"
 done

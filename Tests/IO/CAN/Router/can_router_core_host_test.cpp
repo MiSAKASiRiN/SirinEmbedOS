@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <initializer_list>
 
 using namespace SRNOS_CANRouterDetail;
 
@@ -15,10 +16,8 @@ static bool g_detach_during_push;
 static void *g_detach_obj;
 static SRNOS_CANChannel g_detach_ch;
 
-extern "C" uint32_t HAL_GetTick(void)
-{
-    return g_now_ms;
-}
+extern "C" uint32_t HAL_GetTick(void) { return g_now_ms + 12u; }
+extern "C" uint32_t SRNOS_TimeMs(void) { return g_now_ms; }
 
 static uint32_t test_now_ms()
 {
@@ -517,8 +516,26 @@ static void test_frozen_routes_and_group_scratch()
     drain_script(0u, 0u);
 }
 
+static void test_unbound_clock()
+{
+    // Configuration/startup can enqueue before the backend worker binds.
+    // HAL is already 12 ms ahead; this queue must keep task-clock deadlines.
+    const auto f = frame(0x55);
+    for (uint32_t start : {0u, UINT32_MAX - 5u}) {
+        SRNOS_CANRouterCoreSetBackend(1, nullptr);
+        g_now_ms = start;
+        assert(SRNOS_CANRouterPostOneshot(1, &f, 0, 10) == 0);
+        SRNOS_CANRouterCoreSetBackend(1, &k_backend);
+        assert(SRNOS_CANRouterCoreNextTxWait(1, g_now_ms) == 10);
+        g_now_ms += 10u;
+        SRNOS_CANRouterCoreDrainTx(1, g_now_ms);
+        assert(SRNOS_CANRouterCoreNextTxWait(1, g_now_ms) == UINT32_MAX);
+    }
+    g_now_ms = 0;
+}
 int main()
 {
+    test_unbound_clock();
     for (SRNOS_CANChannel ch = 1u; ch <= SRNOS_CAN_ROUTER_CHANNEL_COUNT; ++ch) {
         SRNOS_CANRouterCoreSetBackend(ch, &k_backend);
     }

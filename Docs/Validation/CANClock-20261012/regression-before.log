@@ -1,0 +1,4 @@
+SRNOS_CANRouterCoreHostTest: PASS (frozen registration/fanout, group scratch reuse and shadow retention)
+four CAN channels: 3000 RX + 3000 TX each, frozen dispatch, sequence/accounting PASS (virtual time only)
+Assertion failed: (ops->now_ms()==app_ms), function SRNOS_CANRouterCoreSetBackend, file test_native_rx.cpp, line 49.
+SirinEmbedOS/Tests/IO/CAN/Router/run_host_tests.sh: line 27: 32046 Abort trap: 6              "$OUT/test_rx"

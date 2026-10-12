@@ -56,6 +56,7 @@ SRNOS_CANFDResult SRNOS_CANFDUnsubscribeRaw(SRNOS_CANChannel channel,
 /* Task context only, after freeze/resources ready. Copies the frame; OK means
  * queued, not delivered. Lower numeric priority wins; FIFO among equal values.
  * ttl_ms=0 selects 20 ms, otherwise 1..INT32_MAX; expiry never extends on retry.
+ * Queue deadlines use SRNOS_TimeMs(), including before backend binding.
  * TTL bounds software queue waiting, checked before backend submission starts.
  * It does not cancel an in-progress SPI/HAL submission or bound hardware FIFO,
  * arbitration/retransmission time; it is not a wire delivery deadline. */

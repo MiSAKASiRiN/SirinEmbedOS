@@ -13,6 +13,7 @@ static size_t checked_pop(uint8_t bus,SRNOS_FDCANRxFrame *frames,size_t max)
 #undef SRNOS_FDCANRxPop
 
 static uint32_t notifications[2];
+extern "C" uint32_t SRNOS_TimeMs(void) {return HAL_GetTick()-12u;}
 static TaskHandle_t current;
 static unsigned isr_notifications,rx_yields,rx_count,rx_batch,max_batch,tx_steps,tx_completed;
 static unsigned rx_waits;
@@ -51,16 +52,18 @@ extern "C" void SRNOS_CANRouterCoreDrainTx(SRNOS_CANChannel,uint32_t) {assert(fa
 extern "C" void SRNOS_CANRouterCoreNoteTxComplete(SRNOS_CANChannel ch) {assert(ch==2u);++classic_completed;}
 extern "C" void SRNOS_CANRouterCoreNoteRxWake(SRNOS_CANChannel,bool) {assert(false);}
 extern "C" void SRNOS_CANRouterCoreNoteRxRejected(SRNOS_CANChannel ch) {assert(ch==2u);++classic_rejected;}
-extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,const SRNOS_CANFrame *frame,uint32_t) {
+extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,const SRNOS_CANFrame *frame,uint32_t stamp) {
+    assert(stamp==SRNOS_TimeMs());
     assert(ch==2u&&frame->dlc==8u);++classic_received;
 }
-extern "C" void SRNOS_CANFDCoreSetBackend(SRNOS_CANChannel ch,const SRNOS_CANFDBackendOps *ops) {assert(ch==1u);bound_fd=ops;}
-extern "C" uint32_t SRNOS_CANFDCoreNextTxWait(SRNOS_CANChannel ch,uint32_t) {assert(ch==1u);return UINT32_MAX;}
-extern "C" void SRNOS_CANFDCoreDrainTx(SRNOS_CANChannel ch,uint32_t) {assert(ch==1u);++tx_steps;}
+extern "C" void SRNOS_CANFDCoreSetBackend(SRNOS_CANChannel ch,const SRNOS_CANFDBackendOps *ops) {assert(ch==1u&&ops->now_ms()==SRNOS_TimeMs());bound_fd=ops;}
+extern "C" uint32_t SRNOS_CANFDCoreNextTxWait(SRNOS_CANChannel ch,uint32_t stamp) {assert(ch==1u&&stamp==SRNOS_TimeMs());return UINT32_MAX;}
+extern "C" void SRNOS_CANFDCoreDrainTx(SRNOS_CANChannel ch,uint32_t stamp) {assert(ch==1u&&stamp==SRNOS_TimeMs());++tx_steps;}
 extern "C" void SRNOS_CANFDCoreNoteTxComplete(SRNOS_CANChannel ch) {assert(ch==1u);++tx_completed;}
 extern "C" void SRNOS_CANFDCoreNoteRxWake(SRNOS_CANChannel ch,bool) {assert(ch==1u);}
 extern "C" void SRNOS_CANFDCoreNoteRxRejected(SRNOS_CANChannel ch) {assert(ch==1u);++fd_rejected;}
-extern "C" void SRNOS_CANFDCoreOnRxFrame(SRNOS_CANChannel ch,const SRNOS_CANFDFrame *frame,uint32_t) {
+extern "C" void SRNOS_CANFDCoreOnRxFrame(SRNOS_CANChannel ch,const SRNOS_CANFDFrame *frame,uint32_t stamp) {
+    assert(stamp==SRNOS_TimeMs());
     assert(ch==1u);last_rx=*frame;
     if(worker_active) {
         assert(frame->length==64u);

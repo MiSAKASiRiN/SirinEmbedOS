@@ -1,0 +1,12 @@
+CAN FD core registration: PASS
+CAN FD core lengths: PASS
+CAN FD core invalid: PASS
+CAN FD core queue: PASS
+CAN FD core expiry: PASS
+CAN FD core unbound_clock: PASS
+CAN FD core stress: PASS
+CAN FD core system: PASS
+CAN FD core fd_on_classic: PASS
+CAN FD core classic_on_fd: PASS
+CAN FD core queued_classic: PASS
+CAN FD core adapter_bitrate: PASS

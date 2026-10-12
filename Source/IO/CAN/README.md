@@ -4,6 +4,12 @@ Native/External 管理硬件收发，Router 管理 Classic 路由与 adapter，F
 
 主机路由/绑定测试及父项目构建通过；CAN1/CAN3 的外接物理回环板测见 Tests/Board/CANThroughput，实际结果与范围以 Docs/Validation 为准。
 
+## 毫秒时间基准
+
+CAN1–4 的 Classic/FD 路由、adapter `on_rx/poll_tx/tick`、发送 TTL 和重试使用公开 `SRNOS_TimeMs()`（FreeRTOS 1 ms tick）。调度前为 0，32 位自然回绕；backend 绑定前后保持同一原点。`on_rx` 时间是软件分发时间，不是帧在线缆上的到达时间。SDK 电机 `last_rx_ms` 可直接与应用 `SRNOS_TimeMs()` 比较；应用自己调用解析或 tick 时也须使用此时间域。HAL/TIM7、DWT `TimeUs` 和独立诊断/日志时间不保证同原点，不能混减，也不能用固定启动偏移补偿。
+
+2026-10-12 在 MSwerve 父项目发现并修复 HAL 与 RTOS 约 12 ms 原点差导致的反馈年龄回绕；主机覆盖启动/TTL/重试/超时/回绕，原生 Classic 13 个电机板测通过。CAN4/FD 本轮仅主机验证。见 [验证记录](../../../Docs/Validation/CANClock-20261012/README.md)。
+
 ## 启动模式与 FD 接口
 
 四路控制器分别通过 `SRNOS_SystemConfig.can[channel - 1]` 在 `SRNOS_ApplicationConfigure()` 中声明。默认全部为 Classic、仲裁速率 1 Mbit/s、`data_bitrate=0`、`brs=false`。每路只选择 Classic 或 FD；启动校验后冻结，无运行期切换、重绑定或 HostLink 改写。`Controller.h` 提供配置校验和冻结配置副本查询，冻结前查询返回 false。最终配置与订阅/adapter 类型不匹配时拒绝启动；恢复只使用冻结配置。

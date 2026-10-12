@@ -11,7 +11,8 @@ extern "C" void SRNOS_CANFDCoreSetBackend(SRNOS_CANChannel,const SRNOS_CANFDBack
 extern "C" uint32_t SRNOS_CANFDCoreNextTxWait(SRNOS_CANChannel,uint32_t) { assert(false);return UINT32_MAX; }
 extern "C" void SRNOS_CANFDCoreDrainTx(SRNOS_CANChannel,uint32_t) { assert(false); }
 extern "C" void SRNOS_CANFDCoreNoteTxComplete(SRNOS_CANChannel) { assert(false); }
-extern "C" uint32_t HAL_GetTick(void) { return now_ms; }
+extern "C" uint32_t HAL_GetTick(void) { return now_ms + 12u; }
+extern "C" uint32_t SRNOS_TimeMs(void) { return now_ms; }
 extern "C" int SRNOS_ExternalCANDevFromChannel(SRNOS_CANChannel ch) { return ch==4?0:-1; }
 extern "C" SRNOS_CANChannel SRNOS_ExternalCANChannelFromDev(uint8_t dev) { return dev==0?4:0; }
 extern "C" SRNOS_ExternalCANCtx *SRNOS_ExternalCANCtxOf(uint8_t dev) { return dev==0?&context:nullptr; }

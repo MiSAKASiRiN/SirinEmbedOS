@@ -1,0 +1,5 @@
+SRNOS_CANRouterCoreHostTest: PASS (frozen registration/fanout, group scratch reuse and shadow retention)
+four CAN channels: 3000 RX + 3000 TX each, frozen dispatch, sequence/accounting PASS (virtual time only)
+native CAN RX: 4-frame pop chunks, bounded 32-frame batches, retained readiness, real yield, idle blocking, Classic/FD RX/TX public clock and rollover PASS
+CAN4 actual backend/core: 3000 TX admissions/3000 FIFO queries, single-step budget, transient retry without IRQ, FIFO wait, TTL and clock wrap: PASS
+CAN4 TX step: one frame per call, suspended urgent batch, group coalescing, adapter cadence and TTL: PASS

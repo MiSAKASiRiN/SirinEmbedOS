@@ -5,7 +5,8 @@
 static uint32_t now;
 static bool busy;
 static std::vector<SRNOS_CANFrame> frames;
-extern "C" uint32_t HAL_GetTick(void){return now;}
+extern "C" uint32_t HAL_GetTick(void) { return now + 12u; }
+extern "C" uint32_t SRNOS_TimeMs(void) { return now; }
 static uint8_t free_slots(SRNOS_CANChannel){return busy?0:8;}
 static bool push(SRNOS_CANChannel,const SRNOS_CANFrame *f,SRNOS_CANRouterTxClass){frames.push_back(*f);return true;}
 struct Adapter {unsigned index,polls[2]{},commits[2]{},ticks{};};
@@ -27,7 +28,7 @@ static void tick(void *p,uint32_t){++static_cast<Adapter*>(p)->ticks;}
 int main(){
     Adapter a{0},b{1};SRNOS_CANAdapterOps ops{nullptr,nullptr,nullptr,poll,commit,tick};
     assert(!SRNOS_CANRouterAttachAdapter(4,&a,&ops,10));assert(!SRNOS_CANRouterAttachAdapter(4,&b,&ops,10));
-    SRNOS_CAN_FreezeConfiguration();SRNOS_CANRouterBackendOps backend{nullptr,free_slots,push,nullptr,HAL_GetTick,nullptr};
+    SRNOS_CAN_FreezeConfiguration();SRNOS_CANRouterBackendOps backend{nullptr,free_slots,push,nullptr,SRNOS_TimeMs,nullptr};
     SRNOS_CANRouterCoreSetBackend(4,&backend);
     now=10;assert(SRNOS_CANRouterCoreStepTx(4,now));assert(frames.size()==1 && a.polls[SRNOS_CAN_TX_KIND_URGENT]==1);
     busy=true;assert(!SRNOS_CANRouterCoreStepTx(4,now));assert(a.polls[SRNOS_CAN_TX_KIND_URGENT]==1 && a.commits[SRNOS_CAN_TX_KIND_URGENT]==1);

@@ -1,3 +1,4 @@
+#include "SirinEmbedOS/Kernel/Thread.h"
 #include "thread_internal.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -17,7 +18,7 @@
  * with the existing oneshot TTL still bounding its overall lifetime. */
 static void SRNOS_ExternalCANTxDeferRetry(SRNOS_ExternalCANCtx *ctx)
 {
-    ctx->tx_retry_after_ms=HAL_GetTick()+1u;
+    ctx->tx_retry_after_ms=SRNOS_TimeMs()+1u;
     ctx->tx_retry_pending=true;
 }
 
@@ -119,7 +120,7 @@ static void SRNOS_ExternalCANBackendSignalTx(SRNOS_CANChannel ch)
 
 static uint32_t SRNOS_ExternalCANBackendNowMs(void)
 {
-    return HAL_GetTick();
+    return SRNOS_TimeMs();
 }
 
 static const SRNOS_CANRouterBackendOps s_backend_ops = {

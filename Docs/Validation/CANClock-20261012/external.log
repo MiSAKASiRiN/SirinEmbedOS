@@ -1,0 +1,2 @@
+CAN4 single-owner notification: pre-start events and publication/IRQ race preserved: PASS
+CAN4 real vendor/registers: Classic/FD mode handshake, exact independent timing, 2016B RAM, all DLC/64B TX+RX, strict mode filtering, failure/timeout/token retry: PASS

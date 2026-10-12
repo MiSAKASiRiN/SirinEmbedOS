@@ -14,3 +14,9 @@ uint32_t HAL_GetTick(void);
 #ifdef __cplusplus
 }
 #endif
+
+typedef struct {uint32_t TXFQS;} FDCAN_GlobalTypeDef;
+extern FDCAN_GlobalTypeDef *FDCAN1, *FDCAN2, *FDCAN3;
+#define FDCAN_TXFQS_TFFL_Msk 0x3fu
+#define FDCAN_TXFQS_TFFL_Pos 0u
+static inline uint32_t __get_IPSR(void) {return 0;}

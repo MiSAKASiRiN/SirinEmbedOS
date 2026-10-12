@@ -1,0 +1,17 @@
+0x0801302e in xTaskIncrementTick () at /Users/sirin/CLionProjects/2027-EmbOS-MSwerve/SirinEmbedOS/ThirdParty/FreeRTOS/Source/tasks.c:2804
+2804	            taskSWITCH_DELAYED_LISTS();
+Resetting target
+Loading section .isr_vector, size 0x2cc lma 0x8000000
+Loading section .text, size 0x45264 lma 0x80002d0
+Loading section .rodata, size 0x3770 lma 0x8045538
+Loading section .ARM, size 0x10 lma 0x8048ca8
+Loading section .preinit_array, size 0x4 lma 0x8048cb8
+Loading section .init_array, size 0x4 lma 0x8048cbc
+Loading section .data, size 0x488 lma 0x8048cc0
+Loading section .itcm_text, size 0x120 lma 0x8049160
+Start address 0x08002af4, load size 299616
+Transfer rate: 146296 KB/sec, 24968 bytes/write.
+Section .isr_vector, range 0x8000000 -- 0x80002cc: matched.
+Section .text, range 0x80002d0 -- 0x8045534: matched.
+Resetting target
+[Inferior 1 (Remote target) detached]

@@ -20,7 +20,8 @@ static bool push_fails, inject_enqueue, callback_enqueue;
 static uint32_t retry_ms = UINT32_MAX;
 static uint32_t admission_delay_ms;
 static std::vector<SRNOS_CANFDFrame> sent, received;
-extern "C" uint32_t HAL_GetTick(void) { return now_ms; }
+extern "C" uint32_t HAL_GetTick(void) { return now_ms + 12u; }
+extern "C" uint32_t SRNOS_TimeMs(void) { return now_ms; }
 extern "C" int osKernelGetState(void) { return kernel_state; }
 extern "C" void SRNOS_TestFDCriticalEnter(void) {
     assert(critical_depth < 8); critical_saved[critical_depth++] = SRNOS_TestFDMask;
@@ -216,6 +217,20 @@ static void queue() {
     for (unsigned i = 0; i < 64; ++i) assert(SRNOS_CANFDPostOneshot(1, &value, 0, 20) == SRNOS_CANFD_OK);
     assert(SRNOS_CANFDPostOneshot(1, &value, 0, 20) == SRNOS_CANFD_FULL);
 }
+static void unbound_clock() {
+    ready();
+    const auto value=frame(0x55);
+    for(uint32_t start : {0u,UINT32_MAX-5u}) {
+        SRNOS_CANFDCoreSetBackend(1,nullptr);
+        now_ms=start;
+        assert(SRNOS_CANFDPostOneshot(1,&value,0,10)==SRNOS_CANFD_OK);
+        SRNOS_CANFDCoreSetBackend(1,&backend);
+        assert(SRNOS_CANFDCoreNextTxWait(1,now_ms)==10);
+        now_ms+=10u;SRNOS_CANFDCoreDrainTx(1,now_ms);
+        assert(stats().tx_depth==0 && sent.empty());
+    }
+    assert(stats().tx_expired==2);
+}
 static void expiry() {
     ready(true);
     now_ms = UINT32_MAX - 5u;
@@ -347,6 +362,7 @@ int main(int argc, char **argv) {
     else if (!std::strcmp(argv[1], "invalid")) invalid();
     else if (!std::strcmp(argv[1], "queue")) queue();
     else if (!std::strcmp(argv[1], "expiry")) expiry();
+    else if (!std::strcmp(argv[1], "unbound_clock")) unbound_clock();
     else if (!std::strcmp(argv[1], "system")) system_config();
     else if (!std::strcmp(argv[1], "stress")) stress();
     else conflicts(argv[1]);

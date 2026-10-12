@@ -103,6 +103,10 @@ typedef struct {
     SRNOS_CANTxGroupI16 group_i16;
 } SRNOS_CANTxItem;
 
+/* All now_ms arguments use SRNOS_TimeMs(): the 32-bit RTOS millisecond
+ * clock, zero before scheduler start, wrapping at 2^32 ms. on_rx timestamps
+ * software dispatch, not the physical bus arrival. Device last_rx_ms derived
+ * here can be compared with SRNOS_TimeMs(); never mix HAL or TimeUs epochs. */
 typedef struct {
     size_t (*rx_filter_count)(void *obj);
     bool (*rx_filter_at)(void *obj, size_t index, SRNOS_CANRxFilter *out);

@@ -1,3 +1,4 @@
+#include "SirinEmbedOS/Kernel/Thread.h"
 #include "thread_internal.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -36,7 +37,7 @@ static void SRNOS_ExternalCANRxPush(SRNOS_ExternalCANCtx *ctx,
     slot->dlc = dlc;
     for (uint8_t i = 0; i < SRNOS_EXTERNAL_CAN_MAX_DATA_BYTES; ++i)
         slot->data[i] = (i < dlc) ? data[i] : 0u;
-    slot->timestamp_ms = HAL_GetTick();
+    slot->timestamp_ms = SRNOS_TimeMs();
 
     ctx->rx_head = next;
     if (!ps) __enable_irq();
@@ -95,12 +96,12 @@ static int SRNOS_ExternalCANReceive(uint8_t dev,SRNOS_ExternalCANCtx *ctx,SRNOS_
         if(rxObj.bF.ctrl.BRS)frame.flags|=SRNOS_CANFD_FRAME_FLAG_BRS;
         if(rxObj.bF.ctrl.ESI)frame.flags|=SRNOS_CANFD_FRAME_FLAG_ESI;
         std::memcpy(frame.data,data,length);++ctx->stats->rx_frames;
-        SRNOS_CANFDCoreOnRxFrame(ch,&frame,HAL_GetTick());
+        SRNOS_CANFDCoreOnRxFrame(ch,&frame,SRNOS_TimeMs());
     } else {
         uint8_t count=length>8?8:length;
         SRNOS_CANFrame frame=SRNOS_ExternalCANFrameFromRx(&rxObj,data,count);
         ++ctx->stats->rx_frames;SRNOS_ExternalCANRxPush(ctx,(uint16_t)(frame.id&0x7ffu),count,data);
-        SRNOS_CANRouterCoreOnRxFrame(ch,&frame,HAL_GetTick());
+        SRNOS_CANRouterCoreOnRxFrame(ch,&frame,SRNOS_TimeMs());
     }
     return 1;
 }
@@ -114,8 +115,8 @@ extern "C" bool SRNOS_ExternalCANReadHardware(uint8_t dev,SRNOS_ExternalCANHardw
     if(!ctx || !ctx->init_done || !ctx->task || !out || __get_IPSR() || osThreadGetId()==ctx->task)return false;
     taskENTER_CRITICAL();uint32_t generation=s_hardware_generation;s_hardware_requested=true;taskEXIT_CRITICAL();
     SRNOS_ExternalCANNotify(ctx,SRNOS_EXTERNAL_CAN_EVT_INT);
-    uint32_t deadline=HAL_GetTick()+50u;
-    while((int32_t)(deadline-HAL_GetTick())>0) {
+    uint32_t deadline=SRNOS_TimeMs()+50u;
+    while((int32_t)(deadline-SRNOS_TimeMs())>0) {
         taskENTER_CRITICAL();bool done=s_hardware_generation!=generation;
         if(done)*out=s_hardware;
         taskEXIT_CRITICAL();
@@ -164,7 +165,7 @@ static void SRNOS_ExternalCANServiceStep(SRNOS_ExternalCANService &s)
     SRNOS_ExternalCANHardwareCapture(s.dev);
     if(ctx->tx_fifo.pending) {
         if(!SRNOS_MCPFifoReconcile(&ctx->tx_fifo)) {
-            ctx->tx_retry_pending=true;ctx->tx_retry_after_ms=HAL_GetTick()+1u;
+            ctx->tx_retry_pending=true;ctx->tx_retry_after_ms=SRNOS_TimeMs()+1u;
         }
     }
     for(;;) {
@@ -189,7 +190,7 @@ static void SRNOS_ExternalCANServiceStep(SRNOS_ExternalCANService &s)
 #ifdef SRNOS_CAN4_PROFILE
             uint64_t before=SRNOS_TimeGetUptimeUs();
 #endif
-            bool sent=s.fd?SRNOS_CANFDCoreStepTx(s.ch,HAL_GetTick()):SRNOS_CANRouterCoreStepTx(s.ch,HAL_GetTick());
+            bool sent=s.fd?SRNOS_CANFDCoreStepTx(s.ch,SRNOS_TimeMs()):SRNOS_CANRouterCoreStepTx(s.ch,SRNOS_TimeMs());
 #ifdef SRNOS_CAN4_PROFILE
             uint32_t us=(uint32_t)(SRNOS_TimeGetUptimeUs()-before);
             ctx->tx_service_us+=us;if(us>ctx->max_tx_us)ctx->max_tx_us=us;
@@ -211,7 +212,7 @@ budget:
 static bool SRNOS_ExternalCANServiceWait(SRNOS_ExternalCANService &s)
 {
     if(s.rx_ready || s.tx_ready)return true;
-    uint32_t now=HAL_GetTick();
+    uint32_t now=SRNOS_TimeMs();
     uint32_t delay=s.fd?SRNOS_CANFDCoreNextTxWait(s.ch,now):SRNOS_CANRouterCoreNextTxWait(s.ch,now);
     if(delay>5)delay=5;
     if(s.ctx->rx_fifo.pending || s.ctx->tx_fifo.pending)delay=1;

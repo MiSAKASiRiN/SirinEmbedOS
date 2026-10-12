@@ -1,3 +1,4 @@
+#include "SirinEmbedOS/Kernel/Thread.h"
 #include "can_fd_internal.h"
 #include "IO/CAN/can_controller_internal.h"
 #include "FreeRTOS.h"
@@ -65,7 +66,7 @@ static const SRNOS_CANFDBackendOps *backend_of(const Context &context) {
 }
 static uint32_t clock_ms(const Context &context) {
     const auto *backend = backend_of(context);
-    return backend && backend->now_ms ? backend->now_ms() : HAL_GetTick();
+    return backend && backend->now_ms ? backend->now_ms() : SRNOS_TimeMs();
 }
 static uint32_t refresh_now(const Context &context, uint32_t previous) {
     const uint32_t current = clock_ms(context);

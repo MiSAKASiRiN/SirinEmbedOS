@@ -63,7 +63,8 @@ static void update_fifo_registers(void) {
     write_word(tx_con+8,depth(rx_con)*(8u+payload(rx_con))+tx_index*(8u+payload(tx_con)));
 }
 void SRNOS_TestUnmask(void) {}
-extern "C" uint32_t HAL_GetTick(void) { return now_ms; }
+extern "C" uint32_t HAL_GetTick(void) { return now_ms + 12u; }
+extern "C" uint32_t SRNOS_TimeMs(void) { return now_ms; }
 extern "C" void HAL_Delay(uint32_t ms) { now_ms+=ms; }
 extern "C" const SRNOS_ExternalCANDevCfg *SRNOS_BoardExternalCANConfig(uint8_t dev) { return dev?nullptr:&binding; }
 extern "C" int8_t SRNOS_MCP2518FDAttachSPI(CANFDSPI_MODULE_ID dev,SRNOS_SPIBusId bus,GPIO_TypeDef *port,uint16_t pin) {
@@ -91,10 +92,10 @@ extern "C" bool SRNOS_CANFDCoreHasRegistrations(SRNOS_CANChannel) { return false
 extern "C" void SRNOS_CANFDCorePrepareResources(void) { ++resource_prepares; }
 extern "C" void SRNOS_CANRouterCoreSetBackend(SRNOS_CANChannel ch,const SRNOS_CANRouterBackendOps *ops) { assert(ch==4);classic_backend=ops; }
 extern "C" void SRNOS_CANFDCoreSetBackend(SRNOS_CANChannel ch,const SRNOS_CANFDBackendOps *ops) { assert(ch==4);fd_backend=ops; }
-extern "C" uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel,uint32_t) { ++classic_waits;return next_wait_delay; }
-extern "C" uint32_t SRNOS_CANFDCoreNextTxWait(SRNOS_CANChannel,uint32_t) { ++fd_waits;return next_wait_delay; }
-extern "C" bool SRNOS_CANRouterCoreStepTx(SRNOS_CANChannel,uint32_t) { ++classic_drains;if(pump_tx)service_order.push_back('T');return pump_tx; }
-extern "C" bool SRNOS_CANFDCoreStepTx(SRNOS_CANChannel,uint32_t) { ++fd_drains;if(pump_tx)service_order.push_back('T');return pump_tx; }
+extern "C" uint32_t SRNOS_CANRouterCoreNextTxWait(SRNOS_CANChannel,uint32_t stamp) { assert(stamp==now_ms); ++classic_waits;return next_wait_delay; }
+extern "C" uint32_t SRNOS_CANFDCoreNextTxWait(SRNOS_CANChannel,uint32_t stamp) { assert(stamp==now_ms); ++fd_waits;return next_wait_delay; }
+extern "C" bool SRNOS_CANRouterCoreStepTx(SRNOS_CANChannel,uint32_t stamp) { assert(stamp==now_ms); ++classic_drains;if(pump_tx)service_order.push_back('T');return pump_tx; }
+extern "C" bool SRNOS_CANFDCoreStepTx(SRNOS_CANChannel,uint32_t stamp) { assert(stamp==now_ms); ++fd_drains;if(pump_tx)service_order.push_back('T');return pump_tx; }
 extern "C" void SRNOS_CANRouterCoreNoteTxComplete(SRNOS_CANChannel) { ++tx_completions; }
 extern "C" void SRNOS_CANFDCoreNoteTxComplete(SRNOS_CANChannel) { ++tx_completions; }
 extern "C" void SRNOS_CANRouterCoreNoteRxWake(SRNOS_CANChannel,bool) { ++rx_wakes; }

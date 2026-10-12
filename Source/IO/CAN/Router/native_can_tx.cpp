@@ -1,3 +1,4 @@
+#include "SirinEmbedOS/Kernel/Thread.h"
 #include "thread_internal.h"
 #include "native_can_backend_internal.h"
 
@@ -31,7 +32,7 @@ extern "C" SRNOS_NativeCANTaskCtx *SRNOS_NativeCANTaskCtxOf(SRNOS_CANChannel ch)
 
 extern "C" uint32_t SRNOS_NativeCANBackendNowMs(void)
 {
-    return HAL_GetTick();
+    return SRNOS_TimeMs();
 }
 
 static bool SRNOS_NativeCANBackendStart(SRNOS_CANChannel ch)

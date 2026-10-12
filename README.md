@@ -20,6 +20,8 @@
 
 2026-10-06 CAN4单服务/SPI序列优化已完成：Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。原测试前Flash已恢复，优化代码未永久留板。详细边界、资源、原始结果和恢复证明见 [最终验收](Docs/Validation/CAN4-Optimization-20261006/README.md)。
 
+CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`，设备反馈时间可以直接与应用任务时间比较；不与 HAL/DWT 原点混用。MSwerve 实战修复与验证见 [CAN 时间基准记录](Docs/Validation/CANClock-20261012/README.md)。
+
 ## 文档入口
 
 [完整导航](Docs/README.md)按父项目开发、持久化、协议、设备和验证组织。常用入口：

@@ -1,0 +1,412 @@
+{
+  "sequence": 4786,
+  "now_ms": 23945,
+  "registration_ok": 1,
+  "online_mask": 8191,
+  "ever_seen_mask": 8191,
+  "motors": [
+    {
+      "bus": 1,
+      "id": 1,
+      "feedback_id": 517,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 7973,
+      "speed_raw": 0,
+      "effort_raw": -94,
+      "temperature_c": 26,
+      "device_status": 0
+    },
+    {
+      "bus": 1,
+      "id": 2,
+      "feedback_id": 518,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 7029,
+      "speed_raw": 0,
+      "effort_raw": -71,
+      "temperature_c": 27,
+      "device_status": 0
+    },
+    {
+      "bus": 1,
+      "id": 3,
+      "feedback_id": 519,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 48,
+      "speed_raw": 0,
+      "effort_raw": -87,
+      "temperature_c": 27,
+      "device_status": 0
+    },
+    {
+      "bus": 1,
+      "id": 4,
+      "feedback_id": 520,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 4664,
+      "speed_raw": 0,
+      "effort_raw": 101,
+      "temperature_c": 27,
+      "device_status": 0
+    },
+    {
+      "bus": 2,
+      "id": 1,
+      "feedback_id": 513,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 3622,
+      "speed_raw": 0,
+      "effort_raw": -22,
+      "temperature_c": 26,
+      "device_status": 0
+    },
+    {
+      "bus": 2,
+      "id": 2,
+      "feedback_id": 514,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 3542,
+      "speed_raw": 0,
+      "effort_raw": -85,
+      "temperature_c": 26,
+      "device_status": 0
+    },
+    {
+      "bus": 2,
+      "id": 3,
+      "feedback_id": 515,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 4107,
+      "speed_raw": 0,
+      "effort_raw": 27,
+      "temperature_c": 26,
+      "device_status": 0
+    },
+    {
+      "bus": 2,
+      "id": 4,
+      "feedback_id": 516,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 3611,
+      "speed_raw": 0,
+      "effort_raw": 54,
+      "temperature_c": 26,
+      "device_status": 0
+    },
+    {
+      "bus": 1,
+      "id": 1,
+      "feedback_id": 0,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23905,
+      "age_ms": 40,
+      "position_raw": 61205,
+      "speed_raw": 2046,
+      "effort_raw": 2049,
+      "temperature_c": 33,
+      "device_status": 0
+    },
+    {
+      "bus": 3,
+      "id": 2,
+      "feedback_id": 0,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23905,
+      "age_ms": 40,
+      "position_raw": 8819,
+      "speed_raw": 2047,
+      "effort_raw": 2045,
+      "temperature_c": 30,
+      "device_status": 0
+    },
+    {
+      "bus": 3,
+      "id": 6,
+      "feedback_id": 518,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23945,
+      "age_ms": 0,
+      "position_raw": 3524,
+      "speed_raw": 0,
+      "effort_raw": -17,
+      "temperature_c": 27,
+      "device_status": 0
+    },
+    {
+      "bus": 3,
+      "id": 7,
+      "feedback_id": 519,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 4121,
+      "speed_raw": 0,
+      "effort_raw": 34,
+      "temperature_c": 26,
+      "device_status": 0
+    },
+    {
+      "bus": 2,
+      "id": 5,
+      "feedback_id": 517,
+      "registration_result": 0,
+      "online": 1,
+      "ever_seen": 1,
+      "last_rx_ms": 23944,
+      "age_ms": 1,
+      "position_raw": 3807,
+      "speed_raw": 0,
+      "effort_raw": 8,
+      "temperature_c": 25,
+      "device_status": 0
+    }
+  ],
+  "router": [
+    {
+      "rx_pops": 96247,
+      "rx_routed_raw": 0,
+      "rx_routed_adapter": 96247,
+      "rx_no_subscriber": 0,
+      "rx_dropped": 0,
+      "rx_wake_by_isr": 96246,
+      "rx_wake_by_timeout": 1,
+      "tx_oneshot_enqueue_ok": 478,
+      "tx_oneshot_enqueue_full": 0,
+      "tx_oneshot_expired": 0,
+      "tx_urgent_accepted": 478,
+      "tx_periodic_accepted": 0,
+      "tx_periodic_dropped": 0,
+      "tx_backend_busy": 0,
+      "tx_complete_events": 478,
+      "rx_route_count": 5,
+      "rx_route_high_water": 5,
+      "rx_route_lookup_steps": 361046,
+      "rx_route_capacity_rejects": 0,
+      "tx_adapter_count": 5,
+      "tx_adapter_high_water": 5,
+      "tx_oneshot_depth": 0,
+      "tx_oneshot_high_water": 1
+    },
+    {
+      "rx_pops": 121110,
+      "rx_routed_raw": 0,
+      "rx_routed_adapter": 121110,
+      "rx_no_subscriber": 0,
+      "rx_dropped": 0,
+      "rx_wake_by_isr": 121106,
+      "rx_wake_by_timeout": 1,
+      "tx_oneshot_enqueue_ok": 0,
+      "tx_oneshot_enqueue_full": 0,
+      "tx_oneshot_expired": 0,
+      "tx_urgent_accepted": 0,
+      "tx_periodic_accepted": 0,
+      "tx_periodic_dropped": 0,
+      "tx_backend_busy": 0,
+      "tx_complete_events": 0,
+      "rx_route_count": 5,
+      "rx_route_high_water": 5,
+      "rx_route_lookup_steps": 460189,
+      "rx_route_capacity_rejects": 0,
+      "tx_adapter_count": 5,
+      "tx_adapter_high_water": 5,
+      "tx_oneshot_depth": 0,
+      "tx_oneshot_high_water": 0
+    },
+    {
+      "rx_pops": 71594,
+      "rx_routed_raw": 0,
+      "rx_routed_adapter": 48913,
+      "rx_no_subscriber": 22681,
+      "rx_dropped": 0,
+      "rx_wake_by_isr": 71592,
+      "rx_wake_by_timeout": 1,
+      "tx_oneshot_enqueue_ok": 478,
+      "tx_oneshot_enqueue_full": 0,
+      "tx_oneshot_expired": 0,
+      "tx_urgent_accepted": 478,
+      "tx_periodic_accepted": 0,
+      "tx_periodic_dropped": 0,
+      "tx_backend_busy": 0,
+      "tx_complete_events": 478,
+      "rx_route_count": 3,
+      "rx_route_high_water": 3,
+      "rx_route_lookup_steps": 192101,
+      "rx_route_capacity_rejects": 0,
+      "tx_adapter_count": 3,
+      "tx_adapter_high_water": 3,
+      "tx_oneshot_depth": 0,
+      "tx_oneshot_high_water": 1
+    }
+  ],
+  "native": [
+    {
+      "rx_isr_cnt": 96287,
+      "rx_overrun_cnt": 0,
+      "tx_ok_cnt": 478,
+      "tx_busy_cnt": 0,
+      "bus_off_cnt": 0,
+      "last_err_code": 0,
+      "rx_error_cnt": 0,
+      "rx_hw_lost_cnt": 0,
+      "recovery_attempts": 0,
+      "recovery_completed": 0,
+      "recovery_errors": 0,
+      "recovery_faults": 0,
+      "recovery_state": 0
+    },
+    {
+      "rx_isr_cnt": 121160,
+      "rx_overrun_cnt": 0,
+      "tx_ok_cnt": 0,
+      "tx_busy_cnt": 0,
+      "bus_off_cnt": 0,
+      "last_err_code": 0,
+      "rx_error_cnt": 0,
+      "rx_hw_lost_cnt": 0,
+      "recovery_attempts": 0,
+      "recovery_completed": 0,
+      "recovery_errors": 0,
+      "recovery_faults": 0,
+      "recovery_state": 0
+    },
+    {
+      "rx_isr_cnt": 71623,
+      "rx_overrun_cnt": 0,
+      "tx_ok_cnt": 478,
+      "tx_busy_cnt": 0,
+      "bus_off_cnt": 0,
+      "last_err_code": 0,
+      "rx_error_cnt": 0,
+      "rx_hw_lost_cnt": 0,
+      "recovery_attempts": 0,
+      "recovery_completed": 0,
+      "recovery_errors": 0,
+      "recovery_faults": 0,
+      "recovery_state": 0
+    }
+  ],
+  "queries": {
+    "attempted": [
+      478,
+      478
+    ],
+    "accepted": [
+      478,
+      478
+    ],
+    "rejected": [
+      0,
+      0
+    ],
+    "last_result": [
+      0,
+      0
+    ]
+  },
+  "usb_window": {
+    "reports": 20,
+    "first_ms": 4005,
+    "last_ms": 23005,
+    "motor_rows": 260,
+    "age_ranges": {
+      "drive_lb": [
+        0,
+        1
+      ],
+      "drive_lf": [
+        0,
+        1
+      ],
+      "drive_rb": [
+        0,
+        1
+      ],
+      "drive_rf": [
+        0,
+        1
+      ],
+      "feeder": [
+        0,
+        1
+      ],
+      "friction_l": [
+        0,
+        1
+      ],
+      "friction_r": [
+        0,
+        1
+      ],
+      "gimbal_pitch": [
+        50,
+        50
+      ],
+      "gimbal_yaw": [
+        50,
+        50
+      ],
+      "steer_lb": [
+        1,
+        1
+      ],
+      "steer_lf": [
+        0,
+        1
+      ],
+      "steer_rb": [
+        1,
+        1
+      ],
+      "steer_rf": [
+        1,
+        1
+      ]
+    }
+  },
+  "clocks": {
+    "hal_ms": 23967,
+    "rtos_ms": 23955
+  },
+  "on_rx": "unwrapped SDK motor callbacks",
+  "elf_sha256": "3b4e4e8241972b85e29f25ac8a92ed01748878d57f1e39f15ec661e9d154f88e"
+}

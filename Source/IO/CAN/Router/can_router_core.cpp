@@ -1,3 +1,4 @@
+#include "SirinEmbedOS/Kernel/Thread.h"
 #include "can_router_core_internal.h"
 #include "can_router_collections.hpp"
 #include "../can_controller_internal.h"
@@ -192,7 +193,7 @@ static uint32_t router_now_ms(SRNOS_CANChannel ch)
     if (backend && backend->now_ms) {
         return backend->now_ms();
     }
-    return HAL_GetTick();
+    return SRNOS_TimeMs();
 }
 
 static bool time_reached(uint32_t now, uint32_t due)
