@@ -152,7 +152,7 @@ def main():
             check_public_headers(pathlib.Path(temp) / 'Headers',
                                  config, keep_going=True)
         return
-    for vendor in (SDK / "ThirdParty/FreeRTOS", SDK / "ThirdParty/USBDevice"):
+    for vendor in (SDK / "ThirdParty/FreeRTOS", SDK / "ThirdParty/USBDevice", SDK / "ThirdParty/LwIP"):
         for line in (vendor / "SHA256SUMS").read_text().splitlines():
             digest, name = line.split("  ", 1)
             assert hashlib.sha256((vendor / name).read_bytes()).hexdigest() == digest, name

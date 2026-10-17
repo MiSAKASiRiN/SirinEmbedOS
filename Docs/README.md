@@ -1,27 +1,38 @@
 # SirinEmbedOS 文档导航
 
-当前合同按 2026-09-29 源码整理。README/专题文档描述现在的用法；CHANGELOG 记录变化；`Validation/日期目录` 保存当时的固件与实验依据，保留历史内容，不据旧板测认定新功能已验收。
+第一次使用先读 [QuickStart](../QuickStart.md)，按完整示例构建一个父项目。本文按开发任务选择下一份指南；修改历史仅放各级 CHANGELOG，原始测试数据仍保留在验证目录。
 
-| 要做的事 | 入口 |
+| 要做的事 | 使用说明与示例 |
 |---|---|
-| 构建 SDK、父项目接入 | [根 README](../README.md)、[源码破坏性迁移](SDKMigration.md) |
-| 创建/停止/删除线程、delay、同步 | [Kernel](../Source/Kernel/README.md)、[Minimal](../Examples/Minimal/README.md) |
-| 设计 EEPROM 数据、恢复规则 | [持久化总览](Storage.md)、[Storage API](../Source/Services/Storage/README.md) |
+| 构建 SDK、创建父项目 | [QuickStart](../QuickStart.md)、[根 README](../README.md) |
+| 升级旧 API 或项目结构 | [SDKMigration](SDKMigration.md) |
+| 创建、停止、删除任务，使用同步对象 | [Kernel](../Source/Kernel/README.md)、[Minimal](../Examples/Minimal/README.md) |
+| 使用 CAN、adapter 或 FD | [CAN](../Source/IO/CAN/README.md)、[Motors](../Source/Devices/Motors/README.md)、[CANFD 示例](../Examples/CANFD/README.md) |
+| 使用 Ethernet、UDP、Ping | [Ethernet](../Source/IO/Ethernet/README.md)、[Network](../Source/Services/Network/README.md) |
+| 配置 UART、遥控和 RS485 | [Serial](../Source/IO/Serial/README.md)、[PrototypeBindings](../Examples/PrototypeBindings/README.md) |
+| 读取传感器、姿态和温控状态 | [Sensors](Sensors.md)、[INS](INS.md) |
 | 声明 PID 等可写可保存参数 | [Parameters](../Source/Services/Parameters/README.md)、[参数示例](../Examples/Parameters/README.md) |
-| 发布编码器等只读高频变量 | [Telemetry](../Source/Services/Telemetry/README.md) |
-| 编写上位机 COBS/HostLink 通信 | [帧格式与消息表](HostLink.md#cobs-帧与校验)、[参数消息字段](../Source/Services/Parameters/HostLink/README.md) |
-| 在父项目注册命令/流/控制邮箱 | [HostLink API](../Source/Services/HostLink/README.md) |
-| IMU 原始采样、坐标、融合和静态校准 | [Sensors](Sensors.md)、[INS 合同](INS.md)、[静态校准用法](../Source/Services/INS/README.md#手动静态校准) |
-| 读取 ADC、CPU 和循环统计 | [SystemMonitor](../Source/Services/SystemMonitor/README.md) |
-| 开发机记录 IMU/INS/监测遥测 | [Tools/HostLink](../Tools/HostLink/README.md)；现有 CLI 不提供参数编辑或校准触发界面 |
-| 原始 EEPROM 调试与全片维护 | [器件驱动](../Source/Devices/EEPROM/README.md)、[EEPROMBringUp](../Examples/EEPROMBringUp/README.md) |
-| 核对资源/实测/未完成工作 | [验证索引](Validation.md)、[开发清单](Development.md) |
-| 查 Board/CubeMX 与迁移所有权 | [Board Support](BoardSupport.md)、[来源与去向](Migration/README.md) |
+| 发布只读变量 | [Telemetry](../Source/Services/Telemetry/README.md)、[示例](../Examples/Telemetry/README.md) |
+| 使用 EEPROM 身份、校准和参数记录 | [Storage](Storage.md)、[Storage API](../Source/Services/Storage/README.md) |
+| 编写上位机，注册命令和数据流 | [HostLink 协议](HostLink.md)、[服务 API](../Source/Services/HostLink/README.md) |
+| 采集 IMU/INS/CPU 遥测 | [Tools/HostLink](../Tools/HostLink/README.md)、[SystemMonitor](../Source/Services/SystemMonitor/README.md) |
+| 维护硬件绑定或 CubeMX 输出 | [Board](../Board/README.md)、[BoardSupport](BoardSupport.md) |
+| 检查代码、运行验证、阅读历史证据 | [Development](Development.md)、[Validation](Validation.md) |
+| 查询代码来源、许可和重命名 | [迁移索引](Migration/README.md)、[迁移历史](Migration/CHANGELOG.md) |
 
-## 最近完成的能力与验证边界
+## 查找示例
 
-- 命名与父项目公共依赖隔离、托管任务、SystemMonitor：有主机/构建和限定范围板测；以各记录的 ELF/配置/负载为准。
-- EEPROM 单份身份/校准/参数记录、Persistent 与只读 Value、SOURCE V2：已实现，见 [Persistence-20260928](Validation/Persistence-20260928/README.md)；新格式未做真实掉电验收。
-- 任意姿态静止陀螺零偏校准及 CONFIG 09/0A：已实现，见 [StaticIMU-20260929](Validation/StaticIMU-20260929/README.md)；未烧录，保存的新校准下次启动应用。
+例如接入 UDP：先在 Network 指南找到启动配置和收发片段，再用 QuickStart 的周期任务调用公开接口。不要把网络 worker 的回调直接当作控制任务，也不要重复启动平台服务。
 
-新增公共合同先更新对应能力 README/CHANGELOG，再把跨模块交互加入专题文档。协议的数字字段以公共协议常量和编码实现核对，存储布局以 Storage 编解码核对；不要把服务号、消息号、流 ID、参数 index 和 stable_id 混用。
+在 SDK 根目录可查找接口及其示例位置：
+
+```sh
+rg -n 'SRNOS_UDPReceive|SRNOS_UDPSend' Include/SirinEmbedOS Source/Services/Network/README.md
+rg -n 'SRNOS_ThreadCreate' QuickStart.md Source/Kernel/README.md Examples/Minimal
+```
+
+## 维护规则
+
+README、QuickStart 和专题文档说明当前用途、配置、使用步骤、示例及限制；日期、修改原因、验证结果和待验事项只写 CHANGELOG。协议字段以公共常量和编码实现为准，存储布局以编解码为准。服务号、消息号、流 ID、参数 index 和 stable_id 不可混用。
+
+历史实验只说明对应固件、配置及窗口，不代表当前板上状态。证据目录中的 README 用于阅读或复现，历史结论见其 CHANGELOG；日志与哈希不因文档整理而改写。

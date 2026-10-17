@@ -14,3 +14,11 @@
 - 2026-09-28：SRNOS_Serial 接入托管循环；保留启动、单轮处理和通知/1 tick 等待。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。
 
 - UART 板级接入移入 Board/Support/IO/serial_board.c；回调、DMA 与 RS485 行为不变。 本次主机及构建验证见 Docs/Validation/BoardSupport-20260928/README.md；未板测。
+
+## 2026-10-17 文档整理
+
+- README 仅说明当前接口、使用方式和边界，补充接入示例；历史结果移至本文件，保留证据链接。此项不修改实现，不新增板端验证。
+
+### 从 README 归档的历史记录
+
+本轮主机回归覆盖总超时、锁竞争后的剩余时间、等待前 RX 到达、32 位时钟回绕、空闲永久等待及已有事务/协议场景。尚未重新进行 UART/RS485 实板时序与负载验证。

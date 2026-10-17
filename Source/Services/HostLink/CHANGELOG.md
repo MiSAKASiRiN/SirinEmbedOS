@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 维护当前使用方式、示例、资源和限制；变更经过与验证结果集中记录于 CHANGELOG。
+
+### 从 README 归档的历史记录
+
+以下保留原记录表述，时间与适用固件以所链接证据为准，不表示本次重新执行验证。
+
+2026-09-29 板测已验证参数事务、SOURCE V2、读取暂停恢复和重连；8路1kHz订阅实收约每路910条/s，不能宣称完整8000标量/s交付。原阈值静态误拒绝及上述遥测结果见 [初轮验收](../../../Docs/Validation/PersistenceBoard-20260929/README.md)；阈值调整后双IMU校准完成、活动重试去重及重启加载已 [复测通过](../../../Docs/Validation/StaticThreshold-20260929/README.md)。
+
+主机测试覆盖协议黄金向量、断连/背压、注册冻结与冲突、活动表寿命、重放、完成队列竞争、RX 预算和回调锁边界。内置遥测 C/Python 黄金向量未变。相关公共头可仅用 SDK Include/Config 以 C11 编译。这里的主机结果不代表本轮固件已经烧录或完成板端性能验收。
+
+线协议及监视工具见 [Docs/HostLink.md](../../../Docs/HostLink.md)。当前等待与队列固件已完成 CDC 停读 12 秒、DTR 断连 5 秒与重连，实际 LATEST 合并 24 项、队列峰值 11、解码错误为 0；见 [SRNOS 板测](../../../Docs/Validation/SRNOSBoard-20260928/README.md)。持续 RX、长业务命令、物理 USB 拔插和真实 CAN 组合负载仍待验证。
+
 ## Unreleased
 
 - 2026-10-10：板端复现转台保存请求在 HostComm 入队时触发栈溢出（尚未写 EEPROM）。去除工作项入队/执行的重复栈副本，HostComm 栈 2→3 KiB，HostCmd 保持 2 KiB；队列复制所有权、协议和优先级不变。 已完成相关主机检查、Debug 构建及双 IMU 无运动保存/重启加载板测，见 [验证记录](../../../Docs/Validation/IMUTurntableSaveFault-20261010/README.md)。

@@ -1,12 +1,8 @@
 # INS 服务
 
-2026-09-29 已按静止原始噪声实测提高校准阈值，连续两次双IMU静态校准、保存及软件复位加载通过；保留revision2并清除INS未校准标记。实际精度、可控运动反例和真实断电仍未验收，见 [阈值复测](../../../Docs/Validation/StaticThreshold-20260929/README.md)。
-
 SirinEmbedOS 固定板载惯性服务：统一坐标，使用 BMI088 与 LSM6DS3 的六轴数据驱动一个 Mahony 姿态状态，并管理唯一的 IMU 加热通路。LIS2MDL 与 SPA06 只提供测量，不参与融合。默认启用，应用无需自行创建 INS 线程。
 
 完整参数、时序与失效合同见 [Docs/INS.md](../../../Docs/INS.md)，本模块历史见 [CHANGELOG](CHANGELOG.md)。
-
-2026-09-28 当前固件独立一分钟采集双 IMU/INS 各 60001 条有效样本，五条流无缺序；但温稳曾进入后退出，INS 在有效输出下切换正常/温度降级。采样连续性与恒温/姿态精度分别验收，数据及范围见 [当前板测](../../../Docs/Validation/SRNOSBoard-20260928/README.md)。
 
 ## 实现分工
 
@@ -47,6 +43,8 @@ void control_cycle(void)
 }
 ```
 
+`ins.enabled=false` 关闭融合，不等于取消 INS worker、传感器 worker 或相关静态缓冲；传感器和加热选择分别由 `sensors` 配置管理，资源裁剪须核对最终 map。
+
 这些也是默认值。配置在启动时检查并冻结：安装四元数必须有限且非零，SDK 归一化；加热目标允许 20～75°C。不能通过 HostLink 或运行期重绑修改配置。
 
 - `SRNOS_INSGetAttitude()`：小型高频姿态副本。
@@ -74,7 +72,7 @@ INS 的 SI 向量为机器人坐标：加速度 m/s²（包含重力对应的比
 - 低动态观测连续 0.5 秒后建立重力方向，继续融合至少 2 秒且末尾 0.2 秒低动态才发布有效姿态；持续运动可使初始化继续等待。
 - 任一健康六轴温度 ≥80°C 立即关 PWM；满足触发来源重新有效且全部有效温度 <75°C 连续 5 秒后才可恢复。硬件故障保持关闭。
 
-本阶段温控只提供恒温，不含温度误差曲线补偿。EEPROM 校准记录加载/保存和 HostLink 存储默认启用；零偏/比例校正及静态校准的当前边界见下文。没有 legacy 融合或温控选择入口。
+温控只提供恒温，不含温度误差曲线补偿。EEPROM 校准记录加载/保存和 HostLink 存储默认启用；零偏/比例校正及静态校准的当前边界见下文。没有 legacy 融合或温控选择入口。
 
 ## CDC 测试与保存
 
@@ -108,19 +106,19 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
 
 ## 验证边界
 
-主机测试在 [Tests/Services/INS](../../../Tests/Services/INS) 和 [IMUTelemetry](../../../Tests/Services/IMUTelemetry)。固件构建、板测证据与未测事项以 [Validation](../../../Docs/Validation.md) 为准。2026-09-28 已完成三个 10 秒窗口短测，不能据此宣称十分钟稳定性、精度校准、动态性能或满 CAN 负载验收通过。
+在 SDK 根目录运行 `bash Tests/Services/INS/run_host_tests.sh` 检查融合状态与配置，运行 `bash Tests/Services/IMUTelemetry/run_host_tests.sh` 检查遥测。精度、动态性能和负载时序需使用目标固件分别测量；各历史验证窗口及限制见 [Validation](../../../Docs/Validation.md)与本目录 [CHANGELOG](CHANGELOG.md)。
 
 ## 板级边界
 
-传感器固定坐标及加热 PWM 接入移入 Board/Support/Devices，heater_board 名称表达输出职责；融合、温控及任务配置不变。
+传感器固定坐标及加热 PWM 由 Board/Support/Devices 提供，heater_board 负责输出；本服务负责融合、温控和状态。
 
 ## 托管线程
 
-SRNOS_INS 接入托管单轮与原 1 ms 超期重置等待；初始化不纳入循环统计。 当前 INS 为 P0 / Realtime（48），与 BMI/LSM 和 CAN1/2/3 同级；栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+SRNOS_INS 使用托管单轮与 1 ms 超期重置等待；初始化不纳入循环统计。INS 为 P0 / Realtime（48）、3 KiB 栈，与 BMI/LSM 和 CAN1/2/3 同级。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
 
 ## 遥测快照边界
 
-INS 与原始传感器遥测逐条在短保护区取得记录，编码在保护外完成，避免整批复制期间屏蔽中断。队列容量、线记录格式、订阅合同和硬件采样频率保留；HostComm 的拥塞/断连不反向改变融合周期。实际临界区和 INS 时序仍需本轮板测。
+INS 与原始传感器遥测逐条在短保护区取得记录，编码在保护外完成，避免整批复制期间屏蔽中断。队列容量、线记录格式、订阅合同和硬件采样频率保留；HostComm 的拥塞/断连不反向改变融合周期。临界区和 INS 时序应按目标固件及实际负载测量。
 
 ## 校准持久化
 
@@ -130,13 +128,13 @@ INS 与原始传感器遥测逐条在短保护区取得记录，编码在保护�
 
 AppInit负责 EEPROM，INS仅等待解析结果并继续温控/状态更新。两颗校准分别校验，总启动存储预算2s；超时关闭接纳窗口，迟到结果不能进入融合。无效记录按零偏0、scale1回退，参与融合的任一源未校准时设置UNCALIBRATED并进入DEGRADED，姿态仍可VALID。真实传感器健康与存储状态分开；默认没有校准的板子以后会明确显示降级。
 
-`SRNOS_IMUCalibrationGetStatus()`提供各器件加载/保存结果、活动/保存revision及待重启掩码；`INSStatus.calibrated_imu_mask`和`calibration_load_pending`给出融合侧状态。身份、校准和参数互不覆盖，单份写入不保证保留旧版本。主机已覆盖序列化、独立损坏、时钟回绕/迟到加载、下一次启动生效和非单位安装旋转；实际校准精度、断电以及共享总线压力仍须板测。
+`SRNOS_IMUCalibrationGetStatus()`提供各器件加载/保存结果、活动/保存revision及待重启掩码；`INSStatus.calibrated_imu_mask`和`calibration_load_pending`给出融合侧状态。身份、校准和参数互不覆盖，单份写入不保证保留旧版本。序列化、独立损坏、时钟回绕/迟到加载、重启生效和非单位安装旋转可通过主机回归检查；实际校准精度、断电以及共享总线压力需板测。
 
 保存由外部校准流程取得的数据（仅在低优先级管理任务调用）：
 
 ```c
 #include "SirinEmbedOS/Services/IMUCalibration.h"
-SRNOS_StorageStatus SRNOS_SaveMeasuredCalibration(const SRNOS_IMUCalibration *measured) {
+SRNOS_StorageStatus save_measured_calibration(const SRNOS_IMUCalibration *measured) {
     SRNOS_StorageStatus result = SRNOS_IMUCalibrationValidate(measured);
     if (result != SRNOS_STORAGE_OK) return result;
     return SRNOS_IMUCalibrationSave(measured, 5000);
@@ -151,7 +149,7 @@ SRNOS_StorageStatus SRNOS_SaveMeasuredCalibration(const SRNOS_IMUCalibration *me
 
 HostCmd 每 10 ms 读取一次最新 SENSOR 轴原始快照，收集约 5 s，估计三轴陀螺零偏和平均温度。单个未知姿态不能把重力与加速度零偏分开，因此保留 EEPROM 中有效的 accel bias/scale；无有效记录时使用 bias=0、scale=1。不会把当前重力向量作为加速度零偏扣除。IMU 也无法区分足够缓慢的匀速转动与零偏，软件静止检查不能替代实际静止要求。[ST 加速度校准说明](https://www.st.com/resource/en/application_note/an4508-parameters-and-calibration-of-a-lowg-3axis-accelerometer-stmicroelectronics.pdf)
 
-拒绝条件包括：传感器非 READY、字段无效、错误/丢样/恢复计数变化、非有限值、样本年龄超过 20 ms、相邻观察时间超过 40 ms 或序号不前进；加热故障、过温和缺失反馈也会结束操作。观察窗口还要求至少 400 个不同样本、跨度至少 4.9 s。工程静止阈值为原始单轴角速度绝对值≤0.10 rad/s、峰峰值≤0.12 rad/s、标准差≤0.02 rad/s；加速度模长 8.8–10.8 m/s²、单轴峰峰值≤0.40 m/s²、标准差≤0.08 m/s²；温度变化≤1.0°C。以上为异常拒绝条件；原始噪声可能触发旧阈值，当前阈值已通过静止复测，但更宽阈值对轻微运动较不敏感，不能代替物理静止要求或校准精度证明。
+拒绝条件包括：传感器非 READY、字段无效、错误/丢样/恢复计数变化、非有限值、样本年龄超过 20 ms、相邻观察时间超过 40 ms 或序号不前进；加热故障、过温和缺失反馈也会结束操作。观察窗口还要求至少 400 个不同样本、跨度至少 4.9 s。工程静止阈值为原始单轴角速度绝对值≤0.10 rad/s、峰峰值≤0.12 rad/s、标准差≤0.02 rad/s；加速度模长 8.8–10.8 m/s²、单轴峰峰值≤0.40 m/s²、标准差≤0.08 m/s²；温度变化≤1.0°C。以上为异常拒绝条件；这些阈值对轻微运动可能不敏感，不能代替物理静止要求或校准精度证明。
 
 所有选中 IMU 都通过采集校验后才开始保存。采集及保存过程持有校准写入租约，其他本地校准 Save/RunStatic 返回 BUSY；EEPROM 总线只在真正读写时占用，普通参数存储仍可能竞争并使本操作报错。每颗沿用独立单份记录、CRC 和读回验证，任一保存失败返回错误及 `saved_mask`，已经成功写入的另一颗不回滚。成功只表示保存完成，**新值下次启动生效**，当前 INS 和原始采样不变；gyro-only 记录有效也不表示已完成加速度多姿态标定。
 
@@ -161,14 +159,15 @@ HostCmd 每 10 ms 读取一次最新 SENSOR 轴原始快照，收集约 5 s，�
 
 ```c
 #include <SirinEmbedOS/Services/IMUCalibration.h>
-SRNOS_IMUStaticStatus result;
-SRNOS_IMUStaticResult rc = SRNOS_IMUCalibrationRunStatic(
-    SRNOS_IMU_CALIBRATION_BOTH_MASK, &result);
-/* rc == SRNOS_IMU_STATIC_OK: 所有请求记录已保存，下次启动应用。
- * 失败读取 result.failed_sensor / saved_mask / storage_status。 */
+SRNOS_IMUStaticResult calibrate_both(SRNOS_IMUStaticStatus *result)
+{
+    return SRNOS_IMUCalibrationRunStatic(SRNOS_IMU_CALIBRATION_BOTH_MASK, result);
+}
+/* 调用者提供状态对象；返回 SRNOS_IMU_STATIC_OK 表示所有请求记录已保存，
+ * 下次启动应用。失败读取 result 的 failed_sensor/saved_mask/storage_status。 */
 ```
 
-不新增线程、运行期内存分配或高优先级采样 hook。固定整数/浮点累计器在 HostCmd 中运行，仅进度副本使用短保护；等待时让出 CPU。主机回归、固件资源及尚未板测的范围见 [本轮验证](../../../Docs/Validation/StaticIMU-20260929/README.md)。
+静态校准不使用独立线程、运行期内存分配或高优先级采样 hook。固定整数/浮点累计器在 HostCmd 中运行，仅进度副本使用短保护；等待时让出 CPU。主机回归、固件资源及尚未板测的范围见 [静态校准验证记录](../../../Docs/Validation/StaticIMU-20260929/README.md)。
 
 分区、v1 48 B / v2 60 B校准记录正文、启动解析和单份失败语义统一见 [EEPROM 设计](../../../Docs/Storage.md)。
 

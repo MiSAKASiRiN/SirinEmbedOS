@@ -16,6 +16,8 @@ void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *c)
         c->can[i].mode = SRNOS_CAN_MODE_CLASSIC;
         c->can[i].nominal_bitrate = 1000000u;
     }
+    c->network.address[0]=192; c->network.address[1]=168; c->network.address[2]=1; c->network.address[3]=50;
+    c->network.netmask[0]=c->network.netmask[1]=c->network.netmask[2]=255;
     c->ins.enabled=true;
     c->ins.board_to_robot_wxyz[0]=1;
     c->sensors.lsm_enabled=c->sensors.lis_enabled=c->sensors.spa_enabled=true;
@@ -65,6 +67,8 @@ uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
     if (c->logging_enabled) bytes += 16u * 1024u;
     if (c->host_link_enabled) bytes += 9u * 1024u; /* HostComm 3 KiB + HostCmd 2 KiB, queues/TCB/TLS. */
     if (c->system_monitor_enabled) bytes += 5u * 1024u;
+    if (c->network.enabled) bytes += 7u * 1024u; /* 6 KiB stack/TCB; lwIP heap and queues are static D1. */
+    if (c->ethernet.enabled) bytes += 5u * 1024u; /* Worker/TCB; queues are static D1. */
     if (c->serial_count) bytes += 3u * 1024u + c->serial_count * 2560u;
     if (c->remote.dr16_port || c->remote.vt03_port) bytes += 4u * 1024u;
     if (c->referee_port) bytes += 4u * 1024u;
@@ -97,6 +101,8 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
     for (unsigned i = 0; i < SRNOS_CAN_CONTROLLER_COUNT; ++i)
         if (!SRNOS_CANControllerConfigValid((uint8_t)(i + 1u), &c->can[i]))
             return SRNOS_SYSTEM_INVALID;
+    if (!SRNOS_EthernetConfigValid(&c->ethernet) || !SRNOS_NetworkConfigValid(&c->network) ||
+        (c->network.enabled && !c->ethernet.enabled)) return SRNOS_SYSTEM_INVALID;
     double qnorm=0;
     for(unsigned i=0;i<4;i++) {
         if(!isfinite(c->ins.board_to_robot_wxyz[i])) return SRNOS_SYSTEM_INVALID;

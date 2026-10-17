@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 按当前使用方式、示例和约束组织；不在使用文档追加版本战报。
+
 ## Unreleased
 
 - 2026-09-29：将已有 `.debug_watch` 从 D2 移入 ITCM，按匹配 ELF 符号访问；保留各记录 magic/version，MpuDcache 末尾新增 ITCM 字节数字段并更新 size。主机/构建和实板初始化、运行 SPI/I2C 计数读取通过；未保证运行中多字段原子快照。见 [记录](../../../Docs/Validation/ITCM-20260929/README.md)。

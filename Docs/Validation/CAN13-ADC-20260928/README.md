@@ -1,65 +1,29 @@
-# 2026-09-28 ADC 对照与 CAN1/CAN3 吞吐实测
+# ADC 对照与 CAN1/CAN3 吞吐实测：证据阅读指南
 
-用户提供仪表约 24 V / 0.091 A（可能波动），确认 CAN1 与 CAN3 外部接通，并授权收发测试。本次沿用当前硬件配置和 1 Mbit/s 经典 CAN，修复实际链接错误后完成阶梯负载，最后恢复正常 Minimal Release。没有修改 ADC 系数、IOC、HAL、第三方源码、EEPROM 或线程默认预算。
+先看 ADC 电压单位、参考源和误差口径，再看请求帧率、实际窗口、对侧接收及 CPU；环回无丢失与业务任务拥有足够 CPU 余量是两项判定。
 
-## ADC
+## 阅读顺序
 
-测试前通过 CDC1 接收 13 次 1 Hz ADC 报告。全部有效，quality=0，转换错误、超时、恢复计数为 0；三条监测流各 13 帧、解码错误 0。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-| 量 | 最小 | 均值 | 最大 |
-|---|---:|---:|---:|
-| 输入电压 V | 24.5637 | 24.6413 | 24.6850 |
-| 电流 A | 0.07258 | 0.08986 | 0.12156 |
-| VBAT V | 3.30298 | 3.30705 | 3.31270 |
-| VDDA V | 3.31079 | 3.31496 | 3.31730 |
-| VREFINT V | 1.23619 | 1.23619 | 1.23619 |
-| MCU 内部温度 °C | 91.223 | 92.015 | 92.532 |
+本目录常用入口：
 
-电压较用户的 24 V 高约 0.641 V / 2.67%，需要继续核对分压实际阻值、ADC 引脚电压和参考电源；本次没有凭单点改倍率。平均电流接近 0.091 A，但仪表与 ADC 未同步且有波动，不能将均值差当成电流精度证明。MCU 温度是内部通道的换算结果，非 IMU 温度或外部温度计验证。VREFINT 电压使用同一出厂校准推导，也不是独立精度依据。原始摘要见 [adc-summary.json](adc-summary.json)。
+- [adc-metadata.json](adc-metadata.json)
+- [adc-summary.json](adc-summary.json)
+- [app-compile.json](app-compile.json)
+- [before-notifications.txt](before-notifications.txt)
+- [can-host.log](can-host.log)
+- [final-restored-metadata.json](final-restored-metadata.json)
 
-## 发现并修复的链接错误
+## 离线查看示例
 
-首次单向 1000 帧/秒测试中，CAN1 硬件发送 2000 帧、CAN3 硬件收到 2000 帧，但 RX worker 没有醒来，router 收到 0 帧，软件 ring 溢出 1873 次；测试按无交付条件中止。硬件 TEC/REC/bus-off 均为 0，不能把该现象归因于接线。
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
 
-`fdcan_internal.h` 将 RX/TX 回调声明为 weak，导致包含该头的 C++ router 定义也继承弱属性，链接器选择了 FDCAN.c 的空默认实现。共享声明改为普通外部声明，仅默认定义保留 weak；最终 RX/TX 通知均为强符号并实际调用 backend 通知。没有修改上游 HAL 回调入口或总线电气时序。
+```sh
+python3 -m json.tool Docs/Validation/CAN13-ADC-20260928/adc-metadata.json
+rg --files Docs/Validation/CAN13-ADC-20260928
+```
 
-`Tests/Core/check_foundation_elf.py` 新增强符号断言：旧 ELF 确定失败，修复后 Debug/Release 和父项目矩阵通过。证据：[修复前反汇编](before-notifications.txt)、[修复后反汇编](fixed-notifications.txt)、[旧 ELF 负向检查](regression-before.log)、[首次失败计数](first.json)。Bus-off 的默认入口没有在本轮实现恢复策略，故障恢复仍待专项开发与验证。
-
-## 完整 INS 负载下的吞吐
-
-测试工程为 [CANThroughput](../../../Tests/Board/CANThroughput/README.md)。先等待 INS 有效，本轮等待 64 秒，再稳定 5 秒；各段开始和结束均记录 INS 状态与有效姿态发布数。标准帧 ID 为 0x601/0x603，8 字节包含阶段、方向、序号、校验。生产者使用 1 ms 托管周期任务，结束后排空 500 ms；阶段内连续运行，不暂停调试器，不同时进行 CDC 高频采集。
-
-下表速率为两个方向合计，双方共享同一物理总线。CPU 按实际窗口 Idle 差分计算，包含板上两个 CAN 控制器的 TX/RX、测试生产者、所有 SDK 服务及中断影响，不能作为单个 CAN 控制器的独立开销。
-
-| 负载 | 持续时间 | 接纳并最终交付 | 提交拒绝 | 整板 CPU |
-|---|---:|---:|---:|---:|
-| 空载 | 5 s | 0 | 0 | 20.53% |
-| CAN1→3 1000 帧/s | 2 s | 2000 | 0 | 30.28% |
-| CAN3→1 1000 帧/s | 2 s | 2000 | 0 | 30.29% |
-| 各 1000，合计 2000 帧/s | 10 s | 20000 | 0 | 39.54% |
-| 各 2000，合计 4000 帧/s | 10 s | 40000 | 0 | 58.33% |
-| 各 3000，合计 6000 帧/s | 10 s | 60000 | 0 | 76.77% |
-| 各 4000，合计 8000 帧/s | 10 s | 80000 | 0 | 95.21% |
-| 各 5000，合计提交 10000 帧/s | 10 s | 84342 | 15658 | 78.68% |
-| 回落至合计 2000 帧/s | 5 s | 10000 | 0 | 39.67% |
-
-累计接纳并交付 298342 帧，接纳后未交付、缺序、乱序、内容错误、软件 TTL 过期、RX ring 溢出均为 0，阶段边界 TEC/REC、错误日志及 bus-off 均为 0，排空后无硬件待发。
-
-8000 帧/s 档活动窗口收到 79998 帧，另 2 帧在排空期收到。10000 提交/s 档活动窗口收到 84254 帧，实测速率约 8425.4 帧/s，另 88 帧随后收到；不能将排空后的总数直接当成严格 10 秒吞吐。拒绝均发生在 CAN3 方向，两个 ID 存在仲裁优先级差异；本结果不是所有 ID/位填充组合的线速上限。过载档 CPU 低于 8000 档是本次实测现象，批处理、通知及阻塞分布尚未逐项剖析，不能据此推断更高吞吐更省 CPU。
-
-INS 在每个窗口均保持有效发布 1000 次/秒，双 IMU 样本各 1000 次/秒；新增 missed、missing、传感器错误/overrun 均为 0。过载末尾 INS 从 RUNNING 转 DEGRADED，热稳条件待满足，姿态仍有效；本轮不是温稳或融合精度验收。Monitor 各阶段快照 CPU 最大 0.0571%，最长监测临界区 2 µs；没有在本轮重新证明全套统计 hook 开关成本。
-
-8000 帧/s 虽无交付损失，但仅剩约 4.8% CPU，不能作为有业务算法余量的安全运行预算。下一步优先剖析 CAN IRQ、逐帧通知、线程切换和统计成本，继续保持 RX/TX 分离；6000 档的 CPU 余量也须结合真实父应用预算。
-
-完整计数：[steady.json](steady.json)；断言与计算：[summarize_steady.py](summarize_steady.py)；摘要：[steady-summary.json](steady-summary.json)。`fixed.json` / `throughput-summary.json` 是修复后但尚未等待 INS 有效的预采集，保留作为过程证据，不用于上述稳态结论。
-
-## 构建与恢复
-
-23 套主机测试、CAN worker 专项、十个父项目固件/公共头依赖闭包、Debug/Release、命名/结构/第三方哈希检查通过。正常 Release Flash 使用 190712 B，D1 307008 B、D2 9696 B、D3 544 B；修复不增加 RAM 预算，Flash 相较修复前增加 56 B。测试专用生产者及结果缓冲不编入正常固件。
-
-- 稳态测试 ELF SHA256：`3ee86840dc860a1d3af833e363cdb515c5af4a48e2995abc16ccb5f85ef62d79`。
-- 最终恢复的正常 Release SHA256：`c330e625f75033d5ea5bda85f6a5137bba946aca7da5d91380c9aa345d48743c`。
-- 原始日志、ELF、1 MiB 原 Flash 备份、二进制结果及 CDC JSONL 留在 `build/can13-board-20260928/`，摘要与回归日志随本目录保存。
-- 最终 load 后所有装载段 compare-sections 匹配，reset/run 后 detach，GDB 和本次 J-Link Server 均退出。再次独立 CDC 采集 12 秒：三条监测流各 13 帧、解码错误 0、ADC 错误 0，见 [恢复后采集元数据](final-restored-metadata.json)。板上不再运行 CAN 压力生产者。
-
-未测试 CAN2/CAN4、共享 SPI4 的外置 CAN 流量、物理断线/bus-off 恢复、不同位填充与长时间持续负载；仪表多点标定和热稳保持仍待验证。本次未提交或推送。
+当前实现或测试用法见[接入说明](../../../Tests/Board/CANThroughput/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

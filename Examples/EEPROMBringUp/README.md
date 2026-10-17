@@ -15,7 +15,7 @@ cmake --build build/EEPROMBringUp
 
 例程通过已有私有测试适配一次分配 32 KiB heap，分别用于 16 KiB 备份及 16 KiB 工作区，保留到主机完成取证；生产驱动本身不做堆分配。完成后比较 `srnos_eeprom_work` 与主机保存的备份，并记录共享总线/传感器快照。调试暂停会扰动传感器时序，采样窗口中不设断点、不暂停。
 
-命令/状态放入现有非缓存 D2 Debug Watch，缓存 RAM 中的备份与恢复工作区在发布完成前显式 clean D-cache，保证主机 SWD dump 与 CPU 看到的数据一致；没有修改链接脚本或 MPU。
+命令/状态放入 SDK Debug Watch（链接布局由当前 `.debug_watch` 段决定），缓存 RAM 中的备份与恢复工作区在发布完成前显式 clean D-cache，保证主机 SWD dump 与 CPU 看到的数据一致；没有修改链接脚本或 MPU。
 
 实测见 [验证记录](../../Docs/Validation/EEPROM-20260928/README.md)。恢复失败时保留备份、停止进一步测试，不继续刷写其他固件。
 
@@ -23,12 +23,14 @@ cmake --build build/EEPROMBringUp
 
 收到命令后，在基线之前做一次只读的数字 SCL 观测：PB8 保持 I2C 复用模式，以 GPIO IDR 与 DWT CYCCNT 记录 128 个相邻上升沿间隔，保存在 `srnos_i2c_scl`。中断可能造成漏采边沿，应看分布/中位数，不将长间隔直接解释为时钟变慢；该方法不测模拟上升时间。只执行一次，不计入连续性窗口。command=2 的阶段 7 无记录，阶段 8 为最终读取，`restored=false` 是预期结果。复位仍只读备份并等待命令，不会自动循环擦写。
 
-400 kHz Fast-mode 的 command=2 实测 21 项通过，整片写含校验约 5.12 秒、读约 1.03 秒，最终全片内容主机核对一致；见 [提速记录](../../Docs/Validation/I2C400-20260928/README.md)。该固件关闭融合/加热，不代替正式 INS 应用验收。
+该示例关闭融合/加热，不代替正式 INS 应用验收。实际窗口、速率与恢复证据见 [CHANGELOG](CHANGELOG.md)。
 
-## 托管接口迁移
+## 任务接入
 
-观察线程改为托管周期任务，应用延时使用 SRNOS_Delay；内核堆专项压力隔离在 kernel_test_adapter，仅此验证应用编入。 旧 ThreadConfig.entry 不再支持；公共创建/停止/删除及同步用法见 Source/Kernel/README.md。本次编译不意味着重新执行板端测试。
+观察线程使用托管周期任务，应用延时使用 `SRNOS_Delay`；内核堆专项压力隔离在 `kernel_test_adapter.c`，仅由此验证应用编入。创建、停止、删除与同步用法见 [Kernel](../../Source/Kernel/README.md)。
 
 原生堆压力、DWT/GPIO SCL 短测和 SWD 缓冲区 cache 发布均隔离在 `kernel_test_adapter.c`，以单独的私有 OBJECT 编译。`app_main.c` 只使用 SDK 及测试自有类型，不包含 HAL/FreeRTOS，也不获得其 include 路径；SCL 测试仍是显式调试命令触发的测量，不是生产任务。
 
-本例显式设置 `storage.enabled=false`，允许整片维护；生产默认管理区不可原始写入。改为测试 heap 备份后须在下一次实测确认 32 KiB 分配及传感器共存，旧板测仅说明旧测试镜像。
+本例显式设置 `storage.enabled=false`，允许整片维护；生产默认管理区不可原始写入。运行前确认 32 KiB 测试缓冲分配成功，再分别验证传感器连续性与整片恢复。
+
+修改与验证记录见 [CHANGELOG](CHANGELOG.md)。

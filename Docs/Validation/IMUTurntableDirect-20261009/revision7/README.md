@@ -1,13 +1,29 @@
-# revision7：关闭超速停机与 ID3 直接双环调整
+# revision7 证据阅读指南
 
-本轮仅应用控制调整，未改 SDK 驱动、公共 API、线程或链接布局。三轴电压上限保持 ±30000，速度目标限幅54/27/27°/s；移除原始rpm和编码器估计速度的即时及持续超速停机，历史故障编号4/11保留供旧日志解码。启动静止检查及限位、反馈、温度、时序、命令过期、堵转、STOP继续有效。
+逐个 revision/run 匹配控制参数、保护开关、镜像和运动范围；堵转、故障归零、恢复承重和完成全行程必须分开判断。不能用后一版本覆盖前一版本失败证据。
 
-ID3速度PI从200/100改为100/100，控制速度反馈低通从100ms改20ms；位置P=4、电压斜率和积分保持不变，无虚拟轨迹。用户本轮现场确认抖动“明显改善”，没有声称全行程抖动消失。
+## 阅读顺序
 
-固件增量编译、烧录及.text比对通过；遵照用户要求没有运行本机测试。相关已有测试断言随配置更新，但未执行，不能作为通过证据。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-本轮run6采集35.04秒。ID3到默认位，三轴回位后ID1扫转，实际电压达到-30000，仍停在raw约3794；高于95%输出的3秒窗口只移动1raw（0.043945°），触发Fault7/axis1，全轴零输出。未完成ID1整圈，也未执行后续ID2整圈和ID3端点往返。并未因超速停止。
+本目录常用入口：
 
-BMI088/LSM6DS3分别35038/35037样本，无序号间断和解码错误。ID3抬升：编码器47.945°，BMI48.129°、LSM47.788°；ID1部分正转净位移151.436°，BMI155.307°、LSM154.190°。这些是去静态偏置后的本次运动对比，旋转轴从同一段运动估计，不是独立标定验收。
+- [sha256.txt](sha256.txt)
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [analysis.json](analysis.json)
+- [build.log](build.log)
+- [capture.log](capture.log)
 
-GDB读回inhibit=7、Stalled、三轴command=0；detach后串口确认保护锁存及三轴零指令，随后释放探针和CDC1。复位将重新开始自动运动。ELF、完整二进制采集与图保存在build/IMUTurntable27/board/run6*。
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableDirect-20261009/revision7/summary.json
+rg --files Docs/Validation/IMUTurntableDirect-20261009/revision7
+```
+
+当前实现或测试用法见[接入说明](../../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

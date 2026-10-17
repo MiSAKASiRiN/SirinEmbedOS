@@ -1,3 +1,5 @@
+#include "IO/Ethernet/ethernet_internal.h"
+#include "Services/Network/network_internal.h"
 #include "thread_internal.h"
 #include "kernel_internal.h"
 #include "startup_barrier.h"
@@ -145,6 +147,8 @@ void SRNOS_KernelStart(void)
     if (draft.bind_channels) configASSERT(draft.bind_channels(draft.bind_channels_user));
     app_imu_observer=draft.sensors.imu_observer;app_imu_user=draft.sensors.imu_observer_user;
     draft.sensors.imu_observer=observe_imu;draft.sensors.imu_observer_user=NULL;
+    configASSERT(SRNOS_EthernetPrepare(&draft.ethernet));
+    configASSERT(SRNOS_NetworkPrepare(&draft.network));
     SRNOS_SensorsPrepare(&draft.sensors);
     configASSERT(SRNOS_SystemMonitorPrepare(draft.system_monitor_enabled));
     configASSERT(SRNOS_StoragePrepare(&draft.storage));
@@ -172,6 +176,8 @@ void SRNOS_KernelStart(void)
     configASSERT(SRNOS_RefereeStart() == 0);
     configASSERT(SRNOS_RS485Start(c->SRNOS_RS485ResponseTimeoutMs) == 0);
     configASSERT(SRNOS_SystemMonitorStart());
+    configASSERT(SRNOS_EthernetStart());
+    configASSERT(SRNOS_NetworkStart());
     if (c->logging_enabled) configASSERT(SRNOS_LoggingStart());
     if (c->host_link_enabled) configASSERT(SRNOS_HostLinkStart());
     /* P0: native CAN and IMU/INS Realtime (48). P1: CAN4 and UART High7

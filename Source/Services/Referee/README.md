@@ -1,11 +1,28 @@
-# Referee
+# 裁判系统与 UI
 
-本模块的公共接口位于 `Include/SirinEmbedOS/Services/Referee/`：`referee.h` 提供协议与状态，`UI/` 提供编码，`Transmitter/RefereeTransmitter.h` 提供发送。全部自维护声明采用 `SRNOS_Referee*` / `SRNOS_REFEREE_*`；UI 和线协议结构大小保持原合同。父项目不包含 RTOS/HAL 头，不直接操作 UART。
+公开入口为 `SirinEmbedOS/Services/Referee/referee.h`；`UI/` 提供编码，`Transmitter/RefereeTransmitter.h` 提供发送。父项目在启动配置声明 Serial 通道和 `referee_port`，使用 [PrototypeBindings](../../../Examples/PrototypeBindings/README.md) 的配置方式；SDK 负责绑定、初始化与接收 worker，应用不重复操作 UART 或调用 Feed/Poll。
 
-发送走 Serial 复制队列，Write/WriteStr/Transmit 的 timeout 为毫秒，支持 `SRNOS_NO_WAIT/FOREVER`；期限包含锁竞争与队列提交，返回成功表示已复制接纳，不表示 UART 线发送完成。只有任务上下文可调用阻塞发送，调用者 buffer 在成功返回后可复用。原空 TX Task 入口已删除；接收健康使用 `SRNOS_RefereeReceiverReady()`，SDK 自行完成固定初始化及 worker 装配。
+## 读取示例
 
-UI 布局属于应用，SDK 仅编码已有协议。C 公共头可独立按 C11/C++17 编译；结构断言与父项目链接见构建回归，实际裁判链路与 UI 显示仍需板测。
+```c
+#include <SirinEmbedOS/Services/Referee/referee.h>
 
-## 托管线程
+bool read_referee(SRNOS_RefereeSnapshot *out)
+{
+    if (out == NULL || !SRNOS_RefereeReceiverReady()) return false;
+    SRNOS_RefereeGetSnapshot(out);
+    return SRNOS_RefereeIsOnline(0);
+}
+```
 
-SRNOS_Referee 接入托管单轮与原相对延时；初始化失败返回统一出口，无独立发送线程。 当前 SRNOS_Referee 为 P1（High7 / 47），与 CAN4/Serial 同级，低于 P0 CAN1/2/3 和 IMU/INS；栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+当前 `SRNOS_RefereeIsOnline(timeout_ms)` 的参数保留但不参与判断，内部按 `ROBOT_STATE` 的固定时效判断；不要以为传入 500 就更改期限。快照和在线检查不是同一原子事务。应用应按字段所属消息检查时效，不能把“近期收到任意帧”当成所有字段都已更新。设备健康、CRC 错误和溢出应单独诊断。
+
+## 发送和任务约束
+
+UI 布局、刷新频率和接收目标由应用决定。`SRNOS_RefereeTxWrite()`、`WriteStr()`、`Transmit()` 将数据复制到 Serial 队列；timeout 单位为毫秒，支持 `SRNOS_NO_WAIT`/`SRNOS_WAIT_FOREVER`。期限包含锁竞争和入队，成功表示复制接纳，不代表 UART 线发送完成。调用者缓冲在成功返回后可复用；阻塞发送只允许任务上下文，实时回调应使用有限等待。
+
+`SRNOS_Referee` 为优先级 47、3072 B 栈，低于 CAN1/2/3 与 IMU/INS，接收采用托管单轮与相对等待，无独立 TX 线程。普通等待不计入循环统计，处理内阻塞、抢占和中断计入墙钟。
+
+## 诊断
+
+使用 `SRNOS_RefereeReceiverReady()` 检查接收装配，`SRNOS_RefereeIsOnline(0)` 检查近期机器人状态帧，`SRNOS_RefereeGetOverflowCnt()` 检查溢出；匹配 ELF 的 Debug Watch 可辅助定位 CRC/发送队列。主机编译和结构断言不能证明实际裁判链路或 UI 显示。修改与验证记录见 [CHANGELOG](CHANGELOG.md)。

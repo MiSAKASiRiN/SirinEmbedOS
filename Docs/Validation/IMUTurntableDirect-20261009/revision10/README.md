@@ -1,11 +1,29 @@
-# revision10：ID1单轴速度108°/s实测
+# revision10 证据阅读指南
 
-仅将临时旁路速度目标从54提高到108°/s，并发布revision10。PID100/100、控制速度20ms低通、±30000电压、40000raw/s电压斜率、堵转归零3秒后最多3次重试等保持。原三轴控制器参数未改。用户确认启动前/运行期间没有其他负载、线束、供电调整或手动助推。起始raw7397，与前一轮不同，故本次不作为同起点严格对照。
+逐个 revision/run 匹配控制参数、保护开关、镜像和运动范围；堵转、故障归零、恢复承重和完成全行程必须分开判断。不能用后一版本覆盖前一版本失败证据。
 
-固件编译、烧录、.text比对通过，未运行本机测试。本轮run10采集120.005秒，有效运动记录118.956秒、累计12834.141°即35.650圈，按累计位移计算平均107.890°/s；排除启动前2秒后平滑速度均值108.004°/s、范围102.280～117.969°/s。全程无堵转和重试，GDB读回retry_count=0。ID2/3所有已采集电压指令均0。
+## 阅读顺序
 
-ID1指令范围-5759～1961，未接近±30000上限，温度反馈37～38°C。BMI088/LSM6DS3分别120000/119999样本，无序号间断、无解码错误。数据是单轴速度旁路观测，不代表原三轴整套动作验证或根因已定位。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-采集脚本到120秒按计划主动发送STOP。summary.json里的status=timeout表示主机采集时长到期，latest字段可能仍是STOP前最后采样，不能据此判断最终电机输出。随后GDB确认Fault::Stop、inhibit9、retry_count0、三轴command0；detach后CDC再次确认故障9和三轴零指令。探针/CDC已释放，复位仍启动此108°/s临时旁路。
+本目录常用入口：
 
-ELF、完整二进制流保存在build/IMUTurntable27/board/run10*。
+- [sha256.txt](sha256.txt)
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [analysis.json](analysis.json)
+- [build.log](build.log)
+- [capture.log](capture.log)
+
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableDirect-20261009/revision10/summary.json
+rg --files Docs/Validation/IMUTurntableDirect-20261009/revision10
+```
+
+当前实现或测试用法见[接入说明](../../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

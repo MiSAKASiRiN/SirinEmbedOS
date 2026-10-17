@@ -25,6 +25,12 @@ VENDOR_FILES = {
 # These names are fixed by HAL weak callbacks, vector tables, the USB middleware,
 # FreeRTOS hooks, Picolibc retargeting, or Microchip's SPI adapter contract.
 ABI_SYMBOLS = {
+    "Source/Services/Network/network.c": {"sys_now"},
+    'Board/Support/IO/ethernet_board.c': {
+        'ETH_IRQHandler', 'HAL_ETH_ErrorCallback', 'HAL_ETH_RxAllocateCallback',
+        'HAL_ETH_RxCpltCallback', 'HAL_ETH_RxLinkCallback',
+        'HAL_ETH_TxCpltCallback', 'HAL_ETH_TxFreeCallback',
+    },
     'Source/IO/SPI/SPI.c': {
         'HAL_SPI_ErrorCallback', 'HAL_SPI_RxCpltCallback',
         'HAL_SPI_TxCpltCallback', 'HAL_SPI_TxRxCpltCallback',
@@ -178,7 +184,7 @@ def classify_input(source):
         return 'CubeMX generated'
     if relative.startswith('Board/Drivers/'):
         return 'CubeMX vendor HAL/CMSIS'
-    if relative.startswith(('ThirdParty/FreeRTOS/', 'ThirdParty/USBDevice/')):
+    if relative.startswith(('ThirdParty/FreeRTOS/', 'ThirdParty/USBDevice/', 'ThirdParty/LwIP/')):
         return 'pinned third-party middleware'
     if relative.startswith(('Examples/', 'Tests/Build/Parent/')):
         return 'application or explicit test adapter'

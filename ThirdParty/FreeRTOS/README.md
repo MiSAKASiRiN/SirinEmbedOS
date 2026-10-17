@@ -1,18 +1,21 @@
-# FreeRTOS 来源与版本
+# FreeRTOS 来源、配置与使用边界
 
-- 内核版本：**10.6.2**，以 `Source/include/task.h` 为准。旧工程 `FreeRTOSConfig.h` 开头的 10.3.1 注释不是实际源码版本。
-- 导入日期：2026-09-25。
-- 直接来源：`/Users/sirin/CLionProjects/h723vg-v2-prototype/Middlewares/Third_Party/FreeRTOS/Source/` 的本地文件快照。
-- 参考仓库 HEAD：`4ae5428c6fb9447b12a79a5cc30a8f47334f8f11`。HEAD 用于定位参考工程，导入内容以 `SHA256SUMS` 为准，不假定该本地快照等同于原版上游 tag。
-- `CMSIS/Include/cmsis_os2.h` 和 `CMSIS/LICENSE.txt` 来自同工程 `Drivers/CMSIS/RTOS2/Include/` 与 `Drivers/CMSIS/`。
-- 上游项目：https://github.com/FreeRTOS/FreeRTOS-Kernel ，CMSIS-RTOS2：https://github.com/ARM-software/CMSIS_5 。本次没有升级、下载替代版本或建立嵌套子模块。
+内核版本为 **10.6.2**，以 `Source/include/task.h` 为准。直接来源是参考工程 `h723vg-v2-prototype/Middlewares/Third_Party/FreeRTOS/Source/` 的本地快照，参考 HEAD 为 `4ae5428c6fb9447b12a79a5cc30a8f47334f8f11`。导入内容以 [SHA256SUMS](SHA256SUMS) 为准；参考 HEAD 不表示本地快照与上游 tag 逐字相同。
 
-## 许可证与补丁
+上游：[FreeRTOS-Kernel](https://github.com/FreeRTOS/FreeRTOS-Kernel)、[CMSIS_5](https://github.com/ARM-software/CMSIS_5)。`CMSIS/Include/cmsis_os2.h` 与 `CMSIS/LICENSE.txt` 来自参考工程 `Drivers/CMSIS/`。内核保留 [MIT 许可证](Source/LICENSE)，CMSIS wrapper 保留源码版权声明与 [Apache-2.0 许可证](CMSIS/LICENSE.txt)。
 
-内核保留 `Source/LICENSE`（MIT）；CMSIS wrapper 的 Apache-2.0 版权声明保留在源码中，完整许可证见 `CMSIS/LICENSE.txt`。**本次导入不修改任何第三方源码**，所有导入文件记录在 `SHA256SUMS`。
+## SDK 接入
 
-项目配置在 `Config/`，生命周期与 hooks 在 `Source/Kernel/`，堆区域和板级启动在 `Board/Glue/`、`Board/Linker/`。
+配置位于 [Config/FreeRTOSConfig.h](../../Config/FreeRTOSConfig.h)，生命周期/hooks 位于 [Source/Kernel](../../Source/Kernel/README.md)，heap_5 区域与启动位于 [Board/Support/System](../../Board/Support/README.md)，内存布局由 Board/Linker 管理。应用使用公开 Kernel/Thread/Sync API，不直接包含第三方私有头。
 
-编译选择 tasks、queue、list、timers、event_groups、stream_buffer、heap_5、CMSIS-RTOS2 和 prototype 使用的 `GCC/ARM_CM4F` 浮点移植层。该移植层保留了对 Cortex-M7 r0p0/r0p1 的断言；不因为目录名有 GCC/CM4F 就改成其他版本的 port。当前 Cortex-M7 hard-float / ST Arm Clang 编译链接已验证，上板调度与 FPU 上下文切换仍待验证。
+组件选择 tasks、queue、list、timers、event_groups、stream_buffer、heap_5、CMSIS-RTOS2，以及参考工程的 `GCC/ARM_CM4F` 浮点移植层。该移植层的 Cortex-M7 r0p0/r0p1 断言保留；不能只根据目录名替换 port。`croutine.c`、MPU wrapper 等随快照保存，但不参与当前构建。
 
-`croutine.c`、MPU wrapper 等随原快照保留但不参与当前构建。后续修改上游源码时须更新补丁说明及哈希记录。
+## 完整性检查示例
+
+从 SDK 根目录运行：
+
+```sh
+(cd ThirdParty/FreeRTOS && shasum -a 256 -c SHA256SUMS)
+```
+
+哈希通过只证明快照完整，不证明调度/FPU 上下文或板端时序。项目适配优先放 Kernel/Board；确需上游补丁时同步来源、哈希和 [CHANGELOG](CHANGELOG.md)，不删除上游版权。

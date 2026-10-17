@@ -1,11 +1,28 @@
-# Studio转台校准接入（2026-10-10）
+# Studio转台校准接入：证据阅读指南
 
-固件revision22 / 配方0x54544332；OmniX Studio插件0.2.0。修改源码位于Examples/IMUTurntableBringUp以及/Users/sirin/PycharmProjects/PythonProject/sirinembedos_plugin。插件已安装项目plugins和/Applications/OmniX Studio.app/Contents/Resources/plugins/moe.sirin.sirinembedos，保留此前插件副本并重新签名，codesign严格检查通过。
+先核对 capabilities 与 installation，再查看 idle-summary、镜像 SHA 和烧录记录；上位机识别、静态观测与物理校准全流程分别判定。
 
-固件烧录前revision21三轴零输出；新.text比对一致，MCU运行、调试器detach及GDB Server退出。独立5秒板端采集确认revision22、三轴命令0、fault0；HostLink专用能力响应recipe匹配、job0、phase0。安装后的真实Studio已打开IMU页并连接CDC1，转台按钮启用，任务#0、温度约59.65/60°C、3D模型/INS图正常显示。CDC1当前由Studio持有。未自动点击运动按钮，未写入新校准EEPROM。
+## 阅读顺序
 
-验证：INS核心/快照/v1-v2校准持久化/静态校准回归通过；转台空闲零输出、STOP、看门狗；配方遍历、预热门控、断连保持和部分写入状态；插件9项转台拟合/独立验证/坏数据不保存测试、13项协议和19项设备GUI测试通过。理想端点配方测试仅验证状态机，不代表机械仿真或实机动作。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-最终FLASH313120B，D1 282912B，ITCM63104B；新增原子统计记录，任务3072字节栈保持，未新增线程。完整多姿态真实运动、标定系数精度、首次本流程EEPROM持久化及重启应用仍待现场执行。完成后保持承重，新系数下次安全重启生效；不使用已失败的固定电压下放。
+本目录常用入口：
 
-流程、算法质量门限、记录布局、存储与取消合同见Examples/IMUTurntableBringUp/Calibration.md。
+- [sha256.json](sha256.json)
+- [capabilities.json](capabilities.json)
+- [flash.log](flash.log)
+- [idle-summary.json](idle-summary.json)
+- [installation.json](installation.json)
+
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableStudio-20261010/sha256.json
+rg --files Docs/Validation/IMUTurntableStudio-20261010
+```
+
+当前实现或测试用法见[接入说明](../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

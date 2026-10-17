@@ -63,10 +63,11 @@ include(Board/Support/component.cmake)
 include(Source/Core/component.cmake)
 include(Source/Devices/component.cmake)
 include(Source/IO/Serial/component.cmake)
+include(Source/IO/Ethernet/component.cmake)
 include(Source/Services/component.cmake)
 add_library(sirinos_components OBJECT
     ${SRNOS_FOUNDATION_SOURCES} ${SRNOS_DEVICES_SOURCES}
-    ${SRNOS_SERIAL_SOURCES} ${SRNOS_SERVICES_SOURCES}
+    ${SRNOS_SERIAL_SOURCES} ${SRNOS_ETHERNET_SOURCES} ${SRNOS_SERVICES_SOURCES}
     ${SRNOS_SUPPORT_COMPONENT_SOURCES})
 target_link_libraries(sirinos_components PRIVATE sirinos_build_internal)
 target_include_directories(sirinos_components PRIVATE

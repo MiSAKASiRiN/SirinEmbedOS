@@ -8,7 +8,7 @@
 
 所有运行期 I/O 是任务上下文接口。Write 完整复制一包后才报告成功；Flush 等 UART TC，不以 DMA 搬运完成代替线路发送完成。Read/Write/Flush 的毫秒超时覆盖锁等待和操作本身，有限值不得超过 INT32_MAX；公开头直接提供 `SRNOS_NO_WAIT`（0，非阻塞查询/提交）和 `SRNOS_WAIT_FOREVER`（取消调用者等待期限，硬件 watchdog 仍有效）。Transceive 的 queue_timeout_ms 覆盖取锁、前序排空、静默、提交和本次 TC，response_timeout_ms 从 TC 后单独计时。Read 等待输入时释放通道锁，允许正常全双工发送；Transceive 则覆盖排队、发送、TC、响应和超时全过程，防止其他任务插入发送或取走响应。故障恢复使用冻结参数，不改变绑定。
 
-一个公共 Serial worker（High7 / 47、2048 字节栈）处理所有端口的发送与错误恢复；协议解析留在原服务任务。RemoteControl 与 Referee 均为 High7 / 47、3072 字节栈。原 Referee TX DMA worker 合入 Serial 共用发送队列，不再额外创建线程。RS485 有 endpoint 时保留一个 High7 / 47、3072 字节栈的总线事务线程；RAW send 仍表示复制入队，空闲时分发被动 RAW 输入。线程栈包含 Picolibc TLS，以上为初始预算，板端需要结合高水位检查。
+一个公共 Serial worker（High7 / 47、2048 字节栈）处理所有端口的发送与错误恢复；协议解析留在原服务任务。RemoteControl 与 Referee 均为 High7 / 47、3072 字节栈。Referee TX 使用 Serial 共用发送队列。RS485 有 endpoint 时保留一个 High7 / 47、3072 字节栈的总线事务线程；RAW send 仍表示复制入队，空闲时分发被动 RAW 输入。线程栈包含 Picolibc TLS，以上为初始预算，板端需要结合高水位检查。
 
 RS485 固定 UART7，使用硬件 DE，发送期间关闭 RE 抑制本机回显，UART TC 后恢复接收。Modbus 事务匹配地址、功能码、长度和 CRC，广播不等待响应；低速保持至少 3.5 字符，高于 19200 使用至少 1750 微秒静默间隔，当前 1 kHz 内核等待向上取整。队列等待与响应等待分别指定。RAW 回调得到临时数据片段，不能保存指针；超过 256 字节的连续输入会分片。
 
@@ -18,10 +18,39 @@ H12H 的协议实例服务多个舵机 ID，通过 Serial 事务完成命令。�
 
 ## 板级边界
 
-UART 板级接入移入 Board/Support/IO/serial_board.c；回调、DMA 与 RS485 行为不变。
+UART 板级接入位于 Board/Support/IO/serial_board.c，持有回调、DMA 与 RS485 电气控制。
 
 ## 托管线程
 
-SRNOS_Serial 接入托管循环；发送入队、TC 和错误通知唤醒，空闲永久阻塞，活动 TX 按 watchdog 截止点等待。RX/Flush/事务通过状态事件和剩余截止时间等待，不再每毫秒轮询；一次恢复失败后至少等待 100 ms 再尝试。 栈、资源所有权和常驻线程数保留；Serial、RC、Referee、RS485 统一 P1（High7 / 47），与 CAN4 同级，低于 CAN1/2/3 和 IMU/INS 的 P0（Realtime / 48）；父应用 RAW 消费线程仍由应用配置优先级。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+SRNOS_Serial 接入托管循环；发送入队、TC 和错误通知唤醒，空闲永久阻塞，活动 TX 按 watchdog 截止点等待。RX/Flush/事务通过状态事件和剩余截止时间等待，不按毫秒轮询；一次恢复失败后至少等待 100 ms 再尝试。 栈与资源所有权见上文；Serial、RC、Referee、RS485 统一 P1（High7 / 47），与 CAN4 同级，低于 CAN1/2/3 和 IMU/INS 的 P0（Realtime / 48）；父应用 RAW 消费线程仍由应用配置优先级。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
 
-本轮主机回归覆盖总超时、锁竞争后的剩余时间、等待前 RX 到达、32 位时钟回绕、空闲永久等待及已有事务/协议场景。尚未重新进行 UART/RS485 实板时序与负载验证。
+## 原始 USART6 接入示例
+
+下例是一个 C 应用的配置片段，绑定 115200/8N1 的双向 USART6。若已有 ApplicationConfigure，应合并声明而不是再定义同名函数；还应确保没有遥控或其他协议占用该端口。
+
+```c
+#include "SirinEmbedOS/Kernel/System.h"
+#include "SirinEmbedOS/IO/Serial/Serial.h"
+static SRNOS_SerialChannel *raw_channel;
+static int raw_owner;
+static bool bind_raw(void *user) {
+    (void)user;
+    raw_channel = SRNOS_SerialGetChannel(SRNOS_SERIAL_USART6);
+    return raw_channel &&
+        SRNOS_SerialClaim(raw_channel, &raw_owner) == SRNOS_SERIAL_OK;
+}
+void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config) {
+    config->serial[0] = (SRNOS_SerialConfig){
+        .port=SRNOS_SERIAL_USART6, .baud_rate=115200, .data_bits=8,
+        .stop_bits=1, .parity=SRNOS_SERIAL_PARITY_NONE,
+        .mode=SRNOS_SERIAL_DUPLEX, .rx_enabled=true, .tx_enabled=true
+    };
+    config->serial_count = 1;
+    config->bind_channels = bind_raw;
+}
+SRNOS_SerialStatus read_raw(void *buffer, size_t capacity, size_t *received) {
+    return SRNOS_SerialRead(raw_channel, buffer, capacity, received, SRNOS_NO_WAIT);
+}
+```
+
+运行期使用保存的通道，不能再次调用 GetChannel。Write 成功后若需要确认线路发完，再调用 Flush 并检查结果；应用不要忙等。协议绑定参考 [PrototypeBindings](../../../Examples/PrototypeBindings/README.md)。

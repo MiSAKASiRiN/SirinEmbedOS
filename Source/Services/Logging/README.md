@@ -43,4 +43,4 @@ void report_voltage(float voltage)
 
 `Tests/Services/Logging/run_host_tests.sh` 编译真实 `Log.c`，用可控消息池、队列及 USB/UART sink 检查启动捕获、未装配、资源耗尽、满队列替换、并发重试失败、ISR 拒绝和锁定调度的处理；明确断言这些失败路径没有直接 I/O。测试启用 C11 严格警告、枚举转换检查和 UBSan，并纳入统一主机套件。USB 后端另见 `Tests/Services/USB`。
 
-主机测试不证明板端输出吞吐、线程调度开销或实机 CDC 背压时序；本轮没有烧录或接管调试现场。
+主机测试不证明板端输出吞吐、线程调度开销或实机 CDC 背压时序。

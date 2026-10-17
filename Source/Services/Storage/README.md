@@ -1,8 +1,6 @@
 # 单份 EEPROM 持久化
 
-2026-09-29 业务参数的实板保存、软件复位加载、CRC独立读回及原EEPROM恢复通过；随后双IMU校准保存与软件复位加载也已通过（见 [复测](../../../Docs/Validation/StaticThreshold-20260929/README.md)）；真实断电仍未测，见 [板测范围](../../../Docs/Validation/PersistenceBoard-20260929/README.md)。
-
-Storage 管理固定 FT24C128A 的记录格式和操作租约，不新增线程、不分配动态内存。启动期冻结 `SRNOS_StorageConfig`；默认启用管理、禁止工厂身份写入。父项目通过 Parameters、INS 校准和身份能力访问记录，不依赖私有地址或 RTOS/HAL 类型。
+Storage 管理固定 FT24C128A 的记录格式和操作租约，没有独立线程或动态内存分配。启动期冻结 `SRNOS_StorageConfig`；默认启用管理、禁止工厂身份写入。父项目通过 Parameters、INS 校准和身份能力访问记录，不依赖私有地址或 RTOS/HAL 类型。
 
 ## 分区与格式
 
@@ -29,7 +27,7 @@ void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config) {
     config->storage.factory_identity_write = true;
 }
 /* 在工厂命令确认完整20位数字后调用，保留前导零。 */
-SRNOS_StorageStatus SRNOS_FactoryAssignSerial(const char serial[20]) {
+SRNOS_StorageStatus factory_assign_serial(const char serial[20]) {
     return SRNOS_StorageWriteIdentity(serial, 5000);
 }
 ```
@@ -38,6 +36,4 @@ SRNOS_StorageStatus SRNOS_FactoryAssignSerial(const char serial[20]) {
 
 ## 验证
 
-`bash Tests/Services/Storage/run_host_tests.sh` 使用实际 Storage + FT24C128A 驱动和 I2C 器件模型，ASan/UBSan 覆盖每个写入字节断电后的重新加载、头/正文/提交逐字节损坏、8064 B 上限/流式访问、末尾损坏与 visitor 中止、分区隔离、CRC 已知向量、管理保护、不同任务竞争、无变化不写、身份与工厂权限、总期限、取消和时钟回绕。原 EEPROM 与 HostLink Codec 专项同时通过。
-
-本轮未烧录，真实断电、EEPROM 与传感器并发、实际保存延迟与上位机协议压力仍需板测。先前驱动板测不能替代新记录格式的掉电验证。
+`bash Tests/Services/Storage/run_host_tests.sh` 使用实际 Storage + FT24C128A 驱动和 I2C 器件模型，ASan/UBSan 覆盖每个写入字节断电后的重新加载、头/正文/提交逐字节损坏、8064 B 上限/流式访问、末尾损坏与 visitor 中止、分区隔离、CRC 已知向量、管理保护、不同任务竞争、无变化不写、身份与工厂权限、总期限、取消和时钟回绕。EEPROM 与 HostLink Codec 提供独立回归；主机模型不能代替真实断电、并发总线与保存延迟测量。

@@ -8,9 +8,11 @@ COMMON=(-Wall -Wextra -Werror -O1 -g -fsanitize=undefined
 "${CC:-cc}" -std=c11 "${COMMON[@]}" -c "$ROOT/Source/IO/CAN/can_controller.c" -o "$OUT/controller.o"
 "${CC:-cc}" -std=c11 "${COMMON[@]}" -c "$ROOT/Source/Kernel/system_config.c" -o "$OUT/system.o"
 "${CC:-cc}" -std=c11 "${COMMON[@]}" -c "$ROOT/Source/Kernel/thread_config.c" -o "$OUT/thread_config.o"
+"${CC:-cc}" -std=c11 "${COMMON[@]}" -c "$ROOT/Source/IO/Ethernet/ethernet_config.c" -o "$OUT/ethernet_config.o"
+"${CC:-cc}" -std=c11 "${COMMON[@]}" -c "$ROOT/Source/Services/Network/network_config.c" -o "$OUT/network_config.o"
 "${CXX:-c++}" -std=c++17 "${COMMON[@]}" "$ROOT/Source/IO/CAN/FD/can_fd_core.cpp" \
  "$ROOT/Source/IO/CAN/Router/can_router_core.cpp" "$ROOT/Tests/IO/CAN/FD/test_fd_core.cpp" \
- "$OUT/controller.o" "$OUT/system.o" "$OUT/thread_config.o" -o "$OUT/test_fd"
+ "$OUT/controller.o" "$OUT/system.o" "$OUT/network_config.o" "$OUT/ethernet_config.o" "$OUT/thread_config.o" -o "$OUT/test_fd"
 for scenario in registration lengths invalid queue expiry unbound_clock stress system fd_on_classic classic_on_fd queued_classic adapter_bitrate; do
  "$OUT/test_fd" "$scenario"
 done

@@ -10,4 +10,23 @@ C++17 父项目包含 `SirinEmbedOS/Devices/Motors/<型号>/<型号>.hpp`，全�
 
 `now_ms` 必须来自同一 32 位毫秒时钟，前进间隔小于等于 INT32_MAX。超时保持 `elapsed > timeout`，默认 100 ms；`tick()` 采样较早、但 RX 已发布更新时刻时，不将无符号减法回绕误判为长时间离线。正常毫秒时钟回绕仍有效。超时值通过原子读写更新；LK8016E 电流满量程配置也为原子单值。控制命令的现有单字段原子接口保持，组合命令的多个独立字段不因此获得事务性。
 
-协议字段、缩放、发送周期与使能语义保持；公共函数签名不变，类的私有布局有调整，父项目需重新编译。`Tests/Devices/Motors/run_host_tests.sh` 覆盖六型号的旧时间、超时边界、时钟回绕、无效帧、嵌套 mask，以及 RX/tick/多读者并发一致性；默认 UBSan，可用 `SRNOS_MOTOR_SANITIZERS=thread` 运行 ThreadSanitizer。主机使用独立寄存器替身以 mutex 模拟单核临界区，不证明板端中断延迟或电机控制行为。
+## C620 接入示例
+
+以下片段在配置阶段注册到 CAN1，每 2 ms 输出一次当前命令，初始命令为零。必须检查注册结果；CAN1 应配置为 Classic，同组电机的发送由 Router 合并。
+
+```cpp
+#include "SirinEmbedOS/Devices/Motors/C620/C620.hpp"
+static SRNOS::Devices::DJI_C620 motor{1};
+
+int register_motor() { // 由 ApplicationConfigure 调用，不放入全局构造函数
+    motor.set_give_cmd(0);
+    return SRNOS::Devices::DJI_C620_AttachCan(1, &motor, 2);
+}
+bool read_motor(SRNOS::Devices::C620State& out) {
+    return motor.snapshot(out);
+}
+```
+
+注册后由 Router 调用反馈、tick 与 poll_tx。业务在自身控制周期检查在线状态、反馈年龄和限幅后，才更新 `set_give_cmd()`；原始命令不等于转速设定值。不同型号的使能/命令语义以对应公共头为准。
+
+主机回归在 SDK 根执行 `bash Tests/Devices/Motors/run_host_tests.sh`，默认 UBSan；`SRNOS_MOTOR_SANITIZERS=thread` 可启用 ThreadSanitizer。模型以 mutex 模拟单核临界区，不能证明板端中断延迟或电机控制行为。

@@ -19,3 +19,27 @@
 - 2026-09-28：SRNOS_SPI4 由统一框架调用单轮分发；保留通知/1 tick 超时、队列公平与取消语义。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。
 
 - 板级 SPI4 handle、模式与 abort 接入独立为 Board/Support/IO/spi_board；队列/时序/资源所有权不变。 本次主机及构建验证见 Docs/Validation/BoardSupport-20260928/README.md；未板测。
+
+## 2026-10-17 文档整理
+
+- README 仅说明当前接口、使用方式和边界，补充接入示例；历史结果移至本文件，保留证据链接。此项不修改实现，不新增板端验证。
+
+### 从 README 归档的历史记录
+
+## P0 IMU 优先的验证边界
+
+实际分发器主机测试验证 IMU 优先于更早排队的 CAN，三类持续饱和 100 笔按 80 IMU、16 CAN4、4 普通分发，无 IMU 时 25 笔按 20 CAN4、5 普通分发；它不能证明真实 3 kHz 双向 CAN4 下的 IMU 1 ms 排队期限。SPI4 时钟、DMA、活动期限和取消合同保持原值，NVIC SPI4 与其 DMA 为 5。组合负载验收见 [当前优先级记录](../../../Docs/Validation/Priority-20261003/README.md)。
+
+## 优化前 CAN4 与双IMU实板基线（2026-10-06）
+
+SPI4保持10MHz、原线程与优先级。Classic双向约各2k时MCP约18998事务/s，加双IMU约5000事务/s，整板CPU91.54%；CAN4更高请求负载出现生产周期不足或FD硬件RX FIFO溢出，但SPI无排队过期、传输错误或超时，双IMU/INS保持1kHz。事务数/CPU不能当成SCK占用率，峰值/直方图口径、8M时序对照和负载限制见 [实测记录](../../../Docs/Validation/CAN4-SPI-20261006/README.md)。尚未覆盖四路及UART混合、物理SPI故障恢复。
+
+## 2026-10-06 优化后验证
+
+Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。实测仅CAN1/CAN4短接，CAN2/3/UART同时满载与物理故障尚未覆盖；原Flash恢复并释放探针。详见 [最终验证与原始证据](../../../Docs/Validation/CAN4-Optimization-20261006/README.md)。
+
+### 补充归档的原始说明
+
+以下为原 README 的历史描述，保留当时的验证口径，不代表本次重新验证。
+
+`bash Tests/IO/SPI/run_host_tests.sh` 编译实际分发器，覆盖保护外复制抢占、保留槽取消、同步总期限、通知与等待竞争、容量、FIFO/公平性、排队超时、活动取消、恢复隔离及早到/迟到完成中断。当前主机测试通过；它们不能证明板端 DMA/IRQ 延迟、传感器连续性或统计开销，该主机回归未包含烧录，后续实板压力证据见本文末节。

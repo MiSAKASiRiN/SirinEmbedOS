@@ -1,7 +1,5 @@
 # HostLink
 
-2026-09-29 板测已验证参数事务、SOURCE V2、读取暂停恢复和重连；8路1kHz订阅实收约每路910条/s，不能宣称完整8000标量/s交付。原阈值静态误拒绝及上述遥测结果见 [初轮验收](../../../Docs/Validation/PersistenceBoard-20260929/README.md)；阈值调整后双IMU校准完成、活动重试去重及重启加载已 [复测通过](../../../Docs/Validation/StaticThreshold-20260929/README.md)。
-
 HostLink 提供 CDC1 上的命令、参数访问、控制邮箱与遥测；CDC0 继续用于日志。COBS 分帧、SRN-Link V2 字段和 CRC32 完全沿用当前线协议，C/C++ 接口统一使用 `SRNOS_`。父项目只包含 `SirinEmbedOS/Services/HostLink/HostLink.h` 和所需 SDK 公共头，不需要 FreeRTOS、CMSIS 或 HAL 头。
 
 ## 父项目注册
@@ -69,17 +67,13 @@ HostComm 按 RX/TX/工作完成通知及最近截止时间等待。未订阅且�
 
 IMU/INS 入队与批量读取均以单条记录为保护单位；编码、遍历和批处理在临界区外。断连清理的重放缓存清零也在临界区外；在途 USB 数据仍等真正完成或端点确认取消后释放。DTR 会话变化清理订阅与活动请求，旧会话的完成结果不发到新会话。
 
-## 验证与迁移
+## 接入边界与诊断
 
-不保留旧命名兼容头或别名。父项目将旧 HostComm 入口迁至 `HostLink.h`、使用 `SRNOS_HostLink*` 类型/函数，并把直接访问底层 link 的注册改为上述不透明上下文接口。transport、线程入口及链接状态已移入 SDK 私有头；纯 COBS/协议编解码头仍可独立使用。
-
-主机测试覆盖协议黄金向量、断连/背压、注册冻结与冲突、活动表寿命、重放、完成队列竞争、RX 预算和回调锁边界。内置遥测 C/Python 黄金向量未变。相关公共头可仅用 SDK Include/Config 以 C11 编译。这里的主机结果不代表本轮固件已经烧录或完成板端性能验收。
-
-线协议及监视工具见 [Docs/HostLink.md](../../../Docs/HostLink.md)。当前等待与队列固件已完成 CDC 停读 12 秒、DTR 断连 5 秒与重连，实际 LATEST 合并 24 项、队列峰值 11、解码错误为 0；见 [SRNOS 板测](../../../Docs/Validation/SRNOSBoard-20260928/README.md)。持续 RX、长业务命令、物理 USB 拔插和真实 CAN 组合负载仍待验证。
+父项目使用 `HostLink.h` 中的 `SRNOS_HostLink*` 类型和函数，通过不透明注册上下文声明自定义消息。transport、线程入口及底层链接状态是 SDK 私有实现；纯 COBS/协议编解码头可独立用于主机编解码。接口不提供旧命名兼容头或别名。
 
 ## 只读变量与 SOURCE V2
 
-新的 `Services/Telemetry.h/.hpp` 提供静态 C++ `SRNOS::Telemetry::Value<T>{name,unit,maxHz}` 和 C 描述登记，四种标量在业务任务中通过 `Publish(value, sample_time_us, valid)` 更新 SDK 缓存。旧 `SRNOS_HostLinkRegisterTelemetrySource` 及 `volatile void *`/getter 注册合同已移除。无需先初始化 HostLink；可在全局构造、ApplicationConfigure 或 host_link_setup 登记，最终在 setup 完成后统一冻结；关闭 HostLink 仍可发布到缓存。
+`Services/Telemetry.h/.hpp` 提供静态 C++ `SRNOS::Telemetry::Value<T>{name,unit,maxHz}` 和 C 描述登记，四种标量在业务任务中通过 `Publish(value, sample_time_us, valid)` 更新 SDK 缓存。不支持任意 `volatile void *`/getter 作为遥测源。无需先初始化 HostLink；可在全局构造、ApplicationConfigure 或 host_link_setup 登记，最终在 setup 完成后统一冻结；关闭 HostLink 仍可发布到缓存。
 
 SOURCE V1 保留 service4/message03～07格式和5～100 Hz、500标量每秒限额。V2使用0x10～0x14，频率uint16、5～1000 Hz步进5，且不超过目录maxHz；V1+V2总额不超过8000标量每秒。一个变量只保留一个版本订阅，后者替换前者；失败批次不改变任何订阅。最多32个实际(version,rate)组，按固定目录半区每包最多16项，以组槽/半区作为LATEST key，避免不同频率互相合并。真实sampleTime、sequence、valid来自业务发布缓存，encodeTime只表示HostComm编码时间；断连不阻塞Publish。详细字节布局见 [SOURCE V2协议](../../../Docs/HostLink.md#只读-source-v2)。
 

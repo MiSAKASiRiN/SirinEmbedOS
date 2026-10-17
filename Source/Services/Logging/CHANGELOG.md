@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 维护当前使用方式、示例、资源和限制；变更经过与验证结果集中记录于 CHANGELOG。
+
 ## Unreleased
 
 - 2026-09-28：公开日志接口只导出 SRNOS 自有类型，移除 timeout 参数与 FreeRTOS/CMSIS/HAL 依赖；资源、worker 和后端接口转为私有。日志宏支持严格 C11 的单格式串调用。

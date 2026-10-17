@@ -1,6 +1,6 @@
 # EEPROM 存储设计与业务使用
 
-截至 2026-09-29，以当前自维护实现为准。FT24C128A 器件读写已有板测；这里的单份记录、业务参数持久化及新静态校准已通过主机/构建检查，尚未完成对应真实断电和组合负载验收。历史结果不自动覆盖新固件。返回 [文档导航](README.md)。
+本文描述 FT24C128A 单份记录、业务参数、IMU 校准及身份的当前使用合同。静态格式和主机模型不能证明真实断电或组合负载行为；历史结果见 [CHANGELOG](CHANGELOG.md)及 [Validation](Validation.md)。返回 [文档导航](README.md)。
 
 ## 数据与职责
 
@@ -38,7 +38,7 @@ Storage 拥有地址、格式、CRC、提交页、互斥与状态；Parameters/I
 
 提交页为 `SRNOSOK1`（8 B），随后是类别/格式版本（各 2 B）、正文长度/revision/记录 CRC（各 4 B），24..59 为零，最后 4 B 为提交页前 60 B 的 CRC。revision 可自然回绕；单份记录不靠 revision 挑选副本。空白头（全 FF 或 00）为 NOT_FOUND；损坏、格式/归属不匹配和 I/O 错误分别报告，不自动擦除、初始化或写默认值。
 
-保存顺序为：验证当前记录（相同内容跳过写入）→将提交页清零并读回确认→写头和正文→完整读回 CRC/内容检查→写提交页→再次检查完整记录。CRC 提取到独立 Core 增量接口，HostLink 继续使用相同 CRC。无 A/B 或备份，保存中断可能令本记录失效；CRC 不是掉电原子写入保证。其他分区不参与本次写入。最终读回失败或超时可能发生在提交页已经写好之后；返回失败不表示介质未变化，也不执行回滚，下一次加载仍须完整校验。
+保存顺序为：验证当前记录（相同内容跳过写入）→将提交页清零并读回确认→写头和正文→完整读回 CRC/内容检查→写提交页→再次检查完整记录。CRC 使用 Core 增量接口，与 HostLink 使用相同算法。无 A/B 或备份，保存中断可能令本记录失效；CRC 不是掉电原子写入保证。其他分区不参与本次写入。最终读回失败或超时可能发生在提交页已经写好之后；返回失败不表示介质未变化，也不执行回滚，下一次加载仍须完整校验。
 
 ## 三种正文
 
@@ -87,7 +87,7 @@ v2在48追加float32[3]陀螺对角比例（0.8..1.2）；v1隐含比例1。`gyr
 | 运行期 LOAD 失败 | 保留当前 RAM，返回错误 |
 | 任一记录写入中断 | 该记录可能失效；无旧副本可恢复，其他分区不随之回滚 |
 | 两颗校准仅一颗保存成功 | 整体失败，saved_mask 明确部分结果；当前 active 不变 |
-| 同时发起存储 | 全局单操作租约，竞争立即 BUSY；不新增存储线程 |
+| 同时发起存储 | 全局单操作租约，竞争立即 BUSY；没有独立存储线程 |
 | 内容与有效记录相同 | 跳过写入，不自动逐次保存 RAM 修改 |
 | HostLink 禁用 | 本地 Storage/Parameters/校准能力仍可使用 |
 
@@ -100,6 +100,20 @@ Storage 默认读 2 s、写 5 s，接口的 timeout=0 表示使用默认总期�
 - 参数目录/READ/WRITE/SAVE/LOAD/STATE/IDENTITY：[CONFIG 01–08](../Source/Services/Parameters/HostLink/README.md)。
 - COBS、CRC、会话/重试及 CONFIG 09/0A：[HostLink](HostLink.md)。
 - 20 位身份工厂配置：[Storage API](../Source/Services/Storage/README.md#工厂身份配置示例)。原始全片维护须启动时关闭 Storage 管理；不允许运行时绕过保护区。
+
+## 只读身份示例
+
+```c
+#include <stddef.h>
+#include <SirinEmbedOS/Services/Storage.h>
+
+bool read_board_identity(SRNOS_StorageIdentity *identity)
+{
+    return identity != NULL && SRNOS_StorageGetIdentity(identity) && identity->valid;
+}
+```
+
+在任务上下文读取启动缓存，不会触发 EEPROM I/O；失败时不要把空字符串当作有效编号。普通应用无需开启工厂权限。业务参数声明、保存和加载示例见上表链接，保存应由低优先级管理任务显式执行。
 
 ## 证据与待测
 

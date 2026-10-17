@@ -8,6 +8,8 @@
 
 所有操作在调度器运行后的任务上下文调用，IRQ 必须开启；不支持 ISR、临界区、锁住调度器或启动配置回调。固定器件只有一个私有上下文，同一时刻只接受一个操作；调用者不得通过旧驱动或另一个 I2C handle 绕过所有权访问同一 EEPROM。
 
+下列为任务函数内的调用片段；写入使用管理区之外的 `0x3000` 扩展区，执行前确认该区没有需要保留的数据。
+
 ```c
 #include "SirinEmbedOS/Devices/EEPROM.h"
 #include "SirinEmbedOS/Kernel/Thread.h"
@@ -33,25 +35,21 @@ if (status == SRNOS_EEPROM_OK) {
 - 调用者保持 RX/TX 缓冲有效至终态 Poll 或 Cancel；TX 期间不能修改。RX 出错可能包含已完成的前缀。驱动只将静态 staging 暴露给底层 RX，取消后不会再触碰用户缓冲。
 - Poll 返回 `IN_PROGRESS` 或最终结果；新请求在已有操作时返回 `BUSY`。其他任务不能 Poll/Cancel 当前操作。取消和错误不回滚已经写入的页面。
 - 正常 Poll 不等待写周期、不执行阻塞 ACK probe；DMA 地址和数据由中断推进。超时/取消经 I2C 与 Board Support 按设备确认归属后恢复，abort 最多等待 5 ms 加上调度开销；失败隔离总线，不伪报成功。因此不是硬实时 API。
-- 使用已有 I2C4 BDMA staging，未增加 DMA 段、修改 MPU/链接脚本或 SDK 线程预算。驱动自身只占一个静态状态及 32 B 中转缓冲。
+- 使用已有 I2C4 BDMA staging，不要求应用增加 DMA 段或额外线程。驱动自身只占一个静态状态及 32 B 中转缓冲。
 
 ## 存储管理与维护
 
 身份、IMU 校准和业务参数由 [Storage](../../Services/Storage/README.md) 统一管理。启用管理时原始写入覆盖 `0x0000..0x2FFF` 返回 `SRNOS_EEPROM_READ_ONLY`；未管理的扩展区从 `0x3000` 开始。Storage 的整个记录操作持有私有租约，在分段/等待期间所有原始读写仍返回 BUSY，同一任务也不能绕过。Poll/Cancel 仍只允许操作的发起任务。
 
-全片测试在启动时显式将 Storage 配置为 `enabled=false`，不支持运行时解锁。旧 24C02 驱动与公共头随 Parameters 迁移删除，不提供旧格式自动迁移或兼容别名。
+全片测试在启动时显式将 Storage 配置为 `enabled=false`，不支持运行时解锁。不支持 24C02 的旧格式自动迁移。
 
 ## 验证
 
 `bash Tests/Devices/EEPROM/run_host_tests.sh` 验证实际驱动状态机：16 KiB 全范围、跨页/跨 256 B/末地址、读回校验、并发所有权、NACK、写保护、总线忙、事务超时、取消、隔离、tick 回绕及调用上下文，启用 ASan/UBSan。
 
-板端入口为 [EEPROMBringUp](../../../Examples/EEPROMBringUp/README.md)，先备份并由主机保存后才能显式触发写入；实测范围见 [验证记录](../../../Docs/Validation/EEPROM-20260928/README.md)。不将主机模型等同于板端电气或掉电验证。
+板端入口为 [EEPROMBringUp](../../../Examples/EEPROMBringUp/README.md)，先备份并由主机保存后才能显式触发写入；历史实测范围见 [CHANGELOG](CHANGELOG.md)。不将主机模型等同于板端电气或掉电验证。
 
-此前器件板测发现密集读写触发环境传感器 BUSY 即离线；当前 I2C4 已增加有界分发队列及 LIS/SPA 保留槽，新的并发测试见 [I2C 验证记录](../../../Docs/Validation/I2C-20260928/README.md)。该历史记录只覆盖器件和共享总线；新 Storage 格式另有主机验证，未执行新的板端掉电测试。
-
-I2C4 当前为 400 kHz Fast mode（数字采样约 370 kHz），驱动仍以 32 B 分段、6 ms 写周期等待和读回校验工作。16 KiB 阻塞/非阻塞整片写含校验约 5.12 秒、整片读约 1.03 秒；同总线 LIS/SPA 持续 READY。21 项板测及主机独立全片内容校验通过，见 [提速记录](../../../Docs/Validation/I2C400-20260928/README.md)。写入耗时仍含器件内部编程等待和任务推进间隔，不能按总线时钟倍数估算。
-
-## 命名与父项目依赖
+## 父项目依赖
 
 父项目只包含 `SirinEmbedOS/Devices/EEPROM.h` 使用原始能力，常规业务通过 Parameters、INS 校准及 Storage 身份接口访问管理记录，不包含私有 EEPROM/RTOS/HAL 头。
 

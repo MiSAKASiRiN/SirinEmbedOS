@@ -10,6 +10,18 @@
 
 WRITE 立即更新 RAM；只有显式 SAVE 才持久化。SAVE 在 HostCmd 执行，不阻塞 HostComm 或控制任务。用 STATE 观察 generation/saved_generation/dirty：保存版本 10 期间改到 11，保存完成后仍显示未保存修改。LOAD 遇到并发修改返回冲突，不覆盖新值；恢复默认也只改 RAM，仍需显式 SAVE。EEPROM 只有单份记录，掉电中断保存可能使其失效，下一次启动回退默认。
 
-C 项目可使用 `SRNOS_ParametersRegisterPersistent` 和 `SRNOS_TelemetryRegister/Publish`。登记复制元数据，父项目在启动配置期完成注册，不在运行期新增。详细合同见 [Parameters](../../Source/Services/Parameters/README.md)、[Telemetry](../../Source/Services/Telemetry/README.md) 和 [Kernel](../../Source/Kernel/README.md)。本轮主机/构建验收不表示完成板端掉电或高频吞吐测试。
+C 项目可使用 `SRNOS_ParametersRegisterPersistent` 和 `SRNOS_TelemetryRegister/Publish`。登记复制元数据，父项目在启动配置期完成注册，不在运行期新增。详细合同见 [Parameters](../../Source/Services/Parameters/README.md)、[Telemetry](../../Source/Services/Telemetry/README.md) 和 [Kernel](../../Source/Kernel/README.md)。主机/构建检查不代替板端掉电或高频吞吐验收。
 
 完整端到端目录、RAM WRITE、显式 SAVE、运行 LOAD 失败保留现值及 EEPROM 格式见 [存储总览](../../Docs/Storage.md)；主机字段见 [CONFIG 协议](../../Source/Services/Parameters/HostLink/README.md)。
+
+## 父项目装配示例
+
+在父项目已经 `add_subdirectory(SirinEmbedOS)` 后添加：
+
+```cmake
+set(SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/SirinEmbedOS")
+sirinos_add_firmware(ParameterExample
+  "${SDK_DIR}/Examples/Parameters/app_main.cpp")
+```
+
+同一固件只保留一份 `SRNOS_ApplicationMain()`，配置回调按项目集中维护。历史变更与验证见 [CHANGELOG](CHANGELOG.md)。

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 按当前使用方式、示例和约束组织；不在使用文档追加版本战报。
+
 ## Unreleased
 
 - 2026-10-03：SRNOS_Referee 纳入 UART P1，统一 High7（47）；执行周期、协议、栈和线程数不变。随 Serial 主机回归及父项目/Debug/Release 构建验证，板端时延待验。

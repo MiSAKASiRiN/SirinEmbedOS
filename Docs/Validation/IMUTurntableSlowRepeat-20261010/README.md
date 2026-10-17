@@ -1,9 +1,28 @@
-# 2026-10-10 慢速重复实测
+# 慢速重复实测：证据阅读指南
 
-使用原revision12固件（build/IMUTurntable27/board/run12.elf），板上.text比对一致后复位执行，没有修改控制代码、编译、烧录或运行本机测试。
+查看独立重复起步的原始 summary 与 analysis，比较每轮速度和误差，不把多轮平均掩盖单次峰值或中止。
 
-ID1速度目标54°/s，15秒运行、3秒零指令间隔，共三次；每次重新启动清零PI，ID2/3始终零输出。run13采集56.923秒，正常complete_zero结束。GDB读回completed_segments=3、stalled_segments_mask=0、faultNone、inhibit0、三轴command0，说明三段均完整结束且无堵转。
+## 阅读顺序
 
-ID1采集指令范围-3197～550，温度反馈全程23°C；ID2/3全部已采集指令0。双IMU各56919样本，无序号间断和解码错误。detach后CDC复核phase24、fault0与三轴零指令。探针和CDC已释放；复位将再次执行三次慢速。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-完整数据保存在build/IMUTurntable27/board/run13*。这次没有复现此前停滞，不代表根因已定位。
+本目录常用入口：
+
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [analysis.json](analysis.json)
+- [capture.log](capture.log)
+- [gdb.log](gdb.log)
+
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableSlowRepeat-20261010/summary.json
+rg --files Docs/Validation/IMUTurntableSlowRepeat-20261010
+```
+
+当前实现或测试用法见[接入说明](../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

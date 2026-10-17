@@ -1,0 +1,30 @@
+# Changelog
+
+## Unreleased — 静态 IPv4
+
+- 2026-10-14：固定 lwIP 2.2.1 / IPv4+ARP+UDP+ICMP，默认 IP 192.168.1.50/24；网络、可选网关和 UDP 端口由上层启动配置冻结。Network 单线程持有协议栈和二层收发，不改变 MCO/RMII/DMA/IRQ。新增 6 KiB 栈、7 KiB heap 预算及约 22 KiB 静态 D1；明确排队期限、link epoch 和原始接口所有权。主机/构建及父项目板测记录见 Network 文档。
+
+
+## Unreleased
+
+- 2026-10-13：新增冻结配置、原始二层复制 API、LAN8720A 协商/恢复与 ETH IRQ worker；沿用固定 MCO/引脚和 D2 非缓存布局。
+- 发送接受与 DMA 完成分开计数；100 ms 生命周期、链路 epoch、满队列丢弃和 reset 后复用 DMA 防止旧帧重播/提前释放。
+- 八个主机场景通过 ASan/UBSan；父工程 Debug 链接通过。实机记录及剩余边界见父工程验证目录。
+
+- 首轮板测定位并修复 HAL ReadData 清空 head 后残留 tail 的跨帧链表错误；新增连续 100 组两段帧的回归，避免 RX buffer 泄漏。
+
+- 100 Mbps 全双工实板 14+600 帧回显通过，连续窗口约 66 s，零超时/数据不匹配，MCU 64.88..66.56°C。父工程 Debug/Release、94 公共头/12 SDK 目标通过；全 SDK 主机 30/31 通过，原有转台断言在基础提交复现，未在本次修改。
+
+## 2026-10-17 文档整理
+
+- README 仅说明当前接口、使用方式和边界，补充接入示例；历史结果移至本文件，保留证据链接。此项不修改实现，不新增板端验证。
+
+### 从 README 归档的历史记录
+
+2026-10-13 父工程板测：100 Mbps 全双工，14+600 帧回显完整通过，26..1514 B 数据逐字节一致，零超时/收发错误；连续窗口约 66 s，MCU 64.88..66.56°C。保留无运动测试固件运行；正常底盘固件仅构建通过。未验证线速、长期热平衡和拔线恢复。
+
+### 补充归档的原始说明
+
+以下为原 README 的历史描述，保留当时的验证口径，不代表本次重新验证。
+
+`Tests/IO/Ethernet/run_host_tests.sh` 在 ASan/UBSan 下覆盖禁用、配置/PHY 解码、复制和满队列、RX 饱和/过期、TX 超时、断线清队列、epoch、计时回绕和 DMA 故障恢复；同时模拟 HAL 清 head 但保留 tail 的契约，连续检查 100 组多 buffer 帧链接。父工程 `Tests/EthernetBringUp` 和 `Tools/ethernet_l2_test.py` 提供无电机输出的实验 EtherType 回显及 MCU 温度门控。实机范围以父工程 `Docs/Validation/2026-10-13-Ethernet` 为准；主机注入不代表拔线、电气或持续高负载验证。

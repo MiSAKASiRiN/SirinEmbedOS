@@ -6,7 +6,7 @@ CDC0 输出日志；CDC1 承载 HostLink V2，保留原 SRN-Link V2 的 COBS/CRC
 - [服务与消息总表](#服务与消息总表)：SYSTEM/EXEC/CONFIG/CONTROL/TELEMETRY，以及状态码。
 - [父项目服务接入](#父项目服务接入)：注册冻结、执行上下文、重试及背压。
 - [参数 CONFIG 01–08](../Source/Services/Parameters/HostLink/README.md)：SCHEMA/READ/WRITE/SAVE/LOAD、状态、身份和稳定 ID。
-- [专用 IMU 流](#专用-imu-流)、[INS 与环境流](#ins-与环境流版本1)、[SystemMonitor](#systemmonitor-v22026-09-28)、[循环统计](#托管循环统计-0x0003)。
+- [专用 IMU 流](#专用-imu-流)、[INS 与环境流](#ins-与环境流版本1)、[SystemMonitor](#systemmonitor-v2)、[循环统计](#托管循环统计-0x0003)。
 - [只读 SOURCE V2](#只读-source-v2)：父项目变量订阅，与专用二进制流分离。
 - [手动静态 IMU 校准](#手动静态-imu-校准)：CONFIG 09/0A、保存后成功和部分失败。
 - [EEPROM 设计](Storage.md)：落盘内容、默认值、加载/保存与单份记录风险。
@@ -99,23 +99,29 @@ HostComm 等待 RX、TX 完成、工作完成和生产者提交通知，并按�
 
 ### 固定存储预算
 
-活动请求、完成重放与 pending 的固定存储不因 SOURCE V2 扩大：context 为 4800 B，活动记录 10 × 12 B 和重放 4 × 520 B 包含在其中；pending 为144 B，注册对象8 B。12项二进制遥测注册表仍为720 B，TX槽元数据每项44 B，回调不另建队列。SOURCE V2 的只读缓存为32 × 120 B加count/frozen共3843 B；HostComm的source目录引用为32 × 8 B、频率组为32 × 12 B。相对之前source指针/getter表和20组低频调度，HostComm对象缩减417 B，合计静态对象净增3426 B；对象之间链接间隙和最终D1用量以构建map为准。
+活动请求、完成重放与 pending 的固定存储不因 SOURCE V2 扩大：context 为 4800 B，活动记录 10 × 12 B 和重放 4 × 520 B 包含在其中；pending 为144 B，注册对象8 B。12项二进制遥测注册表仍为720 B，TX槽元数据每项44 B，回调不另建队列。SOURCE V2 的只读缓存为32 × 120 B加count/frozen共3843 B；HostComm的source目录引用为32 × 8 B、频率组为32 × 12 B。这些是固定存储容量；对象之间的链接对齐、最终 D1 用量和结构布局以当前构建 map 为准。
 
 ## 原始 IMU 观测配置
 
 以下是仅观察原始 IMU、显式关闭业务存储命令的配置片段，不是 SDK 默认配置。在 `SRNOS_ApplicationConfigure()` 中设置：
 
 ```c
-config->host_link_enabled = true;
-config->host_link_storage_enabled = false;
-config->load_parameters = false;
-config->host_link_setup = SRNOS_IMUTelemetryRegister;
-config->sensors.imu_observer = SRNOS_IMUTelemetryObserve;
-config->ins.enabled = false; // 仅原始采样；正式 INS 默认自动注册五条流
-config->sensors.lsm_enabled = true;
-config->sensors.heater_enabled = false;
-config->system_monitor_enabled = false; // 原始采样示例关闭后台 ADC/线程统计
-config->cycle_statistics_enabled = false; // 做开销基准时同时关闭循环 hook
+#include <SirinEmbedOS/Kernel/System.h>
+#include <SirinEmbedOS/Services/HostLink/IMUTelemetry.h>
+
+void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
+{
+    config->host_link_enabled = true;
+    config->host_link_storage_enabled = false;
+    config->load_parameters = false;
+    config->host_link_setup = SRNOS_IMUTelemetryRegister;
+    config->sensors.imu_observer = SRNOS_IMUTelemetryObserve;
+    config->ins.enabled = false; // 仅原始采样；正式 INS 默认自动注册五条流
+    config->sensors.lsm_enabled = true;
+    config->sensors.heater_enabled = false;
+    config->system_monitor_enabled = false; // 原始采样示例关闭后台 ADC/线程统计
+    config->cycle_statistics_enabled = false; // 做开销基准时同时关闭循环 hook
+}
 ```
 
 包含 `SirinEmbedOS/Services/HostLink/IMUTelemetry.h`。观察回调与 HostLink 注册均在启动时冻结。回调运行在传感器发布线程，只复制到静态队列，不编码、不等待 USB。BMI Sensors API 始终发布原始测量。订阅不会改变硬件 ODR 或任务周期。
@@ -157,7 +163,7 @@ config->cycle_statistics_enabled = false; // 做开销基准时同时关闭循�
 
 ## Python CLI
 
-需要保存完整逐样本数据时使用新增 `Tools/HostLink/imu_capture.py`，见 [采集说明](../Tools/HostLink/README.md)。它输出双 CSV、原始接收字节、每秒状态与元数据，支持预热/定时停止，断连后停止而不拼接会话。下述 `imu_telemetry.py` 仍为只显示的监视器。
+需要保存完整逐样本数据时使用 `Tools/HostLink/imu_capture.py`，见 [采集说明](../Tools/HostLink/README.md)。它输出双 CSV、原始接收字节、每秒状态与元数据，支持预热/定时停止，断连后停止而不拼接会话。下述 `imu_telemetry.py` 仍为只显示的监视器。
 
 在 SDK 根目录：
 
@@ -165,18 +171,18 @@ config->cycle_statistics_enabled = false; // 做开销基准时同时关闭循�
 python3 -m venv build/hostlink-venv
 build/hostlink-venv/bin/pip install -r Tools/HostLink/requirements.txt
 build/hostlink-venv/bin/python Tools/HostLink/imu_telemetry.py \
-  --port /dev/cu.usbmodem355C343932333 --duration 600
+  --port CDC1_PATH --duration 600
 ```
 
-端口必须显式选择 **CDC1**，路径随主机枚举变化；上面的路径是 2026-09-27 本机观测值。CLI 拒绝占用中的端口；CDC 波特率设置不改变 USB 链路速率。每秒显示两颗 IMU 完整最新值、实际接收率、序号缺口、重复与设备计数，每十秒输出采集率/接收率及协议错误。每个正常十秒窗口目标均 ≥990 次/秒；不以配置周期代替测量。`--duration 0` 持续运行，Ctrl-C 取消订阅。重连重新握手订阅；无需打开 CDC0。
+将 `CDC1_PATH` 替换为本机实际 **CDC1** 路径；先用 `build/hostlink-venv/bin/python -m serial.tools.list_ports -v` 列出端口，路径随枚举变化。CLI 拒绝占用中的端口；CDC 波特率设置不改变 USB 链路速率。每秒显示两颗 IMU 完整最新值、实际接收率、序号缺口、重复与设备计数，每十秒输出采集率/接收率及协议错误。每个正常十秒窗口目标均 ≥990 次/秒；不以配置周期代替测量。`--duration 0` 持续运行，Ctrl-C 取消订阅。重连重新握手订阅；无需打开 CDC0。
 
-状态/速率输出到 stdout，不录制文件。对进程暂停读取的测试可能被主机 USB/TTY 缓冲吸收，未触发 overflow 时不能宣称验证了设备满队列行为。不同固件的采集时长与实测范围见 [Validation.md](Validation.md)，不能把某次长测外推到当前加入持久化/静态校准后的固件。
+状态/速率输出到 stdout，不录制文件。对进程暂停读取的测试可能被主机 USB/TTY 缓冲吸收，未触发 overflow 时不能宣称验证了设备满队列行为。不同固件的采集时长与实测范围见 [Validation.md](Validation.md)，不能把某次长测外推到其他配置或固件。
 
 C 与 Python 共用 `Tests/Services/IMUTelemetry/golden_record.hex`；主机套件覆盖字段字节序、溢出、会话清理和坏帧恢复。实板短测不代替满负载 CAN、传感器校准或实际声光观察。
 
 ### 温度与终端显示
 
-`imu_capture.py` 与 `imu_telemetry.py` 默认使用易读状态行，显示两颗 IMU 的实测温度、接收率、样本数、缺序和设备累计溢出/发送失败；离线温度标为旧值。`--json` 保留机器可读终端输出。CSV、原始二进制和状态文件格式不变。SensorBringUp 当前优先控制 LSM 为60°C、LSM失效时回退BMI，CDC0显示实际来源和占空比；先用 monitor 观察温度趋稳，再开始正式静置采集，`--warmup` 只是时间分段，不会自动判定温稳。
+`imu_capture.py` 与 `imu_telemetry.py` 默认使用易读状态行，显示两颗 IMU 的实测温度、接收率、样本数、缺序和设备累计溢出/发送失败；离线温度标为旧值。`--json` 保留机器可读终端输出。CSV、原始二进制和状态文件的字段见采集工具说明。SensorBringUp 当前优先控制 LSM 为60°C、LSM失效时回退BMI，CDC0显示实际来源和占空比；先用 monitor 观察温度趋稳，再开始正式静置采集，`--warmup` 只是时间分段，不会自动判定温稳。
 
 ## INS 与环境流（版本1）
 
@@ -235,7 +241,7 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_telemetry.py \
 
 默认省略`--streams`仍仅两路原始流。终端每秒显示姿态、温度、来源/权重、温稳/保护状态和速率；`--json`附完整状态及每10秒实际发布/接收速率。重连重新握手和订阅，退出取消。`imu_capture.py` 默认保存双 IMU，也支持 `--streams bmi lsm ins mag pressure` 分流保存五路 CSV；未选择的流不创建文件。现有工具不发送参数 SAVE/LOAD 或静态校准命令。
 
-## SystemMonitor V2（2026-09-28）
+## SystemMonitor V2
 
 正式默认固件注册 0x0001（任务）、0x0002（ADC/系统）及 0x0003（托管循环）三条流；开启 `system_monitor_enabled` 的构建才注册。订阅周期必须为 1,000,000 µs，采样周期不随订阅改变。与原未接通的 HSKP V1 不兼容；版本字节为 2。沿用 HostLink V2 的 `TELEMETRY/SAMPLE`（service=4、message=2）和 14 B `<HIIHBB` 外层头。sample_period_us=0，表示使用记录内显式时间戳（uint16 无法表示 1 s）；count 分别为 1 或 1..4，size 为 128 或 112，device_time_us 为系统快照 updated_us 的低 32 位。全部数值小端，float 为 IEEE754 binary32。
 
@@ -243,7 +249,7 @@ ADC 记录：0=version(u8)，1=ADC state(u8)，2..3=0；4=snapshot sequence(u32)
 
 任务记录：0=version，1=slot，2=flags，3=state（均 u8，state 沿用 FreeRTOS Running=0/Ready=1/Blocked=2/Suspended=3/Deleted=4）；4=generation、8=snapshot sequence（u32）；12/13=current/base priority(u8，FreeRTOS 原始优先级)；14=stack_free_words(u16，65535=未测量)；16/24/32=sampled_us/window_us/runtime_us(u64)；40/44/48/52/56=cpu_ppm/switch_count/ready_count/max_run_us/max_ready_us(u32)；60=16字节零结尾名称；76=系统updated_us(u64)；84=7个u32（system flags、busy、idle、monitor CPU、task count、max critical、slot overflows）。无活跃任务时允许 slot=0 的空记录以传系统汇总。任务 identity 为(slot,generation)，各任务窗口独立，不应把四条记录相加当作同步CPU总和。
 
-flags/valid/quality 位定义以 SystemMonitor.h 为准。CPU ppm 除以 10,000 得百分比，时间为 µs；每次任务只发最近采样窗口，不汇总未上报的全部轮转间隔。系统总CPU通过 Idle 推算。HostComm 的旧 Debug Watch 栈字段改为 UINT32_MAX 表示未测量，不再每100 ms扫描。
+flags/valid/quality 位定义以 SystemMonitor.h 为准。CPU ppm 除以 10,000 得百分比，时间为 µs；每次任务只发最近采样窗口，不汇总未上报的全部轮转间隔。系统总CPU通过 Idle 推算。HostComm 的 Debug Watch 栈字段为 UINT32_MAX，表示未测量，不进行周期栈扫描。
 
 每流每秒最多一次尝试；采用 LATEST 合并旧的待发送记录，无独立队列和重试自旋。会话断开后取消订阅，由 HostLink 清理待发送内容；已经由 USB 引用的槽依照现有传输生命周期释放。业务命令、INS FIFO 的 QoS 保持。
 
@@ -256,7 +262,7 @@ build/hostlink-venv/bin/python Tools/HostLink/system_monitor.py \
 
 ## 托管循环统计 0x0003
 
-遥测注册上限 12（原 8），继续启动期冻结和 ID 冲突校验。0x0001/0x0002 仍使用上述 V2 记录；0x0003 记录版本为 1，每秒最多四条，每条 112 B，LATEST 策略。使用相同 service=4/message=2/14 B 外层头，sample_period_us=0；device_time_us 是本次系统 updated_us 低 32 位。连续订阅、正常链路下 64 槽最多 16 秒轮转；采样仍每秒独立执行，拥塞或断连不积压、不影响采样。
+遥测注册上限 12，继续启动期冻结和 ID 冲突校验。0x0001/0x0002 仍使用上述 V2 记录；0x0003 记录版本为 1，每秒最多四条，每条 112 B，LATEST 策略。使用相同 service=4/message=2/14 B 外层头，sample_period_us=0；device_time_us 是本次系统 updated_us 低 32 位。连续订阅、正常链路下 64 槽最多 16 秒轮转；采样仍每秒独立执行，拥塞或断连不积压、不影响采样。
 
 | 偏移 | 类型 | 字段 |
 |---|---|---|
@@ -314,7 +320,7 @@ DATA V2头16 B：catalogHash u32（0）、encodeTimeUs u64（4）、count u8（1
 
 ## 手动静态 IMU 校准
 
-CONFIG service=`0x02`，新增 REQUEST `0x09`（执行）和 `0x0A`（读取最近任务状态），不改变既有 CONFIG/TELEMETRY 编码。公共常量位于 `Services/HostLink/IMUCalibrationProtocol.h`。注册在启动期冻结；与自定义路由冲突时启动失败，不能覆盖。默认固定路由使用 22/24 槽，父项目仍有 2 槽（实际可用量随其注册变化）。
+CONFIG service=`0x02`，REQUEST `0x09`（执行）和 `0x0A`（读取最近任务状态），不改变既有 CONFIG/TELEMETRY 编码。公共常量位于 `Services/HostLink/IMUCalibrationProtocol.h`。注册在启动期冻结；与自定义路由冲突时启动失败，不能覆盖。默认固定路由使用 22/24 槽，父项目仍有 2 槽（实际可用量随其注册变化）。
 
 `0x09` 正文严格为 `[u8 version=1, u8 sensor_mask]`：mask 1=BMI088，2=LSM6DS3，3=两颗。例：`01 03`。`host_link_storage_enabled=false` 时拒绝执行；只读查询仍可用。命令在低优先级 HostCmd 中观察约 5 s、校验后保存 EEPROM，完成才返回最终响应。最长执行期限 20 s，不含队列等待及发送拥塞；主机应留出这些余量。状态查询不进入耗时队列，可以在校准中发出。
 
@@ -343,7 +349,7 @@ CONFIG service=`0x02`，新增 REQUEST `0x09`（执行）和 `0x0A`（读取最�
 | 4 / 5 / 6 | NOT_READY / SENSOR_ERROR / STALE |
 | 7 / 8 / 9 / 10 | MOVING / TEMPERATURE / TIMEOUT / STORAGE_ERROR |
 
-最终外层 status：成功 `0x0000`；忙 `0x0106`；非法参数 `0x0108`；存储失败 `0x010C`；静止、温度、采样或期限异常使用新增 `0x010D CALIBRATION_ERROR`，细分原因取正文 result。存储结果枚举为 0 OK、1 BUSY、2 DISABLED、3 INVALID_ARGUMENT、4 CONTEXT_ERROR、5 NOT_FOUND、6 CORRUPT、7 INCOMPATIBLE、8 IO_ERROR、9 TIMEOUT、10 VERIFY_ERROR、11 READ_ONLY。
+最终外层 status：成功 `0x0000`；忙 `0x0106`；非法参数 `0x0108`；存储失败 `0x010C`；静止、温度、采样或期限异常使用 `0x010D CALIBRATION_ERROR`，细分原因取正文 result。存储结果枚举为 0 OK、1 BUSY、2 DISABLED、3 INVALID_ARGUMENT、4 CONTEXT_ERROR、5 NOT_FOUND、6 CORRUPT、7 INCOMPATIBLE、8 IO_ERROR、9 TIMEOUT、10 VERIFY_ERROR、11 READ_ONLY。
 
 需要任意姿态下真实静止，只估计陀螺零偏，保留已有有效加速度校正；无有效记录时为零偏 0、比例 1。两颗都通过观察后才开始写入，但两个单份记录不具备组合原子性：部分保存返回错误和掩码，不能只看某一个 storage_status=0 宣称成功。新值下次启动应用；采集异常不写 EEPROM，保存中异常可能使正在更新的单份记录失效。
 

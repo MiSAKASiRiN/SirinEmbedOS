@@ -10,8 +10,10 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_telemetry.py --port CDC1_PATH 
 
 温稳、观测、收敛期间Application及通信已经运行，但姿态流尚未发送。保持板子低动态，使用状态查询查看进度，不以USB在线判断INS就绪。GDB暂停会扰动采样和温控；速率窗口内不要暂停。完整合同见[INS](../../Docs/INS.md)，结果见[验证记录](../../Docs/Validation.md)。
 
-## 托管接口迁移
+## 任务接入
 
-长期应用工作改为托管 step 描述，周期等待由 SDK 负责；观察 srnos_example_create_result 检查创建结果。 旧 ThreadConfig.entry 不再支持；公共创建/停止/删除及同步用法见 Source/Kernel/README.md。本次编译不意味着重新执行板端测试。
+应用使用托管 `step` 回调，周期等待由 SDK 负责。检查 `srnos_example_create_result` 确认任务创建结果；创建、停止、删除与同步对象用法见 [Kernel](../../Source/Kernel/README.md)。
 
 关闭业务参数加载与 HostLink 存储命令不关闭 Storage：本例启动仍读取身份及双 IMU 校准，并将有效校准应用于 INS；无有效校准则降级。见 [存储开关与流程](../../Docs/Storage.md#启动和运行期)。
+
+修改与验证记录见 [CHANGELOG](CHANGELOG.md)。

@@ -1,10 +1,10 @@
 # 运行观测基础设施
 
-本目录只负责轻量 trace、DWT 运行时计数及逐任务槽取样，不创建诊断线程，不依赖 HostLink/日志。主动采样、统计窗口和发布已归入 Services/SystemMonitor。FreeRTOS 宏唯一入口仍为私有 trace_internal.h，经 Trace.c 同时维护 Fault 元数据与本模块槽位。
+本目录只负责轻量 trace、DWT 运行时计数及逐任务槽取样，不创建诊断线程，不依赖 HostLink/日志。主动采样、统计窗口和发布由 Services/SystemMonitor 持有。FreeRTOS 宏唯一入口为私有 trace_internal.h，经 Trace.c 同时维护 Fault 元数据与本模块槽位。
 
-保留参考工程 tskptt_hskp 的 create/delete/ready/switch 计数逻辑，重命名为私有 runtime_trace.c，删除旧 HSKP worker、配置入口和未接通的 V1 线格式。槽位 1..64，每次复用增加 generation；活跃句柄只能在 SRNOS_RuntimeSampleSlot 的临界区内使用，一次处理一个槽且不扫描栈、不整表暂停调度。返回纯值而非句柄。Ready/max-run 语义和回绕限制见 SystemMonitor README。
+私有 runtime_trace.c 维护 create/delete/ready/switch 计数。槽位 1..64，每次复用增加 generation；活跃句柄只能在 SRNOS_RuntimeSampleSlot 的临界区内使用，一次处理一个槽且不扫描栈、不整表暂停调度。返回纯值而非句柄。Ready/max-run 语义和回绕限制见 SystemMonitor README。
 
-SystemMonitor 禁用时 trace 和每 tick DWT 64 位扩展仍工作，Fault 与时钟不依赖后台采样线程。新增 INCLUDE_xTaskGetIdleTaskHandle 只启用上游 getter，不修改 FreeRTOS 源码。主机测试用可删除的假任务检查句柄生命周期、运行窗口与一次 CYCCNT 回绕；实机临界区测量见下述板端记录。
+SystemMonitor 禁用时 trace 和每 tick DWT 64 位扩展仍工作，Fault 与时钟不依赖后台采样线程。配置 INCLUDE_xTaskGetIdleTaskHandle 启用上游 getter，不修改 FreeRTOS 源码。主机测试用可删除的假任务检查句柄生命周期、运行窗口与一次 CYCCNT 回绕；实机临界区测量见下述板端记录。
 
 ## 托管循环统计
 
@@ -18,4 +18,27 @@ Release 单独对循环统计源文件使用 `-O2`（其他文件保留原工具
 
 ## 公共隔离
 
-FreeRTOS trace 入口位于私有 `trace_internal.h`，父项目不再包含 Trace 或内核头。公开任务/循环观测统一经 SystemMonitor 副本接口；Watch/时间自维护符号全部采用 SRNOS 命名，已有记录 magic 和结构值保留。
+FreeRTOS trace 入口位于私有 `trace_internal.h`，父项目不包含 Trace 或内核头。公开任务/循环观测统一经 SystemMonitor 副本接口；Watch/时间自维护符号全部采用 SRNOS 命名，已有记录 magic 和结构值保留。
+
+
+## 应用读取示例
+
+父项目不直接调用私有 trace/hook；通过 SystemMonitor 读取副本，并检查当前窗口是否有效：
+
+```c
+#include <stddef.h>
+#include <SirinEmbedOS/Services/SystemMonitor.h>
+
+bool read_execution_peak(uint8_t slot, uint32_t *peak_us)
+{
+    SRNOS_MonitorTask task;
+    if (peak_us == NULL || !SRNOS_SystemMonitorGetTask(slot, &task)) return false;
+    const uint32_t needed = SRNOS_CYCLE_ACTIVE | SRNOS_CYCLE_MEASURED;
+    if ((task.cycle.flags & needed) != needed ||
+        (task.cycle.flags & SRNOS_CYCLE_STALE)) return false;
+    *peak_us = task.cycle.execution_max_us;
+    return true;
+}
+```
+
+调用者每次保存 slot 和 generation，避免将槽复用后的新任务混入旧统计。上述值包含 step 内阻塞和抢占；CPU 占比使用任务自己的 CPU 有效位与 `cpu_ppm`。`stack_free_words == UINT16_MAX` 表示未测量，不能计算实际栈余量。监测开关、窗口和完整示例见 [SystemMonitor](../../Services/SystemMonitor/README.md)。

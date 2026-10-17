@@ -16,30 +16,31 @@ IMU 排队期限保持 1 ms；普通请求的有限排队期限由 `timeout_ms` 
 
 ## 等待与板级边界
 
-分发线程由 Kernel 托管单轮处理，普通等待位于统计边界外。空闲无限等待；活动时等待完成/取消/新请求事件或最近的排队、活动截止点，不再每 tick 唤醒检查。通知在等待入口原子消费，不在检查后额外清除，避免丢失并发完成事件。硬件模式、片选时序、栈和队列容量保持既有设置；优先级和仲裁按上文通信策略配置。
+分发线程由 Kernel 托管单轮处理，普通等待位于统计边界外。空闲无限等待；活动时等待完成/取消/新请求事件或最近的排队、活动截止点。通知在等待入口原子消费，不在检查后额外清除，避免丢失并发完成事件。硬件模式、片选时序由固定设备声明；优先级和仲裁按上文通信策略配置。
 
-板级 SPI4 handle、模式与 abort 接入位于 `Board/Support/IO/spi_board`。DMA staging 的位置与大小保持不变，硬件停止确认仍由板级适配负责。
+板级 SPI4 handle、模式与 abort 接入位于 `Board/Support/IO/spi_board`。DMA staging 位于非缓存区，硬件停止确认仍由板级适配负责。
 
 ## 验证
 
-`bash Tests/IO/SPI/run_host_tests.sh` 编译实际分发器，覆盖保护外复制抢占、保留槽取消、同步总期限、通知与等待竞争、容量、FIFO/公平性、排队超时、活动取消、恢复隔离及早到/迟到完成中断。当前主机测试通过；它们不能证明板端 DMA/IRQ 延迟、传感器连续性或统计开销，该主机回归未包含烧录，后续实板压力证据见本文末节。
-
-## P0 IMU 优先的验证边界
-
-实际分发器主机测试验证 IMU 优先于更早排队的 CAN，三类持续饱和 100 笔按 80 IMU、16 CAN4、4 普通分发，无 IMU 时 25 笔按 20 CAN4、5 普通分发；它不能证明真实 3 kHz 双向 CAN4 下的 IMU 1 ms 排队期限。SPI4 时钟、DMA、活动期限和取消合同保持原值，NVIC SPI4 与其 DMA 为 5。组合负载验收见 [当前优先级记录](../../../Docs/Validation/Priority-20261003/README.md)。
-
-## 优化前 CAN4 与双IMU实板基线（2026-10-06）
-
-SPI4保持10MHz、原线程与优先级。Classic双向约各2k时MCP约18998事务/s，加双IMU约5000事务/s，整板CPU91.54%；CAN4更高请求负载出现生产周期不足或FD硬件RX FIFO溢出，但SPI无排队过期、传输错误或超时，双IMU/INS保持1kHz。事务数/CPU不能当成SCK占用率，峰值/直方图口径、8M时序对照和负载限制见 [实测记录](../../../Docs/Validation/CAN4-SPI-20261006/README.md)。尚未覆盖四路及UART混合、物理SPI故障恢复。
+`bash Tests/IO/SPI/run_host_tests.sh` 编译实际分发器，覆盖保护外复制抢占、保留槽取消、同步总期限、通知与等待竞争、容量、FIFO/公平性、排队超时、活动取消、恢复隔离及早到/迟到完成中断。主机模型不能证明板端 DMA/IRQ 延迟、传感器连续性或统计开销。历史实测范围见 [CHANGELOG](CHANGELOG.md)。
 
 ## CAN4 私有事务序列
 
 `SRNOS_SPITransferSequence` 只供设备实现使用：最多四步，每步最多74B，一个共享槽、一次提交、最终一次完成通知，总期限5ms。准备函数只允许有界的寄存器解码和字节准备。每一步结束释放CS，将下一步重新排入原仲裁器；IMU和普通请求仍按原4:1规则获得事务边界，不连续锁住一整条序列。公开 accepted/completed、排队/传输直方图仍按物理事务计数；各步排队耗时从该步入队开始，总期限从首次提交开始。
 
-数据继续经过原非缓存DMA staging。超时/取消返回前确认停止硬件访问；迟到中断不重新完成请求。主机回归在每个序列边界插入IMU请求，并逐步注入错误、取消和总期限耗尽；正式板测结果见 CAN4 优化验证记录。
+数据继续经过原非缓存DMA staging。超时/取消返回前确认停止硬件访问；迟到中断不重新完成请求。主机回归在每个序列边界插入IMU请求，并逐步注入错误、取消和总期限耗尽；历史实测结果见 [CHANGELOG](CHANGELOG.md)。
 
-分发线程使用直接任务通知index 0，避免CMSIS设置标志后的再次查询；Kernel控制仍使用index 1。时钟查询复用每轮快照，逐事务期限和超时口径保持。
+分发线程使用直接任务通知index 0，用于完成/提交唤醒；Kernel控制仍使用index 1。时钟查询复用每轮快照，逐事务期限和超时口径保持。
 
-## 2026-10-06 优化后验证
+## 应用观测示例
 
-Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。实测仅CAN1/CAN4短接，CAN2/3/UART同时满载与物理故障尚未覆盖；原Flash恢复并释放探针。详见 [最终验证与原始证据](../../../Docs/Validation/CAN4-Optimization-20261006/README.md)。
+固定设备 handle 由 SDK 设备层持有；应用通常通过 Sensors 或 CAN 使用 SPI，而不是自行创建片选。下面读取总线统计副本，适合在普通监控任务中调用：
+
+```c
+#include "SirinEmbedOS/IO/SPI/SPI.h"
+SRNOS_SPIStatus read_spi_status(SRNOS_SPISnapshot *snapshot) {
+    return SRNOS_SPIGetSnapshot(SRNOS_SPI_BUS_4, snapshot);
+}
+```
+
+如需扩展设备，在设备实现中使用已绑定的 handle 调用传输接口，遵守上述缓冲、取消和回调合同；硬件绑定归 Board/Support。维护回归在 SDK 根执行 `bash Tests/IO/SPI/run_host_tests.sh`。验收方法见 [验证指南](../../../Docs/Validation.md)。

@@ -1,16 +1,16 @@
 # AGENTS.md
 
-## 当前阶段与参考工程
+## 平台定位与参考工程
 
-本目录是 **SirinEmbedOS** 的重构工程，正在参考：
+本目录是 **SirinEmbedOS SDK**；需要核对历史硬件或协议来源时，可只读参考：
 
 `/Users/sirin/CLionProjects/h723vg-v2-prototype`
 
-将原工程分散在 `Frameworks/`、可复用 task 和项目 glue 中的系统能力，逐步整合为 SirinEmbedOS，对应用提供统一 API、硬件资源访问与系统服务。调度 Kernel 基于 FreeRTOS。
+SDK 对应用提供统一 API、硬件资源访问与系统服务。控制算法、机构状态机和业务线程属于父项目。
 
-当前已建立纯 HAL 的 `Board/OMNICTL2_3.ioc` 基线，并纳入 FreeRTOS 10.6.2 / CMSIS-RTOS2 / heap_5、SRNOS 基础操作/Fault/内存、诊断、CAN/SPI/I2C、固定设备、串口资源与协议、日志/参数/HostLink 和双 CDC USB。源码直接归 SDK 管理，未保留 Framework 嵌套子仓库。系统配置及注册在初始化阶段冻结；主机只可修改明确声明的业务数值。已做主机测试、固件编译链接和部分板端短测，最新实测范围以验证记录为准。逐模块去向见 `Docs/Migration/README.md`，验证记录见 `Docs/Validation.md`；FatFs、LwIP 尚未接入。每次工作仍先检查实际文件，不将规划或编译成功等同于硬件可用。
+平台使用 FreeRTOS / CMSIS-RTOS2 / heap_5，提供 Core、诊断、CAN/SPI/I2C、固定设备、串口协议、日志、参数、HostLink、USB 与静态 IPv4/UDP。配置与注册在启动阶段冻结；主机只可修改显式声明的业务数值。接口用法见 [QuickStart](QuickStart.md) 和 [文档导航](Docs/README.md)，证据读取方法见 [验证指南](Docs/Validation.md)。
 
-本项目正在迁移 prototype 的 Framework 能力，但主要将原工程作为设计与实现参考，而不是直接搬运代码。两者基于类似的硬件平台，因此原工程的硬件绑定、协议、资源配置和运行经验具有参考价值；具体差异仍以本工程 IOC、实现和已确认硬件资料核对。原工程的架构、目录划分、接口和命名不一定适合 SirinEmbedOS，应按本工程的职责边界与命名规范重新判断，必要时重构或重新实现。
+复用 prototype 能力时，以设计与实现参考为主，不直接整包搬运代码。两者基于类似的硬件平台，因此原工程的硬件绑定、协议、资源配置和运行经验具有参考价值；具体差异仍以本工程 IOC、实现和已确认硬件资料核对。原工程的架构、目录划分、接口和命名不一定适合 SirinEmbedOS，应按本工程的职责边界与命名规范重新判断，必要时重构或重新实现。
 
 未经明确要求，不修改参考工程。按本次任务需要读取相关模块，不整包复制旧工程，也不把旧工程历史结构直接当成新架构要求。
 
@@ -18,13 +18,14 @@
 
 本仓库直接作为 **SirinEmbedOS SDK 仓库**，其他应用工程通过一个 Git 子模块引入。SDK 内整合自维护模块，不继续沿用原工程几十个 Framework 子模块的组织方式，也不通过嵌套子模块把同样的碎片化结构藏到内部。第三方代码固定版本随 SDK 管理，保留来源、许可证和补丁记录。
 
-以下是目标目录，按实际迁移需求逐步建立，不一次创建全部目录或空壳模块：
+目录按实际能力维护，不预建空壳模块：
 
 ```text
 SirinEmbedOS/
 ├── AGENTS.md
 ├── README.md
-├── CHANGELOG.md               # 已完成变更、验证结果与已知限制
+├── CHANGELOG.md               # 修改历史、验证结果与待验事项
+├── QuickStart.md              # 构建、父项目接入与完整示例
 ├── CMakeLists.txt              # SDK 构建入口，对父项目导出组件
 ├── Include/SirinEmbedOS/       # 对应用公开的 C / C++ 头文件
 │   ├── Kernel/
@@ -55,7 +56,7 @@ SirinEmbedOS/
 ├── Config/                    # SDK 默认配置及配置规则
 ├── CMake/                     # 自维护的组件选择、配置生成与构建辅助
 ├── Tools/                     # Panic 解码等配套工具
-├── Docs/                      # 模块迁移去向、来源与分层验证记录
+├── Docs/                      # 使用指南、来源索引及验证方法
 ├── Tests/
 └── Examples/
     ├── Minimal/               # SDK 自身可构建的最小应用
@@ -189,7 +190,7 @@ SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些
 - 每次实际执行先将 Board 内容备份到根 `build/cubemx/<时间戳-唯一后缀>/Board-before`（排除 build、.idea、__pycache__），同目录保存实际 `.mx`、生成日志、时序检查日志和变化文件清单。脚本不自动回滚、不构建、不烧录、不操作调试器；生成失败仍保留现场与快照供比较。已有 `Board/generate.mx` 是原始手工脚本，含本机绝对路径，日常使用 `generate.py`。
 - 不能仅凭进程退出码宣称成功：核对 `project generate` 的 `OK` 和生成内容。脚本会检查退出码/成功标记，并运行 `Tools/Debug/check_i2c_timing.py`，要求 IOC、生成的 I2C4 TIMING 和 Support 常量一致。不要为消除检查失败而盲目同步常量，应先核对时钟、滤波、时序及此前板测依据。
 - 生成后与本次快照比较，检查 USER CODE、SDK 自维护 CMake/Support/Linker、HAL/CMSIS、工具链和中断所有权，保留原有未提交修改；再进行对应固件构建，涉及生成清单或构建接入时运行 `Tests/Build/check_sdk.py`。生成、编译与板端验证分别报告，不覆盖当前调试会话所用 ELF。
-- 2026-09-28 本机 CubeMX 6.18.1 / DB.6.0.181 使用该 CLI 路径成功生成，原始调用仅将 `hi2c4.Init.Timing` 更新为已板测的 `0x10C7182D`，407 个 USER CODE 区域完整保留。实际版本以运行日志为准，macOS bundle 曾显示过期的6.13。后续仍检查实际差异，不假定每次只改一行；记录见 `Docs/Validation/CubeMX-20260928/README.md`。
+- CubeMX 版本以实际运行日志为准；每次生成都检查差异和 USER CODE，不假定只变更某个时序字段。
 - 用户明确要求仅修改 IOC、不要 Generate 时遵从该范围；已授权的生成工作无需重复询问。Generate 不隐含授权重新烧录或接管用户暂停现场。
 
 ### 当前 Kernel 实现边界
@@ -245,7 +246,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - 允许应用将可用 UART 配置为原始收发，或绑定平台支持的协议功能。
 - 物理端口、引脚和 DMA 受本板实际布线约束；灵活配置不表示任意重映射硬件。
 - 同一端口的所有权必须清楚。直接访问与协议服务不能绕过资源管理同时占用；确需共享时必须有明确的仲裁或复用协议。
-- 所有架构配置均在启动阶段完成选择、检查和冻结，包括 CAN、UART、IMU 和系统服务；本次架构不支持运行时热切换、rebind 或配置重载。错误恢复只使用已经冻结的配置。
+- 所有架构配置均在启动阶段完成选择、检查和冻结，包括 CAN、UART、IMU 和系统服务；平台不支持运行时热切换、rebind 或配置重载。错误恢复只使用已经冻结的配置。
 - 配置应覆盖真实需求，例如端口用途、波特率、收发模式和缓冲容量，而非为每个内部实现细节暴露开关。
 
 ### 接口与资源合同
@@ -259,7 +260,9 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 ## 重构与验证规则
 
 - 必要的功能目录必须同时保留 `README.md` 和 `CHANGELOG.md`，例如承担独立能力的 IO、设备、服务或诊断模块目录。以能独立说明职责、接口和验证范围的模块为单位维护，不要求每一层目录或每个私有实现子目录重复建立文档；缺失时在该模块下一次重大修改中补齐。
-- 每次重大修改功能、公共接口、配置合同、架构、调度或资源所有权时，必须在同一次变更中更新受影响模块的 `README.md` 和 `CHANGELOG.md`。`README.md` 描述修改后的当前能力、用法、边界与限制；`CHANGELOG.md` 记录本次变更、验证结果和待验证事项，不能只更新其中一个或仅更新根目录日志。
+- 每次重大修改功能、公共接口、配置合同、架构、调度或资源所有权时，必须在同一次变更中更新受影响模块的 `README.md` 和 `CHANGELOG.md`。`README.md` 只描述修改后的当前能力、用法、示例、边界与限制；每次修改的日期、原因、过程、验证结果和待验证事项只记录在对应 `CHANGELOG.md`。行为未变化的修订无需制造 README 更新记录；不得把历史日志追加到 README、QuickStart、专题文档或本文件。
+- `QuickStart.md` 保留一条能实际编译的最短接入路径；专题文档与模块 README 必须给出准确 API、命令或阅读示例，区分完整程序与需集成的片段。配置、同步、错误处理和所有权按当前源码核对。
+- 历史验证叙述归入所在目录 `CHANGELOG.md`，原始日志/JSON/CSV/固件与哈希保持不变；原入口改为复现或证据阅读指南。迁移文字时保留测量结论与未验边界，修复相对链接，不把当时板上状态写成当前状态。
 - 各级 `CHANGELOG.md` 保持浅层结构：优先使用日期或 `Unreleased` 标题配合平铺条目，必要时增加一层分类；避免多层标题和嵌套列表，不按目录树逐层展开日志。
 - 根目录 `CHANGELOG.md` 记录有意义的工程、接口、配置与架构变更，按日期维护。未发布内容放在 `Unreleased`；没有实际发布时不编造版本号。同步记录验证范围和重要限制，计划中的能力不能记为已实现。
 - 所有交流使用中文。用户要求分析、查看或先不改代码时保持只读。
@@ -287,21 +290,13 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 
 - 从当前工具列表确认 `mcp__clion__*` / `xdebug_*` 或 `execute_tool` 是否实际可调用；只有配置条目不代表当前会话已加载。优先使用原生 MCP 工具，必要时可用本地 HTTP 做握手和工具枚举诊断。
 - 在 CLion 的 Settings → Tools → MCP Server 开启服务，并通过 Codex Auto-Configure 或 Copy HTTP Stream Config 获取实际地址；核对 `~/.codex/config.toml` 中的配置，更新后重启/重新加载客户端。不要把端口写成永久固定事实。
-- 2026-09-26 本机实测 CLion 2026.2.3 的地址为 `http://127.0.0.1:64362/stream`；旧配置 `64342` 无监听。此为排查线索，下次仍需检查当前监听与握手。
+- CLion MCP 地址和端口从当前 IDE 设置与握手核对，不沿用历史端口。
 - 调试工具依赖 Debugger MCP Toolset。若使用 router-only 模式，确认 `execute_tool` 可用，并按需从 Settings → Tools → AI Assistant → Skills 将 `clion-debugger` 安装到 Codex (Global)；不要只搜索 `xdebug_*` 就断定没有调试能力。
 - 先读调试状态并选择正确会话，再读寄存器、栈和变量。表达式求值不自动等于只读：避免调用目标函数、带赋值的表达式或会产生副作用的外设寄存器读取。
 
 ### Agent 直接使用 J-Link / GDB
 
-- 使用明确的可执行文件绝对路径，先核对已安装版本和符号链接。2026-09-26 本机最高已安装版本为 `/Applications/SEGGER/JLink_V896/JLinkGDBServerCLExe`，GDB 为 `/opt/homebrew/bin/arm-none-eabi-gdb`；`/Applications/SEGGER/JLink` 当时指向旧 V6.12j，不能据通用路径假定版本最新。“本机最高已安装版本”不等于官网最新发布。
-- 本次实测目标参数为 `STM32H723VG`、SWD、4000 kHz。再次连接仍需核对 IOC、探针、目标电压和实际硬件；多探针时显式选定探针，不自动操作第一个设备。
-- 已授权连接且无其他会话占用时，可参考本次服务器参数：`-device STM32H723VG -if SWD -speed 4000 -port 2331 -localhostonly 1 -noir -nohalt`。这些参数避免服务器主动初始化寄存器/暂停，但不能保证后续 GDB attach 不暂停或完全无扰动；端口也须先检查占用。
-- 不通过猜测的帮助参数探测 J-Link 行为：V8.96 的 `-help` 实测被忽略并进入连接流程。先读对应版本文档，未知参数可能不会阻止程序继续操作探针。
-- GDB 使用 `-nx` 避免隐式加载用户初始化命令。先加载对应 ELF 符号，再 attach；加载符号与 `load` 烧录是两回事。检查构建缓存的 `SIRINEMBEDOS_EXAMPLE`、构建类型和产物路径，不能仅凭 `SirinEmbedOS.elf` 文件名判断是 BringUp。
-- 对现场 ELF 保留原文件，不在取证期间覆盖；修复构建使用独立目录。可先以 `compare-sections .isr_vector` 和 `compare-sections .text` 核对板上代码，这只证明所比较段匹配，不代表整份镜像或全部运行时数据一致。
-- 保持一个持久 GDB 会话；优先硬件断点，记录并清理本次新增断点，不删除用户原有断点。使用 `bt 8` 等有界调用栈及 `set backtrace limit`；本机 GDB 对当前优化固件曾出现重复展开帧，不能直接据此断定真实递归或栈损坏，应结合 SP、反汇编和原始栈核对。
-- 首次采集 PC/LR/SP、当前任务、PRIMASK/BASEPRI、Fault 状态、HAL/Kernel tick 和系统启动状态。需要判断是否推进时，在已授权范围内继续一段时间再暂停对比；tick 回退应考虑复位循环，不能把多次停在 `HAL_Delay` 直接判为延时死锁。
-- retained Fault 记录可能来自前次复位。结合当前 PC、活动 Fault 标记、记录内容及断点复现区分历史记录与当前异常；记录序号本身不足以证明发生时间。保留日志中的 ELF、工具版本、取样值和执行动作。
+- 使用明确的可执行文件绝对路径，先核对已安装版本与符号链接，不据历史 J-Link/GDB 路径推断当前安装。
 
 ### 结束与验证边界
 
@@ -309,47 +304,25 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - BringUp 的 `srnos_bringup` 仅在暂停且 `sampling == false` 时解释为一次完整发布；零值可能只是尚未采样。`RUNNING`、CAN 初始化、USB 启动、USB 枚举和 IMU 数据新鲜分别取证。
 - 暂停/单步会扰动 FreeRTOS、总线超时和设备时序，BringUp 全任务栈扫描也会挂起调度。断点取证不代表实时性验收；故障修复须区分主机测试、编译链接、修复固件下载和修复后板端复测，不以旧固件现场证明新固件正常。
 
-## 后续工作边界
 
-2026-09-26 用户首次板端记录已确认 RUNNING/IMU 初步运行，同时定位到启动事件屏障将成功返回 `0x3` 误判失败而复位。两处等待已改为错误位检查加所需位掩码；13 组主机套件和修复版 Debug/Release 构建通过，修复后板端尚待复测。前文“未烧录”的迁移基线描述不再代表最新硬件观测，具体以 `Docs/Validation.md` 文末为准。不得主动操作用户保留的暂停调试会话。
+## 固定平台合同
 
-源码迁入后的剩余工作与板端验收顺序见 `Docs/Development.md`。`Examples/BringUp` 是可选观测应用，根构建通过 `SIRINEMBEDOS_EXAMPLE=BringUp` 选择；默认仍为 Minimal。其全任务栈扫描会扰动调度，不将观测固件当作实时压力验收结果。
+- CAN1–3 各有 RX/TX 线程，CAN4 使用单个服务线程。CAN1–3、BMI/LSM/INS 为优先级 48，CAN4 与 UART 服务为 47，SPI4 为 49、I2C4 为 46；修改优先级、IRQ、队列或栈前说明资源与时序影响。
+- 四路 CAN 在启动时各选 Classic 或 FD；现有电机 adapter 要求 Classic 1 Mbit/s。原生 RX 每轮最多 32 帧，每批搬运最多 4 帧；FD 负载不能直接套用 Classic 的吞吐结论。时间使用 SRNOS_TimeMs。
+- 板内安装坐标由 Board 支撑维护，应用通过 INS 的 board_to_robot_wxyz 配置机器人安装旋转。消费者检查 VALID、年龄和 epoch，RUNNING 不代表姿态有效。
+- INS worker 负责统一温控；ins.enabled=false 不会取消传感器或 INS worker。IMU 观察回调仅做有界复制/通知，不等待、打印或编码整包 USB。
+- BringUp 明确配置加热用途；指示器复用 SDK 服务，不新增专用 LED 线程。启动提示与运行心跳的实际声光须现场观察。
+- 身份、IMU 校准和业务参数由 Storage 单份 CRC/提交记录管理。保存失败不保证介质未改变；校准在下次启动应用，业务参数在自身周期边界读取一致快照。
 
-现阶段优先按 `Docs/Validation.md` 进行板端 bring-up，验证启动/异常、内存与缓存、总线、固定设备和协议服务，再由父项目验证真实业务接入。FatFs、LwIP 等尚未迁入的能力按实际需要实施；不因目录规划预建空壳，不把旧工程业务控制任务直接编入 SDK。新增优化继续遵循初始化冻结、单一资源所有权和分层验证。
+## 文档维护示例
 
-## 2613 传感器阶段（2026-09-26）
+例如调整 UDP 接收策略时：在 `Source/Services/Network/README.md` 更新配置与消费示例，在该目录 `CHANGELOG.md` 写原因、兼容性和验证边界；公共入口变化再更新 `Docs/SDKMigration.md` 的迁移步骤。不要在这些用法文档追加日期和测试战报。
 
-已增加 Sensors 公共 API、冻结配置、LSM/LIS/SPA 驱动与 SensorBringUp。SPI4 使用唯一 Realtime1（49）分发者、八槽有界复制队列；IMU 优先，最多四笔后服务一笔等待的低层请求，低层内最多四 CAN4 后一个普通事务；同步调用也经此通路。BMI/LSM 默认 1 ms；LIS/SPA 共用 Normal/2 KiB/10 ms 线程，LSM Realtime / 48 / 2 KiB。接口、取消与缓冲生命周期见 `Docs/Sensors.md`。
+```sh
+# 从 SDK 根目录执行；仅离线检查，不连接 PCB。
+cmake --preset Debug -DSIRINEMBEDOS_EXAMPLE=Minimal -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
+python3 Tests/Build/check_sdk.py --public-headers-only
+```
 
-默认运行正式 INS，四颗传感器均采集；BMI/LSM 统一板内坐标后经启动冻结安装旋转进入单一 Mahony 状态。温控由独立 INS Realtime / 48 / 3KiB / 1ms worker 唯一持有，默认60°C、允许20..75°C，LSM优先/BMI回退，80°C保护及75°C以下5秒恢复。板内变换固定于 Board/Support/Devices/sensor_frames.c，应用只能配置 board_to_robot_wxyz。旧全局 INS、方向预设、校准/存储 worker 和两套温控已删除，没有 legacy 模式。SensorBringUp 以 ins.enabled=false 保留原始采样和统一温控。默认启用启动参数加载及 HostLink LOAD/SAVE。FT24C128A 的身份、双 IMU 校准及业务参数由 Storage 单份 CRC/提交页记录管理；旧 24C02 接口和格式已删除。启动总期限 2 s，参数无效采用默认值，校准无效忽略并降级；保存校准下次启动生效。新增持久化及 1 kHz 标量遥测仍需板端验收，先前整片 EEPROM 板测不等于这些新功能已实测。I2C4 已复用 High6/3KiB 线程作唯一分发者，四槽中 LIS/SPA 各保留一槽、后台两槽，最多连续四笔周期事务后服务等待后台。EEPROM 读写/校验每笔最多32B，写周期不占总线；LIS/SPA 使用30ms完成信号量等待。I2C4 当前为400kHz Fast mode，固定PLL3R=60MHz、TIMINGR=0x10C7182D，由IOC与Support维护；已通过CubeMX 6.18.1 CLI的-q脚本执行project generate，生成时序与Support一致，USER CODE接入保留。生成边界与日志见Board/README.md和Docs/Validation/CubeMX-20260928/README.md。数字SCL实测约370kHz，整片写含校验约5.12秒、读约1.03秒，LIS约97–99Hz、SPA约16Hz，无离线/总线错误。按用户要求板上保留EEPROMBringUp及测试数据，融合/加热关闭；不代表模拟边沿、掉电、断线或严格100Hz实时性验收，见 Docs/Validation/I2C400-20260928/README.md。服务与遥测合同见 Docs/INS.md、Docs/HostLink.md。
-
-18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；连续窗口、SHA、结束状态均以 `Docs/Validation.md` 最新条目为准。
-
-### BringUp 指示与遥测接入约定
-
-后续所有 BringUp 示例在配置阶段设置 bringup_indicators=true，明确加热用途；当前 BringUp 关闭加热，SensorBringUp 和 INSBringUp 默认60°C。指示器在HAL完成、配置冻结后、RTOS启动前只初始化一次：第一灯黄色只提交一次，三段启动音各80ms；原Indicators线程随后亮0.5秒/灭0.5秒（1Hz），不依赖CAN/USB。不另加LED线程。实际声光须现场观察，不能仅凭计数宣称通过。INSBringUp关闭周期栈扫描；Application/通信不等待INS温稳。姿态消费者检查VALID、序号与epoch，不把系统RUNNING当作INS就绪。
-
-传感器 `imu_observer` 注册冻结，只允许有界复制或通知；不能在 P0 采样或 SPI 分发回调打印或等待 USB。可复用 IMUTelemetry 服务为每颗 IMU 分配 64 条静态队列，HostComm 线程编码、FIFO 最多使用八个发送槽；满时丢弃新样本计数。订阅/取消仅为会话行为，不修改底层采样配置。CDC1 数据格式、CLI 和恢复合同见 `Docs/HostLink.md`。CLI 必须显式选择 CDC1，不接管其他程序占用的端口。
-
-## 正式 INS（2026-09-28）
-
-正式默认路径及API见 Docs/INS.md。启动3秒无可用六轴须关PWM并Panic；运行全掉线清VALID并重试，恢复增加epoch并重新观察收敛。Application/HostLink无需等待温稳。健康双路按≤2ms年龄和≤1ms时间差选择，恢复100ms健康+100ms权重渐入。BMI DMA完成通知原BMI任务当周期发布，不恢复延后一周期收取。
-
-低动态波动RMS口径固定为三轴分量整体 sqrt((varX+varY+varZ)/3)，加速度0.03g、角速度0.5°/s；不能为了通过板测跳过低动态/收敛或加入未声明的标定。服务执行不动态分配/打印/等USB，公共快照只做短临界区复制。姿态仅相对航向，用户校准未完成，机器人应用须检查VALID/epoch。
-
-19组主机套件、九个父项目目标和三个BringUp构建通过；最终板端三个10秒窗口姿态约1kHz、双路等权、无协议丢样，LSM反馈约60°C。短测不代表精度/闭环/十分钟长测通过。硬件断线和80°C保护仅主机注入，不能主动过热板子。具体配置、SHA、栈水位和GDB结束状态以Docs/Validation.md最新条目为准。
-
-## 板级支撑维护（2026-09-28）
-
-`Board/Support` 仅按 System、IO、Devices、USB 分一层，源码由同目录 `component.cmake` 显式登记；不新增板型层或通用 backend。私有引用带分组路径，Support include 路径仅为 PRIVATE。应用公共函数与类型保持，蜂鸣器/WS2812 固定 GPIO/TIM/DMA 宏收回板级私有头，不支持应用覆盖布线。指示器提示和 worker 位于 `Source/Services/Indicators`，Kernel 仍创建原线程。USB 引脚准备、MCP 默认绑定统一从板级实现取得。维护索引及 IRQ 所有权见 `Board/Support/README.md`；边界审查见 `Docs/BoardSupport.md`。
-
-## 2026-10-03 通信与 IMU 优先策略
-
-目标为每路 CAN 同时 3 kHz RX 与 3 kHz TX，PCB 离线时只能验证软件与构建合同。P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及 UART 的 Serial/RC/Referee/RS485 worker（High7 / 47）。共享 SPI4 分发者保持 Realtime1（49），I2C4 保持 High6（46）。父项目 1..39 不变。CAN 通知使用 index 0，生命周期使用 index 1；NVIC 的 FDCAN1–3、IMU EXTI9_5、SPI4 及其 DMA 为 5；MCP EXTI15_10、五路 UART IRQ 及十路 UART DMA IRQ 为 6。IRQ、队列容量、线程栈和硬件时序进一步改变前需说明影响。软件优化与未验边界见 Docs/Validation/CANRouter-20261002/README.md，最新优先级验证见 Docs/Validation/Priority-20261003/README.md，不将虚拟时间负载测试视为 MCU 吞吐。
-
-
-## 2026-10-03 CAN Classic / FD 启动合同
-
-`SRNOS_SystemConfig.can[4]` 对应 CAN1..4，每控制器在初始化时选择 Classic 或 FD，统一检查注册冲突后复制并冻结，错误恢复沿用该配置，禁止运行期热切换。默认四路 Classic 1 Mbit/s；现有电机/其他 adapter 仅允许 Classic 1 Mbit/s。FD 业务协议由父项目通过 `IO/CAN/FD/CANFD.h` 定义，应用显式配置仲裁速率、数据速率和 BRS。FD 帧长度是精确线长，禁止静默补齐；BRS 是冻结的 TX 策略，RX 保留实际 EXT/BRS/ESI，短 FD 帧不进入 Classic router。
-
-FD 每路 32 条路由、64 个 TX 槽，共 23312 B 静态 D1；Classic 16 B 帧和 59920 B ITCM context 保持。原生 RX 每轮最多 32 帧、分小块搬运以保留 4 KiB worker 栈余量；不新增线程或扩堆。Native FDCAN 改用 PLL2Q 80 MHz（P/R 输出不变），三路 Message RAM 固定窗口从 0/0x300/0x600 word 开始；FD 每路 676 words，Classic 每路 232 words。CAN4 FD FIFO 为 RX16/TX12、64 B，共2016 B。软件支持的位速率不代表本板收发器/布线已通过高速实测。优先级仍为 P0 CAN1/2/3+IMU，P1 CAN4/UART；FD 负载必须另按帧长、BRS和位速率验算，不能将 Classic 3 kHz 收发目标外推到所有 FD 配置。2026-10-03离线证据见 Docs/Validation/CANFD-20261003/README.md；2026-10-06 CAN1/3短接实测Classic8B及FD8M64B各3k收发60秒通过，FD5M64B同档10秒通过，FD4M及以下64B该档过载。RX最小栈余3092 B、双IMU/INS连续1kHz；测试后完整恢复原Flash，不应假设当前板上已有FD固件。完整数据、身份记录/LIS线索和CAN2/4/UART/故障未验边界见 Docs/Validation/CANFD-Board-20261006/README.md。
+根目录与模块指南互相链接，所有示例使用真实公共接口。历史台账见 [迁移索引](Docs/Migration/README.md)，历史验证从 [验证指南](Docs/Validation.md) 进入对应 CHANGELOG。

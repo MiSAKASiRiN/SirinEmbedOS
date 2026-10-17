@@ -1,17 +1,22 @@
 # SystemMonitor
 
-固定 H723 板低优先级监测，默认启用；取代 Diagnostics 采样线程，Indicators 不变。单个 Low / 4096 B 线程每秒采集 ADC 五参数并分批读取线程统计。启动配置 `system_monitor_enabled` 冻结后不支持远程修改；禁用时不启动 ADC、不创建本线程，Fault 元数据及 DWT/调度 trace 仍保持。
+固定 H723 板低优先级监测，默认启用；不与 Indicators 共用线程。单个 Low / 4096 B 线程每秒采集 ADC 五参数并分批读取线程统计。启动配置 `system_monitor_enabled` 冻结后不支持远程修改；禁用时不启动 ADC、不创建本线程，Fault 元数据及 DWT/调度 trace 仍保持。
 
 ## 使用与数据合同
 
 公共头为 `SirinEmbedOS/Services/SystemMonitor.h`。任务上下文调用 `SRNOS_SystemMonitorGetSnapshot()`、`SRNOS_SystemMonitorGetTask(slot, out)`；返回值表示参数/调用上下文合法，健康检查 `flags`、`valid_fields` 和 ADC `state`。返回独立副本，不借出内部指针。任务槽为 1..64；槽号与 generation 共同识别一次任务生命周期，CPU 第一次采样尚无基线。超过 3 秒的缓存清 CPU/ADC 有效位并标过期，旧数值仍保留。
 
 ```c
-SRNOS_SystemMonitorSnapshot s;
-if (SRNOS_SystemMonitorGetSnapshot(&s) &&
-    (s.adc.valid_fields & SRNOS_MONITOR_TEMPERATURE_VALID)) {
-    float mcu_c = s.adc.temperature_c;
-    (void)mcu_c;
+#include <stddef.h>
+#include <SirinEmbedOS/Services/SystemMonitor.h>
+
+bool read_mcu_temperature(float *temperature_c)
+{
+    SRNOS_SystemMonitorSnapshot s;
+    if (temperature_c == NULL || !SRNOS_SystemMonitorGetSnapshot(&s) ||
+        !(s.adc.valid_fields & SRNOS_MONITOR_TEMPERATURE_VALID)) return false;
+    *temperature_c = s.adc.temperature_c;
+    return true;
 }
 ```
 
@@ -31,20 +36,15 @@ ADC 原始 rank 顺序为 PC0 电流、PC2_C 输入电压、MCU 温度、VREFINT
 
 监测输出自身 CPU、采样/快照最长临界区、最大唤醒延迟、跳过周期和槽位溢出计数。10 µs 临界区、0.1% 平均 CPU 是板端验收目标，不是静态代码已证明的保证。首次校准及故障恢复单列，不计稳定阶段平均值。
 
-## 发布与验证
+## 遥测发布与诊断
 
 HostComm 独立编码最新快照，不由监测线程等 USB。流 0x0002 为 128 B ADC/系统记录；0x0001 为每秒最多四条 112 B 线程记录（每条包含系统汇总），64 槽最多 16 次报告轮转。参见 [协议与命令行](../../../Docs/HostLink.md)。采样不依赖订阅，断线丢弃待发送旧报告，不回放积压。
 
-`Tests/Services/SystemMonitor/run_host_tests.sh` 覆盖数值、生命周期、时序和协议；固件/SDK 构建记录见 Docs/Validation.md。已按用户授权完成板端低干扰基准、ADC 正常采集/软件故障注入及 CDC 背压/DTR 重连；详见 [板端记录](../../../Docs/Validation/ManagedTasksBoard-20260928/README.md)。仪表精度、物理 ADC 故障和外部 CAN 负载仍待验证。
-
-全面命名/事件等待后的固件复测见 [SRNOS 板测](../../../Docs/Validation/SRNOSBoard-20260928/README.md)：统计开启时 Monitor 平均约 0.0492%、最长监测临界区 2 µs，四种 ADC 软件注入和 CDC 背压/DTR 重连通过。该临界区指标只覆盖监测/循环统计的被测区域，不代表全系统最长关中断时间。
-
 ## 托管循环快照
 
-线程名为 `SRNOS_Monitor`，仍 Low/4 KiB。任务副本新增 `cycle`，包含独立 sampled/window、生命周期编号、完成数、执行 min/mean/max、启动延迟、周期偏差、miss/skip 和 hook 诊断成本。读取时检查 ACTIVE/MEASURED/PERIODIC/JITTER_VALID/STALE/SATURATED；无周期的事件/相对等待线程不适用抖动。普通框架等待排除，step 内阻塞/抢占/ISR 计入墙钟。采样跨任务分批，不把轮转间隔当实际统计窗口。
+线程名为 `SRNOS_Monitor`，仍 Low/4 KiB。任务副本中的 `cycle`，包含独立 sampled/window、生命周期编号、完成数、执行 min/mean/max、启动延迟、周期偏差、miss/skip 和 hook 诊断成本。读取时检查 ACTIVE/MEASURED/PERIODIC/JITTER_VALID/STALE/SATURATED；无周期的事件/相对等待线程不适用抖动。普通框架等待排除，step 内阻塞/抢占/ISR 计入墙钟。采样跨任务分批，不把轮转间隔当实际统计窗口。
 
-HostComm 增加 0x0003，每秒最多四条 112 B 最新循环明细，64 槽最多 16 秒轮转（连续订阅且链路正常时）；0x0001/0x0002 线格式不变。循环统计开关独立于监测服务；Monitor 关闭时不发布/重置循环窗口，长期累计不是每秒报告，观测开销对照应同时明确两项配置。hook 成本估计和 CPU/临界区验收边界见 Kernel 与 Diagnostics/Runtime。
+HostComm 通过 0x0003 发布，每秒最多四条 112 B 最新循环明细，64 槽最多 16 秒轮转（连续订阅且链路正常时）；0x0001/0x0002 分别发布任务和 ADC 记录。循环统计开关独立于监测服务；Monitor 关闭时不发布/重置循环窗口，长期累计不是每秒报告，观测开销对照应同时明确两项配置。hook 成本估计和 CPU/临界区验收边界见 Kernel 与 Diagnostics/Runtime。
 
 BDMA normal 模式完成后 HAL 将状态置 READY，但可能仍保留 CCR.EN；板级停止流程在 HAL 停止 ADC 后显式关闭专用 BDMA 通道，再读回 ADC/BDMA 均已停用，才允许复用缓冲。未降低停止确认条件。
-
-2026-09-28 仪表约 24 V/0.091 A 单点对照得到 ADC 均值 24.641 V/0.08986 A，错误计数 0；电压偏高约 2.67%，未据此调整标称倍率。仪表未逐点同步，仍需检查分压与参考电源并做多点验证。见 [原始摘要与边界](../../../Docs/Validation/CAN13-ADC-20260928/README.md)。
+维护时在 SDK 根目录运行 `bash Tests/Services/SystemMonitor/run_host_tests.sh`，检查数值、槽生命周期、采样时序和协议编码。每次结果只记录到 [CHANGELOG](CHANGELOG.md)，历史仪表对照和软件故障注入的适用范围见其中的证据链接。

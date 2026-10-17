@@ -29,7 +29,7 @@ cmake --build build/BringUp -j 8
 
 USB 没有枚举或 CDC0 没打开时，仍可通过调试器看快照。CDC1 保持默认 HostLink；本例未声明业务参数，并关闭启动业务参数恢复，因此 `parameter_load_status=OK` 不表示曾成功读取 EEPROM。
 
-示例本身只观测，未添加电机命令、CAN 测试帧、UART 绑定或 EEPROM 写入。SDK 默认固定服务仍会初始化 CAN、共享 SPI、IMU、指示器等；本例通过冻结的 `sensors.heater_enabled=false` 禁止加热（包括恢复路径）；使用正式 INS，本例关闭业务参数启动加载；Storage 与 HostLink 存储命令保留默认启用，启动仍读取身份和 IMU 校准。旧融合/校准入口已替换为当前 Storage/IMUCalibration，主机显式触发保存或校准会写 EEPROM；示例自身不自动写入。原始双 IMU 对比请选择 SensorBringUp，完整姿态验证请选择 INSBringUp。
+示例本身只观测，未添加电机命令、CAN 测试帧、UART 绑定或 EEPROM 写入。SDK 默认固定服务仍会初始化 CAN、共享 SPI、IMU、指示器等；本例通过冻结的 `sensors.heater_enabled=false` 禁止加热（包括恢复路径）；使用正式 INS，本例关闭业务参数启动加载；Storage 与 HostLink 存储命令保留默认启用，启动仍读取身份和 IMU 校准。主机显式触发 Storage/IMUCalibration 保存或校准会写 EEPROM；示例自身不自动写入。原始双 IMU 对比请选择 SensorBringUp，完整姿态验证请选择 INSBringUp。
 
 本例启用 `bringup_indicators=true`：调度前第一灯黄色提交一次、蜂鸣器播放 1/1.5/2 kHz 各 80 ms；调度后原 Indicators 线程每 0.5 秒切换第一灯明灭，完整心跳周期 1 秒，不等待 CAN 或 USB。后续 BringUp 示例沿用这一配置。
 
@@ -37,6 +37,8 @@ USB 没有枚举或 CDC0 没打开时，仍可通过调试器看快照。CDC1 �
 
 板端验收顺序见 [后续开发清单](../../Docs/Development.md)。构建通过与板端实测结果分别记录。
 
-## 托管接口迁移
+## 任务接入
 
-长期应用工作改为托管 step 描述，周期等待由 SDK 负责；观察 srnos_example_create_result 检查创建结果。 旧 ThreadConfig.entry 不再支持；公共创建/停止/删除及同步用法见 Source/Kernel/README.md。本次编译不意味着重新执行板端测试。
+应用使用托管 `step` 回调，周期等待由 SDK 负责。检查 `srnos_example_create_result` 确认任务创建结果；创建、停止、删除与同步对象用法见 [Kernel](../../Source/Kernel/README.md)。
+
+修改与验证记录见 [CHANGELOG](CHANGELOG.md)。

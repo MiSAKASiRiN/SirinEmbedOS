@@ -74,3 +74,5 @@ set(SRNOS_SERVICES_PRIVATE_INCLUDES
   "${_srnos_usb}/Core/Inc"
   "${_srnos_usb}/Class/COMPOSITE/Inc"
   "${_srnos_usb}/Class/CDC_ACM/Inc")
+
+include("${CMAKE_CURRENT_LIST_DIR}/Network/component.cmake")

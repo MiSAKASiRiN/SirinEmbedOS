@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 维护当前使用方式、示例、资源和限制；变更经过与验证结果集中记录于 CHANGELOG。
+
+### 从 README 归档的历史记录
+
+以下保留原记录表述，时间与适用固件以所链接证据为准，不表示本次重新执行验证。
+
+2026-09-29 业务参数的实板保存、软件复位加载、CRC独立读回及原EEPROM恢复通过；随后双IMU校准保存与软件复位加载也已通过（见 [复测](../../../Docs/Validation/StaticThreshold-20260929/README.md)）；真实断电仍未测，见 [板测范围](../../../Docs/Validation/PersistenceBoard-20260929/README.md)。
+
+本轮未烧录，真实断电、EEPROM 与传感器并发、实际保存延迟与上位机协议压力仍需板测。先前驱动板测不能替代新记录格式的掉电验证。
+
+
 ## Unreleased
 
 - 2026-09-29：随静态阈值调整完成真实双IMU记录写入、重复校准revision递增及软件复位校验加载；保留revision2，不恢复旧EEPROM。实现/格式未变，真实断电待测，见 [板测](../../../Docs/Validation/StaticThreshold-20260929/README.md)。

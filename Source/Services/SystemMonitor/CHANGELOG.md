@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 维护当前使用方式、示例、资源和限制；变更经过与验证结果集中记录于 CHANGELOG。
+
+### 从 README 归档的历史记录
+
+以下保留原记录表述，时间与适用固件以所链接证据为准，不表示本次重新执行验证。
+
+`Tests/Services/SystemMonitor/run_host_tests.sh` 覆盖数值、生命周期、时序和协议；固件/SDK 构建记录见 Docs/Validation.md。已按用户授权完成板端低干扰基准、ADC 正常采集/软件故障注入及 CDC 背压/DTR 重连；详见 [板端记录](../../../Docs/Validation/ManagedTasksBoard-20260928/README.md)。仪表精度、物理 ADC 故障和外部 CAN 负载仍待验证。
+
+全面命名/事件等待后的固件复测见 [SRNOS 板测](../../../Docs/Validation/SRNOSBoard-20260928/README.md)：统计开启时 Monitor 平均约 0.0492%、最长监测临界区 2 µs，四种 ADC 软件注入和 CDC 背压/DTR 重连通过。该临界区指标只覆盖监测/循环统计的被测区域，不代表全系统最长关中断时间。
+
+2026-09-28 仪表约 24 V/0.091 A 单点对照得到 ADC 均值 24.641 V/0.08986 A，错误计数 0；电压偏高约 2.67%，未据此调整标称倍率。仪表未逐点同步，仍需检查分压与参考电源并做多点验证。见 [原始摘要与边界](../../../Docs/Validation/CAN13-ADC-20260928/README.md)。
+
+
 ## Unreleased
 
 - 2026-09-28：首次 24 V/0.091 A 仪表单点对照，13 次 ADC 电压均值 24.641 V（+2.67%）、电流 0.08986 A，采样错误 0；未同步仪表，不构成标定。本轮保持换算系数，CAN 稳态压力下 Monitor 快照 CPU 最大 0.0571%、最长临界区 2 µs；见 [记录](../../../Docs/Validation/CAN13-ADC-20260928/README.md)。

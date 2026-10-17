@@ -14,8 +14,17 @@ Studio显示温度、阶段、进度、三轴实际/目标角、记录数量、�
 
 service0x40/message2单路复用，首字节op，所有u32/float32显式小端。0查询能力/状态，1启动（u32任务号+u32配方签名），2查询状态并心跳（u32任务号），3读取记录（u32任务号+u32索引），4保存（u32任务号+两组13个float），5取消保持（u32任务号）。启动不会自动重发；相同任务号不能重启。状态体88字节`<9I9f4I>`；记录100字节`<2I23f>`。具体字段顺序以calibration_job.hpp及插件turntable.py交叉测试为准。保存仅接受当前任务Result状态且24条记录齐全，延后到HostCmd写EEPROM，不阻塞1ms控制。返回5个u32为saved_mask、两个StorageStatus、两个revision；错误/超时不自动重试，查询最终状态。service0x40/message1旧停止命令在本版本也只请求取消保持。
 
-应用仍一个1ms周期线程/3072字节栈；在同线程推进任务和采样统计，增加约3KiB静态记录，通信与控制间使用有界原子快照。新增校准EEPROM工作复用已有HostCmd，未新增线程或更改HAL。
+应用仍一个1ms周期线程/3072字节栈；在同线程推进任务和采样统计，使用约3KiB静态记录，通信与控制间使用有界原子快照。校准EEPROM工作复用 HostCmd，不另建线程。
 
-## 验证边界
+## 主机打包示例
 
-固件编译、INS兼容/应用测试、任务配方/预热门控/断连保持/部分保存测试，及插件求解、坏数据不保存、协议和GUI测试通过。物理运动全流程与新校准精度仍需现场运行确认，不能以模拟数据拟合通过代替实机标定。
+以下只生成查询能力请求正文，不打开串口、不启动运动：
+
+```python
+import struct
+query_payload = struct.pack("<B", 0)  # service 0x40 / message 2 的正文
+status_format = "<9I9f4I"
+assert struct.calcsize(status_format) == 88
+```
+
+完整帧仍由 HostLink 编解码器封装并校验应答；不要把正文直接发送为串口帧。物理全流程、系数精度及每次修改的验证结果见 [CHANGELOG](CHANGELOG.md)，模拟数据拟合不能替代实机标定。

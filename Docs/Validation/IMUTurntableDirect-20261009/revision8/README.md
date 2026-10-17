@@ -1,13 +1,29 @@
-# revision8：临时ID1速度环旁路
+# revision8 证据阅读指南
 
-用户要求绕过其他电机及ID1回零，只运行相近参数的ID1速度环，现场观察停滞。
+逐个 revision/run 匹配控制参数、保护开关、镜像和运动范围；堵转、故障归零、恢复承重和完成全行程必须分开判断。不能用后一版本覆盖前一版本失败证据。
 
-新增speed_only.hpp，app_main.cpp选用SpeedOnlyController及revision8。原control.hpp未改，保留三轴revision7。ID1静止反馈等待2秒后，从当前位置直接以+54°/s运行速度PI，Kp/Ki=100/100，控制速度由编码器差分加20ms低通得到，电压极性-1、上限±30000、双向斜率40000raw/s。不做位置环、回零或虚拟轨迹。ID2/3始终零指令且不影响就绪/停机，原始反馈继续可读，未控制轴的展开位置和速度标为无效。
+## 阅读顺序
 
-超速停机继续关闭；ID1反馈失效、65°C、周期10ms、CAN命令过期20ms、95%输出持续3秒净位移不足0.6°和STOP保留。旁路堵转不读取位置目标。固件运行240秒后归零，本轮主机计划120秒后STOP，实际先堵转结束。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-固件编译、烧录与.text比对通过，没有运行本机测试。run7约15.85秒：从raw5446起步，跨零旋转后停在4078，满输出-30000，高输出3秒净位移0，Fault7/axis1。ID2/3全程电压指令0。ID3保持重力机械限位约4045，没有抬升。停止角度与原三轴运行约3794不同，不能视为相同负载姿态的严格对照；但绕过回零与位置环后仍复现停滞。
+本目录常用入口：
 
-用户现场反馈：电机自己停下，没有观察到奇怪阻碍；停机后再次转动是用户手动确认是否卡住。因此故障后原始编码器的大幅变化不作为自主运动数据。
+- [sha256.txt](sha256.txt)
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [analysis.json](analysis.json)
+- [build.log](build.log)
+- [capture.log](capture.log)
 
-GDB确认Stalled、inhibit7和三轴command0，detach后CDC再次确认零指令与锁存。探针、串口已释放；复位将重新启动ID1旁路。完整二进制流、ELF在build/IMUTurntable27/board/run7*。本轮只验证旁路运行与复现现象，尚未确定根因。
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableDirect-20261009/revision8/summary.json
+rg --files Docs/Validation/IMUTurntableDirect-20261009/revision8
+```
+
+当前实现或测试用法见[接入说明](../../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

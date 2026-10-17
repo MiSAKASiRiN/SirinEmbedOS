@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 按当前使用方式、示例和约束组织；不在使用文档追加版本战报。
+
 ## Unreleased
 
 - 2026-09-28：FreeRTOS trace 入口位于私有 `trace_internal.h`，父项目不再包含 Trace 或内核头。公开任务/循环观测统一经 SystemMonitor 副本接口；Watch/时间自维护符号全部采用 SRNOS 命名，已有记录 magic 和结构值保留。 本轮主机/构建范围见 `Docs/Validation/SRNOSBoundary-20260928/README.md`；未重新烧录。

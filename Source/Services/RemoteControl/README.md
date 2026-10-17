@@ -1,11 +1,27 @@
-# RemoteControl
+# 遥控输入与仲裁
 
-本模块的公共接口位于 Include/SirinEmbedOS 对应能力目录；硬件接线由 Board/Support 持有。
+公开头位于 `SirinEmbedOS/Services/RemoteControl/`。DR16/VT03 接收由 SDK Serial 绑定和 `SRNOS_RC` worker 驱动；父项目在启动配置中声明 UART 用途及 `remote` 选择，示例见 [PrototypeBindings](../../../Examples/PrototypeBindings/README.md)。绑定在启动后冻结，应用不要自行轮询同一接收器或操作 HAL UART。
 
-## 托管线程
+## 读取示例
 
-SRNOS_RC 接入托管单轮与相对 1 ms 等待，解码与仲裁行为保留。 当前 SRNOS_RC 为 P1（High7 / 47），与 CAN4/Serial 同级，低于 P0 CAN1/2/3 和 IMU/INS；栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+```c
+#include <SirinEmbedOS/Services/RemoteControl/RemoteControl.h>
 
-## 公开接口
+bool read_remote(SRNOS_RC_State *out)
+{
+    if (out == NULL) return false;
+    SRNOS_RC_GetSnapshot(out);
+    const SRNOS_RC_Status status = SRNOS_RC_GetStatus();
+    return status.online && !status.blocked;
+}
+```
 
-DR16、VT03 与仲裁接口统一使用 `SRNOS_*`，公开头位于 `Services/RemoteControl/`，不依赖 HAL/CMSIS/FreeRTOS。设备协议值和映射不变，Serial 通道由启动配置冻结，父项目只通过公开状态和仲裁 API 使用输入。旧头及名称已删除；迁移说明见 `Docs/SDKMigration.md`。
+快照与状态是两次独立查询，不是联合原子事务；控制侧还需按自身安全要求检查新鲜度、来源和使能条件。返回不可用时不要继续使用上次输出。开关先检查 `s_valid_mask`，通道使用 `SRNOS_RC_CH_*` 枚举；`idle`/`sticks_idle` 不等于应用已经停车。应用优先读取副本，不把公开的 volatile 调试状态作为跨字段一致快照。
+
+源更新、Tick 和协议解码由 worker 持有；不从业务任务并发调用这些写入接口。自定义映射及仲裁需在配置阶段明确设置，并核对具体遥控器的物理通道。
+
+## 调度与诊断
+
+`SRNOS_RC` 为优先级 47、3072 B 栈，采用相对 1 ms 等待；普通等待不计入循环统计，解码内 I/O、抢占和中断计入墙钟。状态查询可检查 `active_src`、`last_ok_ms`、各来源在线情况及 `blocked`；协议帧计数可通过 [Watch](../../Diagnostics/Watch/README.md) 查看。
+
+Serial 通道与并发约束见 [Serial](../../IO/Serial/README.md)。历史修改及验证结果见 [CHANGELOG](CHANGELOG.md)，设备在线、通道映射和安全动作仍需在实际接收器上分别验证。

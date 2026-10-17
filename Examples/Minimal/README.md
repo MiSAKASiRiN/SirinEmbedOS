@@ -29,7 +29,7 @@
 
 只实现一份 ApplicationMain/ApplicationConfigure，不复制另一个 main 或再次启动调度器。旧 ThreadConfig.entry 已删除；一般业务代码通过 SDK 使用通知、Delay/DelayUntil 和同步对象，不再直接调用 FreeRTOS/CMSIS API，也无需统计 hook。默认 32 KiB 应用池由线程栈和同步对象共用，数量与容量限制见 Kernel 文档。
 
-根 [接入示例](../../README.md#父项目接入) 说明 CMake 子模块接入；[板测记录](../../Docs/Validation/ManagedTasksBoard-20260928/README.md) 记录已执行的正常 Release 与专用测试固件验证。本示例应用源码保持心跳行为；新增 SDK FD 能力未重新烧录或板测。
+根 [接入示例](../../README.md#父项目接入) 说明 CMake 子模块接入；[板测记录](../../Docs/Validation/ManagedTasksBoard-20260928/README.md) 记录已执行的正常 Release 与专用测试固件验证。本示例应用源码仅提供心跳；构建成功不代表 CAN FD 或其他硬件能力已验收。
 
 ## CAN 启动模式
 
@@ -50,3 +50,18 @@ void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 该片段只配置硬件模式。FD 业务协议由父项目通过 `SirinEmbedOS/IO/CAN/FD/CANFD.h` 定义，初始化注册订阅、运行期提交 one-shot；每路固定 32 个订阅/64 个 TX 槽在 D1 BSS，不新建系统线程。FD 长度只允许 0..8、12、16、20、24、32、48、64 B；TX BRS 必须符合配置，RX 保留真实 BRS/ESI。现有电机等 adapter 只支持 Classic 1 Mbit/s，不能注册到 FD 通道。完整合同与原始收发示例见 [CAN](../../Source/IO/CAN/README.md#启动模式与-fd-接口) 和 [CANFD 示例](../CANFD/README.md)。
 
 P0 CAN1/2/3＋IMU/INS、P1 CAN4＋UART、共享 SPI49/IMU 优先保持。上述 1 Mbit/s＋4 Mbit/s 仅为配置示例，不保证 64 B 下每路 3 kHz RX＋3 kHz TX；需按帧长和总线开销验算，并在 PCB 在线后验证位时序、吞吐与延迟。
+
+## 静态 IPv4 接入
+
+`SystemConfig.network` 默认关闭，预置 `192.168.1.50/24`、无网关；上层开启 `ethernet.enabled` 和 `network.enabled` 后可在启动阶段覆盖地址/掩码/网关及四个 UDP 端口。支持 UDP 和单播 Ping，ARP 为其提供邻居发现；其余网络协议关闭。网络开启后原始 Ethernet Send/Receive 返回 `SRNOS_ETHERNET_OWNED`。独立 Network worker 为优先级 15、6 KiB 栈，每轮显式等待 5 ms，保守追加 7 KiB heap 预算；固定队列和 lwIP 8 KiB 堆位于静态 D1。详见 SDK `Source/Services/Network/README.md` 和公共 `Services/Network.h`。
+
+## 构建示例
+
+在 SDK 根目录运行：
+
+```sh
+cmake --preset Debug
+cmake --build --preset Debug
+```
+
+产物为 `build/Debug/SirinEmbedOS.elf`。运行后检查 `srnos_example_create_result` 与递增的 `sirinos_minimal_heartbeat`；具体板端结果见 [CHANGELOG](CHANGELOG.md)。

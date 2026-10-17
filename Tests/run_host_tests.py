@@ -7,7 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SUITES = (
     "Examples/IMUTurntableBringUp", "Core", "Kernel", "Algorithms/Control", "Algorithms/Math", "Algorithms/Power",
-    "IO/CAN/FD", "IO/CAN/Router", "IO/CAN/Native", "IO/CAN/External", "IO/SPI", "IO/I2C", "Devices/EEPROM", "Devices/MCP2518FD", "Devices/Motors", "Devices/IMU", "Devices/Sensors", "Services/Indicators", "Serial", "Services/HostLink/Codec",
+    "Services/Network", "IO/Ethernet", "IO/CAN/FD", "IO/CAN/Router", "IO/CAN/Native", "IO/CAN/External", "IO/SPI", "IO/I2C", "Devices/EEPROM", "Devices/MCP2518FD", "Devices/Motors", "Devices/IMU", "Devices/Sensors", "Services/Indicators", "Serial", "Services/HostLink/Codec",
     "Services/HostLink", "Services/Parameters", "Services/Parameters/HostLink",
     "Services/Storage", "Services/Telemetry", "Services/Logging", "Services/USB", "Services/IMUTelemetry", "Services/INS", "Services/SystemMonitor",
 )

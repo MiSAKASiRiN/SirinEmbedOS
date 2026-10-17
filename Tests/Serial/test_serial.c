@@ -91,6 +91,14 @@ extern SRNOS_SystemResult SRNOS_SystemFreeze(const SRNOS_SystemConfig *);
 static SRNOS_StepResult dummy_task(void *p,const SRNOS_ThreadWake *w){(void)p;(void)w;return SRNOS_STEP_CONTINUE;}
 static void test_system_config(void){
  SRNOS_SystemConfig config;SRNOS_SystemConfigDefaults(&config);
+ assert(!config.network.enabled && config.network.address[0]==192 && config.network.address[1]==168 &&
+        config.network.address[2]==1 && config.network.address[3]==50 && config.network.netmask[2]==255);
+ config.network.enabled=true;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.ethernet.enabled=true;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_OK);
+ config.network.address[3]=255;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);
+ config.network.address[3]=77;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_OK);
+ config.network.enabled=config.ethernet.enabled=false;
+
  assert(config.serial_count==0&&SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_OK);
  assert(SRNOS_SystemGetConfig()==NULL&&!SRNOS_SystemConfigurationFrozen());
  config.remote.dr16_port=SRNOS_SERIAL_USART6;assert(SRNOS_SystemValidate(&config)==SRNOS_SYSTEM_INVALID);

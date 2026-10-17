@@ -10,13 +10,13 @@ Python 3 + pyserial；必须显式指定 CDC1。安装、运行与完整协议�
 python3 -m venv build/hostlink-venv
 build/hostlink-venv/bin/pip install -r Tools/HostLink/requirements.txt
 build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
-  --port /dev/cu.usbmodem355C343932333 \
+  --port CDC1_PATH \
   --warmup 120 --duration 600 \
   --output captures/static-01 \
   --note "板子固定静置，加热关闭，环境可能轻微振动"
 ```
 
-端口是本机此前 CDC1 路径，运行前核对当前枚举；不要选择 CDC0 日志口，也不要同时运行 monitor/其他串口程序。预热 120 秒也保存，随后测量 600 秒，总计约 12 分钟；已经预热可省略 `--warmup`。`--duration 0` 持续采集到 Ctrl-C。不修改固件、不写 EEPROM、不控制加热或重新配置传感器，预热只是记录阶段标记。
+`CDC1_PATH` 替换为当前枚举的 CDC1 设备路径；不要选择 CDC0 日志口，也不要同时运行 monitor/其他串口程序。预热 120 秒也保存，随后测量 600 秒，总计约 12 分钟；已经预热可省略 `--warmup`。`--duration 0` 持续采集到 Ctrl-C。不修改固件、不写 EEPROM、不控制加热或重新配置传感器，预热只是记录阶段标记。
 
 输出目录必须不存在，不会覆盖旧数据；省略 `--output` 时自动创建 `captures/imu-UTC时间/`。默认 captures 已从 Git 忽略；十分钟双 1 kHz 的 CSV 加原始字节应预留数百 MB 磁盘空间。
 
@@ -91,8 +91,10 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
 
 system_monitor.py 订阅任务 0x0001、ADC 0x0002 和循环 0x0003；旧固件对新增流返回 NOT_FOUND 时继续已有两条流，其余错误正常报错。循环显示墙钟 min/mean/max、抖动/延迟、miss/skip、hook 估计成本、实际窗口和数据年龄；事件任务周期字段不适用。JSONL 保存原字段及有效位，metadata 记录实际支持的流。完整线格式和命令见 Docs/HostLink.md；不开启自动重连，不把主机到达时间当采样时间。
 
-## 2026-09-28 板端验证
+## 协议与工具边界
 
-SystemMonitor SAMPLE 帧使用 kind=2、service=4、message=2；流 ID 位于 payload，循环流 0x0003 不是 message=3。板端已验证三条流接收和 DTR 重连。
+SystemMonitor SAMPLE 帧使用 kind=2、service=4、message=2；流 ID 位于 payload，循环流 0x0003 不是 message=3。
 
 现有 CLI 用于 IMU/INS/监测接收和保存，不提供参数编辑、身份写入或静态校准触发命令。SOURCE V2、CONFIG 01–0A 是固件接口，不能把协议已实现理解为这些 CLI 已有对应界面。实现上位机时以 [当前协议](../../Docs/HostLink.md) 和 [存储设计](../../Docs/Storage.md) 为准。
+
+修改、采集结果与重连验证记录见 [CHANGELOG](CHANGELOG.md)。

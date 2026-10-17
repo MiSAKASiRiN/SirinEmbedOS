@@ -19,4 +19,4 @@ cmake --build build/ManagedBoard-On -j8
 
 `cdc_exercise.py --port <CDC1> --output <新目录>` 订阅三条监测流和五条传感器流，正常读取、停读 12 秒、恢复读取、拉低 DTR 5 秒并重连。只修改遥测订阅，不改变采样频率。输出 JSONL 和完成元数据；必须同时检查板端 `SRNOS_DebugHostLink.qos` 的 coalesced/drop_old 才能确认实际发生背压。该测试不是物理 USB 拔插。
 
-具体板端结果和未测边界见 `Docs/Validation/ManagedTasksBoard-20260928/README.md`。仪表精度对照、外部 CAN 持续负载、真实 ADC 硬件故障及长时间压力需要额外实验。
+具体板端结果和未测边界见 [CHANGELOG](CHANGELOG.md) 及[证据阅读指南](../../../Docs/Validation/ManagedTasksBoard-20260928/README.md)。仪表精度对照、外部 CAN 持续负载、真实 ADC 硬件故障及长时间压力需要额外实验。

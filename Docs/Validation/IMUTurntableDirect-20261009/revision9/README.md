@@ -1,11 +1,29 @@
-# revision9：ID1堵转归零后重试三次
+# revision9 证据阅读指南
 
-按用户要求，仅临时单轴旁路加入堵转重试：首次运行后最多3次，合计4次加电。每次沿用原3秒高输出且净位移不足0.6°的堵转判据，先零输出3秒，清零PI积分与电压斜率状态，再应用+54°/s速度PI。第四次堵转锁存Fault7。反馈、温度、时序、STOP等其他故障不重试，ID2/3全程零指令。phase21表示运行，22表示3秒零输出间隔，revision9。原三轴控制器不变。
+逐个 revision/run 匹配控制参数、保护开关、镜像和运动范围；堵转、故障归零、恢复承重和完成全行程必须分开判断。不能用后一版本覆盖前一版本失败证据。
 
-增量编译、烧录、.text比对完成，未运行本机测试。run9实测四次加电均未通过停滞位置：各次运行末raw依次4085、4085、4084、4084，每次电压均到-30000；零输出后回到约4066。三个间隔实测3.000013、3.000017、3.000987秒，间隔所有已采集电压指令均0。每次重启指令从近0开始，没有沿用旧积分造成满输出跳变。每段加电约7.29秒，完整过程约40秒。
+## 阅读顺序
 
-电机温度反馈从34°C升至最终约48°C；四次电流反馈最小值分别约-15180、-14674、-14388、-14256raw。电流保留原始单位，不据此直接换算安培或判定电机内部限流。各源时间独立，phase跳变附近可能读到前一反馈样本，见原始采样。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-GDB确认retry_count=3、Stalled、inhibit7、三轴command0；detach后CDC再次确认三轴零指令，探针和串口释放。重启会再次执行这套有限重试流程。ELF与二进制流在build/IMUTurntable27/board/run9*。
+本目录常用入口：
 
-同次工作前的run8使用原revision8固件重复测试，未改代码/编译/烧录；从raw5540跨零后停在4085，输出-30000后3秒净位移1raw归零。原始记录在build/IMUTurntable27/board/run8*。
+- [sha256.txt](sha256.txt)
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [analysis.json](analysis.json)
+- [build.log](build.log)
+- [capture.log](capture.log)
+
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableDirect-20261009/revision9/summary.json
+rg --files Docs/Validation/IMUTurntableDirect-20261009/revision9
+```
+
+当前实现或测试用法见[接入说明](../../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

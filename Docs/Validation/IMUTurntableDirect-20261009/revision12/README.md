@@ -1,9 +1,29 @@
-# revision12：三次54°/s独立起步
+# revision12 证据阅读指南
 
-用户明确表示没有做其他调整，要求再试三次慢速。仅将临时ID1序列改为54°/s运行15秒→零输出3秒，共三次；首次也是慢速，无快速档。每段重置PI积分和输出斜率，其他PID/滤波/电压上限/堵转条件不变，ID2/3始终零输出。编译、烧录、.text比对通过，没有运行本机测试。
+逐个 revision/run 匹配控制参数、保护开关、镜像和运动范围；堵转、故障归零、恢复承重和完成全行程必须分开判断。不能用后一版本覆盖前一版本失败证据。
 
-run12约57.04秒，三段均完整15秒，无堵转。排除起步2秒后的平滑速度均值分别53.914、53.899、53.928°/s；各运动段净圈数2.225、2.227、2.228（不含零输出后的惯性位移）。三段最大电压指令绝对值分别3276、3586、3161，远低于30000。温度反馈全程35°C。三个零输出间隔实测2.999989、2.998968、3.000017秒，采集的指令均0，间隔末原始rpm均0。
+## 阅读顺序
 
-GDB读回completed_segments3、stalled_segments_mask0、faultNone、inhibit0、三轴command0；detach后CDC确认phase24、fault0与三轴零输出。探针、CDC已释放，复位会再执行三次慢速。完整rx.bin、ELF在build/IMUTurntable27/board/run12*。
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-这轮未复现此前的低速停滞，不能据此声称故障根因已找到或提高速度永久修复。用户没有其他调整的陈述已记录，不将未知原因归结为用户改变硬件。
+本目录常用入口：
+
+- [sha256.txt](sha256.txt)
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [analysis.json](analysis.json)
+- [build.log](build.log)
+- [capture.log](capture.log)
+
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableDirect-20261009/revision12/summary.json
+rg --files Docs/Validation/IMUTurntableDirect-20261009/revision12
+```
+
+当前实现或测试用法见[接入说明](../../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

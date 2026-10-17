@@ -10,6 +10,7 @@ set(SRNOS_SUPPORT_COMPONENT_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/IO/can_board.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/IO/can_native_board.c"
     "${CMAKE_CURRENT_LIST_DIR}/IO/i2c_board.c"
+    "${CMAKE_CURRENT_LIST_DIR}/IO/ethernet_board.c"
     "${CMAKE_CURRENT_LIST_DIR}/IO/serial_board.c"
     "${CMAKE_CURRENT_LIST_DIR}/IO/spi_board.c"
     "${CMAKE_CURRENT_LIST_DIR}/System/fault_handlers.c"

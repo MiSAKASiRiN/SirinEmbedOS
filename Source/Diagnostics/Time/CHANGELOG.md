@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 维护当前使用方式、示例、资源和限制；变更经过与验证结果集中记录于 CHANGELOG。
+
+### 从 README 归档的历史记录
+
+以下保留原记录表述，时间与适用固件以所链接证据为准，不表示本次重新执行验证。
+
+本轮为源码命名与依赖隔离，接口/构建检查见 `Docs/Validation/SRNOSBoundary-20260928/README.md`；没有新增板端验证。
+
+Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。实测仅CAN1/CAN4短接，CAN2/3/UART同时满载与物理故障尚未覆盖；原Flash恢复并释放探针。详见 [最终验证与原始证据](../../../Docs/Validation/CAN4-Optimization-20261006/README.md)。
+
+
 ## Unreleased
 
 - 2026-10-06：完成CAN4优化后的联合板测。 Classic目标3×60s＋600s通过，最高十秒CPU53.9632%，IMU保护线通过；FD格式/负载/恢复、资源及原Flash恢复见 [最终记录](../../../Docs/Validation/CAN4-Optimization-20261006/README.md)。

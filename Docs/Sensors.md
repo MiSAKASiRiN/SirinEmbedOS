@@ -1,14 +1,14 @@
 # 2613 传感器与共享总线合同
 
-驱动提供识别、配置回读、持续采样、状态与统计。融合和安装坐标变换由独立 [INS 服务](INS.md) 提供；磁航向、高度和用户标定尚未实现。板端证据及未通过项见 [Validation.md](Validation.md)。2026-09-27 短测已识别四颗器件，双 IMU 持续采样；较早的 LSM 离线记录保留在历史验证条目中，不代表当前结果。精度及长时间稳定性仍未验收。
+驱动提供识别、配置回读、持续采样、状态与统计。融合和安装坐标变换由独立 [INS 服务](INS.md) 提供；磁航向、高度解算不属于本驱动。IMU 用户校准的保存、加载与应用由 INS/IMUCalibration 管理，Sensors 快照保持器件原始轴向和未应用用户校准的测量。实际精度和稳定性需按目标固件测量，历史证据入口为 [Validation](Validation.md)。
 
 ## 配置与公开 API
 
-公共头为 `SirinEmbedOS/Devices/Sensors.h`。在 `SRNOS_ApplicationConfigure()` 中设置 `config->sensors`，系统检查并复制后冻结；恢复仅用冻结配置。默认四颗传感器采样及正式 [INS](INS.md) 服务启用。BMI 始终发布未用户校准的器件坐标数据，不再有 RAW/legacy 分支。SensorBringUp 设置 `ins.enabled=false`，保留原始采样与统一温控。加热统一由 INS worker 控制：`heater_enabled=true`、`heater_target_c=60` 默认，目标允许20..75°C。反馈 LSM 优先、BMI 回退；低于目标10°C满功率，附近连续 PI，80°C保护及75°C以下5秒恢复详见 INS 合同。`SRNOS_SensorGetHeaterStatus` 仍提供一致状态副本。
+公共头为 `SirinEmbedOS/Devices/Sensors.h`。在 `SRNOS_ApplicationConfigure()` 中设置 `config->sensors`，系统检查并复制后冻结；恢复仅用冻结配置。默认四颗传感器采样及正式 [INS](INS.md) 服务启用。BMI 始终发布未用户校准的器件坐标数据，不提供 RAW/legacy 模式选择。SensorBringUp 设置 `ins.enabled=false`，保留原始采样与统一温控，且不会取消 INS worker 或相关静态缓冲。加热统一由 INS worker 控制：`heater_enabled=true`、`heater_target_c=60` 默认，目标允许20..75°C。反馈 LSM 优先、BMI 回退；低于目标10°C满功率，附近连续 PI，80°C保护及75°C以下5秒恢复详见 INS 合同。`SRNOS_SensorGetHeaterStatus` 仍提供一致状态副本。
 
 `imu_observer` / `imu_observer_user` 在配置阶段声明并冻结，完整 BMI/LSM 样本发布后调用一次。回调参数仅在调用期间有效，需自行复制；回调在对应任务（BMI P0 / 48、LSM SPI dispatcher Realtime1 / 49）执行，禁止等待、打印或编码整包 USB 数据。SDK 提供静态缓存适配 `SRNOS_IMUTelemetryObserve`，接入见 [HostLink.md](HostLink.md)。
 
-| 器件 | 固定绑定 | 首版配置 | 任务周期 |
+| 器件 | 固定绑定 | 固定采样配置 | 任务周期 |
 |---|---|---|---|
 | BMI088 | SPI4，ACC PE4 / GYRO PA0 | 保持已有量程、ODR | 默认 1 ms |
 | LSM6DS3TR-C | SPI4，PD5，PD6 保留但不启用数据中断 | ±4g、±2000 dps、1.66 kHz、BDU、自增、无 FIFO | 默认 1 ms |
@@ -27,6 +27,26 @@
 
 LIS 多字节读设置 SUB[7]，磁场六字节与温度两字节分别读取；实板不采用从磁场起始地址直接连续读八字节的方法。SPA 读取本颗芯片全部 21 字节工厂系数并符号扩展，包含 c31/c40；补偿属于基础驱动，不是用户校准。
 
+## 应用读取示例
+
+```c
+#include <stddef.h>
+#include <SirinEmbedOS/Devices/Sensors.h>
+
+bool read_bmi_gyro(float output_rad_s[3])
+{
+    SRNOS_IMUSample sample;
+    if (output_rad_s == NULL ||
+        !SRNOS_SensorGetIMU(SRNOS_SENSOR_BMI088, &sample) ||
+        sample.header.state != SRNOS_SENSOR_READY ||
+        !(sample.header.valid_fields & SRNOS_SENSOR_GYRO)) return false;
+    for (unsigned i = 0; i < 3; ++i) output_rad_s[i] = sample.gyro_rad_s[i];
+    return true;
+}
+```
+
+从应用任务读取，不调用驱动 Poll 或重新初始化总线。上例返回 SENSOR 轴 rad/s；需要机器人轴/校准后数据时使用 INS 快照。控制器应按自身要求再检查序号和时间，不能把重复读取同一份副本当成新样本。
+
 ## SPI4 所有权与调度
 
 所有同步/异步调用共用 IO 层唯一队列和 DMA 通路。固定八个静态请求槽：四个 IMU、四个共享事务；同类 FIFO。正在传输的命令及数据不抢占且保持同一 CS；IMU 优先，最多连续四笔后服务一笔等待的低层请求，低层内最多四笔 CAN4 后服务一笔普通事务。MCP 每笔寄存器事务重新参与仲裁，不跨 CAN drain 循环占用 SPI。
@@ -44,16 +64,16 @@ LIS 多字节读设置 SUB[7]，磁场六字节与温度两字节分别读取；
 
 ## 线程、内存与 I²C
 
-SPI dispatcher Realtime1 / 49 / 3 KiB；BMI P0 / 48 / 2 KiB、LSM P0 / 48 / 2 KiB；MCP RX/TX 各 P1 / 47 / 4 KiB。LIS/SPA 共用 Normal/2 KiB 线程，等待芯片转换时释放 I²C，不增加每器件线程。新增线程与八个完成信号已计入保守启动预算；请求及采样 buffer 静态分配，采样循环不分配内存。RTOS 线程/信号资源仍在启动时从 heap_5 创建。
+SPI dispatcher 为 Realtime1 / 49 / 3 KiB；BMI 与 LSM 均为 P0 / 48 / 2 KiB；CAN4 收发共用一个 P1 / 47 / 4 KiB worker。LIS/SPA 共用 Normal / 24 / 2 KiB 环境线程，等待芯片转换时释放 I²C。线程与同步对象计入保守启动预算，请求及采样 buffer 静态分配，采样循环不分配内存；RTOS 线程/信号资源在启动时从 heap_5 创建。
 
-I²C4 复用原 High6/3 KiB 回调线程作为唯一分发者，LIS/SPA 各有一个保留槽，EEPROM 等后台有两个槽。周期类优先，最多连续四个周期事务后放行一个等待后台事务。活动事务不可抢占、单笔最多 64 B；EEPROM 自行将读写/校验限制为 32 B，内部写周期不占总线。环境任务使用 30 ms 完成信号量等待，另一个设备占用总线不再使提交立即 BUSY。所有权、取消、期限与统计见 [I2C 模块说明](../Source/IO/I2C/README.md)。共享负载板测见 [验证记录](Validation/I2C-20260928/README.md)，板端断线/卡 SDA/掉电恢复仍未验收。
+I²C4 使用 High6 / 46 / 3 KiB 回调线程作为唯一分发者，LIS/SPA 各有一个保留槽，EEPROM 等后台有两个槽。周期类优先，最多连续四个周期事务后放行一个等待后台事务。活动事务不可抢占、单笔最多 64 B；EEPROM 自行将读写/校验限制为 32 B，内部写周期不占总线。环境任务使用 30 ms 完成信号量等待，另一个设备占用总线不再使提交立即 BUSY。所有权、取消、期限与统计见 [I2C 模块说明](../Source/IO/I2C/README.md)。共享负载板测见 [验证记录](Validation/I2C-20260928/README.md)，板端断线/卡 SDA/掉电恢复仍未验收。
 
 ## 来源
 
-新驱动按数据手册实现，未引入新的嵌套仓库或上游库：
+器件配置与换算依据：
 
 - [ST LSM6DS3TR-C 数据手册](https://www.st.com/resource/en/datasheet/lsm6ds3tr-c.pdf)
 - [ST LIS2MDL 数据手册](https://www.st.com/resource/en/datasheet/lis2mdl.pdf)
 - [SPA06-003 原厂手册镜像](https://files.seeedstudio.com/wiki/Grove-Barometer_Sensor-SPA06-003/res/Datasheet.PDF)
 
-当前 BMI/LSM 仍由周期 worker 发起采样，经 SPI4 完成通知/回调交付；LSM EXTI9_5 虽配置为 NVIC 5，尚未用于采样唤醒，本轮未引入 DRDY 驱动。
+当前 BMI/LSM 仍由周期 worker 发起采样，经 SPI4 完成通知/回调交付；LSM EXTI9_5 虽配置为 NVIC 5，未用于采样唤醒；不能按 DRDY 驱动的时间合同使用。

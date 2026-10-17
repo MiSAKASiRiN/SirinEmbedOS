@@ -1,7 +1,20 @@
 # 导航与视觉 CAN 适配
 
-包含 `SirinEmbedOS/Devices/NaviVision/NaviVision.hpp`，使用 `SRNOS::Devices::Navi`、`Vision` 及对应状态和 CAN 装配函数；帧为 `SRNOS::Devices::CANFrame`。默认 ID/超时编译宏使用 `SRNOS_NAVI_*`、`SRNOS_VISION_*`。
+公共头为 `SirinEmbedOS/Devices/NaviVision/NaviVision.hpp`，类型位于 `SRNOS::Devices`。`Navi` 接收速度协议，默认标准 ID 为 `0x401`；`Vision` 接收从 `0x300` 开始的 14 个目标槽。ID、字段与缩放以公共头中的协议定义为准。
 
-父项目持有适配对象并显式接入 CAN router，按快照判断在线、目标出现和数据有效性；本模块不创建业务线程，不触发运动或射击。移除旧全局 Navision 别名。
+对象由父项目持有，在配置阶段注册到 Classic CAN Router；注册后不更改接收 ID，生命周期覆盖路由使用期。模块不创建业务线程，不触发运动或射击。以下为导航接入片段：
 
-协议和数值保持，已完成公开头独立/实现编译的本模块检查；外部设备互通与控制策略需板端验证。
+```cpp
+#include "SirinEmbedOS/Devices/NaviVision/NaviVision.hpp"
+#include "SirinEmbedOS/Kernel/Thread.h"
+static SRNOS::Devices::Navi navi;
+
+// 在 ApplicationConfigure 中调用并检查结果；CAN1 必须配置为 Classic。
+int register_navi() { return SRNOS::Devices::Navi_AttachCan(1, &navi); }
+bool read_fresh_navi(SRNOS::Devices::NaviState& out) {
+    if (!navi.snapshot(out) || !out.is_navi_online) return false;
+    return (uint32_t)(SRNOS_TimeMs() - out.last_rx_ms) <= 30u;
+}
+```
+
+Navi 的在线标志不代替应用的年龄检查；上例 30 ms 是业务示意阈值。Vision 由 adapter 推进超时，消费者仍检查每个目标的 `is_appear`，不能仅以 `fire` 字段直接触发动作。外部互通与控制策略需要实机验收；验证方法见 [验证指南](../../../Docs/Validation.md)。

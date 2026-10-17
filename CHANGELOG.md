@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased — SDK 使用文档整理
+
+- 2026-10-17：统一文档职责：各级 `CHANGELOG.md` 记录修改原因、日期、验证结果及历史结论；README 和专题文档描述当前用法、配置、示例与限制。规则写入 `AGENTS.md`，重建根入口与 Docs 导航，新增独立 [QuickStart](QuickStart.md)，提供可完整构建的父项目、周期任务及资源查询示例。
+- 模块、示例、工具及专题说明按现有公共 API 核对，修正旧 include 路径、线程数量/优先级、传感器校准归属及检查命令。47 份历史验证报告逐字归档至对应 CHANGELOG；原验证总索引归档时仅修正相对链接，原始日志、数据和固件哈希保留。
+- 离线验证：QuickStart 父项目和 Minimal Debug 固件均完整编译链接通过；95 个公共头的 166 个 C11/C++17 检查单元、49 个模块/专题示例编译单元、QuickStart 资源片段与结构检查通过；两条 HostLink 字节样例与编码器一致并成功回解。237 份 Markdown 的本地链接和锚点检查通过。
+- 与整理前基线比较，1844 个非 Markdown 文件哈希全部一致；本次仅修改文档。PCB 离线，未连接、烧录或进行板端测试。
+
+## Unreleased — UDP 接收事件锁存
+
+- 2026-10-17：按端口提供启动冻结的纯接收选择器，支持最新值替换及幂等事件锁存；普通 UDP 默认行为保持。锁存事件跨排队期限和断线保留至消费，SDK 不解析底盘协议。配置/状态结构扩展，使用方需整体重编译；不改 PHY、DMA、线程优先级和周期。真实协议栈主机回归及父项目 STOP→CAN 软件集成验证见 Network 文档与父项目 `Docs/Validation/2026-10-17-StopLatch/README.md`；PCB 离线，未烧录或板测。
+
+## Unreleased — 静态 IPv4
+
+- 2026-10-14：固定 lwIP 2.2.1 / IPv4+ARP+UDP+ICMP，默认 IP 192.168.1.50/24；网络、可选网关和 UDP 端口由上层启动配置冻结。Network 单线程持有协议栈和二层收发，不改变 MCO/RMII/DMA/IRQ。新增 6 KiB 栈、7 KiB heap 预算及约 22 KiB 静态 D1；明确排队期限、link epoch 和原始接口所有权。主机/构建及父项目板测记录见 Network 文档。
+
+
+## Unreleased — Ethernet 二层接入
+
+- 2026-10-13 板测：无运动测试固件 100 Mbps 全双工二层回显 14+600 帧全部通过，连续窗口约 66 s，零超时/内容错误，MCU 64.88..66.56°C；94 公共头/12 SDK 目标和父工程 Debug/Release 通过。SDK 主机 30/31 套通过，已有转台断言在基础提交复现；正常底盘并发、线速、物理拔线恢复与长期热平衡未验。
+
+- 2026-10-13：新增 Ethernet 冻结配置、LAN8720A 链路管理、原始帧 API 与低优先级 worker；ETH IRQ 7、D2 DMA 新增 9216 B，现有时钟/MPU/生成区不变。默认关闭，父项目显式开启；详见 Source/IO/Ethernet 文档与父工程实测记录。
+
 ## Unreleased — CAN 时间基准修复
 
 - 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。
@@ -291,3 +313,60 @@
 - 当前基础链接脚本尚未接入 SDK 的 DMA/BDMA 专用内存段；ADC3 BDMA 缓冲的 SRAM4/D3 放置与初始化需要后续实现。
 - ETH、SD 初始化函数已生成，但未由 `main()` 自动调用；ADC3 尚未执行校准与启动采样。
 - 当前 Board CMake 是独立板级固件工程，尚未完成供父项目引入的 SDK target 接入。
+
+## 历史记录归档：原根 README 与 AGENTS
+
+以下为整理前的阶段记录，保留当时的配置、结论与未验边界，不代表当前板上状态；当前用法见 README 与 QuickStart。
+
+已完成主机测试和固件编译链接。用户首次板端调试确认可进入 RUNNING 并采到 IMU 数据，同时发现启动事件屏障误判导致复位循环；源码已修复，随后直接连接及一次软件复位复测未再现旧断言，IMU 数据持续更新；完整外设和压力验收仍待完成。当前验证结果和待测项见 [验证记录](Docs/Validation.md)。
+
+2026-09-28 全面命名与事件等待改造后已重新烧录：两组统计开关对照、托管任务生命周期、ADC 软件故障注入及 CDC 背压/DTR 重连通过。统计开销约 0.99 个百分点，接近目标边界；当时实际 CAN 负载、串口、仪表精度和长期压力仍未验收。当前证据见 [SRNOS 板端记录](Docs/Validation/SRNOSBoard-20260928/README.md)，后续功能缺口与优化顺序见 [开发清单](Docs/CHANGELOG.md#当前底层开发与优化优先级)。
+
+2026-09-28 曾完成 CAN1↔CAN3 外接负载短测并修复通知 weak 链接错误：合计 8000 帧/s 全部交付，但整板 CPU 95.21%，业务余量不足；CAN2/CAN4 与故障恢复仍待测。ADC 24 V 仪表单点读到均值 24.641 V，保持标称倍率待进一步核对。详见 [早期实测](Docs/Validation/CAN13-ADC-20260928/README.md)。
+
+2026-10-03 按每路 CAN 同时 3 kHz RX＋3 kHz TX 目标优化：P0 CAN1/2/3＋BMI/LSM/INS 为 48，P1 CAN4＋UART 服务为 47，SPI4 共享依赖为 49、事务优先 IMU；直接任务通知、冻结路由少复制、MCP 减少重复 SPI 事务，并修复原生 RX 满环竞争、Bus-Off 接入与电机反馈并发。公共 CAN API、八个收发线程、栈/队列容量保持；电机对象私有布局变化，父项目须重新编译。当时 PCB 离线，仅验证软件及构建，见 [优化记录](Docs/Validation/CANRouter-20261002/README.md) 与 [当前优先级验证](Docs/Validation/Priority-20261003/README.md)。
+
+随后接入四路独立的启动期 Classic/FD 选择，默认仍为 Classic 1 Mbit/s；新增公开 FD 原始订阅/one-shot API，业务协议由应用定义。原生 FDCAN 改用 80 MHz 及按模式检查的固定 Message RAM 窗口，MCP 使用 16 RX＋12 TX 的 64 B FD FIFO；P0/P1保持；CAN4优化后合并为一个4KiB服务，CAN总计七个worker。原生 RX 每轮最多处理 32 帧、每次搬运 4 帧，避免 64 B 帧批次挤占回调栈。FD 配置、长度、资源和离线限制见 [CAN](Source/IO/CAN/README.md)；历史 Classic 实测不能证明新时钟/FD 运行效果。
+
+2026-10-06 已完成当前优化/FD固件的 CAN1↔CAN3 板测：356格式用例通过；Classic8B和FD8M64B各3k收＋3k发持续60秒、零数据错误/接收丢帧，整板CPU32.00%和35.13%，FD5M64B同档10秒通过；FD4M及以下64B同档受带宽/仲裁限制。双IMU/INS保持1kHz；LIS采样率、身份记录与未测四路/故障边界见 [完整报告](Docs/Validation/CANFD-Board-20261006/README.md)。本次结束恢复测试前的原固件并完整读回校验，未将测试镜像留板。
+
+2026-10-06优化前的CAN1↔CAN4共享SPI基线：Classic双向各2k时CPU约91.5%，各3k请求因生产周期不足未达标；FD5M及8M对齐测试在64B各3k时出现MCP硬件RX溢出。双IMU/INS保持1kHz。默认FD8M首帧失败，测试中将CAN1仲裁采样点对齐到80%后功能通过，生产配置仍待修正；见 [CAN4/SPI实测](Docs/Validation/CAN4-SPI-20261006/README.md)。
+
+2026-10-06 CAN4单服务/SPI序列优化已完成：Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。原测试前Flash已恢复，优化代码未永久留板。详细边界、资源、原始结果和恢复证明见 [最终验收](Docs/Validation/CAN4-Optimization-20261006/README.md)。
+
+CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`，设备反馈时间可以直接与应用任务时间比较；不与 HAL/DWT 原点混用。MSwerve 实战修复与验证见 [CAN 时间基准记录](Docs/Validation/CANClock-20261012/README.md)。
+
+2026-09-29 已完成持久化板测，并按实测噪声提高静态校准阈值：连续两次双IMU校准保存成功，软件复位后revision2加载一致、INS未校准标记清除。当前保留新固件及校准记录，见 [阈值复测](Docs/Validation/StaticThreshold-20260929/README.md)。参数事务和未处理的遥测吞吐结果见 [初轮板测](Docs/Validation/PersistenceBoard-20260929/README.md)；真实断电、校准绝对精度仍待验收。
+
+- 实际板级目录为 `Board/`。需要生成 HAL 时优先运行 `python3 Board/generate.py`，可从任意工作目录使用该脚本的绝对路径调用；脚本根据自身位置定位当前 checkout，不依赖开发者机器上的固定工程路径。
+- 脚本通过系统进程调用 CubeMX `-q <脚本文件>`，命令依次为 `config load "<当前checkout的IOC绝对路径>"`、`project generate`、`exit`，工作目录固定为 `Board/`。macOS CLI 实测不能依赖 `cwd` 解析相对 IOC 路径，否则 `-q` 也可能弹出找不到 IOC 的错误窗口。macOS 默认查找 `/Applications/STMicroelectronics/STM32CubeMX.app/Contents/MacOS/STM32CubeMX`，也支持 `--cubemx <可执行文件>`、环境变量 `STM32CUBEMX` 或 PATH 中的 `STM32CubeMX`。`--dry-run` 只打印计划，`--timeout` 设置生成超时（默认300秒）。
+- 每次实际执行先将 Board 内容备份到根 `build/cubemx/<时间戳-唯一后缀>/Board-before`（排除 build、.idea、__pycache__），同目录保存实际 `.mx`、生成日志、时序检查日志和变化文件清单。脚本不自动回滚、不构建、不烧录、不操作调试器；生成失败仍保留现场与快照供比较。已有 `Board/generate.mx` 是原始手工脚本，含本机绝对路径，日常使用 `generate.py`。
+- 不能仅凭进程退出码宣称成功：核对 `project generate` 的 `OK` 和生成内容。脚本会检查退出码/成功标记，并运行 `Tools/Debug/check_i2c_timing.py`，要求 IOC、生成的 I2C4 TIMING 和 Support 常量一致。不要为消除检查失败而盲目同步常量，应先核对时钟、滤波、时序及此前板测依据。
+- 生成后与本次快照比较，检查 USER CODE、SDK 自维护 CMake/Support/Linker、HAL/CMSIS、工具链和中断所有权，保留原有未提交修改；再进行对应固件构建，涉及生成清单或构建接入时运行 `Tests/Build/check_sdk.py`。生成、编译与板端验证分别报告，不覆盖当前调试会话所用 ELF。
+- 2026-09-28 本机 CubeMX 6.18.1 / DB.6.0.181 使用该 CLI 路径成功生成，原始调用仅将 `hi2c4.Init.Timing` 更新为已板测的 `0x10C7182D`，407 个 USER CODE 区域完整保留。实际版本以运行日志为准，macOS bundle 曾显示过期的6.13。后续仍检查实际差异，不假定每次只改一行；记录见 `Docs/Validation/CubeMX-20260928/README.md`。
+- 用户明确要求仅修改 IOC、不要 Generate 时遵从该范围；已授权的生成工作无需重复询问。Generate 不隐含授权重新烧录或接管用户暂停现场。
+
+- 从当前工具列表确认 `mcp__clion__*` / `xdebug_*` 或 `execute_tool` 是否实际可调用；只有配置条目不代表当前会话已加载。优先使用原生 MCP 工具，必要时可用本地 HTTP 做握手和工具枚举诊断。
+- 在 CLion 的 Settings → Tools → MCP Server 开启服务，并通过 Codex Auto-Configure 或 Copy HTTP Stream Config 获取实际地址；核对 `~/.codex/config.toml` 中的配置，更新后重启/重新加载客户端。不要把端口写成永久固定事实。
+- 2026-09-26 本机实测 CLion 2026.2.3 的地址为 `http://127.0.0.1:64362/stream`；旧配置 `64342` 无监听。此为排查线索，下次仍需检查当前监听与握手。
+- 调试工具依赖 Debugger MCP Toolset。若使用 router-only 模式，确认 `execute_tool` 可用，并按需从 Settings → Tools → AI Assistant → Skills 将 `clion-debugger` 安装到 Codex (Global)；不要只搜索 `xdebug_*` 就断定没有调试能力。
+- 先读调试状态并选择正确会话，再读寄存器、栈和变量。表达式求值不自动等于只读：避免调用目标函数、带赋值的表达式或会产生副作用的外设寄存器读取。
+
+- 使用明确的可执行文件绝对路径，先核对已安装版本和符号链接。2026-09-26 本机最高已安装版本为 `/Applications/SEGGER/JLink_V896/JLinkGDBServerCLExe`，GDB 为 `/opt/homebrew/bin/arm-none-eabi-gdb`；`/Applications/SEGGER/JLink` 当时指向旧 V6.12j，不能据通用路径假定版本最新。“本机最高已安装版本”不等于官网最新发布。
+- 本次实测目标参数为 `STM32H723VG`、SWD、4000 kHz。再次连接仍需核对 IOC、探针、目标电压和实际硬件；多探针时显式选定探针，不自动操作第一个设备。
+- 已授权连接且无其他会话占用时，可参考本次服务器参数：`-device STM32H723VG -if SWD -speed 4000 -port 2331 -localhostonly 1 -noir -nohalt`。这些参数避免服务器主动初始化寄存器/暂停，但不能保证后续 GDB attach 不暂停或完全无扰动；端口也须先检查占用。
+- 不通过猜测的帮助参数探测 J-Link 行为：V8.96 的 `-help` 实测被忽略并进入连接流程。先读对应版本文档，未知参数可能不会阻止程序继续操作探针。
+- GDB 使用 `-nx` 避免隐式加载用户初始化命令。先加载对应 ELF 符号，再 attach；加载符号与 `load` 烧录是两回事。检查构建缓存的 `SIRINEMBEDOS_EXAMPLE`、构建类型和产物路径，不能仅凭 `SirinEmbedOS.elf` 文件名判断是 BringUp。
+- 对现场 ELF 保留原文件，不在取证期间覆盖；修复构建使用独立目录。可先以 `compare-sections .isr_vector` 和 `compare-sections .text` 核对板上代码，这只证明所比较段匹配，不代表整份镜像或全部运行时数据一致。
+- 保持一个持久 GDB 会话；优先硬件断点，记录并清理本次新增断点，不删除用户原有断点。使用 `bt 8` 等有界调用栈及 `set backtrace limit`；本机 GDB 对当前优化固件曾出现重复展开帧，不能直接据此断定真实递归或栈损坏，应结合 SP、反汇编和原始栈核对。
+- 首次采集 PC/LR/SP、当前任务、PRIMASK/BASEPRI、Fault 状态、HAL/Kernel tick 和系统启动状态。需要判断是否推进时，在已授权范围内继续一段时间再暂停对比；tick 回退应考虑复位循环，不能把多次停在 `HAL_Delay` 直接判为延时死锁。
+- retained Fault 记录可能来自前次复位。结合当前 PC、活动 Fault 标记、记录内容及断点复现区分历史记录与当前异常；记录序号本身不足以证明发生时间。保留日志中的 ELF、工具版本、取样值和执行动作。
+
+2026-09-26 用户首次板端记录已确认 RUNNING/IMU 初步运行，同时定位到启动事件屏障将成功返回 `0x3` 误判失败而复位。两处等待已改为错误位检查加所需位掩码；13 组主机套件和修复版 Debug/Release 构建通过，修复后板端尚待复测。前文“未烧录”的迁移基线描述不再代表最新硬件观测，具体以 `Docs/Validation.md` 文末为准。不得主动操作用户保留的暂停调试会话。
+
+18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；连续窗口、SHA、结束状态均以 `Docs/Validation.md` 最新条目为准。
+
+
+## 2026-10-03 CAN Classic / FD 启动合同
+
+FD 每路 32 条路由、64 个 TX 槽，共 23312 B 静态 D1；Classic 16 B 帧和 59920 B ITCM context 保持。原生 RX 每轮最多 32 帧、分小块搬运以保留 4 KiB worker 栈余量；不新增线程或扩堆。Native FDCAN 改用 PLL2Q 80 MHz（P/R 输出不变），三路 Message RAM 固定窗口从 0/0x300/0x600 word 开始；FD 每路 676 words，Classic 每路 232 words。CAN4 FD FIFO 为 RX16/TX12、64 B，共2016 B。软件支持的位速率不代表本板收发器/布线已通过高速实测。优先级仍为 P0 CAN1/2/3+IMU，P1 CAN4/UART；FD 负载必须另按帧长、BRS和位速率验算，不能将 Classic 3 kHz 收发目标外推到所有 FD 配置。2026-10-03离线证据见 Docs/Validation/CANFD-20261003/README.md；2026-10-06 CAN1/3短接实测Classic8B及FD8M64B各3k收发60秒通过，FD5M64B同档10秒通过，FD4M及以下64B该档过载。RX最小栈余3092 B、双IMU/INS连续1kHz；测试后完整恢复原Flash，不应假设当前板上已有FD固件。完整数据、身份记录/LIS线索和CAN2/4/UART/故障未验边界见 Docs/Validation/CANFD-Board-20261006/README.md。

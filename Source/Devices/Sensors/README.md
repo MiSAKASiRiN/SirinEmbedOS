@@ -1,25 +1,30 @@
 # 固定传感器采集
 
-本目录负责固定 LSM6DS3、LIS2MDL、SPA06 的寄存器初始化、转换及采集，并接入 BMI088 驱动；公开接口为 `SirinEmbedOS/Devices/Sensors.h`。任务装配在 Kernel，板级绑定及坐标关系在 Board/Support。姿态融合和恒温控制属于 INS 服务。完整数据、状态与初始化合同见 [Sensors](../../../Docs/Sensors.md)。
+本目录负责 LSM6DS3、LIS2MDL、SPA06 的寄存器、转换及采集，并接入 BMI088 驱动。应用只包含 `SirinEmbedOS/Devices/Sensors.h`；任务装配由 Kernel 管理，硬件绑定与坐标关系由 Board/Support 管理，姿态融合和恒温控制由 INS 服务管理。配置和数据单位见 [Sensors 指南](../../../Docs/Sensors.md)。
 
-BMI/LSM 通过 SPI4 dispatcher 采集。LIS/SPA 共用 Normal / 2 KiB Environment 线程，默认 10 ms 轮询；器件只有数据就绪才发布样本，实际输出频率不等同于轮询频率。
+BMI/LSM 通过 SPI4 采集，默认 1 ms 周期、优先级 48。LIS/SPA 共用优先级 24、2 KiB 栈的环境任务，默认 10 ms 轮询；器件数据就绪才发布样本，输出频率不等于轮询频率。
 
-LIS/SPA 的 I2C4 请求使用各自保留槽，在 EEPROM 背景读写期间可以排队。寄存器读写使用 30 ms 完成信号量等待，覆盖总线的周期排队期限和活动期限。不会因为 EEPROM 正占用总线立即判为设备离线；真正 NACK、超时或硬件错误仍走原有离线/重初始化路径。同一传感器地址不能从其他任务绕过设备层访问。
+LIS/SPA 在 I2C4 各有保留槽，使用 30 ms 完成等待覆盖排队与传输；EEPROM 占用总线时可以排队。真正的 NACK、超时或硬件错误进入离线/重初始化流程，其他任务不能绕过设备层访问相同地址。
 
-测试：`bash Tests/Devices/Sensors/run_host_tests.sh`（转换、寄存器状态机及 worker），共享总线调度测试位于 `Tests/IO/I2C`；EEPROM 整片压力下的采样连续性见 [板端记录](../../../Docs/Validation/I2C-20260928/README.md)。
+## 读取样本
 
-## 板级边界
+以下任务侧片段取得调用者拥有的快照，检查状态、字段和采样时间。时间阈值由业务选择，不能仅凭系统 RUNNING 判断样本可用。
 
-固定绑定与坐标关系移入 Board/Support/Devices；采样与发布路径保持；当前总线策略为 IMU 优先、低层 CAN4/普通请求有界防饥饿。
+```c
+#include "SirinEmbedOS/Devices/Sensors.h"
+#include "SirinEmbedOS/Kernel/Thread.h"
 
-## 托管线程
+bool read_bmi(SRNOS_IMUSample *sample) {
+    const uint32_t needed = SRNOS_SENSOR_ACCEL | SRNOS_SENSOR_GYRO;
+    if (!SRNOS_SensorGetIMU(SRNOS_SENSOR_BMI088, sample)) return false;
+    if (sample->header.state != SRNOS_SENSOR_READY ||
+        (sample->header.valid_fields & needed) != needed) return false;
+    const uint64_t now_us = SRNOS_TimeUs();
+    return now_us >= sample->header.acquisition_end_us &&
+           now_us - sample->header.acquisition_end_us <= 2000u;
+}
+```
 
-BMI/LSM/环境采样拆为单轮和私有等待，统一 SRNOS_ 名称；保持周期超期重置及 BMI DMA 等待。 BMI/LSM 当前为 P0 / Realtime（48），与 CAN1/2/3、INS 同级；环境任务优先级、栈、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+`SRNOS_SensorGetBMI088SPIStatistics()` 返回两颗片选的 SPI 统计副本，不要求包含驱动私有头。采样 observer 在配置阶段注册，只能有界复制或通知，不能在高优先级采样路径打印或阻塞。
 
-## 公开依赖与观测
-
-公共接口只含 SDK 类型，固定 BMI088 寄存器、初始化和 SPI 片选移为私有实现。父项目通过 `SRNOS_SensorGetBMI088SPIStatistics()` 获得两颗片选的 SPI 统计副本，不引用驱动私有头；其他采样快照与频率保持。名称/路径迁移见 `Docs/SDKMigration.md`。
-
-## 共享SPI压力观测（2026-10-06）
-
-CAN1/CAN4短接的Classic/FD真实负载，包括CAN4 RX FIFO溢出的过载窗口，双IMU与INS仍保持1kHz，INS missing/missed无增长。测试observer逐样本统计完成间隔和采集耗时，未改变驱动、优先级或温控；具体峰值、环境传感器与未测边界见 [实板报告](../../../Docs/Validation/CAN4-SPI-20261006/README.md)。此结果不是CAN4吞吐、温稳或姿态精度验收。
+采样单轮和等待由 Kernel 托管；普通等待不计入 step，处理中的 I/O、抢占和中断计入墙钟。主机回归在 SDK 根执行 `bash Tests/Devices/Sensors/run_host_tests.sh`，共享总线回归位于 `Tests/IO/I2C`。硬件连续性、温稳和姿态精度应分别验收，历史结果在 [CHANGELOG](CHANGELOG.md)，分层方法见 [验证指南](../../../Docs/Validation.md)。

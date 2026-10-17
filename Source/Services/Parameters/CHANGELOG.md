@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 文档整理
+
+- README 维护当前使用方式、示例、资源和限制；变更经过与验证结果集中记录于 CHANGELOG。
+
 ## Unreleased
 
 - 2026-09-29：补充持久化总览和完整参数线协议入口；明确 index、stable_id、layout_hash 和存储归属的区别，运行行为不变。

@@ -17,4 +17,4 @@ cmake --build build/CANThroughput -j8
 
 仅在 `SRNOS_TestCAN.phase == 3` 时取完整结果；测试窗口内不要暂停调试器。无接收、bus-off 或排空后仍待发会中止后续阶段。固件阶段结束后停止发送，不循环重跑；测试后恢复原正常固件。该测试不涵盖 CAN2/CAN4、物理断线、bus-off 恢复、所有 ID/数据位填充组合或外部仪器线速测量。
 
-2026-09-28 已完成稳态九阶段测试并恢复正常固件；结果及原始计数见 [验证记录](../../../Docs/Validation/CAN13-ADC-20260928/README.md)。8000 帧/s 的 CPU 95.21%，不能将无损短测解释为真实应用有足够运行余量。
+实际负载与 ADC 测量结果见 [CHANGELOG](CHANGELOG.md) 及[证据阅读指南](../../../Docs/Validation/CAN13-ADC-20260928/README.md)。

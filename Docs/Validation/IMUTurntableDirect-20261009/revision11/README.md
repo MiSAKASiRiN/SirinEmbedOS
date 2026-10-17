@@ -1,18 +1,29 @@
-# revision11：快慢交替两轮
+# revision11 证据阅读指南
 
-ID1单轴旁路从稳定反馈开始，108°/s 15秒→零3秒→54°/s 15秒→零3秒，重复两轮。PID100/100、20ms控制速度低通、电压±30000与斜率40000raw/s不变；每次重启清空PI和电压斜率状态，不回零、无位置环/虚拟轨迹。ID2/3全程零指令。若堵转则提前结束当前档、零3秒后继续下一档；其他反馈/温度/时序/STOP故障锁存。完成四档及最后间隔后phase24保持零输出，capture.py增加complete_zero完成状态。
+逐个 revision/run 匹配控制参数、保护开关、镜像和运动范围；堵转、故障归零、恢复承重和完成全行程必须分开判断。不能用后一版本覆盖前一版本失败证据。
 
-增量编译、烧录、.text比对通过，未运行本机测试。本次约74.97秒采集，四档均完整15秒，没有提前堵转。各档排除起步2秒后的平滑速度均值、运动档编码器净圈数如下（不包含零输出后的惯性位移）：
+## 阅读顺序
 
-| 档 | 目标°/s | 平均速度°/s | 圈数 | 最大电压指令绝对值 |
-|---|---:|---:|---:|---:|
-| 快1 | 108 | 107.881 | 4.459 | 4733 |
-| 慢1 | 54 | 53.929 | 2.226 | 3118 |
-| 快2 | 108 | 107.976 | 4.462 | 5758 |
-| 慢2 | 54 | 53.918 | 2.224 | 3399 |
+1. 先读[历史报告与结果表](CHANGELOG.md)，核对日期、固件版本、接线、窗口和未覆盖项。
+2. 按报告引用的镜像 SHA、manifest/summary、日志与原始数据复核；中间版本单独比较。
+3. 新验证使用独立输出目录，并在对应 `CHANGELOG.md` 追加结果；本说明只维护方法。
 
-四个间隔实测约3秒，全部已采集电压指令为0，间隔末原始rpm均0；第一次间隔结束前约两秒编码器已静止，因此不是高速余速直接带入慢速。温度反馈全程36°C。零输出时电机反馈与phase/command不是原子同步，转换边界以各自时间戳理解。详见alternating-summary.json。
+本目录常用入口：
 
-GDB确认completed_segments=4、stalled_segments_mask=0、phase24、faultNone、inhibit0、三轴command0。detach后CDC再次确认完成零输出，释放探针和CDC。原始流和ELF保存在build/IMUTurntable27/board/run11*。复位会再次执行该交替序列。
+- [sha256.txt](sha256.txt)
+- [summary.json](summary.json)
+- [after-detach.json](after-detach.json)
+- [alternating-summary.json](alternating-summary.json)
+- [analysis.json](analysis.json)
+- [build.log](build.log)
 
-此次证明高速运行后，停稳再以54°/s启动也能重复正常转动，不支持54°/s必然堵转的解释；不能据此确认此前停滞根因或排除间歇硬件/负载因素。未执行原三轴整套运动。
+## 离线查看示例
+
+从 SDK 根目录执行；下面命令只读取归档，不连接板卡或改写证据。
+
+```sh
+python3 -m json.tool Docs/Validation/IMUTurntableDirect-20261009/revision11/summary.json
+rg --files Docs/Validation/IMUTurntableDirect-20261009/revision11
+```
+
+当前实现或测试用法见[接入说明](../../../../Examples/IMUTurntableBringUp/README.md)。新测量须重新核对当前源码、镜像与硬件；归档中的暂停、烧录、写 EEPROM 或运动命令不是本页的自动执行步骤。

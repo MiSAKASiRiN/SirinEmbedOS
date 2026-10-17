@@ -25,7 +25,7 @@ STATE flags 的 bit0 为 dirty、bit1 为 saved_valid、bit2 为 Parameters 存�
 
 SAVE/LOAD 的回复仍为 layout_hash/count/ParametersStatus；BUSY、CONFLICT、存储错误映射到对应 HostLink 状态。关闭启动配置 `host_link_storage_enabled` 时 SAVE/LOAD 返回 UNSUPPORTED_MESSAGE，RAM WRITE 和只读查询仍可使用。注册表与权限冻结，不接受任意地址或系统资源写入。
 
-`bash Tests/Services/Parameters/HostLink/run_host_tests.sh` 覆盖旧协议读写/事务原子性、SAVE/LOAD 延后、存储禁用、状态/身份/稳定 ID 分页与非法长度。EEPROM 格式和落盘合同见 [Parameters](../README.md) 与 [Storage](../../Storage/README.md)；本轮未烧录。
+`bash Tests/Services/Parameters/HostLink/run_host_tests.sh` 覆盖旧协议读写/事务原子性、SAVE/LOAD 延后、存储禁用、状态/身份/稳定 ID 分页与非法长度。EEPROM 格式和落盘合同见 [Parameters](../README.md) 与 [Storage](../../Storage/README.md)。
 
 ## 交互顺序
 
@@ -37,3 +37,16 @@ SAVE/LOAD 的回复仍为 layout_hash/count/ParametersStatus；BUSY、CONFLICT�
 参数结果码：0 OK、1 ERROR、2 INVALID_PARAM、3 NOT_FOUND、4 DUPLICATE、5 NO_SPACE、6 TYPE_MISMATCH、7 OUT_OF_RANGE、8 BUFFER_TOO_SMALL、9 PARSE_ERROR、10 EEPROM_ERROR、11 EEPROM_BUSY、12 BAD_DATA、13 LAYOUT_MISMATCH、14 CRC_ERROR、15 NOT_INITIALIZED、16 LOCKED、17 READ_ONLY、18 CONFLICT、19 TIMEOUT、20 DISABLED、21 CONTEXT_ERROR。它与外层 HostLink status 及 IDENTITY 的 StorageStatus 不同。
 
 CONFIG 0x09/0x0A 属于独立 IMU 静态校准处理器，不是业务参数命令；参数 SAVE 不会触发校准或改 PCB 序列号。完整 [消息总表与 COBS 帧](../../../../Docs/HostLink.md)、[EEPROM 数据及启动流程](../../../../Docs/Storage.md)。
+
+
+## 请求正文示例
+
+以下仅为 CONFIG 请求正文；外层仍需按 [HostLink](../../../../Docs/HostLink.md) 添加消息种类、序号、长度、CRC 并 COBS 封帧：
+
+```text
+SCHEMA (message 0x01): 00 00 04   # cursor=0，请求至多4项
+READ   (message 0x02): 01 00 00   # count=1，读取当前目录index=0
+STATE  (message 0x06): <空正文>   # 查询dirty和当前/已保存代次
+```
+
+只有 SCHEMA 证明 index=0 存在后才发送上述 READ。序号由主机为会话分配，读取响应时检查外层状态码，再按返回类型解码；不能把示例正文原样写到串口。WRITE 的 layout_hash 和字段类型必须来自本次目录查询，不能复制其他固件的固定字节串。

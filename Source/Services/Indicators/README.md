@@ -1,13 +1,29 @@
 # 指示器服务
 
-内部服务通过 `indicators_internal.h` 供 Kernel 调用；父项目通过 SRNOS_Buzzer* / SRNOS_WS2812* 业务接口使用设备，初始化与 worker 接口为 SDK 私有。`SRNOS_IndicatorsPrepare` 在 HAL 完成、配置冻结后、调度前只调用一次，经板级初始化取得蜂鸣器结果。bringup 关闭时仍初始化设备、清灯并服务蜂鸣器队列；开启时第一灯提交黄色一次，依次播放 1000/1500/2000 Hz 各 80 ms。初始化/输出失败计数而不阻止启动；DWT 等待保留有界自旋。
+SDK 负责固定蜂鸣器/LED 初始化、启动提示与心跳；应用通过公共 `SRNOS_Buzzer*`、`SRNOS_WS2812*` 接口使用设备，不重复创建 worker 或调用私有 `indicators_internal.h`。
 
-Indicators worker 仍为 Low/1024 B，按蜂鸣器下一音符截止点与 500 ms 心跳截止点等待；没有待办工作时永久阻塞。新音符/停止请求通知唤醒，不占父项目任务通知。心跳每 500 ms 翻转一次，DMA busy 时等待下次循环，延迟唤醒不补发。`SRNOS_IndicatorsState` 仍供调试器观测；硬件初始化及 DMA1 Stream0/1 入口位于 Board/Support/Devices。服务不重新领取硬件或新增线程。
+## 使用示例
 
-主机测试覆盖提示关闭、重复 prepare、失败、busy 和延迟调度；编译和计数不证明实际声光正常。
+在已有配置入口设置 `config->bringup_indicators = false` 可关闭启动灯效与提示音；设备仍初始化，蜂鸣器队列仍被服务。应用任务中提交一个有限音符：
 
-## 托管线程
+```c
+#include <SirinEmbedOS/Devices/Buzzer/Buzzer.h>
 
-SRNOS_Indic 接入托管单轮及事件/截止时间等待，灯效/蜂鸣器/心跳语义保留。只有心跳已到期但 LED DMA 仍 busy 时使用 1 tick 重试。 栈、优先级、资源所有权和常驻线程数保留。私有等待适配由 Kernel 驱动；普通等待不计入 step，处理期间 I/O/抢占/中断计入墙钟。统计不能替代板端时序验收。详见根文档及 Source/Kernel/README.md。
+SRNOS_BuzzerStatus play_notice(void)
+{
+    const SRNOS_BuzzerNote note = { .freq_hz = 1500, .dur_ms = 80 };
+    return SRNOS_BuzzerEnqueue(note);
+}
+```
 
-主机测试新增空闲无限等待、音符期限、500 ms 心跳、ISR/任务唤醒和时钟回绕。实板声光节奏与 CPU 降幅待验证，本轮未烧录。
+检查返回值，队列满时由应用决定丢弃或稍后重试；不要在控制周期等待整段旋律。ISR 使用明确的 `EnqueueFromISR`/`FlushFromISR`。蜂鸣器和 LED 的详细合同见 [Buzzer](../../Devices/Buzzer/README.md)、[WS2812](../../Devices/WS2812/README.md)。
+
+## 调度与资源
+
+`SRNOS_Indic` 使用优先级 8、1024 B 栈，按下一音符或 500 ms 心跳截止点等待；无待办时无限等待，新请求通过通知唤醒。到期但 LED DMA busy 时一个 tick 后重试，延迟唤醒不补发积压心跳。普通等待不计入循环执行统计，处理内中断/抢占计入墙钟。
+
+启用启动提示时，第一灯提交黄色，依次播放 1000/1500/2000 Hz 各 80 ms；初始化/输出失败只计数，不阻止启动。硬件与 DMA 接线在 Board/Support/Devices。`SRNOS_IndicatorsState` 可用于匹配 ELF 的调试器观测，编译与计数不能代替实际声光验收。
+
+## 诊断
+
+在 SDK 根目录运行 `bash Tests/Services/Indicators/run_host_tests.sh`，检查提示开关、重复准备、输出失败/busy、截止时间、唤醒和时钟回绕。修改及历史验证见 [CHANGELOG](CHANGELOG.md)。

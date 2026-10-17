@@ -5,8 +5,12 @@
 ```cpp
 #include "SirinEmbedOS/Services/Telemetry.hpp"
 static SRNOS::Telemetry::Value<float> temperature{"motor.temperature", "C", 1000};
-// 业务 step 内：采样时间由实际采样点提供，单位 µs。
-// temperature.Publish(measured_temperature, sampled_us, sensor_valid);
+// 在业务 step 取得新样本后调用；sampled_us 来自实际采样时刻。
+SRNOS_TelemetryResult publish_temperature(float value, uint64_t sampled_us, bool valid)
+{
+    if (temperature.Status() != SRNOS_TELEMETRY_OK) return temperature.Status();
+    return temperature.Publish(value, sampled_us, valid);
+}
 ```
 
 只支持 `float`、`int32_t`、`uint32_t`、`bool`，模板拒绝其他类型。`Status()` 查询登记结果；`Publish(value, sample_time_us, valid=true)` 返回 SDK 结果。对象应为静态生命周期，不能复制；不要在业务 step 中构造。名字、单位和描述由 SDK 有界复制，目录最多 32 项，名称最长 63 字节且唯一、单位最长 15 字节。`maxHz` 为 5～1000 Hz、步进 5，是主机允许订阅的上限，不是自动采样定时器。
@@ -15,7 +19,7 @@ C 使用 `SRNOS_TelemetryDescriptor`、`SRNOS_TelemetryRegister(&descriptor, &ha
 
 Publish 仅允许冻结后的任务上下文，ISR 与非运行调度状态返回 CONTEXT。它只在短临界区内复制一个标量、64 位采样时间、有效位并递增 32 位序号；不分配、不扫描目录、不等待、不写日志/设备、不唤醒 HostComm。首次发布前序号为 0 且无效；无效发布保留调用者的值和时间，不能被解释为新有效测量。序号允许无符号回绕，断连期间仍可独立发布。多次发布覆盖旧值，不提供无损历史缓存。
 
-HostComm 在自己的截止点逐项取副本并编码，编码不持目录临界区；不同变量不是跨任务原子快照。V1 SOURCE 保留低频线格式，V2 增加真实采样时间、序号、有效位和 uint16 频率。每个变量最多一个 V1 或 V2 订阅，后订阅替换前订阅；主机订阅不改变发布频率。协议详见 [HostLink 协议](../../../Docs/HostLink.md#只读-source-v2)。
+HostComm 在自己的截止点逐项取副本并编码，编码不持目录临界区；不同变量不是跨任务原子快照。V1 SOURCE 保留低频线格式，V2 提供真实采样时间、序号、有效位和 uint16 频率。每个变量最多一个 V1 或 V2 订阅，后订阅替换前订阅；主机订阅不改变发布频率。协议详见 [HostLink 协议](../../../Docs/HostLink.md#只读-source-v2)。
 
 `Tests/Services/Telemetry` 使用真实 C 缓存和仅含 SDK 公共头的 C++ 调用者验证静态登记、类型、容量、复制、冻结、时间/有效性与 ISR 限制。HostLink 专项覆盖 V1 回归、V2 限额/替换、固定槽分包、调度回绕、背压及断连。测试未证明 1000 Hz/8000 标量每秒在任意 USB 负载下均可达到；板端开销和吞吐仍待实测。
 

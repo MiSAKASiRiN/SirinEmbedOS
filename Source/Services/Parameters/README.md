@@ -34,14 +34,14 @@ C 项目使用 `SRNOS_PersistentParameterDefinition`、`SRNOS_ParametersRegister
 
 ## 格式与资源
 
-Storage 的 PARAMETERS 类别（4）独占业务分区，owner 为 application_id，schema 为 compatibility_version，单份记录不保存上一版。中断写入可能令当前记录失效；启动回退默认是预期合同。参见 [Storage](../Storage/README.md)。旧 24C02 地址宏、驱动依赖和旧镜像格式已移除，不自动迁移旧内容。
+Storage 的 PARAMETERS 类别（4）独占业务分区，owner 为 application_id，schema 为 compatibility_version，单份记录不保存上一版。中断写入可能令当前记录失效；启动回退默认是预期合同。参见 [Storage](../Storage/README.md)。不读取旧 24C02 镜像，不自动迁移旧内容。
 
 PARAMETERS payload：8 B 头（LE32 `0x31505253`、LE16 格式 1、LE16 条数），随后按稳定 ID 严格递增的 12 B 记录：LE32 ID、u8 类型、u8 长度、2 B 零保留、4 B little endian 值；bool 仅首字节有效，后三字节为零。禁止重复 ID，字节流不按 C++ 对象布局存储。完整头/载荷/提交校验由 Storage CRC32 覆盖。
 
-默认固定槽表保存 32 组元数据和四份 4 B 数值（当前/默认/上下界），SAVE 工作缓冲为 `8+12×32=392 B`；LOAD 仅暂存 32 个值和 12 B 片段，允许旧记录超过当前注册数量，不分配 8 KiB 镜像。值保护区只做有限复制/提交，编码、遍历和 EEPROM I/O 在保护区外；无新增 worker 或运行期动态分配。
+默认固定槽表保存 32 组元数据和四份 4 B 数值（当前/默认/上下界），SAVE 工作缓冲为 `8+12×32=392 B`；LOAD 仅暂存 32 个值和 12 B 片段，允许旧记录超过当前注册数量，不分配 8 KiB 镜像。值保护区只做有限复制/提交，编码、遍历和 EEPROM I/O 在保护区外；没有独立 worker 或运行期动态分配。
 
 ## 验证
 
-`bash Tests/Services/Parameters/run_host_tests.sh` 覆盖 C/C++ 注册、默认/范围、冻结/容量、批量一致性、ID 顺序、未知/缺失项、流式字段断点、镜像大于注册容量、末尾 CRC 失败、保存与 WRITE、加载与 WRITE 竞争及总期限状态。`HostLink/run_host_tests.sh` 覆盖 CONFIG 01–08。主机测试不证明掉电电气行为、EEPROM 寿命或板端时序，本轮未烧录。
+`bash Tests/Services/Parameters/run_host_tests.sh` 覆盖 C/C++ 注册、默认/范围、冻结/容量、批量一致性、ID 顺序、未知/缺失项、流式字段断点、镜像大于注册容量、末尾 CRC 失败、保存与 WRITE、加载与 WRITE 竞争及总期限状态。`HostLink/run_host_tests.sh` 覆盖 CONFIG 01–08。主机测试不证明掉电电气行为、EEPROM 寿命或板端时序。
 
 跨模块用法和完整磁盘布局见 [EEPROM 设计](../../../Docs/Storage.md)；完整 SCHEMA/READ/WRITE/SAVE/LOAD 字段见 [参数协议](HostLink/README.md)。
