@@ -42,9 +42,16 @@ typedef struct SRNOS_VT03DecS {
     uint16_t crc_calc;
 } SRNOS_VT03Dec;
 
+/* A5 custom frames and A9 53 remote frames share this byte stream. A complete
+ * valid A5 frame is consumed atomically, including any A9 53 in its payload.
+ * Callback runs in the polling task and must not block. Payload is borrowed. */
+typedef void (*SRNOS_VT03A5Callback)(uint16_t command,const uint8_t *payload,
+    uint16_t length,uint8_t sequence,void *user);
 typedef struct {
-    uint8_t buf[SRNOS_VT03_FRAME_LEN];
-    uint8_t len;
+    uint8_t buf[309];
+    uint16_t len;
+    SRNOS_VT03A5Callback a5_callback;
+    void *a5_user;
 } SRNOS_VT03Framer;
 
 typedef struct {
@@ -64,20 +71,28 @@ typedef struct SRNOS_VT03DiagS {
     uint32_t rx_framer_drop_count;
     uint32_t rx_frame_ok_count;
     uint32_t rx_start_ret;
+    uint32_t stream_resets;
 } SRNOS_VT03Diag;
+
+typedef void (*SRNOS_VT03FrameCallback)(const SRNOS_VT03Dec *,void *);
 
 typedef struct {
     SRNOS_SerialChannel *channel;
     SRNOS_VT03RawTapCb raw_tap_cb;
     void *user;
+    SRNOS_VT03FrameCallback frame_callback; /* Each decoded frame, borrowed in polling task. */
+    SRNOS_VT03A5Callback a5_callback;
+    void *a5_user;
 } SRNOS_VT03Config;
 typedef struct SRNOS_VT03S {
     SRNOS_SerialChannel *channel;
     SRNOS_VT03Framer framer;
     SRNOS_VT03RawTapCb raw_tap_cb;
     void *user;
+    SRNOS_VT03FrameCallback frame_callback; /* Each decoded frame, borrowed in polling task. */
     SRNOS_VT03Diag diag;
     uint16_t debug_index;
+    uint32_t framer_started_ms;
 } SRNOS_VT03T;
 
 int      SRNOS_VT03Init(SRNOS_VT03T* self, const SRNOS_VT03Config* cfg);

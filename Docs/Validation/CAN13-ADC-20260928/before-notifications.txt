@@ -1,5 +1,0 @@
-08016fc0 <SRNOS_FDCANOnRxISR>:
- 8016fc0: 4770         	bx	lr
-
-08016e84 <SRNOS_FDCANOnTxEvent>:
- 8016e84: 4770         	bx	lr

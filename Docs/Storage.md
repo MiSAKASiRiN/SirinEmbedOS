@@ -1,6 +1,6 @@
 # EEPROM 存储设计与业务使用
 
-本文描述 FT24C128A 单份记录、业务参数、IMU 校准及身份的当前使用合同。静态格式和主机模型不能证明真实断电或组合负载行为；历史结果见 [CHANGELOG](CHANGELOG.md)及 [Validation](Validation.md)。返回 [文档导航](README.md)。
+本文描述 FT24C128A 单份记录、业务参数、IMU 校准及身份的当前使用合同。返回 [文档导航](README.md)。
 
 ## 数据与职责
 
@@ -38,9 +38,7 @@ Storage 拥有地址、格式、CRC、提交页、互斥与状态；Parameters/I
 
 提交页为 `SRNOSOK1`（8 B），随后是类别/格式版本（各 2 B）、正文长度/revision/记录 CRC（各 4 B），24..59 为零，最后 4 B 为提交页前 60 B 的 CRC。revision 可自然回绕；单份记录不靠 revision 挑选副本。空白头（全 FF 或 00）为 NOT_FOUND；损坏、格式/归属不匹配和 I/O 错误分别报告，不自动擦除、初始化或写默认值。
 
-保存顺序为：验证当前记录（相同内容跳过写入）→将提交页清零并读回确认→写头和正文→完整读回 CRC/内容检查→写提交页→再次检查完整记录。CRC 使用 Core 增量接口，与 HostLink 使用相同算法。无 A/B 或备份，保存中断可能令本记录失效；CRC 不是掉电原子写入保证。其他分区不参与本次写入。最终读回失败或超时可能发生在提交页已经写好之后；返回失败不表示介质未变化，也不执行回滚，下一次加载仍须完整校验。
-
-## 三种正文
+保存顺序为：验证当前记录（相同内容跳过写入）→将提交页清零并读回确认→写头和正文→完整读回 CRC/内容检查→写提交页→再次检查完整记录。CRC 使用 Core 增量接口，与 SirinLink 使用相同算法。无 A/B 或备份，保存中断可能令本记录失效；CRC 不是掉电原子写入保证。其他分区不参与本次写入。最终读回失败或超时可能发生在提交页已经写好之后；返回失败不表示介质未变化，也不执行回滚，下一次加载仍须完整校验。
 
 ### 板卡身份
 
@@ -58,7 +56,7 @@ BMI088 类别=2，LSM6DS3 类别=3；owner_id=`0x53494D55`，schema=1。v1正文
 | 32 | float32[3] | accel 对角比例，无量纲 |
 | 44 | float32 | 校准温度，°C |
 
-v2在48追加float32[3]陀螺对角比例（0.8..1.2）；v1隐含比例1。`gyro = (measured - bias) × gyro_scale`；`accel = (measured - bias) × scale`，在板级/安装旋转前应用。原始 Sensors 快照不变。范围与降级见 [INS](../Source/Services/INS/README.md#校准持久化)。静止校准只生成陀螺 bias/温度，保留有效的 accel 系数；新值保存后不立即改变当前融合，两个记录不具备组合原子性。触发/结果见 [CONFIG 校准协议](HostLink.md#手动静态-imu-校准)。
+v2在48追加float32[3]陀螺对角比例（0.8..1.2）；v1隐含比例1。`gyro = (measured - bias) × gyro_scale`；`accel = (measured - bias) × scale`，在板级/安装旋转前应用。原始 Sensors 快照不变。范围与降级见 [INS](../Source/Services/INS/README.md#校准持久化)。静止校准只生成陀螺 bias/温度，保留有效的 accel 系数；新值保存后不立即改变当前融合，两个记录不具备组合原子性。触发/结果见 [CONFIG 校准协议](SirinLink.md#手动静态-imu-校准)。
 
 ### 业务参数
 
@@ -76,7 +74,7 @@ v2在48追加float32[3]陀螺对角比例（0.8..1.2）；v1隐含比例1。`gyr
 
 ## 启动和运行期
 
-1. 启动冻结配置与变量注册。默认 `storage.enabled=true`、`load_parameters=true`、`host_link_storage_enabled=true`，工厂身份写入默认关闭。
+1. 启动冻结配置与变量注册。默认 `storage.enabled=true`、`load_parameters=true`、`sirin_link_storage_enabled=true`，工厂身份写入默认关闭。
 2. AppInit 在共同 2 s 截止时间内依次解析身份、双 IMU 校准和业务参数；截止时间是总预算，不是每条记录各 2 s。INS 等待校准解析时继续温控和状态更新，超时不接纳迟到校准。
 3. 参数加载尝试结束后才放行父应用；无效校准被忽略，参与融合的任一 IMU 无有效校准则明确 UNCALIBRATED/DEGRADED，不把存储错误视作传感器离线。
 4. CONFIG WRITE 只改 RAM；SAVE 在 HostCmd 真正开始执行时冻结快照，成功更新 saved_generation；期间 WRITE 产生的新 generation 仍为 dirty。LOAD 遇到同时 WRITE 则返回冲突。
@@ -89,7 +87,7 @@ v2在48追加float32[3]陀螺对角比例（0.8..1.2）；v1隐含比例1。`gyr
 | 两颗校准仅一颗保存成功 | 整体失败，saved_mask 明确部分结果；当前 active 不变 |
 | 同时发起存储 | 全局单操作租约，竞争立即 BUSY；没有独立存储线程 |
 | 内容与有效记录相同 | 跳过写入，不自动逐次保存 RAM 修改 |
-| HostLink 禁用 | 本地 Storage/Parameters/校准能力仍可使用 |
+| SirinLink 禁用 | 本地 Storage/Parameters/校准能力仍可使用 |
 
 Storage 默认读 2 s、写 5 s，接口的 timeout=0 表示使用默认总期限；不要套用 Kernel 的“0=非阻塞”。原始 EEPROM 的 timeout 是每段提交/传输期限，两者不同。同步接口只在 IRQ 开启、调度运行的任务上下文调用，不能放入控制周期或 HostComm 轻量回调。静态校准总执行期限 20 s，其中约 5 s 为观察窗口；队列等待不计入执行期限。
 
@@ -97,8 +95,8 @@ Storage 默认读 2 s、写 5 s，接口的 timeout=0 表示使用默认总期�
 
 - 变量声明、默认值与一致快照：[Parameters](../Source/Services/Parameters/README.md)、[示例](../Examples/Parameters/README.md)。
 - 编码器等只读发布：[Telemetry](../Source/Services/Telemetry/README.md)。单源上限 1 kHz、总预算 8000 标量/s，不承诺任意负载下无丢样。
-- 参数目录/READ/WRITE/SAVE/LOAD/STATE/IDENTITY：[CONFIG 01–08](../Source/Services/Parameters/HostLink/README.md)。
-- COBS、CRC、会话/重试及 CONFIG 09/0A：[HostLink](HostLink.md)。
+- 参数目录/READ/WRITE/SAVE/LOAD/STATE/IDENTITY：[CONFIG 01–08](../Source/Services/Parameters/SirinLink/README.md)。
+- COBS、CRC、会话/重试及 CONFIG 09/0A：[SirinLink](SirinLink.md)。
 - 20 位身份工厂配置：[Storage API](../Source/Services/Storage/README.md#工厂身份配置示例)。原始全片维护须启动时关闭 Storage 管理；不允许运行时绕过保护区。
 
 ## 只读身份示例
@@ -117,4 +115,4 @@ bool read_board_identity(SRNOS_StorageIdentity *identity)
 
 ## 证据与待测
 
-[持久化主机/构建记录](Validation/Persistence-20260928/README.md)覆盖格式、逐字节中断模型、并发及参数升级；[静态校准记录](Validation/StaticIMU-20260929/README.md)覆盖算法、异常和协议。真实断电、校准精度、保存与 INS/I2C/CAN 共存、CDC 断连和栈余量仍须对应固件板测。源码不自动迁移旧 24C02 格式，不提供 A/B、日志轮换、用户标定存储备份或任意 EEPROM 地址的主机写入口。
+真实断电、校准精度、保存与 INS/I2C/CAN 共存、CDC 断连和栈余量仍须对应固件板测。源码不自动迁移旧 24C02 格式，不提供 A/B、日志轮换、用户标定存储备份或任意 EEPROM 地址的主机写入口。

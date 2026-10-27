@@ -34,9 +34,54 @@ ICMP Echo 由 worker 自动响应，不需要应用轮询；ICMP 错误处理使
 - `SRNOS_NetworkGetStatus`：配置、就绪/链路状态和计数。`udp_submitted` 表示
   协议栈已交给二层；MAC 完成须另外查看 `SRNOS_EthernetGetStatus`，UDP 没有送达保证。
 
-SDK 不注册默认业务 UDP 服务。应用自行消费/发送；父项目 NetworkBringUp 的
-5000 端口回显仅是诊断程序，正常底盘固件没有回显任务。无网关时只支持同子网通信。
+SDK 不注册默认业务 UDP 服务。应用自行消费和发送数据，并定义业务协议。
+无网关时只支持同子网通信。
 调用 Send/Receive 的应用任务需为其约 1.5 KiB 局部复制留出栈空间。
+
+## NTP 授时
+
+可选 SNTPv4 客户端连接一个可信局域网 NTP 服务器（UDP 123），兼容 chrony。
+服务器响应授时请求，客户端在网络就绪后主动请求；不依赖 ROS 消息，也不阻塞启动。
+
+```cpp
+config->ethernet.enabled = true;
+config->network.enabled = true;
+config->network.address[3] = 70;
+config->network.ntp.enabled = true;
+const uint8_t server[4] = {192, 168, 1, 50}; // 示例，父项目按实际配置
+for (unsigned i=0; i<4; ++i) config->network.ntp.server_address[i]=server[i];
+config->network.ntp.poll_interval_ms = 60000; // 0 表示首次成功后停止请求
+```
+
+启用时校验服务器是可路由的 IPv4 单播地址，且不是自身地址；周期为 0 或
+15000..86400000 ms。配置在启动冻结，SDK 默认不指定服务器、不启用客户端。
+客户端独占一个自动选择的临时 UDP 源端口，在应用端口全部绑定后建立，不占用四个
+raw UDP 槽或 Message 端口；不能通过公共 UDPSend/Receive 访问该端口。
+
+协议行为：
+
+- 请求模式 3、版本 4；只接受配置的 IP/123、版本 3/4、模式 4、48 字节基本回复，
+  并核对 originate timestamp。拒绝 LI=3、stratum>15、零时间、异常处理时长和迟到/重复包。
+- 使用客户端单调收发时间与服务器接收/发送时间进行往返补偿；支持首次本地没有
+  Unix 时间的交换。日期窗口为 2000-01-01 至 2099-12-31，覆盖 2036 NTP era 回绕。
+- 收包期限 1 秒，扣除服务器处理时间后的 RTT 必须不超过 50 ms。软件时间戳包含
+  二层排队与现有 5 ms worker 周期影响，不承诺亚毫秒对齐，不是完整 NTP 驯频实现。
+- 等待 ARP 时每秒请求一次解析；不将已打时间戳的 NTP 负载交给 ARP 等待队列。
+  失败后从 15 秒开始指数退避，最多 1024 秒；成功后按配置周期请求。
+- 识别 KoD：RATE 至少等待 64 秒并尊重上限 1024 秒内的服务器 poll，DENY/RSTR
+  停止本次启动的请求。链路变化取消待收请求，旧回复不能完成授时，RATE 退避不会因重连绕过。
+- 首次成功前绝对时间无效；成功后失联继续本地计时并标记 holdover，详见
+  [Clock](../Clock/README.md)。单次模式在成功后不因链路重连重新授时。
+
+`NetworkStatus.ntp` 提供请求、成功、拒绝、超时、发送失败、KoD 计数及 pending/denied。
+这是非认证 SNTP，限可信局域网；不支持 NTS、广播、DNS、多服务器选择或 NTP 扩展报文。
+报文格式参考 [RFC 4330](https://datatracker.ietf.org/doc/html/rfc4330) 与
+[RFC 5905](https://datatracker.ietf.org/doc/html/rfc5905)。既有 lwIP SNTP 示例尚有未完成
+的响应校验，本客户端在 SDK 中实现，不修改或重新打包 ThirdParty。
+
+NTP 完全运行于既有 Network worker，没有新线程、优先级或栈大小改动。仅增加
+一个 UDP PCB（现有 lwIP heap）、48 字节局部报文及固定客户端/Clock 状态；
+低频发送每轮最多一次，实际静态内存以最终 map 为准。
 
 ## 可选接收策略与事件锁存
 
@@ -124,14 +169,6 @@ UDP 的排队和等待 ARP 总寿命 100 ms；先确认邻居表再调用 `udp_s
 收发队列和 ARP，保留尚未消费的锁存事件。
 ICMP 等栈自产报文可能使用 lwIP 默认的有限 ARP 等待；不承载应用控制命令。
 
-## 验证
+## 通用消息端口
 
-`Tests/Services/Network/run_host_tests.sh` 编译真实 lwIP 和服务，以伪造二层/内核
-驱动测试默认及自定义地址、ARP、0..1472 字节 Ping/UDP、IP/UDP/ICMP 校验和、
-分片/禁用协议/外部地址拒绝、队列容量、ARP 过期、link epoch 以及显式线程等待。
-可选接收策略回归覆盖保留/替换/锁存、百包突发、重复事件合并、超时及断线保持、
-取快照后消费者抢占的两种交错、API 上下文和计数。父项目另用真实 lwIP、此 SDK
-服务及真实底盘任务/CAN 回调验证 STOP 到零输出的完整软件路径。
-启用 ASan/UBSan 且 UBSan 报错即失败。`Tests/Serial` 覆盖 SDK 默认值和配置依赖，
-Ethernet 回归覆盖原始接口所有权及发送 epoch 检查。板端证据位于父项目
-`Docs/Validation/2026-10-14-IPv4`；短测不代表线速、攻击流量或全部网关场景验收。
+`SystemConfig.messages.udp_port` 可额外声明一个专用监听端口，不能与 network.udp_ports 重复。它接收 raw SirinLink V2 EVENT/CRC32 数据报，在 Network worker 内交给 [Message](../Message/README.md) 按服务/类型分发，绕过 raw UDP 的单槽/选择器，避免不同业务互相覆盖。四个 raw UDP 端口仍可同时使用；新增 PCB 使用现有 lwIP heap。该端口不能用 UDPReceive 取数据；MessageSend 的 origin.endpoint 为本地消息端口，peer 为对端地址/端口。应用回调不能从 Network 任务中阻塞或直接调用 lwIP，建议使用 Message 队列。

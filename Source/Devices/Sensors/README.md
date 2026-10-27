@@ -27,4 +27,4 @@ bool read_bmi(SRNOS_IMUSample *sample) {
 
 `SRNOS_SensorGetBMI088SPIStatistics()` 返回两颗片选的 SPI 统计副本，不要求包含驱动私有头。采样 observer 在配置阶段注册，只能有界复制或通知，不能在高优先级采样路径打印或阻塞。
 
-采样单轮和等待由 Kernel 托管；普通等待不计入 step，处理中的 I/O、抢占和中断计入墙钟。主机回归在 SDK 根执行 `bash Tests/Devices/Sensors/run_host_tests.sh`，共享总线回归位于 `Tests/IO/I2C`。硬件连续性、温稳和姿态精度应分别验收，历史结果在 [CHANGELOG](CHANGELOG.md)，分层方法见 [验证指南](../../../Docs/Validation.md)。
+采样单轮和等待由 Kernel 托管；普通等待不计入 step，处理中的 I/O、抢占和中断计入墙钟。

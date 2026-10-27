@@ -12,7 +12,6 @@ namespace SRNOS::Parameters::detail {
 uint32_t LockValues();
 void UnlockValues(uint32_t);
 bool TaskContext();
-void CopyBytesUnalignedSafe(void *,const void *,size_t);
 class ValueGuard {
     uint32_t state_;
 public:

@@ -74,12 +74,12 @@ void SRNOS_LogBindPool (osMemoryPoolId_t   p);
 
 void SRNOS_LogSetBackendMask(uint32_t backend_mask);
 uint32_t SRNOS_LogGetBackendMask(void);
+/* True when a compiled, selected backend allows this level. This does not
+ * promise queue capacity or physical transport readiness/delivery. */
+bool SRNOS_LogLevelEnabled(SRNOS_LogLevel level);
 void SRNOS_LogGetStats(SRNOS_LogStats* out);
 void SRNOS_LogRecordDroppedQueue(void);
 void SRNOS_LogRecordTruncatedBody(void);
-void SRNOS_LogRecordUartDmaError(void);
-void SRNOS_LogRecordUartBusy(void);
-void SRNOS_LogRecordUartDrop(void);
 
 /* Project-owned ASCII USB transport. submit() must copy before returning. */
 void SRNOS_LogRegisterUsbTransport(const SRNOS_LogUSBTransport *transport);

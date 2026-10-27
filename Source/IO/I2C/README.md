@@ -1,6 +1,6 @@
 # 固定 I2C4 通路
 
-`SRNOS_I2C` 管理当前板 I2C4（400 kHz Fast mode，实际频率见板测），PB7 SDA/PB8 SCL 的 HAL 初始化归 Board。公开头为 `SirinEmbedOS/IO/I2C/I2C.h`，仅依赖 SDK/标准类型，父项目不需要包含 HAL、FreeRTOS 或 CMSIS。设备保存 7-bit 地址，仅在 HAL 调用边界左移一次。支持 `SRNOS_I2C_ADDRESS_8BIT` / `SRNOS_I2C_ADDRESS_16BIT` memory address。
+`SRNOS_I2C` 管理当前板 I2C4（400 kHz Fast mode，实际频率需按硬件实测确认），PB7 SDA/PB8 SCL 的 HAL 初始化归 Board。公开头为 `SirinEmbedOS/IO/I2C/I2C.h`，仅依赖 SDK/标准类型，父项目不需要包含 HAL、FreeRTOS 或 CMSIS。设备保存 7-bit 地址，仅在 HAL 调用边界左移一次。支持 `SRNOS_I2C_ADDRESS_8BIT` / `SRNOS_I2C_ADDRESS_16BIT` memory address。
 
 ## 调度
 
@@ -26,7 +26,7 @@
 
 `SRNOS_I2CSnapshot` 分周期/后台统计接纳、完成、错误、超时、取消、队列满、最长排队与传输耗时，另有排队数、高水位和隔离状态。`cb_queued/cb_queue_overflow` 为零，完成回调由分发线程直接执行。
 
-验证入口 `bash Tests/IO/I2C/run_host_tests.sh` 覆盖实际分发器的保留槽、公平性、保护外复制抢占、保留阶段公开取消接口、阻塞完成、按设备取消、最近截止点、通知与等待竞争、abort 失败隔离、迟到中断和 tick 回绕。故障注入属于主机模型，不能替代板端断线、卡 SDA 或掉电实验。
+故障注入属于主机模型，不能替代板端断线、卡 SDA 或掉电实验。
 
 板级时序由 `Board/Support/IO/i2c_timing.h` 与 IOC 维护，启动检查 PLL3R=60 MHz 和滤波设置后应用；总线队列和期限遵循上文合同，EEPROM 使用 32 B 分段。板级接入见 [Support](../../../Board/Support/README.md)。
 

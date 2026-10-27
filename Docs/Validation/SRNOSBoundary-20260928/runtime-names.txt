@@ -1,3 +1,0 @@
-PASS: 259 active SDK source/header names; 4 exact Microchip file exceptions
-PASS: 110 current SDK objects have SRNOS external definitions or exact owner/ABI exceptions
-Compile input classification: CubeMX generated=23, CubeMX vendor HAL/CMSIS=41, application or explicit test adapter=1, pinned third-party middleware=12, retained Microchip implementation=1, self-maintained SDK=110, verified build-time USB vendor patch=2

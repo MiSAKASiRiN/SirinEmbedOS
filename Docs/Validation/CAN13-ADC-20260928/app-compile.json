@@ -1,6 +1,0 @@
-{
-  "directory": "/Users/sirin/CLionProjects/SirinEmbedOS/build/CANThroughput",
-  "command": "/opt/ST/STM32CubeCLT_1.22.0/st-arm-clang/bin/starm-clang++ -DSRNOS_MEMORY_SECTIONS=1 -I/Users/sirin/CLionProjects/SirinEmbedOS/Include  -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -fdata-sections -ffunction-sections -ftls-model=local-exec -fstack-usage -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard  -Wall -fdata-sections -ffunction-sections -ftls-model=local-exec -fstack-usage -fno-rtti -fno-exceptions -fno-threadsafe-statics -Oz -g0 -g3 -o CMakeFiles/CANThroughput.dir/app.cpp.obj -c /Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANThroughput/app.cpp",
-  "file": "/Users/sirin/CLionProjects/SirinEmbedOS/Tests/Board/CANThroughput/app.cpp",
-  "output": "/Users/sirin/CLionProjects/SirinEmbedOS/build/CANThroughput/CMakeFiles/CANThroughput.dir/app.cpp.obj"
-}

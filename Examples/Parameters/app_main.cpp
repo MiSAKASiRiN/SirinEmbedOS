@@ -23,11 +23,11 @@ PidValues last_snapshot{};
 extern "C" void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 {
     config->usb_enabled = true;
-    config->host_link_enabled = true;
+    config->sirin_link_enabled = true;
     config->parameter_application_id = 0x50494431u; /* PID1: this application owns the record. */
     config->parameter_compatibility_version = 1;
     config->load_parameters = true;
-    config->host_link_storage_enabled = true;
+    config->sirin_link_storage_enabled = true;
 }
 
 static SRNOS_StepResult application_step(void *arg,const SRNOS_ThreadWake *wake)

@@ -2,6 +2,7 @@ set(_srnos_lwip "${SIRINEMBEDOS_ROOT}/ThirdParty/LwIP/src")
 list(APPEND SRNOS_SERVICES_SOURCES
   "${CMAKE_CURRENT_LIST_DIR}/network.c"
   "${CMAKE_CURRENT_LIST_DIR}/network_config.c"
+  "${CMAKE_CURRENT_LIST_DIR}/network_ntp.c"
   "${_srnos_lwip}/core/init.c"
   "${_srnos_lwip}/core/def.c"
   "${_srnos_lwip}/core/inet_chksum.c"

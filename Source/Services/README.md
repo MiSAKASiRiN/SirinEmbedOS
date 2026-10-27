@@ -7,13 +7,16 @@
 | 需求 | 使用方式与示例 | 主要边界 |
 |---|---|---|
 | 文本日志 | [Logging](Logging/README.md) | 有界非阻塞入队，成功不是实际交付 |
-| USB 命令和遥测 | [HostLink](HostLink/README.md)、[USB](USB/README.md) | CDC0 文本、CDC1 二进制，声明在启动期冻结 |
-| 可保存业务参数 | [Parameters](Parameters/README.md)、[协议](Parameters/HostLink/README.md) | WRITE 只改 RAM，SAVE 显式持久化 |
+| USB 命令和遥测 | [SirinLink](SirinLink/README.md)、[USB](USB/README.md) | CDC0 文本、CDC1 二进制，声明在启动期冻结 |
+| 可保存业务参数 | [Parameters](Parameters/README.md)、[协议](Parameters/SirinLink/README.md) | WRITE 只改 RAM，SAVE 显式持久化 |
 | 高频只读数值 | [Telemetry](Telemetry/README.md) | 最新值缓存，不提供无损历史队列 |
+| 图传双向数据 | [VideoLink](VideoLink/README.md) | VT03 单所有者拆分 `0311`；注册最新值的 `0310` 发送周期 |
 | EEPROM 身份和记录 | [Storage](Storage/README.md) | 单份记录，CRC 不保证保留写入前版本 |
 | 姿态与 IMU 校准 | [INS](INS/README.md) | 使用有效位/年龄/epoch，不能只看非零值 |
 | UDP 与 Ping | [Network](Network/README.md) | 需同时启用 Ethernet；无送达保证 |
-| 遥控输入 | [RemoteControl](RemoteControl/README.md) | 冻结 Serial 绑定，业务控制策略归应用 |
+| 启动与绝对时间 | [Clock](Clock/README.md) | 可选 NTP；绝对时间校正不改变控制时基 |
+| 遥控输入 | [Input/SirinRMT](Input/README.md)、[RemoteControl](RemoteControl/README.md) | 各来源独立快照/事件，控制映射与仲裁归应用 |
+| 通用业务消息 | [Message](Message/README.md) | 启动期订阅服务/类型，队列或短回调分发，payload 复制或限时借用 |
 | 裁判协议与 UI | [Referee](Referee/README.md) | SDK 编解码，应用决定 UI 内容与刷新 |
 | 系统健康与任务观测 | [SystemMonitor](SystemMonitor/README.md) | 副本、有效位和独立采样窗口；不周期扫栈 |
 | 提示音与心跳 | [Indicators](Indicators/README.md) | 固定服务装配，应用通过设备 API 提交 |
@@ -30,7 +33,7 @@ void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 {
     config->usb_enabled = true;
     config->logging_enabled = true;
-    config->host_link_enabled = true;
+    config->sirin_link_enabled = true;
     config->system_monitor_enabled = true;
 }
 
@@ -46,9 +49,9 @@ void SRNOS_ApplicationMain(void)
 ## 共同约束
 
 - SDK 配置不进入可远程写入的业务参数表。CAN 模式、UART 角色、服务开关和线程容量由父项目启动声明。
-- 普通 UART 默认未绑定。日志 UART、遥控、裁判等需要显式选择互不冲突的 Serial 用途；`bind_channels` 只声明额外通道所有权。
+- 普通 UART 默认未绑定。日志 UART、遥控、裁判等需要显式选择互不冲突的 Serial 用途；`bind_channels` 声明额外通道所有权或 VideoLink 遥测路由，不重新读取已归 SDK 服务所有的端口。
 - ISR 只使用明确标为 FromISR 的 API。持久化、长命令和校准在管理任务执行，不能阻塞实时控制回调。
 - 原始传感器/INS 流由已有 HostComm 编码；订阅与 USB 背压不改变传感器采样周期。遥测启动前检查功能选择，`ins.enabled=false` 不是线程和静态内存裁剪开关。
-- 系统监控、日志、网络和 HostLink 的固定槽容量不会随注册数量自动扩容。以最终 map、Kernel 资源快照与板端测量分别核对静态、动态和执行预算。
+- 系统监控、日志、网络和 SirinLink 的固定槽容量不会随注册数量自动扩容。以最终 map、Kernel 资源快照与板端测量分别核对静态、动态和执行预算。
 
-协议布局见 [HostLink](../../Docs/HostLink.md)，跨模块说明见 [文档导航](../../Docs/README.md)。测试命令及诊断方法放在各模块 README；修改记录和历史验证摘要只放各模块 [CHANGELOG](CHANGELOG.md)，原始证据入口见 [Validation](../../Docs/Validation.md)。
+协议布局见 [SirinLink](../../Docs/SirinLink.md)，跨模块说明见 [文档导航](../../Docs/README.md)。

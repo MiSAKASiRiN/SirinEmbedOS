@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.22)
-project(Persistence LANGUAGES C CXX ASM)
-add_compile_options(-g3)
-get_filename_component(SDK "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
-add_subdirectory("${SDK}" sdk)
-sirinos_add_firmware(Persistence app.cpp)

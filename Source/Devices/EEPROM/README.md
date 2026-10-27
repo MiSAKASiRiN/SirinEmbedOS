@@ -45,9 +45,7 @@ if (status == SRNOS_EEPROM_OK) {
 
 ## 验证
 
-`bash Tests/Devices/EEPROM/run_host_tests.sh` 验证实际驱动状态机：16 KiB 全范围、跨页/跨 256 B/末地址、读回校验、并发所有权、NACK、写保护、总线忙、事务超时、取消、隔离、tick 回绕及调用上下文，启用 ASan/UBSan。
-
-板端入口为 [EEPROMBringUp](../../../Examples/EEPROMBringUp/README.md)，先备份并由主机保存后才能显式触发写入；历史实测范围见 [CHANGELOG](CHANGELOG.md)。不将主机模型等同于板端电气或掉电验证。
+不将主机模型等同于板端电气或掉电验证。
 
 ## 父项目依赖
 

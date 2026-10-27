@@ -23,7 +23,7 @@
 
 一个P1 CAN4线程独占设备，正常流量不需要RX/TX设备互斥锁。只有RAM操作成功才提交UINC；TX按器件要求同一写操作设置UINC和TXREQ。提交结果不确定时保留对象及旧/下一UA，阻止该方向接受另一帧。后续每轮最多一次有界重同步：读回下一UA表示已推进；旧UA才允许重试UINC；其他值隔离该方向，不能自动清空FIFO掩盖丢帧。RX确认后仅投递一次。TX开始UINC提交后所有权交给设备层的在途对象，core不再重发；软件TTL只约束提交前等待，无法确认完成不代表线缆已交付。诊断读取也由同一线程执行。
 
-`Tests/IO/CAN/External` 使用实际初始化、FIFO实现与有限深度寄存器/RAM模型，覆盖所有DLC、FIFO回绕和满空转换、各阶段失败及UINC执行前/后失败。不将这些模型结果当作真实ACK或吞吐证明。
+不将这些模型结果当作真实ACK或吞吐证明。
 
 ## SPI 仲裁
 
@@ -45,4 +45,4 @@ void configure_can4(SRNOS_SystemConfig *config) { // 从 ApplicationConfigure �
 }
 ```
 
-报文订阅、发送与统计见 [CAN](../../IO/CAN/README.md) 和 [CANFD 示例](../../../Examples/CANFD/README.md)。维护测试在 SDK 根执行 `bash Tests/IO/CAN/External/run_host_tests.sh`；硬件测试方法见 [验证指南](../../../Docs/Validation.md)，历史实测见 [CHANGELOG](CHANGELOG.md)。
+报文订阅、发送与统计见 [CAN](../../IO/CAN/README.md) 和 [CANFD 示例](../../../Examples/CANFD/README.md)。

@@ -1,6 +1,9 @@
 #include "IO/Ethernet/ethernet_internal.h"
 #include "Services/Network/network_internal.h"
 #include "thread_internal.h"
+#include "Services/Input/input_internal.h"
+#include "Services/Message/message_internal.h"
+#include "Services/Blackbox/blackbox_internal.h"
 #include "kernel_internal.h"
 #include "startup_barrier.h"
 #include "SirinEmbedOS/Kernel/Startup.h"
@@ -8,7 +11,7 @@
 #include "SirinEmbedOS/Services/Services.h"
 #include "SirinEmbedOS/Services/Referee/Startup.h"
 #include "../Services/SystemMonitor/monitor_internal.h"
-#include "SirinEmbedOS/Services/HostLink/SystemMonitorTelemetry.h"
+#include "SirinEmbedOS/Services/SirinLink/SystemMonitorTelemetry.h"
 #include "IO/SPI/spi_internal.h"
 #include "IO/I2C/i2c_internal.h"
 #include "IO/CAN/Native/fdcan_internal.h"
@@ -20,8 +23,8 @@
 #include "Services/Parameters/parameters_internal.h"
 #include "Services/Telemetry/telemetry_internal.h"
 #include "../Services/Indicators/indicators_internal.h"
-#include "SirinEmbedOS/Services/HostLink/IMUTelemetry.h"
-#include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"
+#include "SirinEmbedOS/Services/SirinLink/IMUTelemetry.h"
+#include "SirinEmbedOS/Services/SirinLink/INSTelemetry.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cmsis_os2.h"
@@ -38,16 +41,17 @@ static void observe_imu(SRNOS_SensorId id,const SRNOS_IMUSample *sample,void *us
     if(app_imu_observer&&app_imu_observer!=SRNOS_IMUTelemetryObserve) app_imu_observer(id,sample,app_imu_user);
 }
 static bool ins_link_enabled, monitor_link_enabled;
-static SRNOS_HostLinkSetupFn app_host_setup;
+static SRNOS_SirinLinkSetupFn app_host_setup;
 static void *app_host_user;
-static SRNOS_HostLinkResult setup_host(SRNOS_HostLinkRegistration *link,void *user) {
-    (void)user;SRNOS_HostLinkResult r=SRNOS_HOST_LINK_OK;
+static SRNOS_SirinLinkResult setup_host(SRNOS_SirinLinkRegistration *link,void *user) {
+    (void)user;SRNOS_SirinLinkResult r=SRNOS_SIRIN_LINK_OK;
     if(ins_link_enabled) {
         r=SRNOS_IMUTelemetryRegister(link,NULL);
-        if(r==SRNOS_HOST_LINK_OK)r=SRNOS_INSTelemetryRegister(link,NULL);
+        if(r==SRNOS_SIRIN_LINK_OK)r=SRNOS_INSTelemetryRegister(link,NULL);
     }
-    if(r==SRNOS_HOST_LINK_OK&&monitor_link_enabled) r=SRNOS_SystemMonitorTelemetryRegister(link,NULL);
-    if(r==SRNOS_HOST_LINK_OK&&app_host_setup && (!ins_link_enabled ||
+    if(r==SRNOS_SIRIN_LINK_OK&&monitor_link_enabled) r=SRNOS_SystemMonitorTelemetryRegister(link,NULL);
+    if(r==SRNOS_SIRIN_LINK_OK)r=SRNOS_MessageRegisterHost(link);
+    if(r==SRNOS_SIRIN_LINK_OK&&app_host_setup && (!ins_link_enabled ||
         (app_host_setup!=SRNOS_IMUTelemetryRegister&&app_host_setup!=SRNOS_INSTelemetryRegister)))
         r=app_host_setup(link,app_host_user);
     return r;
@@ -127,6 +131,7 @@ void SRNOS_KernelStart(void)
     static unsigned started;
     configASSERT(started == 0U);
     started = 1U;
+    configASSERT(SRNOS_BoardBootIdentityInitialize());
     SRNOS_SystemConfig draft;
     SRNOS_SystemConfigDefaults(&draft);
     SRNOS_SPIInitPre();
@@ -134,17 +139,20 @@ void SRNOS_KernelStart(void)
     SRNOS_ApplicationConfigure(&draft);
     configASSERT(SRNOS_SystemValidate(&draft) == SRNOS_SYSTEM_OK);
     configASSERT(SRNOS_SerialConfigure(draft.serial, draft.serial_count) == SRNOS_SERIAL_OK);
+    configASSERT(SRNOS_MessageTransportPrepare(&draft.messages));
     configASSERT(SRNOS_RemoteControlConfigure(&draft.remote) == 0);
     configASSERT(SRNOS_RefereeConfigure(draft.referee_port) == 0);
     if (draft.logging_enabled) {
         configASSERT(SRNOS_LoggingPrepare(draft.log_backends, SRNOS_SerialGetChannel(draft.log_port)));
     }
-    monitor_link_enabled=draft.system_monitor_enabled;
-    ins_link_enabled=draft.ins.enabled;app_host_setup=draft.host_link_setup;app_host_user=draft.host_link_user;
-    if (draft.host_link_enabled) {
-        configASSERT(SRNOS_HostLinkPrepareEx(draft.usb_enabled, draft.host_link_storage_enabled, setup_host, NULL));
-    }
     if (draft.bind_channels) configASSERT(draft.bind_channels(draft.bind_channels_user));
+    configASSERT(SRNOS_InputFreeze());
+    configASSERT(SRNOS_MessageFreeze());
+    monitor_link_enabled=draft.system_monitor_enabled;
+    ins_link_enabled=draft.ins.enabled;app_host_setup=draft.sirin_link_setup;app_host_user=draft.sirin_link_user;
+    if (draft.sirin_link_enabled) {
+        configASSERT(SRNOS_SirinLinkPrepareEx(draft.usb_enabled, draft.sirin_link_storage_enabled, setup_host, NULL));
+    }
     app_imu_observer=draft.sensors.imu_observer;app_imu_user=draft.sensors.imu_observer_user;
     draft.sensors.imu_observer=observe_imu;draft.sensors.imu_observer_user=NULL;
     configASSERT(SRNOS_EthernetPrepare(&draft.ethernet));
@@ -152,6 +160,7 @@ void SRNOS_KernelStart(void)
     SRNOS_SensorsPrepare(&draft.sensors);
     configASSERT(SRNOS_SystemMonitorPrepare(draft.system_monitor_enabled));
     configASSERT(SRNOS_StoragePrepare(&draft.storage));
+    configASSERT(SRNOS_BlackboxPrepare(&draft.blackbox));
     SRNOS_IMUCalibrationPrepare(draft.storage.enabled);
     SRNOS_ParametersConfigure(draft.parameter_application_id,draft.parameter_compatibility_version);
     configASSERT(SRNOS_TelemetryFreeze());
@@ -165,6 +174,9 @@ void SRNOS_KernelStart(void)
 
     configASSERT(SRNOS_IndicatorsPrepare(c->bringup_indicators));
     configASSERT(osKernelInitialize() == osOK);
+    configASSERT(SRNOS_InputStart());
+    configASSERT(SRNOS_MessageStart());
+    configASSERT(SRNOS_MessageTransportStart());
     configASSERT(SRNOS_KernelThreadPrepare(c->cycle_statistics_enabled));
     application_ready = osEventFlagsNew(NULL);
     configASSERT(application_ready != NULL);
@@ -178,8 +190,9 @@ void SRNOS_KernelStart(void)
     configASSERT(SRNOS_SystemMonitorStart());
     configASSERT(SRNOS_EthernetStart());
     configASSERT(SRNOS_NetworkStart());
+    configASSERT(SRNOS_BlackboxStart());
     if (c->logging_enabled) configASSERT(SRNOS_LoggingStart());
-    if (c->host_link_enabled) configASSERT(SRNOS_HostLinkStart());
+    if (c->sirin_link_enabled) configASSERT(SRNOS_SirinLinkStart());
     /* P0: native CAN and IMU/INS Realtime (48). P1: CAN4 and UART High7
      * (47). Shared SPI stays Realtime1 (49) to complete either class, with
      * IMU-first bounded arbitration. I2C remains High6 (46). */

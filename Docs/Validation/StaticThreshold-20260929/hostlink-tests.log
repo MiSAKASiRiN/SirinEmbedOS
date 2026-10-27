@@ -1,5 +1,0 @@
-test_transport_exec_and_services
-SOURCE V2 directory/maxHz, 8000Hz atomic cap, V1 replacement, 16-record groups, wrap and disconnect: PASS
-opaque registry freeze, idle deadlines, RX budget and no completion requeue loss: PASS
-SRNOS_HostComm host tests: PASS
-IMU calibration protocol: validation, deferred completion, failure/partial save encoding, query and frozen registration passed

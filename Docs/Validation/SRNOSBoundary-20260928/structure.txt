@@ -1,2 +1,0 @@
-PASS: 453 source/header/tool contracts, 30 unique HAL callbacks, 49 modules, explicit source coverage, no nested Git metadata
-PASS: unified SDK creation/deletion, public kernel boundary, examples and no monitor table suspension/stack scan

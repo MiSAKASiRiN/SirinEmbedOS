@@ -2,6 +2,8 @@
 
 本目录维护 STM32H723 / 2613 与 SDK 的接入。CubeMX 拥有 IOC、HAL 初始化和生成入口；Support 拥有板级接线与运行支撑，服务策略属于 Source。这里是 SDK 私有实现，不是应用 include 入口。
 
+`System/boot_identity.c` 在内核启动、应用配置前独占 RNG，使用已开启的 HSI48 和 H723 RNG v3.2 conditioning/health-test 配置生成两个 32 位字，随后关闭 RNG。所有轮询同时有 tick 和迭代上限，最多三次尝试；不新增中断、DMA、线程或 heap。初始化依据 [ST HAL RNG v1.11.3](https://github.com/STMicroelectronics/stm32h7xx-hal-driver/blob/v1.11.3/Src/stm32h7xx_hal_rng.c)，没有修改生成文件或导入新的 HAL 驱动。公开读取接口见 Kernel 的 `SRNOS_SystemBootId()`。
+
 ## 职责索引
 
 | 目录 | 文件与用途 |
@@ -53,7 +55,7 @@
 
 本版 HAL 的 `HAL_RCCEx_GetPeriphCLKFreq` 没有 I2C4 分支，因此使用 I2C4 source 检查、PLL3 ready 检查和 `HAL_RCCEx_GetPLL3ClockFreq` 的 R 输出验证 60 MHz，不修改第三方 HAL。PB7/PB8 开漏、外部上拉、DMA/NVIC/MPU 和其他时钟配置保持原状。
 
-`python3 Tools/Debug/check_i2c_timing.py` 检查寄存器字段、IOC 一致性和 Fast-mode 时序约束。它不证明实际边沿满足 300 ns，需要示波器确认。板端数据见 [400 kHz 记录](../../Docs/Validation/I2C400-20260928/README.md)。
+`python3 Tools/Debug/check_i2c_timing.py` 检查寄存器字段、IOC 一致性和 Fast-mode 时序约束。它不证明实际边沿满足 300 ns，需要示波器确认。
 
 ## ADC3 监测接入
 
@@ -65,18 +67,17 @@ ADC3 停止在 HAL 停止请求源后显式关闭 BDMA Channel2，并核验硬�
 
 System 早期入口在 MPU/cache 前调用 Core 内存初始化，按 64 位清零 ITCM CAN Router BSS/Watch 并复制代码。Support 不接管服务初始化；初始化专用段前全局构造不得访问这些对象。
 
-
 ## CAN Classic / FD 板级配置
 
 `IO/can_native_board.c` 是三路原生控制器的固定板级实现：检查 PLL2Q 80 MHz、CCU 无额外分频和 HAL READY，然后应用冻结配置；HAL/滤波/TDC 失败由 Native 驱动闩锁，禁止 worker 启动默认 Classic 配置。CubeMX 保留 Classic 1 Mbit/s 初始化输入，应用选择 FD 时在启动控制器前重新初始化。窗口偏移为 0/0x300/0x600 word，Classic/FD 分别占 232/676 words；不更改 MCU linker 段或 DMA buffer。数据相位高于 1 Mbit/s 且 BRS 开启时启用 TDC，TDCO=DataTimeSeg1×DataPrescaler、TDCF=0。
 
-新增 FD 的路由和调度属于 `Source/IO/CAN`，MCP 配置经原 backend 完成；Support 不理解应用协议。速率、冻结与 adapter 合同见 [CAN README](../../Source/IO/CAN/README.md)，离线验证见 [CAN FD 记录](../../Docs/Validation/CANFD-20261003/README.md)。
+新增 FD 的路由和调度属于 `Source/IO/CAN`，MCP 配置经原 backend 完成；Support 不理解应用协议。
 
 原生FD时序由自维护can_native_board.c对齐MCP：仲裁80%，数据≤4M80%/5M75%/8M80%；Classic时序和IOC不变。
 
 ## 默认 Panic 串口
 
-未注册自定义 Emergency writer 时，`System/fault_platform.c` 将完整 Fault 报告交给 `fault_usart1.c`：PB14 AF4、USART1 TX、115200/8N1。仅在不可恢复异常时复位 USART1、启用 HSI 并切换 USART1/6、UART9/10 共享内核时钟；正常启动和 Serial 资源分配不变。寄存器轮询有界、失败锁存，未初始化时 Flush 不接管端口；不使用 HAL tick、DMA、中断完成、RTOS 或堆。应用启动期自定义 Emergency writer 覆盖此默认。CubeMX 生成内容、链接段和 Fault retained 格式不变。物理串口与故障超时验证见 [记录](../../Docs/Validation/IMUTurntableLatency-20261010/README.md)。
+未注册自定义 Emergency writer 时，`System/fault_platform.c` 将完整 Fault 报告交给 `fault_usart1.c`：PB14 AF4、USART1 TX、115200/8N1。仅在不可恢复异常时复位 USART1、启用 HSI 并切换 USART1/6、UART9/10 共享内核时钟；正常启动和 Serial 资源分配不变。寄存器轮询有界、失败锁存，未初始化时 Flush 不接管端口；不使用 HAL tick、DMA、中断完成、RTOS 或堆。应用启动期自定义 Emergency writer 覆盖此默认。CubeMX 生成内容、链接段和 Fault retained 格式不变。
 
 ## Ethernet
 
@@ -88,7 +89,6 @@ System 早期入口在 MPU/cache 前调用 Core 内存初始化，按 64 位清�
 
 ```sh
 python3 Tools/Debug/check_i2c_timing.py
-python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
 ```
 
 历史板测、生成与修改结果见 [CHANGELOG](CHANGELOG.md)。

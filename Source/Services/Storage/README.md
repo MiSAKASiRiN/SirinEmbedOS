@@ -36,4 +36,4 @@ SRNOS_StorageStatus factory_assign_serial(const char serial[20]) {
 
 ## 验证
 
-`bash Tests/Services/Storage/run_host_tests.sh` 使用实际 Storage + FT24C128A 驱动和 I2C 器件模型，ASan/UBSan 覆盖每个写入字节断电后的重新加载、头/正文/提交逐字节损坏、8064 B 上限/流式访问、末尾损坏与 visitor 中止、分区隔离、CRC 已知向量、管理保护、不同任务竞争、无变化不写、身份与工厂权限、总期限、取消和时钟回绕。EEPROM 与 HostLink Codec 提供独立回归；主机模型不能代替真实断电、并发总线与保存延迟测量。
+EEPROM 与 SirinLink Codec 提供独立回归；主机模型不能代替真实断电、并发总线与保存延迟测量。

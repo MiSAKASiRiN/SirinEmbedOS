@@ -381,8 +381,7 @@ void SRNOS_RefereeGetSnapshot(SRNOS_RefereeSnapshot *out);
 uint32_t SRNOS_RefereeEventCursorNow(void);
 bool SRNOS_RefereeEventReadNext(uint32_t *cursor, SRNOS_RefereeEvent *out, uint32_t *dropped);
 
-// Reserved for future TX path on the caller-bound UART.
-void SRNOS_RefereeTxInit(void);
+/* Nonblocking submission through the SDK-bound Serial channel; no separate TX init. */
 bool SRNOS_RefereeTxSend(const uint8_t *data, uint16_t len);
 
 #ifdef __cplusplus

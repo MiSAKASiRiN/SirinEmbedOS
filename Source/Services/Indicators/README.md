@@ -26,4 +26,4 @@ SRNOS_BuzzerStatus play_notice(void)
 
 ## 诊断
 
-在 SDK 根目录运行 `bash Tests/Services/Indicators/run_host_tests.sh`，检查提示开关、重复准备、输出失败/busy、截止时间、唤醒和时钟回绕。修改及历史验证见 [CHANGELOG](CHANGELOG.md)。
+修改及历史验证见 [CHANGELOG](CHANGELOG.md)。

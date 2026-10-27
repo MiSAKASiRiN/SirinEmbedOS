@@ -32,7 +32,7 @@ const char *SRNOS_USBCdcInterfaceLabel(uint8_t cdc_ch)
 {
     static const char *const labels[SRNOS_USB_CDC_CHANNEL_COUNT] = {
         SRNOS_USB_CDC_LOG_INTERFACE_STRING,
-        SRNOS_USB_CDC_HOST_LINK_INTERFACE_STRING,
+        SRNOS_USB_CDC_SIRIN_LINK_INTERFACE_STRING,
     };
 
     return (cdc_ch < SRNOS_USB_CDC_CHANNEL_COUNT) ? labels[cdc_ch] : NULL;

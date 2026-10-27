@@ -2,13 +2,11 @@
 
 ## 平台定位与参考工程
 
-本目录是 **SirinEmbedOS SDK**；需要核对历史硬件或协议来源时，可只读参考：
-
-`/Users/sirin/CLionProjects/h723vg-v2-prototype`
+本目录是 **SirinEmbedOS SDK**。历史来源、提交及许可状态见 `Docs/Migration/`；本仓库不依赖个人工作区或内部仓库地址。
 
 SDK 对应用提供统一 API、硬件资源访问与系统服务。控制算法、机构状态机和业务线程属于父项目。
 
-平台使用 FreeRTOS / CMSIS-RTOS2 / heap_5，提供 Core、诊断、CAN/SPI/I2C、固定设备、串口协议、日志、参数、HostLink、USB 与静态 IPv4/UDP。配置与注册在启动阶段冻结；主机只可修改显式声明的业务数值。接口用法见 [QuickStart](QuickStart.md) 和 [文档导航](Docs/README.md)，证据读取方法见 [验证指南](Docs/Validation.md)。
+平台使用 FreeRTOS / CMSIS-RTOS2 / heap_5，提供 Core、诊断、CAN/SPI/I2C、固定设备、串口协议、日志、参数、SirinLink、USB 与静态 IPv4/UDP。配置与注册在启动阶段冻结；主机只可修改显式声明的业务数值。接口用法见 [QuickStart](QuickStart.md) 和 [文档导航](Docs/README.md)，构建步骤见 [开发指南](Docs/Development.md)。
 
 复用 prototype 能力时，以设计与实现参考为主，不直接整包搬运代码。两者基于类似的硬件平台，因此原工程的硬件绑定、协议、资源配置和运行经验具有参考价值；具体差异仍以本工程 IOC、实现和已确认硬件资料核对。原工程的架构、目录划分、接口和命名不一定适合 SirinEmbedOS，应按本工程的职责边界与命名规范重新判断，必要时重构或重新实现。
 
@@ -17,6 +15,8 @@ SDK 对应用提供统一 API、硬件资源访问与系统服务。控制算法
 ## 仓库与目录规划
 
 本仓库直接作为 **SirinEmbedOS SDK 仓库**，其他应用工程通过一个 Git 子模块引入。SDK 内整合自维护模块，不继续沿用原工程几十个 Framework 子模块的组织方式，也不通过嵌套子模块把同样的碎片化结构藏到内部。第三方代码固定版本随 SDK 管理，保留来源、许可证和补丁记录。
+
+源码分发不包含测试套件、专用 BringUp 固件或原始现场资料。测试套件及其 BringUp 依赖可保留在本地，但必须被 `.gitignore` 忽略且从 Git 索引取消跟踪，不使用强制添加绕过此规则，也不作为公开 SDK 的默认构建依赖。API 用法示例与生产诊断接口保留。
 
 目录按实际能力维护，不预建空壳模块：
 
@@ -37,7 +37,7 @@ SirinEmbedOS/
 │   ├── Kernel/                # FreeRTOS 封装、hooks、线程与同步
 │   ├── IO/                    # CAN、UART、SPI、I2C 资源与访问
 │   ├── Devices/               # IMU、EEPROM、外置 CAN 等设备驱动
-│   ├── Services/              # 日志、参数、HostLink、USB、网络、文件系统
+│   ├── Services/              # 日志、参数、SirinLink、USB、网络、文件系统
 │   └── Diagnostics/           # Debug Watch、运行统计、健康状态
 ├── Board/                     # 当前唯一目标硬件，CubeMX 输出边界
 │   ├── OMNICTL2_3.ioc
@@ -57,18 +57,14 @@ SirinEmbedOS/
 ├── CMake/                     # 自维护的组件选择、配置生成与构建辅助
 ├── Tools/                     # Panic 解码等配套工具
 ├── Docs/                      # 使用指南、来源索引及验证方法
-├── Tests/
 └── Examples/
     ├── Minimal/               # SDK 自身可构建的最小应用
-    ├── BringUp/               # 首次上板的启动、堆、任务栈与 IMU 观测
-    ├── SensorBringUp/         # 2613 原始采样与共享总线，不访问 EEPROM/融合
-    ├── INSBringUp/            # 正式 INS、坐标/融合/温控及遥测观测
     ├── Parameters/            # 显式业务参数及一致快照
     └── PrototypeBindings/     # 通过公开 API 声明原串口用途
 ```
 
-- 自维护 C 函数、类型和跨文件符号使用 `SRNOS_<能力><动作或类型>`；枚举、配置宏、头保护使用 `SRNOS_<MODULE>_*`，C++ 位于 `SRNOS` 下的能力命名空间。旧 API/头路径不保留兼容别名。仅第三方、CubeMX 和规定的 RTOS/HAL/USB/供应商 ABI 入口保留原名；历史来源和实测证据不改写。
-- 父项目仅包含 SDK 公共头。`SirinEmbedOS::Platform` 提供完整链接但不传播 RTOS/CMSIS/HAL/Board/Source include；私有依赖只授予 SDK 实现及独立内核测试适配。新增公共头须通过独立 C11/C++17、依赖闭包与命名检查。迁移合同见 `Docs/SDKMigration.md`。
+- 自维护 C 函数、类型和跨文件符号使用 `SRNOS_<能力><动作或类型>`；枚举、配置宏、头保护使用 `SRNOS_<MODULE>_*`，C++ 位于 `SRNOS` 下的能力命名空间。旧 API/头路径不保留兼容别名。仅第三方、CubeMX 和规定的 RTOS/HAL/USB/供应商 ABI 入口保留原名；保留来源身份、上游版本与许可证；公开内容不得包含个人路径、内部端点或原始调试转储。
+- 父项目仅包含 SDK 公共头。`SirinEmbedOS::Platform` 提供完整链接但不传播 RTOS/CMSIS/HAL/Board/Source include；私有依赖只授予 SDK 实现。新增公共头须通过独立 C11/C++17、依赖闭包与命名检查。迁移合同见 `Docs/SDKMigration.md`。
 - 公共头文件集中在 `Include/SirinEmbedOS/`；私有头文件放实现旁边，不要求每个小模块再套 `Inc/Src`。
 - `Board/` 暂不增加多厂商、多 MCU、多板型目录层级；出现真实硬件差异后再调整。
 - CubeMX 当前还在 `Board/` 根生成启动汇编、基础链接脚本等文件，保留其生成位置。最终固件使用自维护的 `Board/Linker/SirinEmbedOS.ld`；不通过搬动生成文件改变 regenerate 的输出边界。
@@ -86,14 +82,13 @@ SirinEmbedOS/
 | 内核接入 | `Source/Kernel/` | FreeRTOS 封装、线程与同步原语、调度接入、内核 hooks 和资源管理。FreeRTOS 上游实现放 `ThirdParty/FreeRTOS/`，不与封装混放。 |
 | 硬件通路 | `Source/IO/` | CAN router、UART 占用与用途管理、SPI/I2C 事务、异步收发及并发控制。管理硬件通路，不承担机器人控制策略。 |
 | 设备能力 | `Source/Devices/` | 固定板载设备的寄存器、协议、初始化、采样与状态处理，例如 IMU、EEPROM、外置 CAN 控制器。通常通过 IO 使用总线；作为 IO backend 的设备驱动应拆清调用方向，避免循环依赖。 |
-| 系统服务 | `Source/Services/` | 日志、参数、HostLink、USB、网络、文件系统等长期运行或供应用调用的功能。服务的 worker/task 与该服务放在一起，不恢复一个平铺全部 `tskptt_*` 的目录。 |
+| 系统服务 | `Source/Services/` | 日志、参数、SirinLink、USB、网络、文件系统等长期运行或供应用调用的功能。服务的 worker/task 与该服务放在一起，不恢复一个平铺全部 `tskptt_*` 的目录。 |
 | 系统观测 | `Source/Diagnostics/` | Debug Watch、线程运行统计、健康状态与诊断快照。区分低成本观测基础设施和主动采样任务；底层模块不得为了记录计数而依赖上层通信或日志服务。 |
 | 固定板级实现 | `Board/` | 当前硬件的 IOC、生成代码和自维护接线。允许固化本板引脚、实例和绑定，不为假想板卡建立额外平台层。 |
 | 上游依赖 | `ThirdParty/` | 固定版本的 RTOS 和 middleware 源码。保留许可证和来源；本项目的适配优先放 `Source/` 或 `Board/Support/`，必须修改上游时记录补丁。 |
 | SDK 默认配置 | `Config/` | 公共能力的默认容量、服务策略、配置声明和校验规则。父项目可以通过明确接口覆盖允许变化的项目，不把某台机器人的参数写成 SDK 默认硬件事实。 |
 | 构建装配 | `CMake/` | 自维护的工具链适配、组件依赖、配置生成和固件构建辅助。与 CubeMX 管理的 `Board/cmake/` 区分。 |
 | 开发工具 | `Tools/` | 在开发机执行的 Panic 解码、检查或辅助脚本，不参与 MCU 固件源码扫描。 |
-| 验证代码 | `Tests/` | 按能力组织主机测试、集成测试或板端测试；明确各自执行环境和验证范围，不作为生产服务默认编入。 |
 | 接入示例 | `Examples/` | 通过公开 API 使用 SDK 的应用示例；`Minimal/` 验证最小启动与接入合同，不复制 SDK 内部实现。 |
 
 `Board/` 内进一步按所有权划分：
@@ -136,7 +131,6 @@ MyRobot/
 │   ├── system_config.*        # 系统服务选择和资源预算
 │   ├── uart_config.*          # UART 用途与参数
 │   └── robot_config.*         # 电机 ID、机构参数、标定等
-├── Tests/
 └── build/
 ```
 
@@ -151,7 +145,6 @@ MyRobot/
 | `App/Behavior/` | 操作模式、状态机、动作流程、应用级安全条件与控制目标选择。 |
 | `App/Devices/` | 本项目独有的外接设备和协议扩展；使用 SDK 提供的总线接口，不私自争用 HAL 资源。 |
 | `Config/` | 本项目的 UART 用途、系统资源预算、外设组合、电机 ID、机构与标定参数。与 SDK 的 `Config/` 默认配置区分。 |
-| `Tests/` | 应用算法、状态机及与 SDK 接入行为的验证。 |
 | `build/` | 编译生成物，不作为源码维护。 |
 
 SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些电机、控制目标和周期、IMU 数据如何参与控制，由父项目决定。经多个应用确认有复用价值的算法，再按需求沉淀到 SDK。
@@ -179,7 +172,7 @@ SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些
 - CubeMX 生成的 Board CMake 按实际内容适配接入，不能假定它天然可作为库；特别检查 `CMAKE_PROJECT_NAME`、固件 target、链接选项和路径。
 - SDK 持有唯一的板级 `main()`，在 `USER CODE` 区调用 Board support。父项目在 `SRNOS_ApplicationConfigure(SRNOS_SystemConfig *)` 声明资源用途、服务与应用线程；配置回调、协议/业务参数注册、冲突检查和冻结都在 `osKernelInitialize()` 前完成，禁止在这些回调中阻塞 I/O 或创建线程。可选 `bind_channels` 用于内置协议之后声明原始通道、H12H 和 RS485 设备。
 - 父项目实现 `SRNOS_ApplicationMain()`，在调度后的 Application 线程执行，允许返回。SDK 先完成启动期业务参数加载尝试和 USB 启动，再放行该入口及 `threads` 中声明的应用线程；启动参数加载失败使用声明默认值，运行期显式 LOAD 失败保留当前 RAM。父项目不得再次初始化/启动调度器。
-- SDK 统一装配总线、IMU、日志、HostLink、诊断等服务线程。父项目通过 `SIRINEMBEDOS_CONFIG_HEADER` 覆盖 `SRNOS_APP_*`、`SRNOS_HEAP_*` 等编译期默认值，通过系统配置声明线程栈/优先级和启用项；一套构建共享一套 SDK 配置。`SRNOS_SystemHeapBudget()` 校验保守启动预算，不覆盖应用运行期额外分配。
+- SDK 统一装配总线、IMU、日志、SirinLink、诊断等服务线程。父项目通过 `SIRINEMBEDOS_CONFIG_HEADER` 覆盖 `SRNOS_APP_*`、`SRNOS_HEAP_*` 等编译期默认值，通过系统配置声明线程栈/优先级和启用项；一套构建共享一套 SDK 配置。`SRNOS_SystemHeapBudget()` 校验保守启动预算，不覆盖应用运行期额外分配。
 - 默认普通 UART 不绑定协议或日志。`Examples/PrototypeBindings` 显式演示原端口分配，`Examples/Parameters` 演示业务值注册与安全快照。启动阶段状态、服务线程已创建、设备健康是不同事实；USB 已启动不代表枚举成功，CAN4/IMU 的运行就绪需看各自状态。
 - `Examples/Minimal` 用于独立验证 SDK，也应使用公开配置与接入机制，避免形成一套仅示例能用的特殊路径。
 
@@ -187,9 +180,9 @@ SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些
 
 - 实际板级目录为 `Board/`。需要生成 HAL 时优先运行 `python3 Board/generate.py`，可从任意工作目录使用该脚本的绝对路径调用；脚本根据自身位置定位当前 checkout，不依赖开发者机器上的固定工程路径。
 - 脚本通过系统进程调用 CubeMX `-q <脚本文件>`，命令依次为 `config load "<当前checkout的IOC绝对路径>"`、`project generate`、`exit`，工作目录固定为 `Board/`。macOS CLI 实测不能依赖 `cwd` 解析相对 IOC 路径，否则 `-q` 也可能弹出找不到 IOC 的错误窗口。macOS 默认查找 `/Applications/STMicroelectronics/STM32CubeMX.app/Contents/MacOS/STM32CubeMX`，也支持 `--cubemx <可执行文件>`、环境变量 `STM32CUBEMX` 或 PATH 中的 `STM32CubeMX`。`--dry-run` 只打印计划，`--timeout` 设置生成超时（默认300秒）。
-- 每次实际执行先将 Board 内容备份到根 `build/cubemx/<时间戳-唯一后缀>/Board-before`（排除 build、.idea、__pycache__），同目录保存实际 `.mx`、生成日志、时序检查日志和变化文件清单。脚本不自动回滚、不构建、不烧录、不操作调试器；生成失败仍保留现场与快照供比较。已有 `Board/generate.mx` 是原始手工脚本，含本机绝对路径，日常使用 `generate.py`。
+- 每次实际执行先将 Board 内容备份到根 `build/cubemx/<时间戳-唯一后缀>/Board-before`（排除 build、.idea、__pycache__），同目录保存实际 `.mx`、生成日志、时序检查日志和变化文件清单。脚本不自动回滚、不构建、不烧录、不操作调试器；生成失败仍保留现场与快照供比较。调用脚本由 `generate.py` 根据当前检出目录临时生成。
 - 不能仅凭进程退出码宣称成功：核对 `project generate` 的 `OK` 和生成内容。脚本会检查退出码/成功标记，并运行 `Tools/Debug/check_i2c_timing.py`，要求 IOC、生成的 I2C4 TIMING 和 Support 常量一致。不要为消除检查失败而盲目同步常量，应先核对时钟、滤波、时序及此前板测依据。
-- 生成后与本次快照比较，检查 USER CODE、SDK 自维护 CMake/Support/Linker、HAL/CMSIS、工具链和中断所有权，保留原有未提交修改；再进行对应固件构建，涉及生成清单或构建接入时运行 `Tests/Build/check_sdk.py`。生成、编译与板端验证分别报告，不覆盖当前调试会话所用 ELF。
+- 生成后与本次快照比较，检查 USER CODE、SDK 自维护 CMake/Support/Linker、HAL/CMSIS、工具链和中断所有权，保留原有未提交修改；再进行对应固件构建，涉及生成清单或构建接入时重新构建 Minimal 和实际父项目。生成、编译与板端验证分别报告，不覆盖当前调试会话所用 ELF。
 - CubeMX 版本以实际运行日志为准；每次生成都检查差异和 USER CODE，不假定只变更某个时序字段。
 - 用户明确要求仅修改 IOC、不要 Generate 时遵从该范围；已授权的生成工作无需重复询问。Generate 不隐含授权重新烧录或接管用户暂停现场。
 
@@ -201,7 +194,7 @@ SDK 默认提供本板的 CAN、板载 IMU 等固定能力；CAN 上连接哪些
 - `Board/Support/System/kernel_board.c` 定义按地址递增的 DTCM 64 KiB + D1 128 KiB heap_5 区域；`osKernelInitialize()` 是 heap 注册的唯一入口。最终内存布局由 `Board/Linker/SirinEmbedOS.ld` 管理，普通 data/TLS/BSS 在 D1，DTCM 留给热数据、heap 和 MSP。NOLOAD heap payload 不保证清零，两区均不是 DMA 分配器。
 - DMA 位于非缓存 D2，BDMA 位于 D3；CAN Router 专用 BSS 与 Watch 位于 ITCM，按 64 位显式清零，ITCM 代码按 64 位复制。三者共享 64 KiB；专用段禁止构造期访问。Fault retained 留在 D2 并验证。Picolibc TLS 占用线程栈；独立 libc arena 和静态递归 RTOS 锁已接入，禁止在 ISR 分配或调用阻塞 stdio，不宣称任意共享 FILE 都线程安全。
 - Fault 向量由 SDK glue 持有，异常捕获不依赖日志或动态分配。紧急输出默认在不可恢复 Panic/Fault 阶段接管 USART1 TX（PB14，115200/8N1）有界轮询输出；正常启动不占用，可在配置阶段显式注册回调覆盖。正常日志只经自己的 Serial/USB sink。细节见 `Source/Core/README.md`。
-- 构建接入说明与配置合同见 `README.md`；`Tests/Build/check_sdk.py` 验证父项目、配置、链接、堆和第三方哈希。能力测试与待测项见 `Docs/Validation.md`，不代表板端调度与外设验证。
+- 构建接入说明与配置合同见 `README.md`；构建与验收边界见 `Docs/Development.md`。构建成功不代表板端调度与外设验证。
 
 ## 核心定位：固定硬件上的通用开发平台
 
@@ -232,8 +225,6 @@ SirinEmbedOS 自行管理：
 
 HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callback 都必须有明确且唯一的所有者。关闭 CubeMX middleware 后，复查生成结果，不假设相关中断和 HAL 配置自动保持正确。
 
-## 硬件资源与 API 原则
-
 ### 固定硬件能力
 
 - CAN、板载 IMU 的板级绑定允许直接固化在平台实现中，对外提供稳定、易用的 API。
@@ -254,7 +245,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - API 明确单位、超时、返回状态、线程/ISR 调用限制和数据所有权。
 - 异步 I/O 明确 buffer 生命周期及完成通知；不提前复用尚在传输中的内存。
 - 优先沿用已迁入的 `SRNOS_*` / `SRNOS::` 基础操作，避免重复实现字节复制、边界检查、Endian、Assert/Panic 等能力。不新增旧名兼容别名。
-- HostLink 可写入的仅限显式 `SRNOS::Parameters::Persistent<T>` 或对应 C 描述声明且有默认值、稳定 ID 和范围的业务数值，例如 PID 增益；遥测使用只读且不可持久化的 `SRNOS::Telemetry::Value<T>`。系统底层选择、UART/CAN/IMU 配置、线程预算和服务开关不得放入可远程修改的参数表。注册和访问权限初始化后冻结；业务代码通过一致快照在自己的周期边界应用数值，不让通信线程直接修改控制器内部状态。
+- SirinLink 可写入的仅限显式 `SRNOS::Parameters::Persistent<T>` 或对应 C 描述声明且有默认值、稳定 ID 和范围的业务数值，例如 PID 增益；遥测使用只读且不可持久化的 `SRNOS::Telemetry::Value<T>`。系统底层选择、UART/CAN/IMU 配置、线程预算和服务开关不得放入可远程修改的参数表。注册和访问权限初始化后冻结；业务代码通过一致快照在自己的周期边界应用数值，不让通信线程直接修改控制器内部状态。
 - 新接口命名、旧 API 兼容范围和组件目录应结合迁入的实际实现确定，不凭本文假定它们已经存在。
 
 ## 重构与验证规则
@@ -262,7 +253,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - 必要的功能目录必须同时保留 `README.md` 和 `CHANGELOG.md`，例如承担独立能力的 IO、设备、服务或诊断模块目录。以能独立说明职责、接口和验证范围的模块为单位维护，不要求每一层目录或每个私有实现子目录重复建立文档；缺失时在该模块下一次重大修改中补齐。
 - 每次重大修改功能、公共接口、配置合同、架构、调度或资源所有权时，必须在同一次变更中更新受影响模块的 `README.md` 和 `CHANGELOG.md`。`README.md` 只描述修改后的当前能力、用法、示例、边界与限制；每次修改的日期、原因、过程、验证结果和待验证事项只记录在对应 `CHANGELOG.md`。行为未变化的修订无需制造 README 更新记录；不得把历史日志追加到 README、QuickStart、专题文档或本文件。
 - `QuickStart.md` 保留一条能实际编译的最短接入路径；专题文档与模块 README 必须给出准确 API、命令或阅读示例，区分完整程序与需集成的片段。配置、同步、错误处理和所有权按当前源码核对。
-- 历史验证叙述归入所在目录 `CHANGELOG.md`，原始日志/JSON/CSV/固件与哈希保持不变；原入口改为复现或证据阅读指南。迁移文字时保留测量结论与未验边界，修复相对链接，不把当时板上状态写成当前状态。
+- 历史变更记录归入所在目录 `CHANGELOG.md`；公开树不携带测试套件、专用测试固件、实机记录和转储。迁移文字时保留测量结论与未验边界，修复相对链接，不把当时板上状态写成当前状态。
 - 各级 `CHANGELOG.md` 保持浅层结构：优先使用日期或 `Unreleased` 标题配合平铺条目，必要时增加一层分类；避免多层标题和嵌套列表，不按目录树逐层展开日志。
 - 根目录 `CHANGELOG.md` 记录有意义的工程、接口、配置与架构变更，按日期维护。未发布内容放在 `Unreleased`；没有实际发布时不编造版本号。同步记录验证范围和重要限制，计划中的能力不能记为已实现。
 - 所有交流使用中文。用户要求分析、查看或先不改代码时保持只读。
@@ -276,8 +267,6 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - 构建系统由项目维护，避免依赖 CubeMX 扫描目录自动决定 middleware 和系统服务是否参与编译。
 - 验证层次明确区分：IOC 保存/重开、CubeMX 生成、静态检查、主机测试、固件编译、板端运行。编译成功不等于外设或系统服务已经可用。
 - 固件具备构建条件后，迁移应完成适当的编译检查；内存布局变化需检查 map/size；运行时或硬件行为变化仍需对应实机验证。
-
-## CLion MCP 与 Agent 直接调试
 
 ### 接入与会话所有权
 
@@ -301,9 +290,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 ### 结束与验证边界
 
 - 结束时明确 MCU 是运行、暂停还是已断开，GDB/J-Link 是否仍占用探针，以及保留了哪些断点和日志。`detach`、关闭服务器或退出调试器可能改变目标运行状态，不作为无副作用的自动清理步骤；用户要求保留现场时保持暂停并说明。
-- BringUp 的 `srnos_bringup` 仅在暂停且 `sampling == false` 时解释为一次完整发布；零值可能只是尚未采样。`RUNNING`、CAN 初始化、USB 启动、USB 枚举和 IMU 数据新鲜分别取证。
-- 暂停/单步会扰动 FreeRTOS、总线超时和设备时序，BringUp 全任务栈扫描也会挂起调度。断点取证不代表实时性验收；故障修复须区分主机测试、编译链接、修复固件下载和修复后板端复测，不以旧固件现场证明新固件正常。
-
+- 暂停/单步会扰动 FreeRTOS、总线超时和设备时序，全任务栈扫描也会挂起调度。断点取证不代表实时性验收；故障修复须区分主机测试、编译链接、修复固件下载和修复后板端复测，不以旧固件现场证明新固件正常。
 
 ## 固定平台合同
 
@@ -311,7 +298,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 - 四路 CAN 在启动时各选 Classic 或 FD；现有电机 adapter 要求 Classic 1 Mbit/s。原生 RX 每轮最多 32 帧，每批搬运最多 4 帧；FD 负载不能直接套用 Classic 的吞吐结论。时间使用 SRNOS_TimeMs。
 - 板内安装坐标由 Board 支撑维护，应用通过 INS 的 board_to_robot_wxyz 配置机器人安装旋转。消费者检查 VALID、年龄和 epoch，RUNNING 不代表姿态有效。
 - INS worker 负责统一温控；ins.enabled=false 不会取消传感器或 INS worker。IMU 观察回调仅做有界复制/通知，不等待、打印或编码整包 USB。
-- BringUp 明确配置加热用途；指示器复用 SDK 服务，不新增专用 LED 线程。启动提示与运行心跳的实际声光须现场观察。
+- 应用明确配置加热用途；指示器复用 SDK 服务，不新增专用 LED 线程。启动提示与运行心跳的实际声光须现场观察。
 - 身份、IMU 校准和业务参数由 Storage 单份 CRC/提交记录管理。保存失败不保证介质未改变；校准在下次启动应用，业务参数在自身周期边界读取一致快照。
 
 ## 文档维护示例
@@ -321,8 +308,7 @@ HAL tick 与 FreeRTOS tick、中断向量与 handler、外设初始化与 callba
 ```sh
 # 从 SDK 根目录执行；仅离线检查，不连接 PCB。
 cmake --preset Debug -DSIRINEMBEDOS_EXAMPLE=Minimal -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
-python3 Tests/Build/check_sdk.py --public-headers-only
+cmake --build --preset Debug
 ```
 
-根目录与模块指南互相链接，所有示例使用真实公共接口。历史台账见 [迁移索引](Docs/Migration/README.md)，历史验证从 [验证指南](Docs/Validation.md) 进入对应 CHANGELOG。
+根目录与模块指南互相链接，所有示例使用真实公共接口。历史来源见 [迁移索引](Docs/Migration/README.md)，功能变更见对应 CHANGELOG。

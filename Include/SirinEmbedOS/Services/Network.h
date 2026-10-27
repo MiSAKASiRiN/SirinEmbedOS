@@ -33,6 +33,19 @@ typedef enum {
  * events coalesce to the latest event. Do not use LATCH for motion/setpoints. */
 typedef SRNOS_UDPReceiveAction (*SRNOS_UDPReceiveSelector)(
     const SRNOS_UDPDatagram *incoming, const SRNOS_UDPDatagram *queued);
+/** Optional SNTPv4 client for a trusted local NTP server (UDP 123). No DNS,
+ * broadcast, authentication, RTC or persistence. Configuration is frozen.
+ * poll_interval_ms: 0 = stop after first success; otherwise 15000..86400000.
+ * All-zero defaults leave NTP disabled; enabled requires a routable server. */
+typedef struct {
+    bool enabled;
+    uint8_t server_address[4];
+    uint32_t poll_interval_ms;
+} SRNOS_NTPConfig;
+typedef struct {
+    uint32_t requests, accepted, rejected, timeouts, send_errors, kiss_of_death;
+    bool pending, denied;
+} SRNOS_NTPStatus;
 /** Startup-only configuration. Defaults: disabled, 192.168.1.50/24, no gateway,
  * no UDP listeners. Enable Ethernet too. Ports are unique, nonzero, frozen.
  * IPv4 unicast only; no TCP, DHCP, DNS, IPv6, forwarding or IP fragmentation. */
@@ -43,6 +56,7 @@ typedef struct {
     uint8_t udp_port_count;
     /** Per-port opt-in. NULL preserves full-drops-newest behavior. */
     SRNOS_UDPReceiveSelector udp_rx_select[SRNOS_UDP_PORT_LIMIT];
+    SRNOS_NTPConfig ntp;
 } SRNOS_NetworkConfig;
 typedef struct {
     bool enabled, ready, link_up;
@@ -52,6 +66,7 @@ typedef struct {
     uint32_t udp_accepted, udp_submitted, udp_tx_dropped;
     uint32_t tx_frames, tx_errors;
     uint32_t udp_rx_replaced, udp_rx_latched;
+    SRNOS_NTPStatus ntp;
 } SRNOS_NetworkStatus;
 bool SRNOS_NetworkConfigValid(const SRNOS_NetworkConfig *config);
 /** Task-only, nonblocking copy. OK means queued, not delivered. local_port must

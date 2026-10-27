@@ -50,8 +50,6 @@ static volatile bool s_rx_enabled;
 static TaskHandle_t s_service_task;
 static TaskHandle_t s_rx_notify_task;
 static uint32_t s_rx_notify_bits;
-static SRNOS_DebugPortWriteSinkFn s_write_sink;
-static void *s_write_sink_user;
 static uint8_t s_initialized;
 static volatile uint8_t s_usb_dtr;
 
@@ -134,8 +132,6 @@ void SRNOS_DebugPortInit(void)
     s_service_task = NULL;
     s_rx_notify_task = NULL;
     s_rx_notify_bits = 0u;
-    s_write_sink = NULL;
-    s_write_sink_user = NULL;
     s_usb_dtr = 0u;
     SRNOS_DebugLog.rx_enabled = 0u;
     SRNOS_DebugLog.usb_configured = usb_is_configured() ? 1u : 0u;
@@ -150,21 +146,6 @@ void SRNOS_DebugPortRegisterTxServiceTask(TaskHandle_t task)
 {
     SRNOS_DebugPortInit();
     s_service_task = task;
-}
-
-void SRNOS_DebugPortRegisterWriteSink(SRNOS_DebugPortWriteSinkFn sink,
-                                    void *user)
-{
-    SRNOS_DebugPortInit();
-    taskENTER_CRITICAL();
-    s_write_sink = sink;
-    s_write_sink_user = user;
-    taskEXIT_CRITICAL();
-}
-
-void SRNOS_DebugPortServiceTxOnce(void)
-{
-    /* TX scheduling is owned by HostComm in protocol V2. */
 }
 
 bool SRNOS_DebugPortIsConfigured(void)
@@ -247,74 +228,6 @@ bool SRNOS_DebugPortTakeTxComplete(bool *success)
     }
     taskEXIT_CRITICAL();
     return pending;
-}
-
-static SRNOS_DebugPortWriteStatus write_to_sink(const void *data,
-                                                   size_t len,
-                                                   bool high_priority)
-{
-    if ((data == NULL) || (len == 0u)) {
-        return SRNOS_DEBUG_PORT_WRITE_INVALID;
-    }
-    SRNOS_DebugPortInit();
-    if ((s_write_sink == NULL) || (xPortIsInsideInterrupt() == pdTRUE)) {
-        SRNOS_DebugLog.usb_tx_drop += (uint32_t)len;
-        return SRNOS_DEBUG_PORT_WRITE_NOT_CONFIGURED;
-    }
-    const SRNOS_DebugPortWriteStatus status =
-        s_write_sink(s_write_sink_user, data, len, high_priority);
-    if (high_priority) {
-        SRNOS_DebugLog.tx_high_prio_last_len = (uint32_t)len;
-        if (status == SRNOS_DEBUG_PORT_WRITE_OK) {
-            SRNOS_DebugLog.tx_high_prio_writes++;
-            SRNOS_DebugLog.tx_high_prio_bytes += (uint32_t)len;
-        } else {
-            SRNOS_DebugLog.tx_high_prio_full++;
-        }
-    }
-    if (status != SRNOS_DEBUG_PORT_WRITE_OK) {
-        SRNOS_DebugLog.usb_tx_drop += (uint32_t)len;
-    }
-    if (status == SRNOS_DEBUG_PORT_WRITE_OK) {
-        notify_service_from_task();
-    }
-    return status;
-}
-
-SRNOS_DebugPortWriteStatus SRNOS_DebugPortWriteExact(const void *data,
-                                                       size_t len)
-{
-    return write_to_sink(data, len, false);
-}
-
-SRNOS_DebugPortWriteStatus SRNOS_DebugPortWriteHighPrioExact(const void *data,
-                                                               size_t len)
-{
-    return write_to_sink(data, len, true);
-}
-
-size_t SRNOS_DebugPortWrite(const void *data, size_t len, TickType_t timeout)
-{
-    (void)timeout;
-    return (SRNOS_DebugPortWriteExact(data, len) == SRNOS_DEBUG_PORT_WRITE_OK) ? len : 0u;
-}
-
-size_t SRNOS_DebugPortWriteStr(const char *text, TickType_t timeout)
-{
-    if (text == NULL) {
-        return 0u;
-    }
-    size_t len = 0u;
-    while (text[len] != '\0') {
-        ++len;
-    }
-    return SRNOS_DebugPortWrite(text, len, timeout);
-}
-
-int SRNOS_DebugPortPutChar(int ch, TickType_t timeout)
-{
-    const uint8_t value = (uint8_t)ch;
-    return (SRNOS_DebugPortWrite(&value, 1u, timeout) == 1u) ? ch : -1;
 }
 
 SRNOS_DebugPortRxStatus SRNOS_DebugPortStartRx(TaskHandle_t notify_task,

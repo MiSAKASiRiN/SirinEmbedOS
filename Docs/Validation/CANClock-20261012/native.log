@@ -1,4 +1,0 @@
-native HAL: SPSC drop-new, bounded IRQ, batched TX notification, real HAL status dispatch and bounded Bus-Off recovery PASS
-native FD: real board timing/RAM, 8 mode combinations, all rate profiles/DLCs, init failure latch and recovery preservation PASS
-native workers: direct ISR notify, startup backlog, wait race, 32-frame batches and 8 completions / 1 wake PASS
-native FD workers: 64-byte startup backlog/32-frame batches, all DLCs, mode/BRS/ESI isolation and completion routing PASS

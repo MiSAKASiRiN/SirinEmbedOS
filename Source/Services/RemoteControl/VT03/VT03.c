@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Services/RemoteControl/VT03/VT03.h"
+#include "../../VideoLink/codec.h"
 #include "SirinEmbedOS/Core/C/Endian.h"
 #include "SirinEmbedOS/Core/C/Numeric.h"
 #include <string.h>
@@ -148,7 +149,7 @@ int SRNOS_VT03Decode21(const uint8_t* s, SRNOS_VT03Dec* d)
 void SRNOS_VT03FramerInit(SRNOS_VT03Framer* f)
 {
     if (f != NULL) {
-        f->len = 0u;
+        memset(f, 0, sizeof(*f));
     }
 }
 
@@ -165,30 +166,35 @@ size_t SRNOS_VT03FramerFeed(SRNOS_VT03Framer* f,
 
     size_t out_count = 0u;
     for (size_t i = 0u; i < len; ++i) {
-        if (f->len < SRNOS_VT03_FRAME_LEN) {
-            f->buf[f->len++] = data[i];
-            if (f->len < SRNOS_VT03_FRAME_LEN) {
-                continue;
+        f->buf[f->len++] = data[i];
+        while(f->len) {
+            if(f->buf[0]==0xa5) {
+                if(f->len<5)break;
+                uint16_t n=SRNOS_VideoLinkU16(f->buf+1);
+                if(n<=300 && SRNOS_VideoLinkCRC(f->buf,4,0xff,0x8c)==f->buf[4]) {
+                    uint16_t total=(uint16_t)(n+9);
+                    if(f->len<total)break;
+                    if(SRNOS_VideoLinkCRC(f->buf,total-2,0xffff,0x8408)==SRNOS_VideoLinkU16(f->buf+total-2)) {
+                        if(f->a5_callback)f->a5_callback(SRNOS_VideoLinkU16(f->buf+5),f->buf+7,n,f->buf[3],f->a5_user);
+                        f->len=(uint16_t)(f->len-total);memmove(f->buf,f->buf+total,f->len);continue;
+                    }
+                    /* A recognized A5 envelope owns its payload even when its
+                     * CRC16 fails: opaque command bytes must not become RC. */
+                    if(drop_count)(*drop_count)+=total;
+                    f->len=(uint16_t)(f->len-total);memmove(f->buf,f->buf+total,f->len);continue;
+                }
+            } else if(f->buf[0]==SRNOS_VT03_SOF0) {
+                if(f->len<2)break;
+                if(f->buf[1]==SRNOS_VT03_SOF1) {
+                    if(f->len<SRNOS_VT03_FRAME_LEN)break;
+                    if(SRNOS_VT03FrameSanity(f->buf)) {
+                        if(out_count<max_frames)memcpy(out_frames[out_count++].b,f->buf,SRNOS_VT03_FRAME_LEN);
+                        else if(drop_count)(*drop_count)+=SRNOS_VT03_FRAME_LEN;
+                        f->len-=SRNOS_VT03_FRAME_LEN;memmove(f->buf,f->buf+SRNOS_VT03_FRAME_LEN,f->len);continue;
+                    }
+                }
             }
-        }
-
-        if (SRNOS_VT03FrameSanity(f->buf)) {
-            for (uint32_t j = 0u; j < SRNOS_VT03_FRAME_LEN; ++j) {
-                out_frames[out_count].b[j] = f->buf[j];
-            }
-            out_count++;
-            f->len = 0u;
-            if (out_count >= max_frames) {
-                break;
-            }
-        } else {
-            for (uint32_t j = 0u; j < SRNOS_VT03_FRAME_LEN - 1u; ++j) {
-                f->buf[j] = f->buf[j + 1u];
-            }
-            f->len = (uint8_t)(SRNOS_VT03_FRAME_LEN - 1u);
-            if (drop_count != NULL) {
-                (*drop_count)++;
-            }
+            --f->len;memmove(f->buf,f->buf+1,f->len);if(drop_count)(*drop_count)++;
         }
     }
     return out_count;
@@ -209,12 +215,16 @@ static int16_t clamp_i32_to_i16(int32_t v)
 uint32_t SRNOS_VT03CheckSerialConfig(const SRNOS_SerialConfig *c) {
  return !c || c->baud_rate!=921600u || c->data_bits!=8 || c->stop_bits!=1 || c->parity!=SRNOS_SERIAL_PARITY_NONE || !c->rx_enabled;
 }
-static void sync_debug(SRNOS_VT03T *s,uint32_t now) {
+static int stream_discontinuity(SRNOS_VT03T *s) {
  SRNOS_SerialStats serial;
- if(SRNOS_SerialGetStats(s->channel,&serial)==SRNOS_SERIAL_OK){
-  s->diag.rx_hw_error_count=serial.hardware_errors;s->diag.rx_recover_count=serial.recoveries;
-  s->diag.rx_fifo_overflow_bytes=serial.rx_overflow;
- }
+ if(SRNOS_SerialGetStats(s->channel,&serial)!=SRNOS_SERIAL_OK)return 1;
+ int changed=s->diag.rx_hw_error_count!=serial.hardware_errors||s->diag.rx_recover_count!=serial.recoveries||s->diag.rx_fifo_overflow_bytes!=serial.rx_overflow;
+ s->diag.rx_hw_error_count=serial.hardware_errors;s->diag.rx_recover_count=serial.recoveries;
+ s->diag.rx_fifo_overflow_bytes=serial.rx_overflow;
+ if(changed){s->framer.len=0;++s->diag.stream_resets;(void)SRNOS_SerialDiscardRx(s->channel);}
+ return changed;
+}
+static void sync_debug(SRNOS_VT03T *s,uint32_t now) {
  volatile SRNOS_DbgVT03 *dbg=&SRNOS_DebugDbgVT03[s->debug_index];
  SRNOS_DbgBegin(&dbg->h);
  dbg->started=s->diag.started;dbg->rx_hw_error_count=s->diag.rx_hw_error_count;
@@ -226,7 +236,8 @@ static void sync_debug(SRNOS_VT03T *s,uint32_t now) {
 int SRNOS_VT03Init(SRNOS_VT03T *self,const SRNOS_VT03Config *cfg) {
  if(next_debug_index>=SRNOS_VT03_MAX_INSTANCES||!self||!cfg||SRNOS_VT03CheckSerialConfig(SRNOS_SerialGetConfig(cfg->channel)))return 0;
  if(SRNOS_SerialClaim(cfg->channel,self)!=SRNOS_SERIAL_OK)return 0;
- memset(self,0,sizeof(*self));self->channel=cfg->channel;self->raw_tap_cb=cfg->raw_tap_cb;self->user=cfg->user;
+ memset(self,0,sizeof(*self));self->channel=cfg->channel;self->raw_tap_cb=cfg->raw_tap_cb;self->user=cfg->user;self->frame_callback=cfg->frame_callback;
+ self->framer.a5_callback=cfg->a5_callback;self->framer.a5_user=cfg->a5_user;
  self->debug_index=next_debug_index++;
  SRNOS_DbgZero(&SRNOS_DebugDbgVT03[self->debug_index],sizeof(SRNOS_DebugDbgVT03[self->debug_index]));
  SRNOS_DbgInit(&SRNOS_DebugDbgVT03[self->debug_index].h,SRNOS_DBG_MODULE_VT03,self->debug_index,sizeof(SRNOS_DebugDbgVT03[self->debug_index]));return 1;
@@ -236,15 +247,24 @@ int SRNOS_VT03Stop(SRNOS_VT03T *s) {if(!s)return 0;s->diag.started=0;return 1;}
 int SRNOS_VT03Rearm(SRNOS_VT03T *s) {return SRNOS_VT03Start(s);} /* Physical recovery belongs to Serial. */
 int SRNOS_VT03ReadDiag(const SRNOS_VT03T *s,SRNOS_VT03Diag *out) {if(!s||!out)return 0;*out=s->diag;return 1;}
 int SRNOS_VT03PollDec(SRNOS_VT03T *s,SRNOS_VT03Dec *out,uint32_t now_ms) {
- (void)now_ms;if(!s||!s->channel||!s->diag.started)return 0;
+ if(!s||!s->channel||!s->diag.started)return 0;
+ if(stream_discontinuity(s)){sync_debug(s,now_ms);return 0;}
+ /* At 921600 baud even the largest frame takes <4 ms. Bound how long a
+  * truncated A5 header can mask the next remote packet. */
+ if(s->framer.len && now_ms-s->framer_started_ms>=10u) {
+  s->diag.rx_framer_drop_count+=s->framer.len;s->framer.len=0;
+ }
+ if(!s->framer.len)s->framer_started_ms=now_ms;
  uint8_t bytes[128];int got_frame=0;SRNOS_VT03Dec latest={0};
  int32_t mx=0,my=0,mz=0;
  /* Bound work to one ring per invocation under a continuously active line. */
  for(unsigned budget=0;budget<8;budget++){
   size_t n=0;if(SRNOS_SerialRead(s->channel,bytes,sizeof(bytes),&n,0)!=SRNOS_SERIAL_OK)break;
+  if(stream_discontinuity(s)){got_frame=0;break;}
   if(s->raw_tap_cb)s->raw_tap_cb(bytes,(uint16_t)n,s->user);
   SRNOS_VT03Raw frames[8];size_t count=SRNOS_VT03FramerFeed(&s->framer,bytes,n,frames,8,&s->diag.rx_framer_drop_count);
   for(size_t i=0;i<count;i++){SRNOS_VT03Decode21(frames[i].b,&latest);got_frame=1;s->diag.rx_frame_ok_count++;
+   if(s->frame_callback)s->frame_callback(&latest,s->user);
    mx+=latest.mx;my+=latest.my;mz+=latest.mz;
   }
  }

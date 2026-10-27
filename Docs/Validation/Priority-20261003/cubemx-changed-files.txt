@@ -1,2 +1,0 @@
-Core/Src/dma.c
-Core/Src/gpio.c

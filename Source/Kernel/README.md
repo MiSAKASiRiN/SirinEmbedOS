@@ -2,6 +2,8 @@
 
 Kernel 在现有 FreeRTOS 10.6.2 / CMSIS-RTOS2 上管理线程生命周期、外层循环、等待和内部统计；第三方内核不修改。父项目包含 `SirinEmbedOS/Kernel/Thread.h`、`Sync.h`，通常不再调用原生 RTOS API。接口只公开 SirinOS 值句柄和类型，不借出 TCB、原生句柄或统计 hook。
 
+`System.h` 的 `SRNOS_SystemBootId()` 返回本次启动的非零随机 64 位标识；在 ApplicationConfigure 前由板级 RNG 生成，此后仅读取、不分配或访问硬件。复位重新生成，独立于 NTP、uptime 和设备身份，不用作认证；随机碰撞概率非零。内核启动前返回 0；RNG 连续三次有界初始化失败会阻止应用启动，不能退回固定标识冒充新启动。
+
 ## 父项目从哪里开始
 
 应用通常把回调及管理函数放在 `App/Tasks/`，在 `App/app_main.cpp` 实现 `SRNOS_ApplicationMain()`，在 `Config/` 的配置回调声明启动期选择。父项目持有业务参数、通信协议和控制算法，SDK 持有调度器和固定服务；不要再次启动内核，不把长期循环写进 ApplicationMain。
@@ -170,7 +172,7 @@ SRNOS_Result send_value(uint32_t value) {
 
 启动时一次预留默认 32 KiB 父项目对象池，运行期只从固定 256 B 块分配栈、静态 TCB、完成事件和同步对象存储，通过 RTOS 静态创建装配。父项目线程上限 8，mutex/semaphore/queue/event 各 8；`SRNOS_APP_OBJECT_POOL_BYTES`、`SRNOS_APP_THREAD_LIMIT` 和各 `SRNOS_APP_*_LIMIT` 可编译期覆盖。数量上限不保证全部最大对象能同时放下，连续块不足也会返回 RESOURCE。池扫描和清零不覆盖全局关中断。
 
-KernelGetResources 报告池容量、当前/峰值、池分配失败及对象创建资源失败次数、父项目线程数以及 heap_5 空闲/最低空闲；池中空闲并不等于可满足任意连续分配。SDK 静态登记表和可选循环统计累加器在调度前各分配一次，保守预算各 8 KiB；32 KiB 父项目池另计。HostLink 启用时预留 9 KiB，包含 HostComm 3 KiB、HostCmd 2 KiB 及队列/TCB/TLS。SystemHeapBudget 包含这些预留和原有服务栈/队列/TCB/TLS，不代表运行期实测余量。其他业务分配仍应单独预留。
+KernelGetResources 报告池容量、当前/峰值、池分配失败及对象创建资源失败次数、父项目线程数以及 heap_5 空闲/最低空闲；池中空闲并不等于可满足任意连续分配。SDK 静态登记表和可选循环统计累加器在调度前各分配一次，保守预算各 8 KiB；32 KiB 父项目池另计。SirinLink 启用时预留 9 KiB，包含 HostComm 3 KiB、HostCmd 2 KiB 及队列/TCB/TLS。SystemHeapBudget 包含这些预留和原有服务栈/队列/TCB/TLS，不代表运行期实测余量。其他业务分配仍应单独预留。
 
 ## 运行期内存观测示例
 
@@ -207,15 +209,22 @@ SRNOS_Result read_memory_budget(SRNOS_KernelResources *out)
 
 `cycle_statistics_enabled` 默认启用，启动冻结，关闭不改变等待策略或 Fault。hook 只记 DWT 整数计数，SystemMonitor 每批最多四槽、批间阻塞一个 tick 后换算/发布。墙钟执行时间包含抢占、同步阻塞和中断，与 CPU 占比分开。事件/相对等待无固定周期时不发布虚构抖动；详见 Diagnostics/Runtime 和 SystemMonitor。基础流为 0x0001、ADC 为 0x0002，循环统计为 0x0003。
 
-在 SDK 根目录运行 `bash Tests/Kernel/run_host_tests.sh`，使用 pthread 假内核运行实际封装，检查生命周期、同步、时钟回绕与统计。父项目接入和固件链接使用 `Tests/Build`；主机与构建检查不能证明设备时序。历史板端负载与限制见 [ManagedTasks](../../Docs/Validation/ManagedTasksBoard-20260928/README.md)、[公共边界](../../Docs/Validation/SRNOSBoard-20260928/README.md)及本目录 [CHANGELOG](CHANGELOG.md)。
-
 ## 公共构建边界
 
-Kernel 的 RTOS/CMSIS、Board 与 Source include 都是 SDK 私有编译依赖。生产应用只链接 Platform 并包含 SDK 公共头；需要原生 RTOS 的验证代码单独编译为测试适配目标。接口独立 C11/C++17、依赖闭包和父项目真实编译命令由 Tests/Build 检查。
+Kernel 的 RTOS/CMSIS、Board 与 Source include 都是 SDK 私有编译依赖。生产应用只链接 Platform 并包含 SDK 公共头；不传播 HAL、RTOS 或其他私有 include 路径。父项目应使用与 SDK 相同的 ABI 和配置构建。
 
 ## 持久化启动屏障
 
-SystemConfig包含`storage.enabled`（默认true）、`storage.factory_identity_write`（默认false）、`parameter_application_id`与兼容版本（默认1）。AppInit先解析身份和逐IMU校准，再加载业务参数，共享2秒期限；超时或损坏使用规定的默认/降级状态后放行应用。INS等待校准期间继续温控，存储没有独立worker。注册了持久参数的父项目必须声明非零应用ID；HostLink禁用时本地加载/保存仍可用。整片EEPROM维护示例显式设置storage.enabled=false；普通业务不要使用维护模式绕过分区。
+SystemConfig包含`storage.enabled`（默认true）、`storage.factory_identity_write`（默认false）、`parameter_application_id`与兼容版本（默认1）。AppInit先解析身份和逐IMU校准，再加载业务参数，共享2秒期限；超时或损坏使用规定的默认/降级状态后放行应用。INS等待校准期间继续温控，EEPROM Storage 没有独立worker。注册了持久参数的父项目必须声明非零应用ID；SirinLink禁用时本地加载/保存仍可用。整片EEPROM维护示例显式设置storage.enabled=false；普通业务不要使用维护模式绕过分区。
+
+## NOR 黑匣子线程
+
+`SystemConfig.blackbox` 默认关闭，Prepare 在配置冻结前执行；启用后在 heap/线程注册表
+就绪时一次分配服务状态和有界队列，创建优先级 8、4096 B 栈的 `SRNOS_Blackbox`。
+它独占全部 NOR 读写，挂载不加入应用启动屏障，父项目通过 RAM 接口检查 READY/FAULT。
+32 条队列保守追加 15104 B heap；不从应用对象池分配，不改变其他任务优先级。
+父项目可用编译期 heap 配额并结合实际 map 安排容量，不得将 DTCM heap 用作 DMA 缓冲。
+公开 Append/异步读回 API 和恢复边界见 [Blackbox](../Services/Blackbox/README.md)。
 
 ## CAN 模式与启动冻结
 
@@ -225,7 +234,7 @@ SystemConfig包含`storage.enabled`（默认true）、`storage.factory_identity_
 
 ## 固定通信优先级
 
-P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及 UART 的 Serial/RC/Referee/RS485 worker（High7 / 47）。共享 SPI4 分发者保持 Realtime1（49），I2C4 保持 High6（46）。父项目仍限 1..39，CAN4使用一个4KiB栈，启动保守基础预算为60KiB。CAN 私有收发通知使用 index 0，生命周期控制使用 index 1。CAN 同步对象的保守启动预算仍保留，不将其当作业务内存保证。该策略优先保障 CAN1/2/3 与 IMU/INS，有界 batch/Yield 仅让出同级任务，不承诺持续过载下低优先级任务获得 CPU；实际余量按 [当前优先级与组合负载验收](../../Docs/Validation/CAN4-Optimization-20261006/README.md) 检查。
+P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及 UART 的 Serial/RC/Referee/RS485 worker（High7 / 47）。共享 SPI4 分发者保持 Realtime1（49），I2C4 保持 High6（46）。父项目仍限 1..39，CAN4使用一个4KiB栈，启动保守基础预算为60KiB。CAN 私有收发通知使用 index 0，生命周期控制使用 index 1。CAN 同步对象的保守启动预算仍保留，不将其当作业务内存保证。该策略优先保障 CAN1/2/3 与 IMU/INS，有界 batch/Yield 仅让出同级任务，不承诺持续过载下低优先级任务获得 CPU；实际余量需在应用负载下测量。
 
 ## Ethernet 启动项
 
@@ -233,4 +242,8 @@ P0 为 CAN1/2/3 收发与 BMI/LSM/INS（Realtime / 48），P1 为 CAN4 收发及
 
 ## 静态 IPv4 接入
 
-`SystemConfig.network` 默认关闭，预置 `192.168.1.50/24`、无网关；上层开启 `ethernet.enabled` 和 `network.enabled` 后可在启动阶段覆盖地址/掩码/网关及四个 UDP 端口。支持 UDP 和单播 Ping，ARP 为其提供邻居发现；其余网络协议关闭。网络开启后原始 Ethernet Send/Receive 返回 `SRNOS_ETHERNET_OWNED`。独立 Network worker 为优先级 15、6 KiB 栈，每轮显式等待 5 ms，保守追加 7 KiB heap 预算；固定队列和 lwIP 8 KiB 堆位于静态 D1。详见 SDK `Source/Services/Network/README.md` 和公共 `Services/Network.h`。
+Kernel 在冻结配置后装配 Network worker，并将其启动开销计入 heap 预算。网络开关、线程资源和协议栈存储合同统一见 [Network](../Services/Network/README.md#所有权调度与资源)。
+
+## 输入与消息启动顺序
+
+Serial 配置后先准备 Message 传输与内置遥控来源，再调用 bind_channels 注册应用来源、消息订阅及通道路由；Input/Message 注册表随后冻结，SirinLinkPrepare 注册对应 EVENT handler。sirin_link_setup 位于通用注册表冻结之后。配置和注册阶段不使用 RTOS heap；osKernelInitialize 完成 heap_5 注册后，Input 快照/事件环、Message 队列及 UART parser 一次分配，且纳入 SystemHeapBudget。运行期不分配。只有启用物理遥控/消息 UART 时创建 InputIO（47、3072 B、相对1 ms等待），HostComm/Network 沿用既有线程。公共用法见 [Input](../Services/Input/README.md) 和 [Message](../Services/Message/README.md)。

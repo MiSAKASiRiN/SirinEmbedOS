@@ -1,27 +1,21 @@
-# 遥控输入与仲裁
+# 物理遥控输入
 
-公开头位于 `SirinEmbedOS/Services/RemoteControl/`。DR16/VT03 接收由 SDK Serial 绑定和 `SRNOS_RC` worker 驱动；父项目在启动配置中声明 UART 用途及 `remote` 选择，示例见 [PrototypeBindings](../../../Examples/PrototypeBindings/README.md)。绑定在启动后冻结，应用不要自行轮询同一接收器或操作 HAL UART。
+`remote.dr16_port`、`remote.vt03_port`、`remote.wbus_port` 在启动时绑定 Serial 并自动注册独立 Input 来源。运行期通过 [Input](../Input/README.md) 的快照/事件接口读取。SDK 不选择活动遥控器，不配置优先级、死区、底盘方向或控制模式。
 
-## 读取示例
+| 来源名 | 接收 | 通道布局（零起始） | 按键/增量 |
+|---|---|---|---|
+| dr16 | 18 B DBUS，100000/8E2 | 0…3 摇杆，4 AUX 原始值，5/6 为 s1/s2 的原生 1上/3中/2下 | 16 位键盘，其中既有 DR16 低八位 W/S/A/D/Q/E/Shift/Ctrl 转为 Input 的低八位；高八位原位保留。鼠标 L/R 位16/17，相对 xyz。 |
+| vt03 | VT03/13 21 B 遥控帧，921600/8N1 | 0…3 摇杆，4 wheel，5 gear（0/1/2 原值） | 键盘位0…15，鼠标位16…18，Pause/Fn1/Fn2/Trigger 位19…22，相对 xyz。 |
+| wbus | 25 B W.Bus，100000/8E2 | 0…15 原始 11 位通道，按 remote.wbus_channels 逐通道可选校准 | 数字 CH17/18 位32/33；仅 frame_lost 丢弃本帧、不刷新 Input；failsafe 立即使整个来源无效。 |
 
-```c
-#include <SirinEmbedOS/Services/RemoteControl/RemoteControl.h>
+DR16 的 0…3、VT03 的 0…4 按 364/1024/1684 归一化。DR16 AUX 的可接受原始范围更宽，默认保留 raw，避免把端点假定为普通摇杆。W.Bus 默认没有归一化配置。键位按接收协议合同处理；应用不应把未知/未使用通道当作有效控制指令。
 
-bool read_remote(SRNOS_RC_State *out)
-{
-    if (out == NULL) return false;
-    SRNOS_RC_GetSnapshot(out);
-    const SRNOS_RC_Status status = SRNOS_RC_GetStatus();
-    return status.online && !status.blocked;
-}
-```
+`remote.offline_ms` 默认 300 ms，范围 1…60000；Input 对字段检查新鲜度。VT03 的自定义 A5/0311 数据走 Message，不能刷新物理 vt03 的在线状态。开启 video_link_enabled 必须 VT03 通道为 RX/TX 全双工，详见 [VideoLink](../VideoLink/README.md)。
 
-快照与状态是两次独立查询，不是联合原子事务；控制侧还需按自身安全要求检查新鲜度、来源和使能条件。返回不可用时不要继续使用上次输出。开关先检查 `s_valid_mask`，通道使用 `SRNOS_RC_CH_*` 枚举；`idle`/`sticks_idle` 不等于应用已经停车。应用优先读取副本，不把公开的 volatile 调试状态作为跨字段一致快照。
+W.Bus 的单次 `frame_lost` 仅由解码器累计计数，不发布该帧的通道/按键，也不改变 Input sequence、epoch、事件或时间戳。此前有效字段按原时间自然过期；连续 LOST 不会延长在线或控制许可。`failsafe` 优先于 `frame_lost`，两标志同时置位也立即发布失效；正常帧恢复会改变 epoch，应用仍需执行自己的重新使能要求。UART 错误、溢出和流重置依然发布 INPUT_FRAME_LOST 使来源失效，与接收机单帧 LOST 不同。更严格的控制超时（例如父项目 50 ms）由消费者在原有效字段时间上判断。
 
-源更新、Tick 和协议解码由 worker 持有；不从业务任务并发调用这些写入接口。自定义映射及仲裁需在配置阶段明确设置，并核对具体遥控器的物理通道。
+DR16/VT03/W.Bus 解码器均保留独立公开接口，允许应用在未启用内置绑定时自行 Init/轮询同一协议的另一实例。端口只有一个所有者；使用内置来源时不能再由父项目 Init/Poll 同一端口。DR16/VT03 Config 的 frame_callback 每个解码帧调用一次，W.Bus Framer 的回调在 Init 后设置；回调借用帧，仅在接收任务内有效。每帧发布可保留同次 Poll 中按下后立即松开的边沿与相对增量，不把多个帧压成一个按键状态。
 
-## 调度与诊断
+InputIO 只在有物理接收器或消息 UART 时创建，优先级 47、3072 B 栈、每轮相对等待 1 ms。Serial 负责 DMA/错误恢复；检测字节流溢出/硬件错误时清除未完成帧并使来源失效，后续完整有效帧恢复。每次 Poll 有读取上限，不因持续输入而无限运行。DR16 没有 CRC，按字段范围/帧长度同步的能力有限，不能提供强完整性保证。
 
-`SRNOS_RC` 为优先级 47、3072 B 栈，采用相对 1 ms 等待；普通等待不计入循环统计，解码内 I/O、抢占和中断计入墙钟。状态查询可检查 `active_src`、`last_ok_ms`、各来源在线情况及 `blocked`；协议帧计数可通过 [Watch](../../Diagnostics/Watch/README.md) 查看。
-
-Serial 通道与并发约束见 [Serial](../../IO/Serial/README.md)。历史修改及验证结果见 [CHANGELOG](CHANGELOG.md)，设备在线、通道映射和安全动作仍需在实际接收器上分别验证。
+完整配置示例见 [InputMessages](../../../Examples/InputMessages/README.md)，原板端口参考见 [PrototypeBindings](../../../Examples/PrototypeBindings/README.md)，W.Bus 独立解码接口见 [WBus](WBus/README.md)。

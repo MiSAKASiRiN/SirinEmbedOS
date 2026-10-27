@@ -1,9 +1,0 @@
-[1/2] Building CXX object CMakeFiles/SirinEmbedOS.dir/Examples/IMUTurntableBringUp/app_main.cpp.obj
-[2/2] Linking CXX executable SirinEmbedOS.elf
-Memory region         Used Size  Region Size  %age Used
-         DTCMRAM:        128 KB       128 KB    100.00%
-          RAM_D1:      279744 B       320 KB     85.37%
-          RAM_D2:        6848 B        32 KB     20.90%
-          RAM_D3:         544 B        16 KB      3.32%
-         ITCMRAM:       63104 B        64 KB     96.29%
-           FLASH:      302048 B         1 MB     28.81%

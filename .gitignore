@@ -6,6 +6,31 @@ cmake-build-*/
 CMakeUserPresets.json
 /captures/
 
+# Private local test suites and their hardware example fixtures
+/Tests/
+/Examples/BringUp/
+/Examples/SensorBringUp/
+/Examples/INSBringUp/
+/Examples/EEPROMBringUp/
+/Examples/IMUTurntableBringUp/
+
+# Local credentials, diagnostic captures and firmware outputs
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.elf
+*.map
+*.bin
+*.hex
+*.dump
+*.log
+*.core
+core
+
 # Python generated caches
 __pycache__/
 *.py[cod]

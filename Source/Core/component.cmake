@@ -8,7 +8,6 @@ set(SRNOS_FOUNDATION_SOURCES
     Source/Algorithms/Math/Matrix.c
     Source/Algorithms/Power/PowerControl.cpp
     Source/Diagnostics/Time/Time.c
-    Source/Diagnostics/Watch/Watch.c
     Source/Diagnostics/Runtime/cycle_statistics.c
     Source/Diagnostics/Runtime/runtime_trace.c
     Source/Diagnostics/Runtime/Trace.c

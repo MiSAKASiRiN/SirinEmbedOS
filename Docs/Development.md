@@ -26,38 +26,31 @@
 
 任务拆成 init / step / cleanup，优先通过 ThreadCreate 保存可管理句柄。先准备资源再启用生产者；Create 成功与 init 成功分开检查。停止生产者后 RequestStop / Join / Delete，只有 Delete 成功才释放参数。生命周期完整示例见 [Kernel](../Source/Kernel/README.md)。
 
-## 离线检查示例
+## 构建检查
 
-从 SDK 根目录运行；编译检查需要 QuickStart 中的工具链 PATH。
-
-```sh
-cmake --preset Debug -DSIRINEMBEDOS_EXAMPLE=Minimal -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
-python3 Tests/Build/check_sdk.py --public-headers-only
-bash Tests/Kernel/run_host_tests.sh
-bash Tests/Services/Network/run_host_tests.sh
-```
-
-根据改动选择相关套件；完整主机套件入口是 `python3 Tests/run_host_tests.py`。完整 SDK 集成检查使用 `python3 Tests/Build/check_sdk.py`，会构建测试父项目并检查链接布局和第三方哈希，不访问 PCB。
-
-构建隔离的观测固件示例：
+从 SDK 根目录运行；需要 QuickStart 中的工具链 PATH：
 
 ```sh
-cmake -S . -B build/bringup-check -G Ninja -DCMAKE_BUILD_TYPE=Debug -DSIRINEMBEDOS_EXAMPLE=BringUp
-cmake --build build/bringup-check -j 8
+cmake --preset Debug -DSIRINEMBEDOS_EXAMPLE=Minimal
+cmake --build --preset Debug -j 8
+cmake --preset Release -DSIRINEMBEDOS_EXAMPLE=Minimal
+cmake --build --preset Release -j 8
+python3 Tools/Debug/check_i2c_timing.py
 ```
 
-仅生成固件，不自动下载。所选示例、配置和 ELF 哈希应与后续验证记录对应。
+Minimal 和 InputMessages 可通过 `SIRINEMBEDOS_EXAMPLE` 选择。其余 API 用法示例由父项目按需接入。构建只生成固件，不自动下载；父项目应独立配置和构建，核对公共头隔离、最终 ELF 与资源预算。
+
+Git 分发不包含测试套件、专用实机测试固件或原始验证材料。本地已配置私有测试目录时，可从 SDK 根目录运行 `python3 Tests/run_host_tests.py`；这不是公开检出的必需构建步骤。私有测试源码和 BringUp 依赖必须保持忽略且未跟踪。历史变更记录只说明当时的实现与验证范围。
 
 ## 资源与板端验收
 
 - map 给出静态分配和预留，不能代替 heap 当前/历史最小余量或任务栈水位。常规监控不周期扫栈；专用观测会扰动调度。
 - DMA staging 保持可达 SRAM、对齐和 cache 合同；ITCM/DTCM 不能随意用于 DMA。链接段调整需核对早期清零/复制。
 - 系统启动、设备 READY、有效数据、吞吐、期限和故障恢复分别取证，不将其中一项视作全部验收。
-- 实机复现遵循 [验证指南](Validation.md)和具体测试说明，保存原固件/配置及可恢复状态；不依据历史结束状态操作当前调试会话。
+
 - 未实现的接口不在文档中承诺；FatFs、硬件看门狗监督等能力应先确认真实需求，再设计实现与验收。
 
-已记录问题及阶段性实测保留在 [文档 CHANGELOG](CHANGELOG.md)和 [验证历史](Validation/CHANGELOG.md)。这些条目用于定位证据，不能自动外推为当前固件已修复或仍失败。
+历史记录不能自动外推为当前固件已修复或仍失败。
 
 <a id="2026-10-03-初检遗留问题"></a>
 

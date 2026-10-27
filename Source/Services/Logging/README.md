@@ -33,14 +33,10 @@ void report_voltage(float voltage)
 
 ## 后端与线程
 
-在系统启动配置中选择 `log_backends`；UART 后端还须由 Serial 配置明确分配日志用途。默认 USB CDC，SWO 默认关闭。后端绑定和选择在启动阶段冻结，冻结后的 `SRNOS_LogSetBackendMask()` 不改变配置。不默认占用 USART1，不把协议端口当备用输出口。
+在系统启动配置中选择 `log_backends`；UART 后端还须由 Serial 配置明确分配日志用途。默认 USB CDC，SWO 默认关闭。编译期开关、所选后端和各后端等级 mask 共同决定输出范围；正常日志入队不检查物理链路是否就绪。后端绑定和选择在启动阶段冻结，冻结后的 `SRNOS_LogSetBackendMask()` 不改变配置。不默认占用 USART1，不把协议端口当备用输出口。
 
 `SRNOS_Log` 使用 2 KiB 栈和 Low 优先级，通过 SDK 私有统一线程入口创建。队列的 10 ms 等待位于循环统计之外；整行格式化、投递与 USB 维护在单轮处理内。公开日志调用只入队，后台线程经已配置的非阻塞 Serial/USB sink 输出；后端拥塞可丢弃并计数。调度、资源装配、transport、输出函数和任务入口均保留在私有头内。
 
 现有 libc `__io_putchar()` 仍由 SDK 适配到已配置的非阻塞输出 sink，并不经过上述结构化日志队列；它不是资源耗尽的回退路径。Fault 紧急输出保持独立，不依赖本服务。`SRNOS_LogGetStats()` 获取入队、丢弃、截断、USB 和 UART 计数；Debug Watch 对象名为 `SRNOS_DebugLog`。
-
-## 验证与边界
-
-`Tests/Services/Logging/run_host_tests.sh` 编译真实 `Log.c`，用可控消息池、队列及 USB/UART sink 检查启动捕获、未装配、资源耗尽、满队列替换、并发重试失败、ISR 拒绝和锁定调度的处理；明确断言这些失败路径没有直接 I/O。测试启用 C11 严格警告、枚举转换检查和 UBSan，并纳入统一主机套件。USB 后端另见 `Tests/Services/USB`。
 
 主机测试不证明板端输出吞吐、线程调度开销或实机 CDC 背压时序。

@@ -107,6 +107,13 @@ SRNOS_ParametersStatus SRNOS_ParametersValidateBinaryByIndex(size_t,const uint8_
 SRNOS_ParametersStatus SRNOS_ParametersSetBinaryByIndex(size_t,const uint8_t *,size_t);
 SRNOS_ParametersStatus SRNOS_ParametersSetBinaryBatch(const SRNOS_ParametersBinaryWrite *,size_t,size_t *);
 SRNOS_ParametersStatus SRNOS_ParametersDumpRegistry(SRNOS_ParametersDumpCallback,void *);
+/* Task-only diagnostic dump through the SDK Logging queue at INFO level;
+ * scheduler must be running or locked. Never enters startup boot capture.
+ * DISABLED: no selected backend allows INFO. NO_SPACE: queue/pool rejected a
+ * record. BUFFER_TOO_SMALL: a complete name=value line exceeds the log body.
+ * Stops on first failure; accepted earlier records are not rolled back.
+ * OK means every record was accepted, not delivered; Logging may drop records.
+ * An empty registry is a successful no-op. Use DumpRegistry for custom export. */
 SRNOS_ParametersStatus SRNOS_ParametersDumpDebugPort(void);
 const char *SRNOS_ParametersStatusName(SRNOS_ParametersStatus);
 const char *SRNOS_ParametersTypeName(SRNOS_ParametersType);

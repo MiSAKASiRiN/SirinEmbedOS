@@ -121,14 +121,12 @@ size_t SRNOS_DR16FramerFeed(SRNOS_DR16Framer* f,
         }
 
         if (SRNOS_DR16FrameSanity(f->buf)) {
-            for (uint32_t j = 0u; j < SRNOS_DR16_FRAME_LEN; ++j) {
-                out_frames[out_count].b[j] = f->buf[j];
+            if(out_count<max_frames) {
+                memcpy(out_frames[out_count++].b,f->buf,SRNOS_DR16_FRAME_LEN);
+            } else if(drop_count) {
+                *drop_count+=SRNOS_DR16_FRAME_LEN;
             }
-            out_count++;
             f->len = 0u;
-            if (out_count >= max_frames) {
-                break;
-            }
         } else {
             for (uint32_t j = 0u; j < SRNOS_DR16_FRAME_LEN - 1u; ++j) {
                 f->buf[j] = f->buf[j + 1u];
@@ -146,12 +144,16 @@ size_t SRNOS_DR16FramerFeed(SRNOS_DR16Framer* f,
 uint32_t SRNOS_DR16CheckSerialConfig(const SRNOS_SerialConfig *c) {
  return !c || c->baud_rate!=100000u || c->data_bits!=8 || c->stop_bits!=2 || c->parity!=SRNOS_SERIAL_PARITY_EVEN || !c->rx_enabled;
 }
-static void sync_debug(SRNOS_DR16T *s,uint32_t now) {
+static int stream_discontinuity(SRNOS_DR16T *s) {
  SRNOS_SerialStats serial;
- if(SRNOS_SerialGetStats(s->channel,&serial)==SRNOS_SERIAL_OK){
-  s->diag.rx_hw_error_count=serial.hardware_errors;s->diag.rx_recover_count=serial.recoveries;
-  s->diag.rx_fifo_overflow_bytes=serial.rx_overflow;
- }
+ if(SRNOS_SerialGetStats(s->channel,&serial)!=SRNOS_SERIAL_OK)return 1;
+ int changed=s->diag.rx_hw_error_count!=serial.hardware_errors||s->diag.rx_recover_count!=serial.recoveries||s->diag.rx_fifo_overflow_bytes!=serial.rx_overflow;
+ s->diag.rx_hw_error_count=serial.hardware_errors;s->diag.rx_recover_count=serial.recoveries;
+ s->diag.rx_fifo_overflow_bytes=serial.rx_overflow;
+ if(changed){s->framer.len=0;++s->diag.stream_resets;(void)SRNOS_SerialDiscardRx(s->channel);}
+ return changed;
+}
+static void sync_debug(SRNOS_DR16T *s,uint32_t now) {
  volatile SRNOS_DbgDR16 *dbg=&SRNOS_DebugDbgDR16[s->debug_index];
  SRNOS_DbgBegin(&dbg->h);
  dbg->started=s->diag.started;dbg->rx_hw_error_count=s->diag.rx_hw_error_count;
@@ -163,7 +165,7 @@ static void sync_debug(SRNOS_DR16T *s,uint32_t now) {
 int SRNOS_DR16Init(SRNOS_DR16T *self,const SRNOS_DR16Config *cfg) {
  if(next_debug_index>=SRNOS_DR16_MAX_INSTANCES||!self||!cfg||SRNOS_DR16CheckSerialConfig(SRNOS_SerialGetConfig(cfg->channel)))return 0;
  if(SRNOS_SerialClaim(cfg->channel,self)!=SRNOS_SERIAL_OK)return 0;
- memset(self,0,sizeof(*self));self->channel=cfg->channel;self->raw_tap_cb=cfg->raw_tap_cb;self->user=cfg->user;
+ memset(self,0,sizeof(*self));self->channel=cfg->channel;self->raw_tap_cb=cfg->raw_tap_cb;self->user=cfg->user;self->frame_callback=cfg->frame_callback;
  self->debug_index=next_debug_index++;
  SRNOS_DbgZero(&SRNOS_DebugDbgDR16[self->debug_index],sizeof(SRNOS_DebugDbgDR16[self->debug_index]));
  SRNOS_DbgInit(&SRNOS_DebugDbgDR16[self->debug_index].h,SRNOS_DBG_MODULE_DR16,self->debug_index,sizeof(SRNOS_DebugDbgDR16[self->debug_index]));return 1;
@@ -173,14 +175,19 @@ int SRNOS_DR16Stop(SRNOS_DR16T *s) {if(!s)return 0;s->diag.started=0;return 1;}
 int SRNOS_DR16Rearm(SRNOS_DR16T *s) {return SRNOS_DR16Start(s);} /* Physical recovery belongs to Serial. */
 int SRNOS_DR16ReadDiag(const SRNOS_DR16T *s,SRNOS_DR16Diag *out) {if(!s||!out)return 0;*out=s->diag;return 1;}
 int SRNOS_DR16PollDec(SRNOS_DR16T *s,SRNOS_DR16Dec *out,uint32_t now_ms) {
- (void)now_ms;if(!s||!s->channel||!s->diag.started)return 0;
+ if(!s||!s->channel||!s->diag.started)return 0;
+ if(stream_discontinuity(s)){sync_debug(s,now_ms);return 0;}
+ if(s->framer.len && now_ms-s->framer_started_ms>=10u){s->diag.rx_framer_drop_count+=s->framer.len;s->framer.len=0;}
+ if(!s->framer.len)s->framer_started_ms=now_ms;
  uint8_t bytes[128];int got_frame=0;SRNOS_DR16Dec latest={0};
  /* Bound work to one ring per invocation under a continuously active line. */
  for(unsigned budget=0;budget<8;budget++){
   size_t n=0;if(SRNOS_SerialRead(s->channel,bytes,sizeof(bytes),&n,0)!=SRNOS_SERIAL_OK)break;
+  if(stream_discontinuity(s)){got_frame=0;break;}
   if(s->raw_tap_cb)s->raw_tap_cb(bytes,(uint16_t)n,s->user);
   SRNOS_DR16Raw frames[8];size_t count=SRNOS_DR16FramerFeed(&s->framer,bytes,n,frames,8,&s->diag.rx_framer_drop_count);
   for(size_t i=0;i<count;i++){SRNOS_DR16Decode18(frames[i].b,&latest);got_frame=1;s->diag.rx_frame_ok_count++;
+   if(s->frame_callback)s->frame_callback(&latest,s->user);
   }
  }
  sync_debug(s,now_ms);if(got_frame&&out)*out=latest;return got_frame;

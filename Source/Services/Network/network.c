@@ -1,4 +1,6 @@
 #include "network_internal.h"
+#include "network_ntp.h"
+#include "../Message/message_internal.h"
 #include "IO/Ethernet/ethernet_internal.h"
 #include "Kernel/thread_internal.h"
 #include "queue.h"
@@ -22,7 +24,13 @@ static uint32_t accepted;
 static bool prepared, initialized, pending;
 static uint32_t next_arp;
 static struct netif interface;
-static struct udp_pcb *ports[SRNOS_UDP_PORT_LIMIT];
+static struct udp_pcb *ports[SRNOS_UDP_PORT_LIMIT+1];
+static uint16_t message_port;
+bool SRNOS_NetworkBindMessages(uint16_t port)
+{
+    if(prepared||message_port||!port)return false;
+    message_port=port;return true;
+}
 static QueueHandle_t tx_queue, rx_queue[SRNOS_UDP_PORT_LIMIT];
 static StaticQueue_t tx_control, rx_control[SRNOS_UDP_PORT_LIMIT];
 static uint8_t tx_storage[SRNOS_UDP_TX_DEPTH * sizeof(tx_item_t)];
@@ -40,6 +48,7 @@ static rx_item_t rx_previous;
 u32_t sys_now(void) { return SRNOS_TimeMs(); }
 static void publish(void)
 {
+    SRNOS_NTPGetStatus(&current.ntp);
     taskENTER_CRITICAL();
     published = current;
     taskEXIT_CRITICAL();
@@ -55,6 +64,7 @@ bool SRNOS_NetworkGetStatus(SRNOS_NetworkStatus *status)
 }
 static int port_index(uint16_t port)
 {
+    if(message_port&&port==message_port)return SRNOS_UDP_PORT_LIMIT;
     for (unsigned i=0;i<configuration.udp_port_count;++i)
         if (configuration.udp_ports[i]==port) return (int)i;
     return -1;
@@ -87,7 +97,7 @@ SRNOS_NetworkResult SRNOS_UDPReceive(uint16_t local_port, SRNOS_UDPDatagram *dat
 {
     if (!SRNOS_KernelTaskContext()) return SRNOS_NETWORK_CONTEXT;
     int index=port_index(local_port);
-    if (index<0 || !datagram) return SRNOS_NETWORK_INVALID;
+    if (index<0 || (unsigned)index>=SRNOS_UDP_PORT_LIMIT || !datagram) return SRNOS_NETWORK_INVALID;
     SRNOS_NetworkStatus status;
     const bool live=live_status(&status);
     rx_item_t item;
@@ -143,6 +153,13 @@ static void udp_received(void *argument, struct udp_pcb *pcb, struct pbuf *p,
         item.datagram.received_ms=SRNOS_TimeMs();
         pbuf_copy_partial(p,item.datagram.data,p->tot_len,0);
         ++current.udp_received;
+        if(index==SRNOS_UDP_PORT_LIMIT) {
+            SRNOS_MessageOrigin origin={.transport=SRNOS_MESSAGE_UDP,.endpoint=message_port,.peer_port=port};
+            memcpy(origin.peer_address,item.datagram.source_address,4);
+            if(SRNOS_MessageReceiveWire(&origin,item.datagram.data,item.datagram.length,item.datagram.received_ms)!=SRNOS_MESSAGE_OK)
+                ++current.udp_rx_dropped;
+            pbuf_free(p);return;
+        }
         SRNOS_UDPReceiveAction action=SRNOS_UDP_RX_KEEP_FIRST;
         if (configuration.udp_rx_select[index]) {
             bool queued=xQueuePeek(rx_queue[index],&rx_previous,0)==pdPASS;
@@ -181,7 +198,12 @@ static bool initialize(const SRNOS_EthernetStatus *eth)
         if (!ports[i] || udp_bind(ports[i],IP_ADDR_ANY,configuration.udp_ports[i])!=ERR_OK) return false;
         udp_recv(ports[i],udp_received,(void *)(uintptr_t)i);
     }
-    return true;
+    if(message_port) {
+        ports[SRNOS_UDP_PORT_LIMIT]=udp_new();
+        if(!ports[SRNOS_UDP_PORT_LIMIT]||udp_bind(ports[SRNOS_UDP_PORT_LIMIT],IP_ADDR_ANY,message_port)!=ERR_OK)return false;
+        udp_recv(ports[SRNOS_UDP_PORT_LIMIT],udp_received,(void *)(uintptr_t)SRNOS_UDP_PORT_LIMIT);
+    }
+    return SRNOS_NTPInitialize(&configuration.ntp,&interface);
 }
 static void flush(void)
 {
@@ -268,6 +290,7 @@ static void step(void *context)
         current.link_up=up;
         if (up) { netif_set_link_up(&interface); netif_set_up(&interface); }
     }
+    SRNOS_NTPStep(up,current.link_epoch);
     if (up) { receive_frames(); send_datagram(); }
     sys_check_timeouts();
     publish();
@@ -287,6 +310,10 @@ static void entry(void *context)
 bool SRNOS_NetworkPrepare(const SRNOS_NetworkConfig *config)
 {
     if (prepared || !SRNOS_NetworkConfigValid(config)) return false;
+    if(message_port) {
+        if(!config->enabled)return false;
+        for(unsigned i=0;i<config->udp_port_count;i++)if(config->udp_ports[i]==message_port)return false;
+    }
     if (config->enabled && !SRNOS_EthernetClaimNetwork()) return false;
     configuration=*config;
     current.enabled=config->enabled;

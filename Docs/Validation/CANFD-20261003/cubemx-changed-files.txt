@@ -1,3 +1,0 @@
-Core/Src/fdcan.c
-Core/Src/main.c
-OMNICTL2_3.ioc

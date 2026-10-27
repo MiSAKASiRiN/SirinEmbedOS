@@ -14,7 +14,7 @@ bool SRNOS_NetworkDestinationValid(const SRNOS_NetworkConfig *c, const uint8_t i
 bool SRNOS_NetworkConfigValid(const SRNOS_NetworkConfig *c)
 {
     if (!c || c->udp_port_count > SRNOS_UDP_PORT_LIMIT) return false;
-    if (!c->enabled) return true;
+    if (!c->enabled) return !c->ntp.enabled;
     uint32_t ip=address_value(c->address), mask=address_value(c->netmask), host=~mask;
     uint32_t gateway=address_value(c->gateway);
     /* Conventional /1../30 subnets only, with host and broadcast addresses. */
@@ -26,5 +26,8 @@ bool SRNOS_NetworkConfigValid(const SRNOS_NetworkConfig *c)
         if (!c->udp_ports[i]) return false;
         for (unsigned j=0;j<i;++j) if (c->udp_ports[i]==c->udp_ports[j]) return false;
     }
+    if (c->ntp.enabled && (!SRNOS_NetworkDestinationValid(c,c->ntp.server_address) ||
+        (c->ntp.poll_interval_ms && (c->ntp.poll_interval_ms<15000u ||
+            c->ntp.poll_interval_ms>86400000u)))) return false;
     return true;
 }

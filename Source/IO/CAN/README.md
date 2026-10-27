@@ -8,7 +8,7 @@ CAN1–4 的 Classic/FD 路由、adapter `on_rx/poll_tx/tick`、发送 TTL 和�
 
 ## 启动模式与 FD 接口
 
-四路控制器分别通过 `SRNOS_SystemConfig.can[channel - 1]` 在 `SRNOS_ApplicationConfigure()` 中声明。默认全部为 Classic、仲裁速率 1 Mbit/s、`data_bitrate=0`、`brs=false`。每路只选择 Classic 或 FD；启动校验后冻结，无运行期切换、重绑定或 HostLink 改写。`Controller.h` 提供配置校验和冻结配置副本查询，冻结前查询返回 false。最终配置与订阅/adapter 类型不匹配时拒绝启动；恢复只使用冻结配置。
+四路控制器分别通过 `SRNOS_SystemConfig.can[channel - 1]` 在 `SRNOS_ApplicationConfigure()` 中声明。默认全部为 Classic、仲裁速率 1 Mbit/s、`data_bitrate=0`、`brs=false`。每路只选择 Classic 或 FD；启动校验后冻结，无运行期切换、重绑定或 SirinLink 改写。`Controller.h` 提供配置校验和冻结配置副本查询，冻结前查询返回 false。最终配置与订阅/adapter 类型不匹配时拒绝启动；恢复只使用冻结配置。
 
 | 配置 | 支持范围 |
 |---|---|
@@ -38,7 +38,7 @@ TX 入队与完成通知立即唤醒，无 adapter 和排队项时永久阻塞�
 
 父项目仅包含公开的 `Controller.h`、`Router/CAN.h`、`External/ExternalCAN.h` 或 `FD/CANFD.h`。worker、ISR 和冻结/启动装配声明位于私有头；GetStats(ch, out)/GetStats(dev, out) 在任务上下文返回调用者拥有的副本，禁止缓存旧版本内部统计指针。原生诊断与调试观测符号统一 SRNOS_ 前缀。
 
-原生 RX/TX 通知的头文件声明必须是普通外部声明，只有 FDCAN.c 的默认定义使用 weak；router 提供强实现。若将 weak 放在共享声明上，C++ router 的实现也会继承弱属性，链接器可能选中空实现，造成硬件收帧而 RX 线程永远不醒。Tests/Core/check_foundation_elf.py 检查最终 RX/TX 通知均为强符号，不能仅凭单模块主机测试或硬件 TX 入队计数判断链路正常。
+原生 RX/TX 通知的头文件声明必须是普通外部声明，只有 FDCAN.c 的默认定义使用 weak；router 提供强实现。若将 weak 放在共享声明上，C++ router 的实现也会继承弱属性，链接器可能选中空实现，造成硬件收帧而 RX 线程永远不醒。
 
 ## 内存归属
 
@@ -57,7 +57,6 @@ RX/TX 使用 FreeRTOS 直接任务通知 index 0，Kernel 生命周期控制使�
 CAN4的状态/UA读取、RAM操作与UINC合并为每帧一个私有SPI序列，各物理事务之间仍允许IMU优先插入。错误恢复、诊断和回调统一由P1 `SRNOS_CAN4` 执行，应用回调必须有界且非阻塞，不持设备锁。
 
 Bus-Off 由 HAL_FDCAN_ErrorStatusCallback 接入，ISR 仅记录并唤醒 TX worker。恢复状态机等待 100 ms，取消旧硬件 TX（最多等待 10 ms），Stop/Start 后最多等待 100 ms 确认恢复；最多三次失败后隔离至重启。隔离时不再提交硬件，但软件队列继续按 TTL 过期；旧硬件命令不重放。私有观测包含恢复状态、次数和失败计数。HAL 取消与实际总线重入仍待硬件验收。
-
 
 ## CAN4 单线程服务与预算
 
@@ -91,16 +90,3 @@ int register_status_receiver(void) {
 Classic 任务侧一次性发送使用 `SRNOS_CANRouterPostOneshot()`，返回成功只表示复制入队；发送完成和外部 ACK 需要相应观测。电机 adapter 示例见 [Motors](../../Devices/Motors/README.md)，FD 完整接入见 [CANFD 示例](../../../Examples/CANFD/README.md)。业务使用同一 SDK 毫秒时钟，按新鲜度判断反馈。
 
 吞吐评估须按实际 ID、长度、BRS、仲裁/数据速率、填充和重传计算占用；通道合计 3 kHz 不表示支持 333 µs adapter 周期。四路并发能力不能由单路测试推导。增加容量后重新检查 map，ITCM 超量会链接失败，不会静默回落到 D1。
-
-## 验证入口
-
-在 SDK 根执行：
-
-```sh
-bash Tests/IO/CAN/Router/run_host_tests.sh
-bash Tests/IO/CAN/FD/run_host_tests.sh
-bash Tests/IO/CAN/Native/run_host_tests.sh
-bash Tests/IO/CAN/External/run_host_tests.sh
-```
-
-主机模型覆盖路由、队列、TTL、模式和恢复状态机，不能测 MCU 实际吞吐或物理 Bus-Off 恢复。各轮构建、板测及限制集中在 [CHANGELOG](CHANGELOG.md)，验证方法见 [验证指南](../../../Docs/Validation.md)。

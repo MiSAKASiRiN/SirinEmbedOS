@@ -27,7 +27,7 @@ void controller_cycle(void) {
 }
 ```
 
-架构配置在启动时检查、归一化并冻结。安装四元数必须有限且范数非零，目标温度不能为 NaN/Inf 或超出范围。INS 开启时 BMI/LSM 采样周期均为 1 ms；应用不能运行时改变安装旋转、ODR、温控目标或通过 HostLink 写这些配置。仅作原始采样的 SensorBringUp 设置 `ins.enabled=false`，仍使用同一个 INS/温控 worker；该开关不取消 worker 或静态缓冲，资源变化应以最终 map 和任务创建配置核对。
+架构配置在启动时检查、归一化并冻结。安装四元数必须有限且范数非零，目标温度不能为 NaN/Inf 或超出范围。INS 开启时 BMI/LSM 采样周期均为 1 ms；应用不能运行时改变安装旋转、ODR、温控目标或通过 SirinLink 写这些配置。仅需原始采样时设置 `ins.enabled=false`，仍使用同一个 INS/温控 worker；该开关不取消 worker 或静态缓冲，资源变化应以最终 map 和任务创建配置核对。
 
 `SRNOS_INSGetSnapshot` 返回姿态、四路测量与状态的统一副本；`SRNOS_INSGetAttitude` 只复制高频姿态；`SRNOS_INSGetStatus` 在初始化阶段也可调用。均限任务上下文，返回 true 仅表示输出指针有效。多个消费者独立读取，不消费数据、不返回内部指针。复制使用短 IRQ 临界区；`max_copy_us` 包含复制及新鲜度检查的最大耗时，须结合板测判断。
 
@@ -79,21 +79,15 @@ PWM 仅由 INS worker 持有；不再依赖 BMI 的初始化或重试。反馈�
 
 该保护由运行中的任务执行，调试暂停 CPU 时不会继续闭环。过温路径可用主机注入检查，不以人为把实板升至 80°C 作为默认测试方法。长期热场、环境变化和传感器误差需要各自测量，恒温不等于温度误差已校准。
 
-## 构建与遥测
+## 遥测
+
+使用启用了正式 INS 和 SirinLink 的应用固件，并按 [主机工具说明](../Tools/SirinLink/README.md) 准备 Python 环境：
 
 ```sh
-cmake --preset Debug -B build/INSBringUp -DSIRINEMBEDOS_EXAMPLE=INSBringUp
-cmake --build build/INSBringUp
-build/hostlink-venv/bin/python Tools/HostLink/imu_telemetry.py \
+build/sirinlink-venv/bin/python Tools/SirinLink/imu_telemetry.py \
   --port CDC1_PATH --streams ins mag pressure --duration 600
 ```
 
-以上命令在 SDK 根目录执行；先按 [主机工具说明](../Tools/HostLink/README.md) 准备 Python 环境，将 `CDC1_PATH` 换成实际 CDC1。加上 `bmi lsm` 可同时订阅原始流；`--json` 输出每秒完整机器可读状态和每十秒采集/接收速率。未就绪时无姿态事件，状态查询仍报告进度。INS 默认自动注册五条流，应用的 HostLink setup 与样本观察回调仍可附加。
+将 `CDC1_PATH` 换成实际 CDC1。加上 `bmi lsm` 可同时订阅原始流；`--json` 输出机器可读状态。未就绪时无姿态事件，状态查询仍报告进度。INS 默认注册五条流，应用可附加 SirinLink setup 和样本观察回调。
 
-INSBringUp 使用正常 API，每秒日志和调试快照，无周期全任务栈扫描，启动音与黄色第一灯 1 Hz 心跳保留。BringUp 关闭加热并观测正式 INS；SensorBringUp 关闭融合而保持统一温控。SDK 默认启用持久化加载与业务参数 SAVE/LOAD；这些观测示例可显式关闭业务参数加载，但 IMU 校准仍由独立 Storage 启动路径加载。校准失败继续采样和融合并标记 UNCALIBRATED/DEGRADED。
-
-逐样本保存可用 `imu_capture.py --port CDC1_PATH --streams bmi lsm ins mag pressure --warmup 120 --duration 600 --output captures/ins-static-01`；监视器终端摘要不等于完整数据。模块分工、接入示例及采集说明见 [INS README](../Source/Services/INS/README.md)，模块变更见 [INS CHANGELOG](../Source/Services/INS/CHANGELOG.md)。
-
-协议、缓存与 CLI 见 [HostLink](HostLink.md)，分层验证与板测限制见 [Validation](Validation.md)。
-
-手动校准命令、拒绝条件、保存与下次启动合同见 [INS 静态校准](../Source/Services/INS/README.md#手动静态校准)。不会在融合循环中自动学习零偏。
+关闭融合不取消传感器或统一温控 worker；应用必须显式配置加热与参数加载。IMU 校准由独立 Storage 启动路径加载，失败继续采样和融合并标记 UNCALIBRATED/DEGRADED。

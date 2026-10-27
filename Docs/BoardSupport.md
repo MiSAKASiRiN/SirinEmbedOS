@@ -29,7 +29,7 @@ Board/Support 管理当前固定板卡的接线、资源和启动适配。应用
 rg -n 'ethernet|SRNOS_SUPPORT' Board/Support/component.cmake
 rg -n 'HAL_ETH|LAN8720|RMII' Board/Support/IO/ethernet_board.c Board/OMNICTL2_3.ioc
 cmake --preset Debug -DSIRINEMBEDOS_EXAMPLE=Minimal -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
+cmake --build --preset Debug
 python3 Board/generate.py --dry-run
 ```
 

@@ -4,8 +4,7 @@
 
 ## CRC32
 
-`Core/C/CRC32.h` 提供 CRC-32/ISO-HDLC 一次性和增量接口，初值/最终 XOR 均为 `0xFFFFFFFF`。Update 接收未 finalize 的状态；分块完成后仅最后 XOR 一次。`123456789` 的结果为 `0xCBF43926`。Storage 和 HostLink 共用实现，CRC 不依赖通信服务或 RTOS。
-
+`Core/C/CRC32.h` 提供 CRC-32/ISO-HDLC 一次性和增量接口，初值/最终 XOR 均为 `0xFFFFFFFF`。Update 接收未 finalize 的状态；分块完成后仅最后 XOR 一次。`123456789` 的结果为 `0xCBF43926`。Storage 和 SirinLink 共用实现，CRC 不依赖通信服务或 RTOS。
 
 ```c
 #include "SirinEmbedOS/Core/C/CRC32.h"

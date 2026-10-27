@@ -1,9 +1,0 @@
-{
-  "backup": "/Users/sirin/PycharmProjects/PythonProject/build/sirinembedos/turntable-install-20261010-223818",
-  "package_sha256": "45f833b5d83f28bd28575ac9ee1f92e081c9f412c6d520bf47a68f584dd7d7f1",
-  "version": "0.2.0",
-  "targets": [
-    "/Users/sirin/PycharmProjects/PythonProject/plugins/moe.sirin.sirinembedos",
-    "/Applications/OmniX Studio.app/Contents/Resources/plugins/moe.sirin.sirinembedos"
-  ]
-}

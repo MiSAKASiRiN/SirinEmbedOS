@@ -226,10 +226,6 @@ static void SRNOS_RefereeEventPushShootData(const uint8_t *shoot_payload, uint32
 static SRNOS_SerialChannel *SRNOS_DebugRefereeChannel = NULL;
 static bool SRNOS_DebugRefereeInitialized = false;
 
-// Reserved for future UART TX DMA payload staging.
-
-static volatile uint16_t g_tx_len = 0;
-static volatile uint8_t g_tx_busy = 0;
 static volatile uint32_t g_last_rx_ms = 0;
 
 volatile SRNOS_RefereeSnapshot SRNOS_DebugRefereeSnapshotRawDbg;
@@ -256,8 +252,6 @@ bool SRNOS_RefereeInit(void)
     return false;
   }
   g_last_rx_ms = 0;
-  g_tx_len = 0;
-  g_tx_busy = 0;
   g_last_game_status_ms = 0;
   g_last_game_result_ms = 0;
   g_last_game_robot_hp_ms = 0;
@@ -1009,12 +1003,6 @@ uint32_t SRNOS_RefereeGetOverflowCnt(void)
 uint32_t SRNOS_RefereeGetLastRxTickMs(void)
 {
   return g_last_rx_ms;
-}
-
-void SRNOS_RefereeTxInit(void)
-{
-  g_tx_len = 0;
-  g_tx_busy = 0;
 }
 
 bool SRNOS_RefereeTxSend(const uint8_t *data,uint16_t len) {return SRNOS_RefereeTransmit(data,len,0);}

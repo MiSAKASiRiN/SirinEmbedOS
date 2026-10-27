@@ -2,16 +2,16 @@
 
 ## 历史导入与接线记录
 
-以下保留原迁移台账说明，旧路径、线程优先级和状态是历史记录；当前用法见 README。原始 JSON、哈希及导入配方不作修改。
+以下保留迁移过程说明，旧路径、线程优先级和状态是历史记录；当前用法见 README。源码分发整理保留模块身份、提交及原始文件哈希，省略内部仓库端点，并移除一次性导入脚本。
 
 # Framework 迁移台账
 
-来源：`/Users/sirin/CLionProjects/h723vg-v2-prototype` 的实际工作区快照。原 Framework 共 **49** 个目录；没有迁移任何嵌套 `.git`、`.gitmodules` 或 gitlink。SDK 自身的根 `.git` 保留。
+来源：`h723vg-v2-prototype` 的实际工作区快照。原 Framework 共 **49** 个目录；没有迁移任何嵌套 `.git`、`.gitmodules` 或 gitlink。SDK 自身的根 `.git` 保留。
 
-- `source-manifest.json` 是导入前原始记录：父仓库commit/status、每个模块的URL/commit/status，以及 **323** 个原文件SHA-256。包含排除模块和未导入文档的hash；不等于323个文件全部迁入。
+- `source-manifest.json` 记录导入前的父仓库commit/status、模块身份/commit/status，以及 **323** 个原文件SHA-256；内部URL在源码分发整理时省略。包含排除模块和未导入文档的hash；不等于323个文件全部迁入。
 - `migration-ledger.json` 是实施结果：逐模块处理、许可情况、原文件hash和最终目标文件hash。拆分/重写/新增文件以说明及 `SDK-SHA256SUMS` 为准。旧链接片段合并进Board维护的完整脚本。
 - `header-map.json` 记录最初头文件路径迁移，最终编译不依赖这个表或prototype路径。
-- `board-support-relocations.json` 将历史板级目标映射到当前文件，支持拆分后的多个目标；来源快照及原始 SHA 不改写。`import_prototype.py` 是历史导入配方，不用于当前工程重新导入；当前台账由 `finalize_ledger.py` 维护。
+- `board-support-relocations.json` 将历史板级目标映射到当前文件，支持拆分后的多个目标；原始 SHA 保留。历史导入和台账生成脚本已移出源码分发范围，不用于当前工程重新导入。
 - `persistence-relocations.json` 记录旧24C02接口到FT24C128A/Storage重实现的去向；不是旧格式兼容或代码照搬。
 - `system-monitor-relocations.json` 记录旧 HSKP 到轻量 trace、SystemMonitor 及 V2 遥测的替换映射。
 - `srnos-renames.json` 记录本轮源码不兼容的名称、公共头及私有路径迁移；台账沿拆分与重命名链解析到最终文件，不改写来源快照。父项目用法见 `../SDKMigration.md`。没有旧名兼容层。
@@ -89,4 +89,4 @@
 - 默认Fault只保留RAM记录；配置阶段可明确预留紧急输出。正常Boot/日志不触发USART1重置。
 - `.data/.bss/TLS`位于D1；I2C4 BDMA staging位于D3；DMA/Watch/retained位于D2。链接验证会检查可达性和边界。
 
-验证命令、结果与板端待测项见 `../Validation.md`。编译/主机测试不代表板端外设已验证。
+编译/主机测试不代表板端外设已验证。

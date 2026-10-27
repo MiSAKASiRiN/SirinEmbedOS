@@ -4,8 +4,7 @@
 
 SetPixel/SetAll/亮度调整后由 CommitStartAsync 非阻塞提交；调用者协调与 Indicators 的资源所有权，BUSY 时不改写正在传输的内容。完成/错误及通知回调位于 DMA ISR，不能阻塞，应用通知只使用 SDK 的 ISR 接口。回调描述提交时复制，用户上下文保持到完成；没有向应用暴露 DMA buffer。
 
-普通 IRQ 由 Board/Support 转接；私有 critical 路径为无 IRQ 阻塞发送。两条路径使用同一资源，不代表支持同时运行；启动/心跳策略属于 Services/Indicators。主机测试和构建不证明物理灯效。
-
+普通 IRQ 由 Board/Support 转接，启动/心跳策略属于 Services/Indicators。私有 critical 路径作为备用实现保留，当前启动、心跳和 Fault 流程均未调用；它采用无 IRQ 阻塞发送，并与普通路径共用硬件，接入时必须确保单一所有权。主机测试和构建不证明物理灯效。
 
 ## 自定义灯色示例
 
@@ -21,4 +20,4 @@ SRNOS_WS2812Result set_green(void) {
 }
 ```
 
-`OK` 表示提交成功，实际结束用 `IsBusy()` 或完成回调判断。不要在忙等待循环里持续轮询；周期任务可在下一轮检查。时序与物理灯效的验证方法见 [验证指南](../../../Docs/Validation.md)。
+`OK` 表示提交成功，实际结束用 `IsBusy()` 或完成回调判断。不要在忙等待循环里持续轮询；周期任务可在下一轮检查。

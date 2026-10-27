@@ -1,16 +1,12 @@
 # Changelog
 
-## 2026-10-17 文档整理
+## 2026-09-25 快照导入
 
-- 使用说明保留当前合同、入口和示例；日期战报与修改记录归入本文件。仅调整 Markdown，代码、原始测量数据和第三方源码未改动。
-
-### README.md 中保留的历史说明
-
-以下内容描述原文所述时期，不作为当前用法；当前入口见 [README.md](README.md)。
+以下保留导入时的来源、编译选择和验证边界；当前配置见 [README](README.md)。
 
 - 内核版本：**10.6.2**，以 `Source/include/task.h` 为准。旧工程 `FreeRTOSConfig.h` 开头的 10.3.1 注释不是实际源码版本。
 - 导入日期：2026-09-25。
-- 直接来源：`/Users/sirin/CLionProjects/h723vg-v2-prototype/Middlewares/Third_Party/FreeRTOS/Source/` 的本地文件快照。
+- 直接来源：`h723vg-v2-prototype/Middlewares/Third_Party/FreeRTOS/Source/` 的本地文件快照。
 - 参考仓库 HEAD：`4ae5428c6fb9447b12a79a5cc30a8f47334f8f11`。HEAD 用于定位参考工程，导入内容以 `SHA256SUMS` 为准，不假定该本地快照等同于原版上游 tag。
 - `CMSIS/Include/cmsis_os2.h` 和 `CMSIS/LICENSE.txt` 来自同工程 `Drivers/CMSIS/RTOS2/Include/` 与 `Drivers/CMSIS/`。
 - 上游项目：https://github.com/FreeRTOS/FreeRTOS-Kernel ，CMSIS-RTOS2：https://github.com/ARM-software/CMSIS_5 。本次没有升级、下载替代版本或建立嵌套子模块。

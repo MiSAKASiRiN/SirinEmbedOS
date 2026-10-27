@@ -18,4 +18,4 @@ SRNOS_BuzzerStatus play_short_beep(void) {
 }
 ```
 
-需要中止队列时使用 `SRNOS_BuzzerFlush()`，直接持续音使用 `Start()`/`Stop()`；协调系统启动音和应用提示音的使用时机。维护入口与验证分层见 [验证指南](../../../Docs/Validation.md)。
+需要中止队列时使用 `SRNOS_BuzzerFlush()`，直接持续音使用 `Start()`/`Stop()`；协调系统启动音和应用提示音的使用时机。

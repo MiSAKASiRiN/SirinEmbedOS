@@ -1,9 +1,0 @@
-[1/2] Building C object Source/Kernel/CMakeFiles/sirinos_kernel.dir/thread.c.obj
-[2/2] Linking C executable SirinEmbedOS.elf
-Memory region         Used Size  Region Size  %age Used
-         DTCMRAM:        128 KB       128 KB    100.00%
-          RAM_D1:      305472 B       320 KB     93.22%
-          RAM_D2:        9696 B        32 KB     29.59%
-          RAM_D3:         544 B        16 KB      3.32%
-         ITCMRAM:         224 B        64 KB      0.34%
-           FLASH:      263880 B         1 MB     25.17%

@@ -1,7 +1,0 @@
-PASS: 415 USER CODE blocks preserved
-PASS: Drivers unchanged from generation snapshot
-PASS: cmake unchanged from generation snapshot
-PASS: Linker unchanged from generation snapshot
-INFO: Support/IO/can_native_board.c completed after generation; generator changed-files.txt excludes Support
-PASS: IOC/generated 80 MHz Classic baseline, nominal timing and fixed RAM windows
-PASS: 26 P0/P1 IRQ priorities preserved in IOC and generated code

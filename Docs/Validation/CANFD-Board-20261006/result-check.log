@@ -1,8 +1,0 @@
-PASS classic: function, payload integrity, hardware, queue accounting and IMU; achieved stages [0, 1, 2, 3, 4, 5, 6, 8]
-PASS fd1m: function, payload integrity, hardware, queue accounting and IMU; achieved stages [0, 1, 2, 3, 8]
-PASS fd2m: function, payload integrity, hardware, queue accounting and IMU; achieved stages [0, 1, 2, 3, 4, 8]
-PASS fd4m: function, payload integrity, hardware, queue accounting and IMU; achieved stages [0, 1, 2, 3, 4, 5, 8]
-PASS fd5m: function, payload integrity, hardware, queue accounting and IMU; achieved stages [0, 1, 2, 3, 4, 5, 6, 8]
-PASS fd8m: function, payload integrity, hardware, queue accounting and IMU; achieved stages [0, 1, 2, 3, 4, 5, 6, 7, 8]
-PASS classic: 60 s, each controller 3000 RX + 3000 TX per second, 360000 wire frames
-PASS fd8m: 60 s, each controller 3000 RX + 3000 TX per second, 360000 wire frames

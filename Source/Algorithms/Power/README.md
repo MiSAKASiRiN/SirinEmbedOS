@@ -19,4 +19,4 @@ void apply_power_limit(SRNOS_PowerControlCtx *ctx, float dt_s,
 // 在初始化阶段调用 SRNOS_PowerControlInit(&ctx, &config)，每轮再调用上式。
 ```
 
-可通过 `SRNOS_PowerControlGetDebug()` 检查预算、估计功率与缩放系数。主机回归：在 SDK 根运行 `sh Tests/Algorithms/Power/run_host_tests.sh`；数值测试不能替代实物功率模型与保护策略验收。
+可通过 `SRNOS_PowerControlGetDebug()` 检查预算、估计功率与缩放系数。

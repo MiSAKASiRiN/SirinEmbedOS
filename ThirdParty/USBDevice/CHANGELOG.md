@@ -1,5 +1,3 @@
 # Changelog
 
-## 2026-10-17 文档整理
-
-- 使用说明保留当前合同、入口和示例；日期战报与修改记录归入本文件。仅调整 Markdown，代码、原始测量数据和第三方源码未改动。
+本目录保留导入的上游快照，版本、来源和许可见 [README](README.md)。自维护 USB 适配的行为变更见 [USB 服务记录](../../Source/Services/USB/CHANGELOG.md)。

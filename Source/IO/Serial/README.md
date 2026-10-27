@@ -14,7 +14,7 @@ RS485 固定 UART7，使用硬件 DE，发送期间关闭 RE 抑制本机回显�
 
 H12H 的协议实例服务多个舵机 ID，通过 Serial 事务完成命令。当前板级合同仅声明已确认的双线 UART 和 UART7 RS485；没有自动把普通 UART 改为单线的行为。设备适配器和接线需满足实际电气要求。
 
-`bash Tests/Serial/run_host_tests.sh` 覆盖真实核心状态机和编解码，硬件与 RTOS 边界使用 fake。这不能证明实际 UART 极性、DMA 延迟、RS485 DE、USB 或设备时序已经上板通过。
+这不能证明实际 UART 极性、DMA 延迟、RS485 DE、USB 或设备时序已经上板通过。
 
 ## 板级边界
 

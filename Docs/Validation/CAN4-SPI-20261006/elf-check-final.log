@@ -1,7 +1,0 @@
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/Classic.elf
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD2M.elf
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD5M.elf
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8M.elf
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8MAligned.elf
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8MAlignedProbe.elf
-PASS: foundation memory, TLS, libc arena, retained sections, exception vectors and strong CAN notifications: /Users/sirin/CLionProjects/SirinEmbedOS/build/can4-spi-board-20261006/firmware/FD8MProbe.elf

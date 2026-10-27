@@ -29,7 +29,7 @@
 
 只实现一份 ApplicationMain/ApplicationConfigure，不复制另一个 main 或再次启动调度器。旧 ThreadConfig.entry 已删除；一般业务代码通过 SDK 使用通知、Delay/DelayUntil 和同步对象，不再直接调用 FreeRTOS/CMSIS API，也无需统计 hook。默认 32 KiB 应用池由线程栈和同步对象共用，数量与容量限制见 Kernel 文档。
 
-根 [接入示例](../../README.md#父项目接入) 说明 CMake 子模块接入；[板测记录](../../Docs/Validation/ManagedTasksBoard-20260928/README.md) 记录已执行的正常 Release 与专用测试固件验证。本示例应用源码仅提供心跳；构建成功不代表 CAN FD 或其他硬件能力已验收。
+本示例应用源码仅提供心跳；构建成功不代表 CAN FD 或其他硬件能力已验收。
 
 ## CAN 启动模式
 
@@ -53,7 +53,7 @@ P0 CAN1/2/3＋IMU/INS、P1 CAN4＋UART、共享 SPI49/IMU 优先保持。上述 
 
 ## 静态 IPv4 接入
 
-`SystemConfig.network` 默认关闭，预置 `192.168.1.50/24`、无网关；上层开启 `ethernet.enabled` 和 `network.enabled` 后可在启动阶段覆盖地址/掩码/网关及四个 UDP 端口。支持 UDP 和单播 Ping，ARP 为其提供邻居发现；其余网络协议关闭。网络开启后原始 Ethernet Send/Receive 返回 `SRNOS_ETHERNET_OWNED`。独立 Network worker 为优先级 15、6 KiB 栈，每轮显式等待 5 ms，保守追加 7 KiB heap 预算；固定队列和 lwIP 8 KiB 堆位于静态 D1。详见 SDK `Source/Services/Network/README.md` 和公共 `Services/Network.h`。
+Minimal 默认不启用网络。需要 UDP 时，在配置回调中同时开启 Ethernet 与 Network，并按 [Network 示例](../../Source/Services/Network/README.md)声明地址和端口。
 
 ## 构建示例
 

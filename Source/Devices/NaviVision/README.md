@@ -17,4 +17,4 @@ bool read_fresh_navi(SRNOS::Devices::NaviState& out) {
 }
 ```
 
-Navi 的在线标志不代替应用的年龄检查；上例 30 ms 是业务示意阈值。Vision 由 adapter 推进超时，消费者仍检查每个目标的 `is_appear`，不能仅以 `fire` 字段直接触发动作。外部互通与控制策略需要实机验收；验证方法见 [验证指南](../../../Docs/Validation.md)。
+Navi 的在线标志不代替应用的年龄检查；上例 30 ms 是业务示意阈值。Vision 由 adapter 推进超时，消费者仍检查每个目标的 `is_appear`，不能仅以 `fire` 字段直接触发动作。

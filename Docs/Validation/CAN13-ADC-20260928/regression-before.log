@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/sirin/CLionProjects/SirinEmbedOS/Tests/Core/check_foundation_elf.py", line 97, in <module>
-    check(parser.parse_args().elf)
-    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/sirin/CLionProjects/SirinEmbedOS/Tests/Core/check_foundation_elf.py", line 31, in check
-    assert name in symbols and symbols[name][1] == "T", (
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: SRNOS_FDCANOnRxISR: native CAN notification must be a strong router definition

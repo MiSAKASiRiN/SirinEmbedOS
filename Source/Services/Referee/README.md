@@ -21,6 +21,8 @@ bool read_referee(SRNOS_RefereeSnapshot *out)
 
 UI 布局、刷新频率和接收目标由应用决定。`SRNOS_RefereeTxWrite()`、`WriteStr()`、`Transmit()` 将数据复制到 Serial 队列；timeout 单位为毫秒，支持 `SRNOS_NO_WAIT`/`SRNOS_WAIT_FOREVER`。期限包含锁竞争和入队，成功表示复制接纳，不代表 UART 线发送完成。调用者缓冲在成功返回后可复用；阻塞发送只允许任务上下文，实时回调应使用有限等待。
 
+发送通路随 SDK 的裁判串口绑定完成初始化，不需要单独的 TX 初始化调用；`SRNOS_RefereeTxSend()` 为零等待提交。
+
 `SRNOS_Referee` 为优先级 47、3072 B 栈，低于 CAN1/2/3 与 IMU/INS，接收采用托管单轮与相对等待，无独立 TX 线程。普通等待不计入循环统计，处理内阻塞、抢占和中断计入墙钟。
 
 ## 诊断

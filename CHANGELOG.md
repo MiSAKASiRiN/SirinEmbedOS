@@ -1,5 +1,78 @@
 # Changelog
 
+以下记录保留各次变更、验证结论及未验边界，仅适用于当时版本和负载。原始测试日志与实机转储不随源码分发；当前用法以 README 和专题指南为准。
+
+## Unreleased — SDK 内容整理（2026-10-25）
+
+- 精简公开文档中的私有机构调试历史和重复板测摘要，集中网络资源合同与历史验证索引；保留本地私有测试及来源、许可台账。
+- 移除废弃的 `SRNOS_RefereeTxInit()`；发送仍由启动配置和 Serial 服务初始化。`ParametersDumpDebugPort` 保留入口，改用正式 Logging 队列并报告失败。迁移方法见 [SDKMigration](Docs/SDKMigration.md)。
+- 删除 `Watch.c` 占位编译单元、无调用的 `ParameterBinary.cpp` 和私有 DebugPort 旧发送接口，保留正式诊断与参数能力。CMSIS-DSP 快照与 WS2812 critical 实现保留，说明按实际集成状态修正；IMU/INS 实现和相关主机工具未改动。
+- 删除三项未装配的 GCC/Newlib 模板；生成脚本仅在生成与时序检查通过后，将这三项重新生成的文件归档移出源码树。
+- SDK Minimal、Board、父项目 Release 和 12 个集成固件目标通过；101 个公共头、178 个 C11/C++17 单元、结构和文档链接检查通过。主机回归 37/38 通过，既有 IMUTurntable 回零断言（`test_control.cpp:25`）仍失败；本轮未实际运行 CubeMX、烧录或进行板测。
+
+## Unreleased — 源码分发与文档整理
+
+- 2026-10-24：公开树保留 SDK、API 示例和通用工具，移除原始验证归档、一次性迁移脚本及固定路径脚本。测试源码与五个 BringUp 示例恢复为本地私有内容，由 Git 忽略且取消跟踪；测试构建适配留在私有父工程。
+- 清理个人路径、内部端点和设备标识，保留来源、提交、哈希及许可状态；合并重复文档说明，移除失效引用，修正私有测试指南。生产实现、公共 API、板级配置、调度及内存布局未改动。
+- SDK Minimal、InputMessages 和父项目 Release 重新构建通过；父项目固件与清理前逐字节一致，第三方 362 项哈希检查通过。此项为源码树清理，不表示 Git 历史已脱敏或许可证已补齐。
+
+## Unreleased — W25Q128 Blackbox
+
+- 2026-10-24：新增 NOR 私有驱动、板级 SDR OSPI 适配、12 MiB 可恢复环形记录和 SDK Blackbox 专用 worker；父项目仅用公开入队、异步读回/取消和状态接口。其余 NOR 分区预留，不含 DFU。
+- SystemConfig 新增启动期 blackbox 配置，默认关闭，启用后将服务对象、队列、4 KiB 栈纳入保守 heap 预算；SDK 默认 heap 不变，公共结构需整体重编译。
+- 新增 NOR/Blackbox 主机套件及系统配置预算/父项目接入回归。主机故障注入与有限次板端结果分别记录，不将模拟断电视为实际供电掉电验收。
+- 2026-10-24：修复 NOR 首次板测在发命令前初始化失败：当前 HAL 不支持通过 `HAL_RCCEx_GetPeriphCLKFreq()` 查询 OSPI，改为校验固定 D1HCLK mux 后读取 HCLK 并向上取整分频。NOR 的 33 个 transport 与 13 个 HAL 主机场景通过 ASan/UBSan；新增未知 mux 拒绝回归。
+- 修复后独立 Blackbox 板测识别 `EF4018`；20×224 B、序号 1..20 跨扇区，committed=20，写入/提交/完整读回合计 265 ms。MCU 复位后只读相同 20 条通过，105 ms、当前启动 committed=0，两轮读写错误均为 0。原始测试资料不随源码分发。供电掉电、满环回绕、脏扇区擦除、100 Hz 长期负载和栈水位仍未实板验收。
+
+## Unreleased — SirinRMT PLANAR_VELOCITY
+
+- 增加 kind=6 的有限 float32 vx/vy/wz 编解码及 Python CLI，旧 v1 类型、30 B 线长、会话与顺序语义不变。
+- Input 公共结构扩展独立速度快照、能力声明、时间/有效位和 motion_epoch；切换清除旧运动/ENABLE，保留 DISABLE 身份。SDK 不包含机器人限速/档位策略；需要整体重编译。
+- Input/Message/物理解码 ASan/UBSan、C/Python 黄金向量、公共头、结构检查及父项目 Release 通过；Jetson 双向 100 Hz、两类运动输入六方向及停止/切换板测通过，原始记录由父项目保管。
+
+## Unreleased — 启动标识和 UDP Python codec
+
+- 增加 SRNOS_SystemBootId()：板级 H723 RNG 在应用配置前生成非零 64 位启动标识，初始化有界、失败阻止启动；无新增线程/中断/heap，生成文件与链接分区不变。
+- Python codec 增加 pack_raw/unpack_raw，SirinRMT UDP 复用；原 V2 和串口 COBS 合同不变。
+- 公共头、结构、Input/Network/IMU telemetry 专项和父项目 Release 构建通过；EngNaviTest 实板复位后启动标识变化、NTP 恢复，UDP 100 Hz 双向与六方向架空联调通过。板测原始记录由父项目保管，不代表随机数质量认证或长期压力测试。
+
+## Unreleased — SirinLink 命名与 SirinRMT DISABLE
+
+- 2026-10-21：HostLink 当前公开 API、路径、宏、启动配置、实现、示例、测试和工具统一改为 SirinLink，不提供旧名兼容别名；HostComm 仍是传输任务名称。外层 V2 编码、COBS/CRC、service/message ID 保持，迁移见 `Docs/SDKMigration.md`。
+- SirinRMT v1 保持 30 字节，增加 DISABLE（kind=5、全零 body），Input Frame/Snapshot 增加独立停止请求身份；保留输入字段及时间，清除旧 ENABLE 有效性。应用负责权限，需同时消费两种请求并对同周期停止优先；INVALIDATE/重新同步隔离旧请求。
+- 公共结构变化要求 SDK/应用整体重编译。100 公共头、176 C11/C++17 单元、公共命名/依赖检查及 12 个集成固件目标通过。SDK 全量 35/36 通过；既有转台回零断言在隔离 HEAD 复现，相关 7 个依赖文件未变化。Input 与 SirinLink 专项通过，七来源示例 heap 预算为 192672/196608 B。未烧录。
+
+## Unreleased — NTP 与系统绝对时间
+
+- 2026-10-21：新增 `Services/Clock.h`，任务可读取一致的 uptime/Unix UTC 微秒、有效性、holdover、校时 generation 与 RTT；原有 RTOS/DWT 计时不受授时影响。
+- Network 可选 SNTPv4 客户端，启动冻结服务器和单次/周期配置；复用现有网络线程、lwIP heap 与自动分配的临时端口。完成无效回复检查、四时间点补偿、退避、KoD、断链隔离与 2036 era 处理；不修改 ThirdParty/CubeMX。
+- Clock、真实 lwIP Network、父项目测试和公共头/结构检查通过，Debug/Release 与完整边界见父项目 NTP 验证记录。SDK 全量测试中的既有 IMUTurntableBringUp 回零断言失败，该独立算法测试不编译本次时间/网络实现。未烧录、未配置远端 Jetson，实机精度待验。
+
+## Unreleased — W.Bus 单次 LOST 不再使整个来源失效
+
+- 2026-10-21：内置 W.Bus 适配层丢弃仅带 FRAME_LOST 的帧，不刷新 Input 字段/时间或改变 epoch；解码器仍累计 LOST。FAILSAFE（包括与 LOST 同时出现）及 UART 流异常仍立即失效。更严格的超时与重新使能仍属于父项目；无公共 API、调度、硬件或内存布局变更。
+- SDK 输入适配/独立 W.Bus 回归及父项目安全回归验证短丢帧、连续丢帧过期、FAILSAFE 优先、同周期失效恢复、50 ms 控制边界及重新使能。编译/烧录与实板范围见父项目 2026-10-21-WBusLoss 记录，不将模拟注入视为真实无线失控试验。
+
+## Unreleased — 明确的输入使能请求
+
+- 2026-10-21：SirinRMT v1 增加 kind=4 ENABLE；Input Frame/Snapshot 保存请求计数、时间和 epoch，失效/恢复隔离旧请求。SDK 不执行机器人使能，不改变通道、按键、相对量时效；应用消费请求并实施安全门。Python 工具增加默认关闭的 `--enable`，只发送一次。公共结构扩展须整体重编译，见 SDKMigration。
+- Input/Message/SirinRMT、物理适配器和 C/Python 黄金向量通过；公共头 C11/C++17 检查和父项目 Debug/Release 链接通过。七来源示例主机 heap 预算 192616/196608 B；未新增线程、修改 CubeMX 生成区或烧录，板端运行与栈水位待验。
+
+## Unreleased — 输入与消息
+
+- 2026-10-21：通用 Message 分发与独立 Input 快照/事件、SirinRMT v1 接入 HostComm/UART/UDP/图传；保留 DR16/VT03/13/W.Bus，删除旧 RC 仲裁/固定五通道 API 和图传全局命令 FIFO。新增 InputMessages 示例与 Python 编码器；父项目旧 API 待单独迁移，本轮未烧录。
+
+- 验证：InputMessages Release 链接、99个公共头的C11/C++17检查、12个SDK集成固件、源文件覆盖及内存布局检查通过；新增输入/消息测试与真实lwIP第五端口测试通过。全套主机回归仍有未改动的IMUTurntableBringUp控制测试第25行断言失败；与本次输入代码无依赖的旧测试问题单列保留。未修改父项目、未烧录或接管PCB。
+
+## Unreleased — W.BUS 串口解码
+
+- 2026-10-20：新增公共 `Services/RemoteControl/WBus/WBus.h`，支持 100000/8E2 的 25 字节 W.BUS/S.BUS 兼容帧、16 路原始通道、数字 17/18、丢帧/失控标志及有界 Serial 轮询。不增加线程，不接入 RC 仲裁。新增 API 不修改既有结构；使用方式见 [WBus](Source/Services/RemoteControl/WBus/README.md)。
+
+## Unreleased — 图传双向数据与遥测
+
+- 2026-10-20：新增公共 `Services/VideoLink.h`，为已有 Telemetry handle 注册图传周期、稳定 wire ID 与新鲜度上限。VT03 单接收所有者拆分 `0311` 和遥控帧，原 RC worker 自动聚合 `0310`，40 Hz 总限速及有界队列。默认关闭，不改变电机或遥控仲裁语义。使用见 [VideoLink](Source/Services/VideoLink/README.md)。
+- RemoteControl 配置/VT03 结构新增字段，父项目须整体重编译，迁移步骤见 SDKMigration。无新增线程/优先级/硬件引脚变更。注册、发送节奏、背压、失效值、CRC、混合帧和 C5 解码通过主机测试；全 SDK 构建及公共边界检查通过。具体板端结果由 EngNaviTest 父项目验证记录维护，不推广为线速或长期热稳定证明。
+
 ## Unreleased — SDK 使用文档整理
 
 - 2026-10-17：统一文档职责：各级 `CHANGELOG.md` 记录修改原因、日期、验证结果及历史结论；README 和专题文档描述当前用法、配置、示例与限制。规则写入 `AGENTS.md`，重建根入口与 Docs 导航，新增独立 [QuickStart](QuickStart.md)，提供可完整构建的父项目、周期任务及资源查询示例。
@@ -9,12 +82,11 @@
 
 ## Unreleased — UDP 接收事件锁存
 
-- 2026-10-17：按端口提供启动冻结的纯接收选择器，支持最新值替换及幂等事件锁存；普通 UDP 默认行为保持。锁存事件跨排队期限和断线保留至消费，SDK 不解析底盘协议。配置/状态结构扩展，使用方需整体重编译；不改 PHY、DMA、线程优先级和周期。真实协议栈主机回归及父项目 STOP→CAN 软件集成验证见 Network 文档与父项目 `Docs/Validation/2026-10-17-StopLatch/README.md`；PCB 离线，未烧录或板测。
+- 2026-10-17：按端口提供启动冻结的纯接收选择器，支持最新值替换及幂等事件锁存；普通 UDP 默认行为保持。锁存事件跨排队期限和断线保留至消费，SDK 不解析底盘协议。配置/状态结构扩展，使用方需整体重编译；不改 PHY、DMA、线程优先级和周期。完成真实协议栈主机回归及父项目 STOP→CAN 软件集成验证；PCB 离线，未烧录或板测。
 
 ## Unreleased — 静态 IPv4
 
 - 2026-10-14：固定 lwIP 2.2.1 / IPv4+ARP+UDP+ICMP，默认 IP 192.168.1.50/24；网络、可选网关和 UDP 端口由上层启动配置冻结。Network 单线程持有协议栈和二层收发，不改变 MCO/RMII/DMA/IRQ。新增 6 KiB 栈、7 KiB heap 预算及约 22 KiB 静态 D1；明确排队期限、link epoch 和原始接口所有权。主机/构建及父项目板测记录见 Network 文档。
-
 
 ## Unreleased — Ethernet 二层接入
 
@@ -25,134 +97,74 @@
 ## Unreleased — CAN 时间基准修复
 
 - 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。
-- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 MSwerve Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。记录：Docs/Validation/CANClock-20261012/README.md。
+- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 MSwerve Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。
 
-## Unreleased — 转台直接双环与抗抖动
+## 2026-10-10 诊断与校准
 
-- 2026-10-10：整个 SDK 的 Panic/Fault 默认从 USART1 PB14、115200/8N1 输出，保留自定义紧急输出覆盖；仅致命异常接管端口。转台 revision24 启用现有 SystemMonitor，增加同步电机/双 IMU/CPU 采集与相对时延分析脚本，控制参数不变。Core主机、固件构建、烧录和串口 Panic 板测通过；旧转台控制测试默认角度夹具失败见记录。运动数据用于延迟/占用估计，不作为校准验收。见 [记录](Docs/Validation/IMUTurntableLatency-20261010/README.md)。
-
-- revision23：修复转台保存请求的 HostComm 栈溢出；入队/执行工作项去除重复副本，HostComm 栈增加 1 KiB。运动控制、取消保持、协议及 EEPROM 格式不变；验证记录见 `Docs/Validation/IMUTurntableSaveFault-20261010/README.md`。
-
-- revision22：新增Studio按键启动的转台预热、多姿态静态、分轴动态拟合/独立校验、随机联动观察及EEPROM保存协议；默认仍零输出，取消/断连保持承重。v2陀螺比例记录兼容v1，校验通过才保存，部分失败可查询，重启后生效。编译及定向主机/插件测试通过；完整实机运动与校准精度待现场确认。
-
-- revision21：为上位机开发启用正式INS和60°C温控，使用SDK自动注册HostLink姿态/原始流，移除示例重复注册。MotorControlEnabled=false编译期旁路电机动作，保留原控制实现，三轴周期命令恒零，原始反馈仍可观测；STOP不会启动下放。应用线程不变，INS/温控使用现有服务worker。增量构建及旁路专项检查通过；烧录.text一致，100秒板测中INS有效输出1000Hz、60416条测量记录无缺序，三轴零输出。温控开启但末尾61.45°C/目标60°C，THERMAL_PENDING仍在；记录见Docs/Validation/IMUTurntableINS-20261010。
-
-- revision20：按用户新要求，将正常退出改为ID3固定正向电压2500raw持续8秒后全部下力；取消退出速度/位置闭环和落座判定，保持正常运动、限位与反馈/温度/时序故障保护。phase34及采集timed_release_zero仅表示定时下力，不再证明落座。增量编译和定时专项检查通过；run22实测8秒后归零，但0.28秒即到支撑邻域，编码器平滑峰值170.85°/s、双IMU加速度峰值43.5/56.6m/s²，固定2500输出不满足缓降，已停止重复运动。当前三轴零输出。
-
-- revision17～19：默认改为双IMU静止调平，保留航向参考和运行限位；正常停止独立于紧急归零，ID3经授权退出越界通道受控落座后卸力。首次3°/s过慢，revision18改远端9°/s、近支撑1.5°/s与较短支撑确认。主机正常退出/中断等待落座，强杀/断电/硬件故障不保证制动。run19正常停止到零输出约52.7秒；run20约14秒到支撑附近，但卸力被单点反馈跳动反复打断，未确认零输出。revision19改用平滑速度与实际下降位移联合判定，增量构建及抖动/真实下落专项检查通过；revision19已烧录，run21约16.24秒完成下降及卸力，三轴零输出，无反复重试。
-
-- IMUTurntable revision16：坐标辨识的专用到位判据放宽为12raw/2°每秒持续1秒，仍静止2秒采样；解决revision15量化波动导致长等待，控制/限位不变。run18完整180秒、31步及24个分轴段/2个联动段完成，无故障/丢样；识别外→内ID1→ID3→ID2，BMI/LSM轴向拟合RMS0.47/0.60°，独立联动速度向量RMS0.9～2.0°/s，仍有约2.3°积分残差。结果见Docs/Validation/IMUTurntableAxes-20261010。
-
-- IMUTurntable revision15：31步多姿态分轴辨识与两步联动验证，保留revision14直接控制参数；新增离线坐标映射/机构顺序拟合。增量构建与烧录.text比对通过，run17启动采集缺段且到位等待偏长，主动中止后由revision16完整重跑；未运行主机测试。
-
-- IMUTurntable revision14：ID3输出双向斜率40000raw/s、静止承重拟合的80%重力前馈与回算抗饱和5/s；保持直接双环及其他轴参数。增量构建、烧录及132秒完整三轴实测通过（无主机测试）；ID3正/返编码器峰值75.2/118.4→35.3/34.8°/s，仍有残余误差；ID1巡航起伏和ID2启动尖峰仍存在。记录见Docs/Validation/IMUTurntableGravity-20261010。
-
-- revision13恢复三轴直接位置P/速度PI，删除临时单轴旁路源文件；保留无虚拟轨迹、±30000、54/27/27°/s与ID3抗抖动参数。编译烧录通过，未运行本机测试；完整run15采集137.8秒，三轴回位、ID1/2各361°往返、ID3端点扫转全部完成，无故障，最终350/4850/5140闭环保持。双IMU约13.8万样本各无间断；见 Docs/Validation/IMUTurntableFullRestore-20261010。
-
-- revision12：按用户要求，临时旁路仅执行54°/s三次，每次15秒、零输出间隔3秒，其他参数不变。编译烧录通过，未运行本机测试；三次54°/s均完整15秒且无堵转，各转2.23圈，最大指令绝对值3586，温度35°C，最终自动零输出。见 Docs/Validation/IMUTurntableDirect-20261009/revision12。
-
-- revision11：ID1临时旁路执行108/54°/s交替两轮，每档15秒、间隔零输出3秒，重启清零PI；堵转提前结束该档并按计划切下一档，其他保护保持。编译烧录通过，未运行本机测试；实测四档全部15秒、间隔零3秒，两次54°/s都正常转过2.22圈，无堵转，最后自动零输出。见 Docs/Validation/IMUTurntableDirect-20261009/revision11。
-
-- revision10：临时ID1单轴速度目标54→108°/s，保持PID、±30000和零输出3秒后最多3次重试；原三轴控制器参数不变。编译烧录通过，未运行本机测试；120秒采集内连续运行35.65圈，无堵转/重试，温度37～38°C，按计划STOP归零。用户确认无其他调整或助推，尚未定位此前停滞根因。见 Docs/Validation/IMUTurntableDirect-20261009/revision10。
-
-- revision9仅为ID1临时旁路加入堵转零输出3秒后清空PI并重启，首次运行后最多重试3次，第四次堵转锁存归零。其他故障不重试，ID2/3保持零输出；编译烧录与实测完成，未运行本机测试。实测3次零输出间隔约3秒，4次加电均停在raw4084～4085并到满输出；温度反馈34→48°C，最后归零。见 Docs/Validation/IMUTurntableDirect-20261009/revision9。
-
-- revision8临时ID1旁路：从当前位置直接速度PI +54°/s，取消回零和位置环，ID2/3始终零输出且不参与就绪/限位判定。原三轴控制器保留，独立speed_only.hpp供本次硬件观察；编译烧录通过，未运行本机测试；单轴从raw5446跨零到4078后满输出仍停滞，堵转归零。用户确认停机后位移来自手动检查。证据见 Docs/Validation/IMUTurntableDirect-20261009/revision8。
-
-- revision7：按用户要求关闭两类运行超速停机；ID3速度PI改100/100、控制速度低通20ms，保持直接双环和±30000，现场确认抖动明显改善。编译、烧录与实测完成，未运行本机测试；ID1满输出仍停在raw3794，3秒净位移1raw触发堵转归零，完整行程未完成。记录见 Docs/Validation/IMUTurntableDirect-20261009/revision7。
-
-- 最终ID1速度PI调整为100/100、控制反馈20ms；实板回位成功、部分正转达到54°/s（平滑峰值56.58）。25000下仍在raw3787停滞，3秒13raw触发归零；完整行程未完成。双IMU、最终固件与释放证据见 Docs/Validation/IMUTurntableDirect-20261009。
-
-- revision6按用户要求移除虚拟轨迹和跟随误差保护，直接位置P→限幅速度→速度PI。ID1速度限幅54°/s，其他轴27°/s，输出25000；原轨迹加速度限制移除，保留电压斜率。超速确认/即时阈值按ID1速度同比调整，其他保护保持。仅做针对性保护与直接双环目标检查、固件编译，未重复完整构建矩阵。
-
-- 用户要求降低反馈抖动敏感度：revision5将7rpm/36°/s改为连续50ms确认，保留12rpm/54°/s即时保护及严格限位等保护。新增反复短尖峰不累计触发、持续超速及大幅超速测试。
-
-- 三轴目标速度、加速度分别从9/3提高至27°/s、9°/s²，输出上限保持25000；运行超速阈值为36°/s及7rpm，启动静止检查仍5rpm。sequence_revision=4。
-- 参考角度限幅时保持速度前馈，避免高速下重复清零导致速度突变。完整模拟及故障回归通过，峰值27.23°/s；该历史轨迹版本随后被用户要求的直接双环替换。
-
-## Unreleased — 转台9°/s与25000上限
-
-- 修复提速后虚拟轨迹减速距离导致参考继续前冲的问题：将参考角度硬限在实际位置±2°，触边清零轨迹速度；新增9°/s运动中突然负载停止及随后真实饱和堵转测试。
-
-- 用户确认外部无阻碍后，将三轴电压上限统一25000、回位/恢复/扫转目标9°/s；保留3°/s²加速度，估计超速阈值调为15°/s，原始5rpm、3秒堵转、温度和限位保护保持。sequence_revision=3。
-- 主机故障/抖动堵转及完整三轴模拟通过，模拟峰值9.24°/s；Debug、分析与十二目标检查通过；两轮实板最终确认25000输出，ID1约151.7°仍停滞，3秒仅2raw触发归零。ID3回位约18.45s，完整扫转未完成，见 Docs/Validation/IMUTurntableFast-20261009。
-
-## Unreleased — 完整转台扫转
-
-- ID1 在约 150° 处无法继续，原速度判据被编码器抖动反复打断；改为连续 3 秒高输出下净位移小于 0.6° 锁存归零。用户随后要求提高力矩，将 ID1 电压上限由 8000 提到 10000，速度不变、ID2/3 上限不变。
-
-- 转台目标速度改为 3°/s、加速度 3°/s²；ID1/2 分别 +361° 并返回，ID3 按 4264→跨零→2096→5140 扫转。增加速度阻尼，保留 8°/s 硬保护及到默认位结束首次豁免。
-- 遥测增加 sequence_revision=2，32 个只读源；采集支持 1200 秒与双 IMU 分轴分析。主机控制/接入测试和固件构建通过；完整十二目标构建、含编码器抖动的堵转回归及分析回归通过；实机三轴回位通过，ID3约42～45秒；ID1提高到10000后仍在约150°受阻，新堵转保护已全轴归零，完整行程未完成。详见 Docs/Validation/IMUTurntableFullSweep-20261009。
-
-记录 SirinEmbedOS 已完成的变更、验证结果与重要限制。尚未发布的变更归入 `Unreleased`，规划与约束见 `AGENTS.md`。
+- 默认致命 Panic/Fault 经 USART1 PB14、115200/8N1 输出，保留启动期自定义覆盖；仅异常时接管端口。主机、固件构建及物理串口输出/复位验证通过，边界见 [Core](Source/Core/CHANGELOG.md)。
+- 修复保存请求的 HostComm 栈压力，去除重复工作项副本并增加 1 KiB 栈；协议和 EEPROM 格式保持。资源变化见 [Kernel](Source/Kernel/CHANGELOG.md)。
+- IMU 校准 v2 增加陀螺对角比例，兼容 v1 加载，保存后重启生效；主机与构建检查通过，多姿态实机校准精度仍待验证。格式与应用规则见 [INS](Source/Services/INS/CHANGELOG.md)。
 
 ## Unreleased
 
-- 2026-10-09：IMUTurntableBringUp 从只接收扩展为自动回位/低速转台观测：默认raw为350/4850/5140，ID3跨零软限位及一次上电重力恢复（到5140结束豁免），之后越界锁存全电机零指令。增加3KiB应用闭环任务、命令时效保护、31项只读遥测与双IMU采集，SDK公共API/电机驱动/生成边界不变；主机与十二目标父工程检查通过；ID3实板到5140并保持，ID1回位仍触发超速保护、全轴归零，完整往返未完成。部分运动双IMU对比与最终状态见[记录](Docs/Validation/IMUTurntableMotion-20261009/README.md)。
+- 2026-10-06：CAN4 合并为 P1/4 KiB 单服务，MCP 改用可仲裁 SPI 序列与 UA 确认，FD 生产时序对齐，并优化时间换算与通知。29 组主机、完整 SDK 十一目标、Debug/Release 及内存检查通过，ITCM 不增加；联合实测与未验边界见 [CAN4 板测摘要](Source/IO/CAN/CHANGELOG.md#can4-20261006)。
 
-- 2026-10-09：新增 [IMUTurntableBringUp](Examples/IMUTurntableBringUp/README.md)：CAN3 注册 ID 1/2/3 的 GM6020，只接收反馈，不发送控制帧；HostComm SOURCE V2 提供编码器/单圈角度/在线状态。新增 1 ms、2 KiB、优先级 24 应用观测任务，关闭融合/加热；根示例和父工程构建入口已接入。示例/电机/Telemetry 主机回归、Debug 固件/ELF/结构及完整十二目标父工程检查通过；按授权完成烧录，三颗电机反馈及两段 30 秒 HostComm 采集通过，最终不中断窗口 CAN3 TX/溢出/Bus-Off=0；无运动命令，新固件保留运行、探针释放。见 [验证记录](Docs/Validation/IMUTurntable-20261009/README.md)。
+- 2026-10-06：完成CAN1/CAN4共享SPI与双IMU压力测试，新增专用应用和逐窗SPI/IMU观测。Classic各3k因生产周期不足未达标；FD5M及8M对齐配置64B各3k出现MCP RX溢出；默认FD8M仲裁采样点不一致，测试专用80%对照通过但生产未修改。双IMU/INS保持1kHz；优化前后结果见 [CAN 历史验证](Source/IO/CAN/CHANGELOG.md)。
 
-- 2026-10-06：CAN4合并为P1/4KiB单服务，MCP使用逐步可仲裁的私有SPI序列与UA确认，FD生产时序对齐；优化高频时间换算和通知。Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。29组主机、完整SDK十一目标、Debug/Release及内存检查通过；ITCM不增加。原1MiB Flash已恢复/读回一致，探针释放，未写EEPROM或提交。见 [优化验证](Docs/Validation/CAN4-Optimization-20261006/README.md)。
-
-- 2026-10-06：完成CAN1/CAN4共享SPI与双IMU压力测试，新增专用应用和逐窗SPI/IMU观测。Classic各3k因生产周期不足未达标；FD5M及8M对齐配置64B各3k出现MCP RX溢出；默认FD8M仲裁采样点不一致，测试专用80%对照通过但生产未修改。双IMU/INS保持1kHz，详见 [实测](Docs/Validation/CAN4-SPI-20261006/README.md)。
-
-- 2026-10-06：完成 CAN1↔CAN3 实板 Classic/FD 六模式、356 帧格式用例与54档负载；Classic8B及FD8M64B各3k收＋3k发持续60秒零损失，整板CPU32.00%/35.13%，FD5M64B同档10秒通过；低速64B过载按背压/TTL计数。双IMU/INS各1kHz连续，原生RX最小栈余3092 B。新增独立板测应用、原始bin和统计；原1MiB Flash完整恢复并读回一致，探针释放。身份记录CORRUPT及LIS偶发低采样另记待查，未写EEPROM；CAN2/4、UART及Bus-Off物理恢复仍未验。见 [实板记录](Docs/Validation/CANFD-Board-20261006/README.md)。
+- 2026-10-06：完成 CAN1↔CAN3 实板 Classic/FD 六模式、356 帧格式用例与54档负载；Classic8B及FD8M64B各3k收＋3k发持续60秒零损失，整板CPU32.00%/35.13%，FD5M64B同档10秒通过；低速64B过载按背压/TTL计数。双IMU/INS各1kHz连续，原生RX最小栈余3092 B。新增独立板测应用、原始bin和统计；原1MiB Flash完整恢复并读回一致，探针释放。身份记录CORRUPT及LIS偶发低采样另记待查，未写EEPROM；CAN2/4、UART及Bus-Off物理恢复仍未验。
 
 - 2026-10-03：四路 CAN 启动时独立选择并冻结 Classic/FD，默认 Classic 1 Mbit/s；新增 FD 原始订阅/one-shot/统计公共 API，应用显式指定仲裁、数据速率及 BRS，协议留给父项目。FD 精确长度 0..8/12/16/20/24/32/48/64 B、TX BRS 固定/RX 保留实际 EXT/BRS/ESI，现有 adapter 仅允许 Classic 1 Mbit/s。每路 32 订阅/64 TX 槽固定在 D1；四路上下文 23312 B，Classic 59920 B ITCM 保持。
-- 2026-10-03：原生 FDCAN 改用 PLL2Q 80 MHz，各路固定 0x300 word Message RAM 窗口；FD 8 RX/28 TX、64 B 共 676 word。MCP FD 16 RX/12 TX、64 B 共 2016 B，40 MHz/SPI 10 MHz 和 vendor 保持；启动配置与最终模式有界确认，拒绝冻结前初始化。原生 RX 每轮 32 帧预算改为每次搬运 4 帧，恢复 FD 回调栈余量而不扩栈；CAN4 长 TTL 换算防溢出、完成统计排除纯 RX 共享 IRQ。P0/P1、八个 worker、heap 不变。局部主机回归通过，完整离线证据以 Docs/Validation.md 为准；PCB 离线，新增时钟/FD/TDC/吞吐均待上板验证，64 B 不能套用 Classic 虚拟负载结果。
-- 2026-10-03：FD 最终离线回归为 29 组主机、十一种父项目固件、93 个公共头/162 个 C/C++ 编译单元、14 条应用 include 隔离与 117 个当前 SDK 对象检查通过，Debug/Release ELF 检查通过。Release D1 277888 B、Flash 218720 B，ITCM 63104 B（余 2432 B）；原生 RX 回调前静态调用链降至 Debug 912 B / Release 896 B，各节省 3016 B，不代表含应用回调/TLS/异常的动态栈验收。完整证据与硬件待测项见 [验证记录](Docs/Validation.md)。
+- 2026-10-03：原生 FDCAN 改用 PLL2Q 80 MHz，各路固定 0x300 word Message RAM 窗口；FD 8 RX/28 TX、64 B 共 676 word。MCP FD 16 RX/12 TX、64 B 共 2016 B，40 MHz/SPI 10 MHz 和 vendor 保持；启动配置与最终模式有界确认，拒绝冻结前初始化。原生 RX 每轮 32 帧预算改为每次搬运 4 帧，恢复 FD 回调栈余量而不扩栈；CAN4 长 TTL 换算防溢出、完成统计排除纯 RX 共享 IRQ。P0/P1、八个 worker、heap 不变。局部主机回归通过，PCB 离线，新增时钟/FD/TDC/吞吐均待上板验证，64 B 不能套用 Classic 虚拟负载结果。
+- 2026-10-03：FD 最终离线回归为 29 组主机、十一种父项目固件、93 个公共头/162 个 C/C++ 编译单元、14 条应用 include 隔离与 117 个当前 SDK 对象检查通过，Debug/Release ELF 检查通过。Release D1 277888 B、Flash 218720 B，ITCM 63104 B（余 2432 B）；原生 RX 回调前静态调用链降至 Debug 912 B / Release 896 B，各节省 3016 B，不代表含应用回调/TLS/异常的动态栈验收。
 
-- 2026-10-03：按用户最新要求调整为 P0 CAN1/2/3＋BMI/LSM/INS（48），P1 CAN4＋Serial/RC/Referee/RS485（47）。SPI4依赖49、IMU优先且两级有界防饥饿；NVIC P0=5、P1=6（UART DMA统一6）。公共API/容量/线程数不变；离线验证见 [记录](Docs/Validation/Priority-20261003/README.md)，未烧录或追加提交。
+- 2026-10-03：按用户最新要求调整为 P0 CAN1/2/3＋BMI/LSM/INS（48），P1 CAN4＋Serial/RC/Referee/RS485（47）。SPI4依赖49、IMU优先且两级有界防饥饿；NVIC P0=5、P1=6（UART DMA统一6）。公共API/容量/线程数不变；离线，未烧录或追加提交。
 
-- 2026-10-03：提交既有重构基线 820b777 后，按每路 3 kHz RX＋3 kHz TX 优化 CAN：直接任务通知、冻结路由直读、group 按需初始化、批量完成通知、CAN4 减少 SPI 查询、Release 热路径 -O2；CAN/SPI/Serial 与 IRQ 优先级按通信顺序调整，SPI 保留防饥饿。修复原生满环竞争、HAL Bus-Off 回调/有界恢复、CAN4 初始化失败句柄与六种电机反馈并发/旧时间离线误判。公共函数签名和资源容量不变，电机私有布局变化需重编译；28 套主机、十个父项目、Debug/Release 和 ELF 检查通过。Release 命名工具仍有 13 条基线已存在的标准库/TLS 误报，未绕过。PCB 离线未烧录，实际四路吞吐/IMU 延迟待验；见 [记录](Docs/Validation/CANRouter-20261002/README.md)。
+- 2026-10-03：提交既有重构基线 820b777 后，按每路 3 kHz RX＋3 kHz TX 优化 CAN：直接任务通知、冻结路由直读、group 按需初始化、批量完成通知、CAN4 减少 SPI 查询、Release 热路径 -O2；CAN/SPI/Serial 与 IRQ 优先级按通信顺序调整，SPI 保留防饥饿。修复原生满环竞争、HAL Bus-Off 回调/有界恢复、CAN4 初始化失败句柄与六种电机反馈并发/旧时间离线误判。公共函数签名和资源容量不变，电机私有布局变化需重编译；28 套主机、十个父项目、Debug/Release 和 ELF 检查通过。Release 命名工具仍有 13 条基线已存在的标准库/TLS 误报，未绕过。PCB 离线未烧录，实际四路吞吐/IMU 延迟待验。
 
-- 2026-09-29：以释放 RAM 为目标，将 CAN Router 上下文和 Debug Watch 迁入 ITCM；新增 SRNOS_ITCM_BSS、64 位清零/复制及容量/对齐检查。Release 释放 D1 59904 B、D2 2848 B，ITCM 余 2528 B；heap、线程、DMA/BDMA、协议和 EEPROM 不变。25 套主机、父项目与 Debug/Release 通过；板端启动/软件复位/监测结果见 [记录](Docs/Validation/ITCM-20260929/README.md)，CAN 未短接不做外部吞吐。
+- 2026-09-29：以释放 RAM 为目标，将 CAN Router 上下文和 Debug Watch 迁入 ITCM；新增 SRNOS_ITCM_BSS、64 位清零/复制及容量/对齐检查。Release 释放 D1 59904 B、D2 2848 B，ITCM 余 2528 B；heap、线程、DMA/BDMA、协议和 EEPROM 不变。25 套主机、父项目与 Debug/Release 通过；板端启动/软件复位/监测，CAN 未短接不做外部吞吐。
 
-- 2026-09-29：按实测提高静态校准陀螺/加速度峰值/温漂拒绝阈值，新增噪声接受及运动拒绝回归；INS/HostLink、结构、Debug/Release通过。两次实板双IMU保存成功，复位加载revision2，保留新固件及EEPROM；不改变遥测，见 [复测](Docs/Validation/StaticThreshold-20260929/README.md)。
+- 2026-09-29：按实测提高静态校准陀螺/加速度峰值/温漂拒绝阈值，新增噪声接受及运动拒绝回归；INS/HostLink、结构、Debug/Release通过。两次实板双IMU保存成功，复位加载revision2，保留新固件及EEPROM；不改变遥测，见 [INS 历史验证](Source/Services/INS/CHANGELOG.md)。
 
-- 2026-09-29：完成首次持久化/静态校准板测，参数保存及复位加载、SAVE期间WRITE隔离、CRC与EEPROM恢复通过；静态判定噪声阈值不适配，校准未通过，8路1kHz变量实收约7284标量/s。新增仅EEPROMBringUp的显式主机备份恢复入口，未调整生产算法；最终Minimal Release运行且释放探针。证据见 [板测记录](Docs/Validation/PersistenceBoard-20260929/README.md)。
+- 2026-09-29：完成首次持久化/静态校准板测，参数保存及复位加载、SAVE期间WRITE隔离、CRC与EEPROM恢复通过；静态判定噪声阈值不适配，校准未通过，8路1kHz变量实收约7284标量/s。新增仅EEPROMBringUp的显式主机备份恢复入口，未调整生产算法；最终Minimal Release运行且释放探针。
 
 - 2026-09-29：整理当前文档入口：新增 Docs/README.md 导航和 Docs/Storage.md 持久化总览；补齐 COBS/CRC 帧样例、消息表、CONFIG 01–0A 与 SOURCE V1/V2，澄清记录/参数身份、默认加载和示例开关。同步模块、工具及迁移说明，保留历史板测；只改文档/索引，协议与固件行为不变。 已检查 20 篇文档的 186 个本地链接/锚点、COBS/CRC 样例与字段长度，现有 Codec、参数协议、Storage/EEPROM 主机测试和结构检查通过；未重新编译或烧录固件。
 
+- 2026-09-29：实现上位机手动静态 IMU 陀螺零偏校准（任意静止姿态），保留有效加速度校正，约 5 s 观察及异常拒绝后保存单份 EEPROM，新值下次启动生效。新增 CONFIG 0x09/0x0A、完整错误/部分保存状态，复用 HostCmd，无新增线程或动态工作区；验证范围为主机与构建，未烧录或实板验证。
 
-- 2026-09-29：实现上位机手动静态 IMU 陀螺零偏校准（任意静止姿态），保留有效加速度校正，约 5 s 观察及异常拒绝后保存单份 EEPROM，新值下次启动生效。新增 CONFIG 0x09/0x0A、完整错误/部分保存状态，复用 HostCmd，无新增线程或动态工作区；验证范围见 `Docs/Validation/StaticIMU-20260929/README.md`，未烧录或实板验证。
+- 2026-09-28：实现FT24C128A单份CRC32身份/校准/业务参数存储，父项目Persistent与只读Telemetry声明，稳定ID升级及generation/dirty；移除旧24C02依赖。启动2秒加载期间温控继续，校准下次启动应用、无效明确降级；SOURCE V2因08/09已占用改用10–14。无新增生产线程，固定工作区计入map；25套主机、90公共头/156编译单元及闭包、十个父项目固件、结构/命名/第三方哈希和Debug/Release通过。D1剩余约13.7KiB，未缩减线程资源；本轮不烧录，板端掉电/高频组合负载待验证。
 
+- 2026-09-28：CAN1/CAN3 外接吞吐板测发现并修复 weak 声明导致 RX/TX 通知空实现，增加最终 ELF 强符号回归。完整 INS 负载下合计 6000/8000 帧/s 各 10 秒全部交付，整板 CPU 76.77%/95.21%；过载出现提交背压。24 V/0.091 A 单点 ADC 均值 24.641 V/0.08986 A，电压偏高待核对。23 套主机、父项目矩阵、Debug/Release 通过，恢复正常固件并释放探针；见 [CAN 历史验证](Source/IO/CAN/CHANGELOG.md) 与 [文档历史摘要](Docs/CHANGELOG.md)。
 
-- 2026-09-28：实现FT24C128A单份CRC32身份/校准/业务参数存储，父项目Persistent与只读Telemetry声明，稳定ID升级及generation/dirty；移除旧24C02依赖。启动2秒加载期间温控继续，校准下次启动应用、无效明确降级；SOURCE V2因08/09已占用改用10–14。无新增生产线程，固定工作区计入map；25套主机、90公共头/156编译单元及闭包、十个父项目固件、结构/命名/第三方哈希和Debug/Release通过。D1剩余约13.7KiB，未缩减线程资源；本轮不烧录，板端掉电/高频组合负载待验证，见 [记录](Docs/Validation/Persistence-20260928/README.md)。
-
-- 2026-09-28：CAN1/CAN3 外接吞吐板测发现并修复 weak 声明导致 RX/TX 通知空实现，增加最终 ELF 强符号回归。完整 INS 负载下合计 6000/8000 帧/s 各 10 秒全部交付，整板 CPU 76.77%/95.21%；过载出现提交背压。24 V/0.091 A 单点 ADC 均值 24.641 V/0.08986 A，电压偏高待核对。23 套主机、父项目矩阵、Debug/Release 通过，恢复正常固件并释放探针；见 [实测记录](Docs/Validation/CAN13-ADC-20260928/README.md)。
-
-- 2026-09-28：按授权完成当前 SRNOS 固件板测，恢复并保留 Minimal Release，释放探针后完成一分钟五流采集。四次完整生命周期窗口零失败，统计增量约 0.99 个百分点、Monitor 约 0.0492%、最长监测临界区 2 µs；ADC 软件注入及 CDC 背压/DTR 重连通过。温稳反复退出、统计余量小列为优化线索，实际 CAN/串口/仪表精度仍待验收。证据见 [SRNOS 板测](Docs/Validation/SRNOSBoard-20260928/README.md)，更新根接入状态与底层开发清单。
+- 2026-09-28：按授权完成当前 SRNOS 固件板测，恢复并保留 Minimal Release，释放探针后完成一分钟五流采集。四次完整生命周期窗口零失败，统计增量约 0.99 个百分点、Monitor 约 0.0492%、最长监测临界区 2 µs；ADC 软件注入及 CDC 背压/DTR 重连通过。温稳反复退出、统计余量小列为优化线索，实际 CAN/串口/仪表精度仍待验收。更新根接入状态与底层开发清单。
 - 板测工程将原生内核/ADC 适配独立为 OBJECT 目标，父应用保持公共 include 隔离。未修改生产运行逻辑、生成边界、线程预算或内存布局。
 
 - 本轮最终验证：23 套主机回归、87 个公共头/151 单元及闭包、十个父项目固件、13 条应用编译命令隔离、110 个 SDK 对象符号、Debug/Release 和结构/第三方哈希通过。SPI/I2C/Serial 统一 SRNOS_NO_WAIT/WAIT_FOREVER，同步消费者保证在途 buffer 生命周期；板端性能待测，未自动烧录。
 
 - 2026-09-28：完成自维护模块 SRNOS 命名及公共依赖隔离。删除旧 API/头路径/兼容入口，HostLink 注册上下文不透明，Logging 取消无效 timeout 参数，SPI 设备与 HAL/供应商/worker 接口私有，矩阵改用 SDK 类型。Platform 完整链接能力保留，应用编译不再得到 RTOS/CMSIS/HAL/Board/Source include；源码破坏性迁移见 [指南](Docs/SDKMigration.md)。
 - HostComm/SPI/I2C/Serial/Indicators 按事件及截止时间等待；HostComm RX 每轮最多 1024 B，CAN RX 最多 32 帧并公平续跑，CAN RX/TX、HostComm/HostCmd、Indicators/Monitor 保持分离。HostLink 活动请求 10 项与 4 项/2 秒重放缓存分离，固定持有一份待发送结果，交付回调锁外执行；长命令与断连不重复执行业务。
-- SPI/I2C 使用预留—复制—发布槽生命周期，修复复制期间取消确认；Serial 总期限覆盖锁竞争，日志运行期耗尽不退化为直接输出，IMU/INS 遥测改逐条短快照。保持线协议、EEPROM 格式、采样频率、硬件时序、线程优先级和默认栈。静态 D1 同步/事务状态及最终构建资源见 [验证记录](Docs/Validation/SRNOSBoundary-20260928/README.md)。本轮没有烧录，开销与真实负载验收待完成。
+- SPI/I2C 使用预留—复制—发布槽生命周期，修复复制期间取消确认；Serial 总期限覆盖锁竞争，日志运行期耗尽不退化为直接输出，IMU/INS 遥测改逐条短快照。保持线协议、EEPROM 格式、采样频率、硬件时序、线程优先级和默认栈。本轮没有烧录，开销与真实负载验收待完成。
 
 - 2026-09-28：补齐父项目线程建立与管理文档：两种创建路径、句柄/参数所有权、初始化状态、协作回收、延时/通知/同步及原生 API 迁移；同步根 README、Kernel、Minimal、开发约定与 AGENTS。仅文档变更，未改变运行行为或烧录。 文档中根 C++17 / Kernel C11 示例语法及本地链接检查通过。
 
-- 2026-09-28：完成托管任务/SystemMonitor 板端验证；修复 ADC BDMA READY/EN 停止确认、主机 SAMPLE 消息号；优化循环统计热点并新增生命周期/CPU 对照/CDC/ADC 注入板测。结果及边界见 Docs/Validation/ManagedTasksBoard-20260928。
+- 2026-09-28：完成托管任务/SystemMonitor 板端验证；修复 ADC BDMA READY/EN 停止确认、主机 SAMPLE 消息号；优化循环统计热点并新增生命周期/CPU 对照/CDC/ADC 注入板测。
 
-- 2026-09-28：父项目线程合同从 entry 切换为 init/step/cleanup；增加不透明生命周期句柄、协作停止/删除、时间/同步接口及默认 32 KiB 有界池。全部 SDK worker 接入统一外层循环并以 SRNOS_ 命名，保持优先级/栈及私有等待；增加低干扰循环统计、0x0003 遥测和 JSONL，容量 8→12。旧 entry 不兼容；生成代码和第三方内核未改动。 主机/构建证据见 `Docs/Validation/ManagedTasks-20260928/README.md`；本次未烧录，时序与开销仍待板测。
+- 2026-09-28：父项目线程合同从 entry 切换为 init/step/cleanup；增加不透明生命周期句柄、协作停止/删除、时间/同步接口及默认 32 KiB 有界池。全部 SDK worker 接入统一外层循环并以 SRNOS_ 命名，保持优先级/栈及私有等待；增加低干扰循环统计、0x0003 遥测和 JSONL，容量 8→12。旧 entry 不兼容；生成代码和第三方内核未改动。验证范围为主机与构建；本次未烧录，时序与开销仍待板测。
 
-- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。22组主机、Debug/Release、九个父项目构建及结构检查通过；见Docs/Validation/SystemMonitor-20260928，未烧录/板测。
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。22组主机、Debug/Release、九个父项目构建及结构检查通过；未烧录/板测。
 
-
-- 2026-09-28：板级支撑整理为 Support/System、IO、Devices、USB；指示器策略归服务，USB 准备和 MCP 默认配置收拢，蜂鸣器/WS2812 固定硬件宏私有化。保留生成边界及现有时序/调度/内存合同；21 组主机、九个父项目目标、Minimal/Board/EEPROMBringUp 构建通过，未生成/烧录/板测。详见 Docs/Validation/BoardSupport-20260928/README.md。
+- 2026-09-28：板级支撑整理为 Support/System、IO、Devices、USB；指示器策略归服务，USB 准备和 MCP 默认配置收拢，蜂鸣器/WS2812 固定硬件宏私有化。保留生成边界及现有时序/调度/内存合同；21 组主机、九个父项目目标、Minimal/Board/EEPROMBringUp 构建通过，未生成/烧录/板测。
 
 ### 2026-09-28
 
 - 新增 `Board/generate.py` 系统调用入口，动态定位当前 checkout 的 IOC 绝对路径，经 CubeMX `-q` 生成；自动保留 Board 快照、日志和内容变化清单，核对生成成功及三处 I2C 时序。AGENTS.md 固化生成流程与相对路径报错经验；不自动构建或烧录。
-- 按用户要求用 STM32CubeMX 6.18.1 `-q` 脚本执行 `project generate`，生成成功；与生成前快照相比，仅 `Board/Core/Src/i2c.c` 的 TIMING 从旧值更新为 `0x10C7182D`，所有 USER CODE 和其余 Board 文件保持一致。新增 Board 生成说明，时序检查覆盖 IOC/生成代码/Glue 三者一致；验证见 `Docs/Validation/CubeMX-20260928/README.md`，本轮未烧录。
+- 按用户要求用 STM32CubeMX 6.18.1 `-q` 脚本执行 `project generate`，生成成功；与生成前快照相比，仅 `Board/Core/Src/i2c.c` 的 TIMING 从旧值更新为 `0x10C7182D`，所有 USER CODE 和其余 Board 文件保持一致。新增 Board 生成说明，时序检查覆盖 IOC/生成代码/Glue 三者一致；本轮未烧录。
 - 用户要求的全仓库基线已提交为 `ebef330`，随后将 I2C4 提升至 400 kHz Fast mode：IOC 与 Glue 时序同步，生成文件仅 USER CODE 接入，启动检查固定 PLL3R/滤波配置，未执行 CubeMX generate。
-- 保留原队列、期限及 EEPROM 32 B 分段；Debug/Release、20 组主机套件、九个父项目构建和时序检查通过。21 项板测通过，数字 SCL 约 370 kHz，整片写含校验 5.12 秒/读 1.03 秒，压力下 LIS约97–99 Hz/SPA约16 Hz，无总线错误或超时。验证应用新增显式保留数据命令，测试后 EEPROM 与固件未恢复，MCU 继续运行；模拟边沿、掉电/断线未验收。详见 `Docs/Validation/I2C400-20260928/README.md`。
+- 保留原队列、期限及 EEPROM 32 B 分段；Debug/Release、20 组主机套件、九个父项目构建和时序检查通过。21 项板测通过，数字 SCL 约 370 kHz，整片写含校验 5.12 秒/读 1.03 秒，压力下 LIS约97–99 Hz/SPA约16 Hz，无总线错误或超时。验证应用新增显式保留数据命令，测试后 EEPROM 与固件未恢复，MCU 继续运行；模拟边沿、掉电/断线未验收。
 - I2C4 原回调线程改为 High6/3 KiB 唯一分发者：LIS/SPA 保留槽、后台两槽、周期优先与后台防饥饿、64 B 事务上限、排队/活动期限、完成信号量及按请求取消。启动同步预算增加 512 B，未增加生产线程或改变 IOC/MPU/链接段。
-- FT24C128A 读/写/校验统一最多 32 B，保留 64 B 页边界；LIS/SPA 改用 30 ms 排队完成等待。20 组主机套件、九个父项目构建及 Debug/Release 通过；32.864 秒整片并发板测 20 项通过并恢复，LIS约88–93 Hz/SPA约16 Hz，无离线或总线错误。模块 README/CHANGELOG 已同步，详见 `Docs/Validation/I2C-20260928/README.md`。
+- FT24C128A 读/写/校验统一最多 32 B，保留 64 B 页边界；LIS/SPA 改用 30 ms 排队完成等待。20 组主机套件、九个父项目构建及 Debug/Release 通过；32.864 秒整片并发板测 20 项通过并恢复，LIS约88–93 Hz/SPA约16 Hz，无离线或总线错误。模块 README/CHANGELOG 已同步。
 
 - FT24C128A 增加独立 `SRNOS_EEPROM*` 阻塞/非阻塞状态机：16 KiB、两字节地址、64 B 页边界、分段读写、写周期后逐页读回校验、超时及设备级取消。无新增常驻线程或驱动堆分配；旧参数/HostLink/INS 存储保持未迁移及默认关闭。
-- 增加 EEPROMBringUp、模块 README/CHANGELOG 和 ASan/UBSan 主机测试；20 组主机套件、专用 Debug/Release 构建通过。板端 20 项检查通过，整片恢复后与外部备份逐字节一致，测试前完整 Flash 已恢复并比对一致。记录现有 LIS/SPA 将总线 BUSY 判为离线的共享访问限制，测试后恢复 READY；详见 `Docs/Validation/EEPROM-20260928/README.md`。
+- 增加 EEPROMBringUp、模块 README/CHANGELOG 和 ASan/UBSan 主机测试；20 组主机套件、专用 Debug/Release 构建通过。板端 20 项检查通过，整片恢复后与外部备份逐字节一致，测试前完整 Flash 已恢复并比对一致。记录现有 LIS/SPA 将总线 BUSY 判为离线的共享访问限制，测试后恢复 READY。
 
 - 补充 `Source/Services/INS/README.md` 与模块 `CHANGELOG.md`；主机保存工具增加 `--streams`，支持双 IMU、INS、磁场、气压全量 CSV、INS/温控状态和 epoch 变化检查，旧默认命令及双 IMU CSV 列保持兼容。主机模拟串口/黄金向量回归通过，本次文档与采集工具更新未改固件、未操作实板。
 
@@ -162,13 +174,13 @@
 - BMI DMA完成通知原采样线程当周期发布，去掉额外1ms延迟；最终板测双路时间差最大76µs，双路等权融合。低动态波动明确采用三轴分量整体RMS，不增加滤波或自动校准。
 - 新增INSBringUp与0x0102/0103/0104姿态/磁场/气压流、INS状态查询和CLI可选订阅；沿用有界FIFO/丢新计数/会话清理。原0x0100/0101、双IMU保存脚本及CSV格式保持兼容。三个BringUp保留启动音和1Hz心跳，SensorBringUp仅禁用融合，使用同一温控。
 
-验证：19组主机套件、Debug/Release、Board独立入口、三个BringUp、九种父项目固件与链接检查通过。最终实板一次软件复位后收敛，五流同时订阅的三个10秒窗姿态计算均1000Hz、接收1000.4/1000.0/1000.2Hz，无协议错误/缺序/溢出，全部双路等权；取消/DTR重连通过，温控反馈LSM约60°C。详细SHA、内存/栈、RMS定义、未实测项与结束状态见 Docs/Validation.md。十分钟长测由用户执行，未进行精度校准或真实CAN负载验收。没有提交、推送或修改CubeMX生成边界。
+验证：19组主机套件、Debug/Release、Board独立入口、三个BringUp、九种父项目固件与链接检查通过。最终实板一次软件复位后收敛，五流同时订阅的三个10秒窗姿态计算均1000Hz、接收1000.4/1000.0/1000.2Hz，无协议错误/缺序/溢出，全部双路等权；取消/DTR重连通过，温控反馈LSM约60°C。十分钟长测由用户执行，未进行精度校准或真实CAN负载验收。没有提交、推送或修改CubeMX生成边界。
 
 ### 2026-09-27
 
 - RAW 加热改为 LSM 优先、BMI 回退；LSM恢复健康100 ms后切回，切换清积分并从零缓升，两路失效或任一有效温度达到70°C锁存关闭。使用连续位置式PI 40/2/0、积分上限350/输出500、5个百分点/秒的功率斜率限制，取消旧RAW预热全功率及越过目标清积分行为。新增只读温控状态快照与CDC0每秒来源/温度/占空比日志；legacy温控默认行为保留。目标仍60°C，作用于实际反馈源，参数是首次平滑整定值而非最终温稳保证。
 
-- SensorBringUp 的 RAW 采样新增显式 BMI 60°C 加热目标；默认 RAW 配置仍关闭加热，融合/用户校准/EEPROM 路径保持关闭。新鲜温度驱动原有 PWM/PID，失效、超时或超温锁存关闭；PWM 启动失败同样锁存故障。CLI 默认显示双 IMU 温度与易读采集状态，`--json` 可切回机器输出，保存格式不变。验证见 `Docs/Validation.md` 最新记录。
+- SensorBringUp 的 RAW 采样新增显式 BMI 60°C 加热目标；默认 RAW 配置仍关闭加热，融合/用户校准/EEPROM 路径保持关闭。新鲜温度驱动原有 PWM/PID，失效、超时或超温锁存关闭；PWM 启动失败同样锁存故障。CLI 默认显示双 IMU 温度与易读采集状态，`--json` 可切回机器输出，保存格式不变。
 
 - 新增主机端 `imu_capture.py`：复用现有解码器保存双 IMU 全量 CSV、原始 CDC1 字节和状态/元数据，支持预热分段、定时结束、Ctrl-C 保存、断连标记与拒绝覆盖。模拟串口验证保存行数与原始字节重新解码一致，并覆盖序号环绕、缺口、重复、时间戳精度和异常收尾；未操作板子或重新采集，未改变固件。
 
@@ -181,7 +193,7 @@
 - SensorBringUp 开启 CDC1 遥测，保留 CDC0 每秒摘要，禁用 HostLink LOAD/SAVE 与周期栈扫描；新增 Python CLI、黄金向量和使用文档。存储驱动/格式未改。
 - BringUp 与 SensorBringUp 显式禁用加热；legacy 初始化、温度等待及恢复遵守冻结开关，普通 SDK 默认行为保留。调度前一次黄色首灯与三段启动音，原 Indicators 线程独立于 CAN/USB 屏障输出 0.5 Hz 黄色心跳，不新增线程。
 
-验证：18 组主机套件、构建矩阵与父项目/链接检查通过。最终 SensorBringUp 实板两个正常 10 秒窗口及软件复位后窗口均约 1 kHz，无协议错误/序号缺口/遥测丢样；取消订阅、DTR 重连及暂停读取后恢复通过。此次暂停读取未触发设备满队列。用户自行进行十分钟长测，实际声光未现场确认；详情和 SHA 见 `Docs/Validation.md`。未修改 IOC/生成代码、未提交或推送。
+验证：18 组主机套件、构建矩阵与父项目/链接检查通过。最终 SensorBringUp 实板两个正常 10 秒窗口及软件复位后窗口均约 1 kHz，无协议错误/序号缺口/遥测丢样；取消订阅、DTR 重连及暂停读取后恢复通过。此次暂停读取未触发设备满队列。用户自行进行十分钟长测，实际声光未现场确认。未修改 IOC/生成代码、未提交或推送。
 
 ### 2026-09-26
 
@@ -194,16 +206,14 @@
 - 修复 ELF 静态检查的 objcopy 调用，显式使用临时输出，避免检查重写原始 ELF 容器。
 - 新增 SensorBringUp、10 秒样本/轮询窗口和主机端 GDB 栈导出工具。该配置禁用参数加载、HostLink 存储入口和周期全任务栈扫描，MCP 只被动运行。生成代码、第三方版本、EEPROM/ADC/PHY 未改。
 
-验证：16 组主机套件通过；根 Debug/Release、Board Debug、SensorBringUp Debug/Release、八种父项目固件及内存/容量/来源检查通过。板端 LIS=0x40、SPA=0x11 并持续更新；LSM 默认读 0x00，上拉 MISO 后读 0xFF，仍未通过可达性验证。持续窗口、软件复位、精确 SHA 和计数见 `Docs/Validation.md`；不能据此宣称 LSM、双 IMU 实时性、传感器精度或真实 CAN 帧压力已验收。没有自动提交。
-
+验证：16 组主机套件通过；根 Debug/Release、Board Debug、SensorBringUp Debug/Release、八种父项目固件及内存/容量/来源检查通过。板端 LIS=0x40、SPA=0x11 并持续更新；LSM 默认读 0x00，上拉 MISO 后读 0xFF，仍未通过可达性验证。不能据此宣称 LSM、双 IMU 实时性、传感器精度或真实 CAN 帧压力已验收。没有自动提交。
 
 #### 启动屏障修复后的板端复测
 
 - 经用户授权使用 J-Link V8.96 + ARM GDB 连接；板上向量表及代码段匹配修复版 BringUp ELF，未重新编译或烧录。
 - 初次连接时已运行约 634 秒/127 次采样；继续后 648 秒/130 次。软件复位后在 40 秒/8 次及 99 秒/20 次采样，均未复现旧断言，IMU 数据新鲜，当前 Fault 标记为零。
 - 记录 CAN RX 最小空闲栈仅 412 B、USB 尚无枚举证据，保留为后续验收项。未做 CAN 帧压力或完整实时性验证。
-- 清除本次新增断点后让 MCU 继续运行，保留 GDB/J-Link 会话。取样值、固件 SHA 和日志路径见 `Docs/Validation.md` 文末。
-
+- 清除本次新增断点后让 MCU 继续运行，保留 GDB/J-Link 会话。
 
 #### 调试协作约定
 
@@ -220,7 +230,7 @@
 
 验证：13 组主机套件和结构检查通过；修复版 BringUp 的 Debug/Release 编译链接、基础 ELF 内存/TLS/异常向量检查通过。
 
-硬件记录证明的是修复前的失效原因，修复后的板端验证仍待执行；本次不操作用户保留的 GDB/J-Link 会话，不烧录、复位或继续 MCU。修复固件在独立的 `build/BringUp-barrier-fix` 和 `build/BringUp-barrier-fix-release` 构建，保留 `build/BringUp` 原 ELF。
+硬件记录证明的是修复前的失效原因，修复后的板端验证仍待执行；本次不操作用户保留的 GDB/J-Link 会话，不烧录、复位或继续 MCU。修复固件使用独立构建目录，保留原调试 ELF。
 
 #### 迁移收尾与 BringUp 观测应用
 
@@ -246,7 +256,7 @@
 - 最终链接采用 `Board/Linker/SirinEmbedOS.ld`，普通 data/TLS/BSS 放 D1，DTCM 保留热数据、RTOS heap 和 MSP；加入 D2 DMA/Watch/retained、D3 BDMA、ITCM 复制和独立 libc arena。Picolibc 静态递归锁接入 FreeRTOS，IRQ 不允许动态分配；生成基线文件保留原位置。
 - 新增 `Examples/Parameters` 业务 PID 增益和快照示例、`Examples/PrototypeBindings` 串口用途示例；重写 README 和 AGENTS 的当前能力、父项目接入、初始化冻结与验证边界。
 
-验证：12组主机套件通过；根与Board独立Debug/Release均链接通过；外部父项目6种固件（含无GC全组件、94公共头）通过。检查MSP/libc容量覆盖与越界拒绝、DMA银行、TLS及真实异常向量。完整命令、构建变体、来源校验及剩余问题统一记录在 `Docs/Validation.md`，不将旧基线的 size 数据用于本轮资源预算。
+验证：12组主机套件通过；根与Board独立Debug/Release均链接通过；外部父项目6种固件（含无GC全组件、94公共头）通过。检查MSP/libc容量覆盖与越界拒绝、DMA银行、TLS及真实异常向量。不将旧基线的 size 数据用于本轮资源预算。
 
 限制：未烧录，USB 枚举、UART DMA/IDLE/错误恢复、RS485 收发、CAN、IMU、FPU/TLS、缓存一致性和 Fault 仍需板端验证。默认初始化不代表外接设备存在或服务健康，具体业务必须检查相应状态。
 
@@ -268,7 +278,7 @@
 
 验证：ST Arm Clang 21.1.1 / Picolibc 下，根目录 Debug、Release 与 Board 独立入口均编译链接通过。Debug Flash **60,044 B**，Release Flash **47,340 B**；两者 DTCM **76,224 B**（含 64 KiB RTOS heap 与生成脚本的 heap/stack 预留）、D1 **131,072 B**。这些数字不包含应用后续增加的资源。
 
-`Tests/Build/check_sdk.py` 通过：第三方哈希、含空格的父项目路径、父工程名保持、两个不同固件名、helper 与直接链接 Platform 两种接入、应用配置覆盖、C++ 构造/TLS 段、强 IRQ/hook 符号和 NOLOAD heap 布局均完成静态检查。生成边界另行核对：只有 `main.c` 的 USER CODE 区、项目维护的 Board 入口和 preset 发生修改，IOC 未改、未重新 generate。
+构建检查通过：第三方哈希、含空格的父项目路径、父工程名保持、两个不同固件名、helper 与直接链接 Platform 两种接入、应用配置覆盖、C++ 构造/TLS 段、强 IRQ/hook 符号和 NOLOAD heap 布局均完成静态检查。生成边界另行核对：只有 `main.c` 的 USER CODE 区、项目维护的 Board 入口和 preset 发生修改，IOC 未改、未重新 generate。
 
 限制：尚未烧录；实际调度、FPU 上下文、TLS 隔离与外设行为仍需板端验证。CMSIS 原有 `optimize("Os")` 被 Clang 忽略的警告仍在。完整 Fault/Debug Watch、运行统计、DMA/BDMA 段、libc malloc/new/stdio 的 RTOS 锁、其他 middleware 和系统服务未包含在本次迁移内。普通 heap_5 分配不能作为 DMA 缓冲使用。
 
@@ -283,7 +293,7 @@
 #### 工程与架构
 
 - 新增 SDK 根目录 CMake 入口、Debug/Release presets 和 ST Arm Clang 工具链路径适配，CLion 可直接打开 `SirinEmbedOS/`；复用 Board 生成源码清单，不修改生成文件。根目录构建目标为 `SirinEmbedOS.elf`，新增 IDE/构建输出忽略规则。
-- 建立面向固定 STM32H723 主控硬件的 SirinEmbedOS 重构基线，参考工程为 `/Users/sirin/CLionProjects/h723vg-v2-prototype`。
+- 建立面向固定 STM32H723 主控硬件的 SirinEmbedOS 重构基线，参考工程为 `h723vg-v2-prototype`。
 - 在 `AGENTS.md` 明确单一 SDK 子模块的组织方式：SDK 提供固定硬件能力和公共服务，父项目管理特有控制算法、业务任务与配置。
 - 写入 SDK 和父项目的目录规划、CubeMX 生成边界、CMake 接入与启动所有权规则。目录按需建立，规划中的系统能力尚未迁入。
 - 明确 CAN、板载 IMU 等固定能力默认集成，UART 等可变用途资源保留配置和占用管理空间。
@@ -299,9 +309,9 @@
 
 #### 验证
 
-- 根目录 Debug 配置与构建通过，使用 ST Arm Clang 21.1.1 / Picolibc，生成 `build/Debug/SirinEmbedOS.elf`。验证时将本机 ST Arm Clang 的 bin 目录加入 PATH；CLion 工具链环境也需要提供此路径。Release preset 已提供，尚未验证。
+- 根目录 Debug 配置与构建通过，使用 ST Arm Clang 21.1.1 / Picolibc。验证时将本机 ST Arm Clang 的 bin 目录加入 PATH；CLion 工具链环境也需要提供此路径。Release preset 已提供，尚未验证。
 - 在 `Board/` 执行 `cmake --preset Debug` 和 `cmake --build --preset Debug -j 8`，ST Arm Clang 21.1.1 配置、编译和链接通过。
-- 产物为 `Board/build/Debug/OMNICTL2_3.elf`；该次链接报告 Flash 占用 49,136 B，DTCM 占用 7,216 B。此数据仅代表当前 HAL 基线，不是完整 SDK 的内存预算。
+- 该次链接报告 Flash 占用 49,136 B，DTCM 占用 7,216 B。此数据仅代表当前 HAL 基线，不是完整 SDK 的内存预算。
 - 编译出现 ST CMSIS 的 `optimize("Os")` 属性被 Clang 忽略的警告，未阻止链接。
 - 已静态核对 ADC3 五通道、TIM7 tick 及外设 HAL 中断调用；未烧录或验证实机运行。
 
@@ -318,55 +328,34 @@
 
 以下为整理前的阶段记录，保留当时的配置、结论与未验边界，不代表当前板上状态；当前用法见 README 与 QuickStart。
 
-已完成主机测试和固件编译链接。用户首次板端调试确认可进入 RUNNING 并采到 IMU 数据，同时发现启动事件屏障误判导致复位循环；源码已修复，随后直接连接及一次软件复位复测未再现旧断言，IMU 数据持续更新；完整外设和压力验收仍待完成。当前验证结果和待测项见 [验证记录](Docs/Validation.md)。
+已完成主机测试和固件编译链接。用户首次板端调试确认可进入 RUNNING 并采到 IMU 数据，同时发现启动事件屏障误判导致复位循环；源码已修复，随后直接连接及一次软件复位复测未再现旧断言，IMU 数据持续更新；完整外设和压力验收仍待完成。
 
-2026-09-28 全面命名与事件等待改造后已重新烧录：两组统计开关对照、托管任务生命周期、ADC 软件故障注入及 CDC 背压/DTR 重连通过。统计开销约 0.99 个百分点，接近目标边界；当时实际 CAN 负载、串口、仪表精度和长期压力仍未验收。当前证据见 [SRNOS 板端记录](Docs/Validation/SRNOSBoard-20260928/README.md)，后续功能缺口与优化顺序见 [开发清单](Docs/CHANGELOG.md#当前底层开发与优化优先级)。
+2026-09-28 全面命名与事件等待改造后已重新烧录：两组统计开关对照、托管任务生命周期、ADC 软件故障注入及 CDC 背压/DTR 重连通过。统计开销约 0.99 个百分点，接近目标边界；当时实际 CAN 负载、串口、仪表精度和长期压力仍未验收。当时的功能缺口与优化顺序见 [开发清单](Docs/CHANGELOG.md#当前底层开发与优化优先级)。
 
-2026-09-28 曾完成 CAN1↔CAN3 外接负载短测并修复通知 weak 链接错误：合计 8000 帧/s 全部交付，但整板 CPU 95.21%，业务余量不足；CAN2/CAN4 与故障恢复仍待测。ADC 24 V 仪表单点读到均值 24.641 V，保持标称倍率待进一步核对。详见 [早期实测](Docs/Validation/CAN13-ADC-20260928/README.md)。
+2026-09-28 曾完成 CAN1↔CAN3 外接负载短测并修复通知 weak 链接错误：合计 8000 帧/s 全部交付，但整板 CPU 95.21%，业务余量不足；CAN2/CAN4 与故障恢复仍待测。ADC 24 V 仪表单点读到均值 24.641 V，保持标称倍率待进一步核对。
 
-2026-10-03 按每路 CAN 同时 3 kHz RX＋3 kHz TX 目标优化：P0 CAN1/2/3＋BMI/LSM/INS 为 48，P1 CAN4＋UART 服务为 47，SPI4 共享依赖为 49、事务优先 IMU；直接任务通知、冻结路由少复制、MCP 减少重复 SPI 事务，并修复原生 RX 满环竞争、Bus-Off 接入与电机反馈并发。公共 CAN API、八个收发线程、栈/队列容量保持；电机对象私有布局变化，父项目须重新编译。当时 PCB 离线，仅验证软件及构建，见 [优化记录](Docs/Validation/CANRouter-20261002/README.md) 与 [当前优先级验证](Docs/Validation/Priority-20261003/README.md)。
+2026-10-03 按每路 CAN 同时 3 kHz RX＋3 kHz TX 目标优化：P0 CAN1/2/3＋BMI/LSM/INS 为 48，P1 CAN4＋UART 服务为 47，SPI4 共享依赖为 49、事务优先 IMU；直接任务通知、冻结路由少复制、MCP 减少重复 SPI 事务，并修复原生 RX 满环竞争、Bus-Off 接入与电机反馈并发。公共 CAN API、八个收发线程、栈/队列容量保持；电机对象私有布局变化，父项目须重新编译。当时 PCB 离线，仅验证软件及构建。
 
 随后接入四路独立的启动期 Classic/FD 选择，默认仍为 Classic 1 Mbit/s；新增公开 FD 原始订阅/one-shot API，业务协议由应用定义。原生 FDCAN 改用 80 MHz 及按模式检查的固定 Message RAM 窗口，MCP 使用 16 RX＋12 TX 的 64 B FD FIFO；P0/P1保持；CAN4优化后合并为一个4KiB服务，CAN总计七个worker。原生 RX 每轮最多处理 32 帧、每次搬运 4 帧，避免 64 B 帧批次挤占回调栈。FD 配置、长度、资源和离线限制见 [CAN](Source/IO/CAN/README.md)；历史 Classic 实测不能证明新时钟/FD 运行效果。
 
-2026-10-06 已完成当前优化/FD固件的 CAN1↔CAN3 板测：356格式用例通过；Classic8B和FD8M64B各3k收＋3k发持续60秒、零数据错误/接收丢帧，整板CPU32.00%和35.13%，FD5M64B同档10秒通过；FD4M及以下64B同档受带宽/仲裁限制。双IMU/INS保持1kHz；LIS采样率、身份记录与未测四路/故障边界见 [完整报告](Docs/Validation/CANFD-Board-20261006/README.md)。本次结束恢复测试前的原固件并完整读回校验，未将测试镜像留板。
+2026-10-06 已完成当前优化/FD固件的 CAN1↔CAN3 板测：356格式用例通过；Classic8B和FD8M64B各3k收＋3k发持续60秒、零数据错误/接收丢帧，整板CPU32.00%和35.13%，FD5M64B同档10秒通过；FD4M及以下64B同档受带宽/仲裁限制。双IMU/INS保持1kHz；LIS 采样率与身份记录仍有待核对项，四路同步和物理故障恢复尚未验收。本次结束恢复测试前的原固件并完整读回校验，未将测试镜像留板。
 
-2026-10-06优化前的CAN1↔CAN4共享SPI基线：Classic双向各2k时CPU约91.5%，各3k请求因生产周期不足未达标；FD5M及8M对齐测试在64B各3k时出现MCP硬件RX溢出。双IMU/INS保持1kHz。默认FD8M首帧失败，测试中将CAN1仲裁采样点对齐到80%后功能通过，生产配置仍待修正；见 [CAN4/SPI实测](Docs/Validation/CAN4-SPI-20261006/README.md)。
+2026-10-06优化前的CAN1↔CAN4共享SPI基线：Classic双向各2k时CPU约91.5%，各3k请求因生产周期不足未达标；FD5M及8M对齐测试在64B各3k时出现MCP硬件RX溢出。双IMU/INS保持1kHz。默认FD8M首帧失败，测试中将CAN1仲裁采样点对齐到80%后功能通过，生产配置仍待修正。
 
-2026-10-06 CAN4单服务/SPI序列优化已完成：Classic 1M/8B双向各3k完成3×60s＋600s，零丢帧/拒绝/TTL过期/硬件RX溢出，78个十秒CPU窗口最高53.9632%。双IMU/INS保持1kHz，含6k过载的完成间隔/采集/SPI排队峰值1143/151/112µs；FD五速率320格式用例和过载恢复通过，64B各3k在5/8M下CPU约61%。原测试前Flash已恢复，优化代码未永久留板。详细边界、资源、原始结果和恢复证明见 [最终验收](Docs/Validation/CAN4-Optimization-20261006/README.md)。
+2026-10-06 CAN4 单服务与 SPI 序列优化完成；完整测量值、负载条件和恢复范围见 [CAN4 板测摘要](Source/IO/CAN/CHANGELOG.md#can4-20261006)。
 
-CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`，设备反馈时间可以直接与应用任务时间比较；不与 HAL/DWT 原点混用。MSwerve 实战修复与验证见 [CAN 时间基准记录](Docs/Validation/CANClock-20261012/README.md)。
+CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`，设备反馈时间可以直接与应用任务时间比较；不与 HAL/DWT 原点混用。该时间基准修复已在 MSwerve 父项目实测。
 
-2026-09-29 已完成持久化板测，并按实测噪声提高静态校准阈值：连续两次双IMU校准保存成功，软件复位后revision2加载一致、INS未校准标记清除。当前保留新固件及校准记录，见 [阈值复测](Docs/Validation/StaticThreshold-20260929/README.md)。参数事务和未处理的遥测吞吐结果见 [初轮板测](Docs/Validation/PersistenceBoard-20260929/README.md)；真实断电、校准绝对精度仍待验收。
+2026-09-29 已完成持久化板测，并按实测噪声提高静态校准阈值：连续两次双IMU校准保存成功，软件复位后revision2加载一致、INS未校准标记清除。当前保留新固件及校准记录。真实断电、校准绝对精度仍待验收。
 
-- 实际板级目录为 `Board/`。需要生成 HAL 时优先运行 `python3 Board/generate.py`，可从任意工作目录使用该脚本的绝对路径调用；脚本根据自身位置定位当前 checkout，不依赖开发者机器上的固定工程路径。
-- 脚本通过系统进程调用 CubeMX `-q <脚本文件>`，命令依次为 `config load "<当前checkout的IOC绝对路径>"`、`project generate`、`exit`，工作目录固定为 `Board/`。macOS CLI 实测不能依赖 `cwd` 解析相对 IOC 路径，否则 `-q` 也可能弹出找不到 IOC 的错误窗口。macOS 默认查找 `/Applications/STMicroelectronics/STM32CubeMX.app/Contents/MacOS/STM32CubeMX`，也支持 `--cubemx <可执行文件>`、环境变量 `STM32CUBEMX` 或 PATH 中的 `STM32CubeMX`。`--dry-run` 只打印计划，`--timeout` 设置生成超时（默认300秒）。
-- 每次实际执行先将 Board 内容备份到根 `build/cubemx/<时间戳-唯一后缀>/Board-before`（排除 build、.idea、__pycache__），同目录保存实际 `.mx`、生成日志、时序检查日志和变化文件清单。脚本不自动回滚、不构建、不烧录、不操作调试器；生成失败仍保留现场与快照供比较。已有 `Board/generate.mx` 是原始手工脚本，含本机绝对路径，日常使用 `generate.py`。
-- 不能仅凭进程退出码宣称成功：核对 `project generate` 的 `OK` 和生成内容。脚本会检查退出码/成功标记，并运行 `Tools/Debug/check_i2c_timing.py`，要求 IOC、生成的 I2C4 TIMING 和 Support 常量一致。不要为消除检查失败而盲目同步常量，应先核对时钟、滤波、时序及此前板测依据。
-- 生成后与本次快照比较，检查 USER CODE、SDK 自维护 CMake/Support/Linker、HAL/CMSIS、工具链和中断所有权，保留原有未提交修改；再进行对应固件构建，涉及生成清单或构建接入时运行 `Tests/Build/check_sdk.py`。生成、编译与板端验证分别报告，不覆盖当前调试会话所用 ELF。
-- 2026-09-28 本机 CubeMX 6.18.1 / DB.6.0.181 使用该 CLI 路径成功生成，原始调用仅将 `hi2c4.Init.Timing` 更新为已板测的 `0x10C7182D`，407 个 USER CODE 区域完整保留。实际版本以运行日志为准，macOS bundle 曾显示过期的6.13。后续仍检查实际差异，不假定每次只改一行；记录见 `Docs/Validation/CubeMX-20260928/README.md`。
-- 用户明确要求仅修改 IOC、不要 Generate 时遵从该范围；已授权的生成工作无需重复询问。Generate 不隐含授权重新烧录或接管用户暂停现场。
+- 2026-09-28 本机 CubeMX 6.18.1 / DB.6.0.181 使用该 CLI 路径成功生成，原始调用仅将 `hi2c4.Init.Timing` 更新为已板测的 `0x10C7182D`，407 个 USER CODE 区域完整保留。实际版本以运行日志为准，macOS bundle 曾显示过期的6.13。后续仍检查实际差异，不假定每次只改一行。
 
-- 从当前工具列表确认 `mcp__clion__*` / `xdebug_*` 或 `execute_tool` 是否实际可调用；只有配置条目不代表当前会话已加载。优先使用原生 MCP 工具，必要时可用本地 HTTP 做握手和工具枚举诊断。
-- 在 CLion 的 Settings → Tools → MCP Server 开启服务，并通过 Codex Auto-Configure 或 Copy HTTP Stream Config 获取实际地址；核对 `~/.codex/config.toml` 中的配置，更新后重启/重新加载客户端。不要把端口写成永久固定事实。
-- 2026-09-26 本机实测 CLion 2026.2.3 的地址为 `http://127.0.0.1:64362/stream`；旧配置 `64342` 无监听。此为排查线索，下次仍需检查当前监听与握手。
-- 调试工具依赖 Debugger MCP Toolset。若使用 router-only 模式，确认 `execute_tool` 可用，并按需从 Settings → Tools → AI Assistant → Skills 将 `clion-debugger` 安装到 Codex (Global)；不要只搜索 `xdebug_*` 就断定没有调试能力。
-- 先读调试状态并选择正确会话，再读寄存器、栈和变量。表达式求值不自动等于只读：避免调用目标函数、带赋值的表达式或会产生副作用的外设寄存器读取。
+CubeMX 生成、构建与调试会话维护方法见 [Board 指南](Board/README.md)和[开发指南](Docs/Development.md)。
 
-- 使用明确的可执行文件绝对路径，先核对已安装版本和符号链接。2026-09-26 本机最高已安装版本为 `/Applications/SEGGER/JLink_V896/JLinkGDBServerCLExe`，GDB 为 `/opt/homebrew/bin/arm-none-eabi-gdb`；`/Applications/SEGGER/JLink` 当时指向旧 V6.12j，不能据通用路径假定版本最新。“本机最高已安装版本”不等于官网最新发布。
-- 本次实测目标参数为 `STM32H723VG`、SWD、4000 kHz。再次连接仍需核对 IOC、探针、目标电压和实际硬件；多探针时显式选定探针，不自动操作第一个设备。
-- 已授权连接且无其他会话占用时，可参考本次服务器参数：`-device STM32H723VG -if SWD -speed 4000 -port 2331 -localhostonly 1 -noir -nohalt`。这些参数避免服务器主动初始化寄存器/暂停，但不能保证后续 GDB attach 不暂停或完全无扰动；端口也须先检查占用。
-- 不通过猜测的帮助参数探测 J-Link 行为：V8.96 的 `-help` 实测被忽略并进入连接流程。先读对应版本文档，未知参数可能不会阻止程序继续操作探针。
-- GDB 使用 `-nx` 避免隐式加载用户初始化命令。先加载对应 ELF 符号，再 attach；加载符号与 `load` 烧录是两回事。检查构建缓存的 `SIRINEMBEDOS_EXAMPLE`、构建类型和产物路径，不能仅凭 `SirinEmbedOS.elf` 文件名判断是 BringUp。
-- 对现场 ELF 保留原文件，不在取证期间覆盖；修复构建使用独立目录。可先以 `compare-sections .isr_vector` 和 `compare-sections .text` 核对板上代码，这只证明所比较段匹配，不代表整份镜像或全部运行时数据一致。
-- 保持一个持久 GDB 会话；优先硬件断点，记录并清理本次新增断点，不删除用户原有断点。使用 `bt 8` 等有界调用栈及 `set backtrace limit`；本机 GDB 对当前优化固件曾出现重复展开帧，不能直接据此断定真实递归或栈损坏，应结合 SP、反汇编和原始栈核对。
-- 首次采集 PC/LR/SP、当前任务、PRIMASK/BASEPRI、Fault 状态、HAL/Kernel tick 和系统启动状态。需要判断是否推进时，在已授权范围内继续一段时间再暂停对比；tick 回退应考虑复位循环，不能把多次停在 `HAL_Delay` 直接判为延时死锁。
-- retained Fault 记录可能来自前次复位。结合当前 PC、活动 Fault 标记、记录内容及断点复现区分历史记录与当前异常；记录序号本身不足以证明发生时间。保留日志中的 ELF、工具版本、取样值和执行动作。
+2026-09-26 用户首次板端记录已确认 RUNNING/IMU 初步运行，同时定位到启动事件屏障将成功返回 `0x3` 误判失败而复位。两处等待已改为错误位检查加所需位掩码；13 组主机套件和修复版 Debug/Release 构建通过，修复后板端尚待复测。前文“未烧录”的迁移基线描述不再代表最新硬件观测，不得主动操作用户保留的暂停调试会话。
 
-2026-09-26 用户首次板端记录已确认 RUNNING/IMU 初步运行，同时定位到启动事件屏障将成功返回 `0x3` 误判失败而复位。两处等待已改为错误位检查加所需位掩码；13 组主机套件和修复版 Debug/Release 构建通过，修复后板端尚待复测。前文“未烧录”的迁移基线描述不再代表最新硬件观测，具体以 `Docs/Validation.md` 文末为准。不得主动操作用户保留的暂停调试会话。
-
-18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；连续窗口、SHA、结束状态均以 `Docs/Validation.md` 最新条目为准。
-
+18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；
 
 ## 2026-10-03 CAN Classic / FD 启动合同
 
-FD 每路 32 条路由、64 个 TX 槽，共 23312 B 静态 D1；Classic 16 B 帧和 59920 B ITCM context 保持。原生 RX 每轮最多 32 帧、分小块搬运以保留 4 KiB worker 栈余量；不新增线程或扩堆。Native FDCAN 改用 PLL2Q 80 MHz（P/R 输出不变），三路 Message RAM 固定窗口从 0/0x300/0x600 word 开始；FD 每路 676 words，Classic 每路 232 words。CAN4 FD FIFO 为 RX16/TX12、64 B，共2016 B。软件支持的位速率不代表本板收发器/布线已通过高速实测。优先级仍为 P0 CAN1/2/3+IMU，P1 CAN4/UART；FD 负载必须另按帧长、BRS和位速率验算，不能将 Classic 3 kHz 收发目标外推到所有 FD 配置。2026-10-03离线证据见 Docs/Validation/CANFD-20261003/README.md；2026-10-06 CAN1/3短接实测Classic8B及FD8M64B各3k收发60秒通过，FD5M64B同档10秒通过，FD4M及以下64B该档过载。RX最小栈余3092 B、双IMU/INS连续1kHz；测试后完整恢复原Flash，不应假设当前板上已有FD固件。完整数据、身份记录/LIS线索和CAN2/4/UART/故障未验边界见 Docs/Validation/CANFD-Board-20261006/README.md。
+FD 每路 32 条路由、64 个 TX 槽，共 23312 B 静态 D1；Classic 16 B 帧和 59920 B ITCM context 保持。原生 RX 每轮最多 32 帧、分小块搬运以保留 4 KiB worker 栈余量；不新增线程或扩堆。Native FDCAN 改用 PLL2Q 80 MHz（P/R 输出不变），三路 Message RAM 固定窗口从 0/0x300/0x600 word 开始；FD 每路 676 words，Classic 每路 232 words。CAN4 FD FIFO 为 RX16/TX12、64 B，共2016 B。软件支持的位速率不代表本板收发器/布线已通过高速实测。优先级仍为 P0 CAN1/2/3+IMU，P1 CAN4/UART；FD 负载必须另按帧长、BRS和位速率验算，不能将 Classic 3 kHz 收发目标外推到所有 FD 配置。2026-10-03离线；2026-10-06 CAN1/3短接实测Classic8B及FD8M64B各3k收发60秒通过，FD5M64B同档10秒通过，FD4M及以下64B该档过载。RX最小栈余3092 B、双IMU/INS连续1kHz；测试后完整恢复原Flash，不应假设当前板上已有FD固件。

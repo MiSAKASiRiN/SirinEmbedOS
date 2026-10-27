@@ -1,6 +1,6 @@
 #include "parameters_internal.h"
 #include "Services/Storage/storage_internal.h"
-#include "Services/Logging/debug_port_internal.h"
+#include "Services/Logging/log_internal.h"
 #include "SirinEmbedOS/Diagnostics/Watch/Watch.h"
 #include <cerrno>
 #include <climits>
@@ -301,8 +301,35 @@ SRNOS_ParametersStatus SRNOS_ParametersSnapshot(const uint16_t *indices,size_t n
     size_t offset=0;for(size_t i=0;i<n;++i){encode(entries[indices[i]].type,values[i],out+offset);offset+=size_of(entries[indices[i]].type);}*written=offset;return SRNOS_PARAMETERS_STATUS_OK;
 }
 SRNOS_ParametersStatus SRNOS_ParametersDumpRegistry(SRNOS_ParametersDumpCallback cb,void *user){if(!context())return SRNOS_PARAMETERS_STATUS_CONTEXT_ERROR;if(!cb)return SRNOS_PARAMETERS_STATUS_INVALID_PARAM;for(size_t i=0;i<count;++i){SRNOS_ParametersEntryInfo info{};SRNOS_ParametersGetByIndex(i,&info);char a[32],b[32],c[32],d[32];format(i,SRNOS_PARAMETERS_BINARY_VALUE_CURRENT,a,sizeof(a));format(i,SRNOS_PARAMETERS_BINARY_VALUE_DEFAULT,b,sizeof(b));format(i,SRNOS_PARAMETERS_BINARY_VALUE_MIN,c,sizeof(c));format(i,SRNOS_PARAMETERS_BINARY_VALUE_MAX,d,sizeof(d));cb(&info,a,b,c,d,user);}return SRNOS_PARAMETERS_STATUS_OK;}
-static void dump_line(const SRNOS_ParametersEntryInfo *i,const char *v,const char *,const char *,const char *,void *){char b[128];int n=std::snprintf(b,sizeof(b),"%s=%s\n",i->name,v);if(n>0&&(size_t)n<sizeof(b))(void)SRNOS_DebugPortWriteExact(b,(size_t)n);}
-SRNOS_ParametersStatus SRNOS_ParametersDumpDebugPort(void){return SRNOS_ParametersDumpRegistry(dump_line,nullptr);}
+SRNOS_ParametersStatus SRNOS_ParametersDumpDebugPort(void)
+{
+    if(!context())return SRNOS_PARAMETERS_STATUS_CONTEXT_ERROR;
+    const osKernelState_t kernel_state=osKernelGetState();
+    if(kernel_state!=osKernelRunning && kernel_state!=osKernelLocked)
+        return SRNOS_PARAMETERS_STATUS_CONTEXT_ERROR;
+    if(count==0)return SRNOS_PARAMETERS_STATUS_OK;
+    if(!SRNOS_LogLevelEnabled(SRNOS_LOG_INFO))return SRNOS_PARAMETERS_STATUS_DISABLED;
+    for(size_t i=0;i<count;++i){
+        char value[SRNOS_PARAMETERS_VALUE_STRING_MAX_LEN];
+        auto status=format(i,SRNOS_PARAMETERS_BINARY_VALUE_CURRENT,value,sizeof(value));
+        if(status!=SRNOS_PARAMETERS_STATUS_OK)return status;
+        char line[SRNOS_LOG_BODY_MAX];
+        const int length=std::snprintf(line,sizeof(line),"%s=%s",entries[i].name,value);
+        if(length<0)return SRNOS_PARAMETERS_STATUS_ERROR;
+        if((size_t)length>=sizeof(line))return SRNOS_PARAMETERS_STATUS_BUFFER_TOO_SMALL;
+        /* Accepted records are owned by Logging; a later failure cannot undo
+         * that prefix. The worker retains its normal bounded/drop policy. */
+        switch(SRNOS_LogPrintf(SRNOS_LOG_INFO,"Parameters","%s",line)){
+        case SRNOS_LOG_OK:break;
+        case SRNOS_LOG_FULL:
+        case SRNOS_LOG_NO_MEMORY:return SRNOS_PARAMETERS_STATUS_NO_SPACE;
+        case SRNOS_LOG_TIMEOUT:return SRNOS_PARAMETERS_STATUS_TIMEOUT;
+        case SRNOS_LOG_ISR_FORBIDDEN:return SRNOS_PARAMETERS_STATUS_CONTEXT_ERROR;
+        default:return SRNOS_PARAMETERS_STATUS_ERROR;
+        }
+    }
+    return SRNOS_PARAMETERS_STATUS_OK;
+}
 const char *SRNOS_ParametersStatusName(SRNOS_ParametersStatus s){static const char *const names[]={"ok","error","invalid_param","not_found","duplicate","no_space","type_mismatch","out_of_range","buffer_too_small","parse_error","eeprom_error","eeprom_busy","bad_data","layout_mismatch","crc_error","not_initialized","locked","read_only","conflict","timeout","disabled","context_error"};return (unsigned)s<sizeof(names)/sizeof(names[0])?names[s]:"unknown";}
 const char *SRNOS_ParametersTypeName(SRNOS_ParametersType t){static const char *const n[]={"invalid","float","int32","uint32","bool"};return (unsigned)t<5?n[t]:"invalid";}
 }

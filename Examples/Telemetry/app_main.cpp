@@ -11,7 +11,7 @@ SRNOS_StepResult step(void *,const SRNOS_ThreadWake *)
 }
 }
 extern "C" void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
-{ config->usb_enabled=true;config->host_link_enabled=true; }
+{ config->usb_enabled=true;config->sirin_link_enabled=true; }
 extern "C" void SRNOS_ApplicationMain(void)
 {
     if(cycles.Status()!=SRNOS_TELEMETRY_OK)return;

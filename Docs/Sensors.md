@@ -1,12 +1,12 @@
 # 2613 传感器与共享总线合同
 
-驱动提供识别、配置回读、持续采样、状态与统计。融合和安装坐标变换由独立 [INS 服务](INS.md) 提供；磁航向、高度解算不属于本驱动。IMU 用户校准的保存、加载与应用由 INS/IMUCalibration 管理，Sensors 快照保持器件原始轴向和未应用用户校准的测量。实际精度和稳定性需按目标固件测量，历史证据入口为 [Validation](Validation.md)。
+驱动提供识别、配置回读、持续采样、状态与统计。融合和安装坐标变换由独立 [INS 服务](INS.md) 提供；磁航向、高度解算不属于本驱动。IMU 用户校准的保存、加载与应用由 INS/IMUCalibration 管理，Sensors 快照保持器件原始轴向和未应用用户校准的测量。
 
 ## 配置与公开 API
 
-公共头为 `SirinEmbedOS/Devices/Sensors.h`。在 `SRNOS_ApplicationConfigure()` 中设置 `config->sensors`，系统检查并复制后冻结；恢复仅用冻结配置。默认四颗传感器采样及正式 [INS](INS.md) 服务启用。BMI 始终发布未用户校准的器件坐标数据，不提供 RAW/legacy 模式选择。SensorBringUp 设置 `ins.enabled=false`，保留原始采样与统一温控，且不会取消 INS worker 或相关静态缓冲。加热统一由 INS worker 控制：`heater_enabled=true`、`heater_target_c=60` 默认，目标允许20..75°C。反馈 LSM 优先、BMI 回退；低于目标10°C满功率，附近连续 PI，80°C保护及75°C以下5秒恢复详见 INS 合同。`SRNOS_SensorGetHeaterStatus` 仍提供一致状态副本。
+公共头为 `SirinEmbedOS/Devices/Sensors.h`。在 `SRNOS_ApplicationConfigure()` 中设置 `config->sensors`，系统检查并复制后冻结；恢复仅用冻结配置。默认四颗传感器采样及正式 [INS](INS.md) 服务启用。BMI 始终发布未用户校准的器件坐标数据，不提供 RAW/legacy 模式选择。应用设置 `ins.enabled=false`，保留原始采样与统一温控，且不会取消 INS worker 或相关静态缓冲。加热统一由 INS worker 控制：`heater_enabled=true`、`heater_target_c=60` 默认，目标允许20..75°C。反馈 LSM 优先、BMI 回退；低于目标10°C满功率，附近连续 PI，80°C保护及75°C以下5秒恢复详见 INS 合同。`SRNOS_SensorGetHeaterStatus` 仍提供一致状态副本。
 
-`imu_observer` / `imu_observer_user` 在配置阶段声明并冻结，完整 BMI/LSM 样本发布后调用一次。回调参数仅在调用期间有效，需自行复制；回调在对应任务（BMI P0 / 48、LSM SPI dispatcher Realtime1 / 49）执行，禁止等待、打印或编码整包 USB 数据。SDK 提供静态缓存适配 `SRNOS_IMUTelemetryObserve`，接入见 [HostLink.md](HostLink.md)。
+`imu_observer` / `imu_observer_user` 在配置阶段声明并冻结，完整 BMI/LSM 样本发布后调用一次。回调参数仅在调用期间有效，需自行复制；回调在对应任务（BMI P0 / 48、LSM SPI dispatcher Realtime1 / 49）执行，禁止等待、打印或编码整包 USB 数据。SDK 提供静态缓存适配 `SRNOS_IMUTelemetryObserve`，接入见 [SirinLink.md](SirinLink.md)。
 
 | 器件 | 固定绑定 | 固定采样配置 | 任务周期 |
 |---|---|---|---|
@@ -15,7 +15,7 @@
 | LIS2MDL | I²C4，7 位地址 0x1E | 连续 100 Hz、BDU、芯片温度补偿 | 10 ms |
 | SPA06-003 | I²C4，7 位地址 0x76 | 压力/内部温度 16 Hz，过采样 P8/T1 | 10 ms |
 
-原始采样允许 BMI/LSM 周期 1–100 ms，环境线程10–100 ms；正式 INS 要求六轴1 ms，默认1/1/10 ms。没有运行时 ODR 或总线改绑接口，配置不进入 HostLink 参数表。I²C 地址只在 HAL 边界左移一次。
+原始采样允许 BMI/LSM 周期 1–100 ms，环境线程10–100 ms；正式 INS 要求六轴1 ms，默认1/1/10 ms。没有运行时 ODR 或总线改绑接口，配置不进入 SirinLink 参数表。I²C 地址只在 HAL 边界左移一次。
 
 `SRNOS_SensorGetStatus()`、`SRNOS_SensorGetIMU()`、`SRNOS_SensorGetMagnetic()`、`SRNOS_SensorGetPressure()` 在任务上下文复制快照，返回布尔值表示参数是否合法。**成功返回不代表数据有效**：调用者还须检查 `header.state == SRNOS_SENSOR_READY` 及 `valid_fields`。单份快照通过短临界区保证一致；多次 getter 不构成跨设备同时采样。
 
@@ -66,7 +66,7 @@ bool read_bmi_gyro(float output_rad_s[3])
 
 SPI dispatcher 为 Realtime1 / 49 / 3 KiB；BMI 与 LSM 均为 P0 / 48 / 2 KiB；CAN4 收发共用一个 P1 / 47 / 4 KiB worker。LIS/SPA 共用 Normal / 24 / 2 KiB 环境线程，等待芯片转换时释放 I²C。线程与同步对象计入保守启动预算，请求及采样 buffer 静态分配，采样循环不分配内存；RTOS 线程/信号资源在启动时从 heap_5 创建。
 
-I²C4 使用 High6 / 46 / 3 KiB 回调线程作为唯一分发者，LIS/SPA 各有一个保留槽，EEPROM 等后台有两个槽。周期类优先，最多连续四个周期事务后放行一个等待后台事务。活动事务不可抢占、单笔最多 64 B；EEPROM 自行将读写/校验限制为 32 B，内部写周期不占总线。环境任务使用 30 ms 完成信号量等待，另一个设备占用总线不再使提交立即 BUSY。所有权、取消、期限与统计见 [I2C 模块说明](../Source/IO/I2C/README.md)。共享负载板测见 [验证记录](Validation/I2C-20260928/README.md)，板端断线/卡 SDA/掉电恢复仍未验收。
+I²C4 使用 High6 / 46 / 3 KiB 回调线程作为唯一分发者，LIS/SPA 各有一个保留槽，EEPROM 等后台有两个槽。周期类优先，最多连续四个周期事务后放行一个等待后台事务。活动事务不可抢占、单笔最多 64 B；EEPROM 自行将读写/校验限制为 32 B，内部写周期不占总线。环境任务使用 30 ms 完成信号量等待，另一个设备占用总线不再使提交立即 BUSY。所有权、取消、期限与统计见 [I2C 模块说明](../Source/IO/I2C/README.md)。
 
 ## 来源
 

@@ -4,7 +4,7 @@
 #include "Devices/heater_board.h"
 #include "SirinEmbedOS/Kernel/System.h"
 #include "SirinEmbedOS/Diagnostics/Time/Time.h"
-#include "SirinEmbedOS/Services/HostLink/INSTelemetry.h"
+#include "SirinEmbedOS/Services/SirinLink/INSTelemetry.h"
 #include "SirinEmbedOS/Core/C/Fault.h"
 #include "cmsis_os2.h"
 #include "FreeRTOS.h"

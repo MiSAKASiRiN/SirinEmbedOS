@@ -19,6 +19,7 @@ set(SRNOS_DEVICES_SOURCES
     Source/Devices/IMU/mahony_filter.c
     Source/Devices/IMU/quaternion_ekf.cpp
     Source/Devices/EEPROM/ft24c128a.c
+    Source/Devices/NOR/nor.c
     Source/Devices/MCP2518FD/drv_canfdspi_api.c
     Source/Devices/MCP2518FD/fifo.c
     Source/Devices/MCP2518FD/SPIAdapter.c

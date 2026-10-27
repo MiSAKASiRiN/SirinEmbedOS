@@ -26,7 +26,7 @@ rg -n 'lib_can|lib_imu|bsp_spi|Board/Support' Docs/Migration/migration-ledger.js
 rg --files Include/SirinEmbedOS Source/IO Board/Support
 ```
 
-先用台账找到候选目标，再按当前文件和公共头核对。编译不依赖这些映射或 prototype 的绝对路径。`import_prototype.py` 是历史配方；`finalize_ledger.py` 属于台账维护工具，只有明确维护来源记录时才运行，不作为日常构建步骤。
+先用台账找到候选目标，再按当前文件和公共头核对。编译不依赖这些映射或历史工程。本目录仅保留来源身份、提交、哈希、许可状态和路径映射；内部仓库端点已省略，一次性导入脚本不随源码分发。
 
 ## 许可和历史
 

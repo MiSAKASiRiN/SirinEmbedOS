@@ -1,1 +1,0 @@
-PASS: public macros and compiler-parsed C/C++ declarations in 90 headers use SRNOS names

@@ -18,4 +18,4 @@ int read_drive(SRNOS_TL42RMonitor *monitor) {
 
 示例只读取监控，不使能或移动电机。设备事务限任务上下文，等待单位为毫秒；请求与应答缓冲生命周期遵循 [RS485](../../IO/RS485/README.md)。寄存器权限和类型可用参数描述接口查询，写入须满足对应范围；电机使能、动作和控制策略由父项目决定。
 
-调试全局为 `SRNOS_DebugTL42RWatch` / `SRNOS_DebugTL42RConfigCache`。主机协议回归入口为 `bash Tests/Serial/run_host_tests.sh`（SDK 根）；具体设备互通需实机验证。
+调试全局为 `SRNOS_DebugTL42RWatch` / `SRNOS_DebugTL42RConfigCache`。

@@ -29,4 +29,4 @@ int send_raw(const uint8_t *bytes, uint16_t length) {
 
 Modbus 事务检查地址、功能码、长度和 CRC；广播不等待响应。低速至少保持 3.5 字符静默，高于 19200 时至少 1750 µs，1 kHz 内核按 tick 向上取整。发送的超时限制队列等待，应答期限在配置阶段声明；超时不会撤回已发出的字节。TL42R 接入见 [设备示例](../../Devices/TL42R/README.md)。
 
-主机回归在 SDK 根执行 `bash Tests/Serial/run_host_tests.sh`。物理 DE/RE、总线极性、终端与设备响应时序需实机验收。
+物理 DE/RE、总线极性、终端与设备响应时序需实机验收。

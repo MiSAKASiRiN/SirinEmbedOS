@@ -1,5 +1,5 @@
 {
-  "prototype": "/Users/sirin/CLionProjects/h723vg-v2-prototype",
+  "prototype": "h723vg-v2-prototype",
   "prototype_commit": "4ae5428c6fb9447b12a79a5cc30a8f47334f8f11",
   "source_snapshot": "source-manifest.json",
   "modules": [
@@ -7,7 +7,7 @@
       "module": "SirinOS",
       "destination": "Core",
       "commit": "2ebb2025f1225abef0e0aeff1d2ec9a31a125caf",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/sirinos",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：Core公共操作和Fault；板级异常/输出在Board/Support；OS符号整体改SRNOS。",
@@ -233,13 +233,14 @@
           "destination_sha256": "61c086173a19e8473a7c7f2322414f0effc29fd477a959c3f7a309a6b9c162f6",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "SirinOS"
     },
     {
       "module": "bsp_bmi088",
       "destination": "Devices/IMU/BMI088",
       "commit": "56977aeb879d4d9e186b15211754e14603738731",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_bmi088",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -269,13 +270,14 @@
           "destination_sha256": "019f6f07766f36f3a74999ece1c9649018adc26eacdd6863a2516660e0e6dcc9",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_bmi088"
     },
     {
       "module": "bsp_buzzer",
       "destination": "Devices/Buzzer",
       "commit": "eb9d907b1348b3903d32f273c30939df3addb4a6",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_buzzer.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -298,13 +300,14 @@
           "destination_sha256": "0f5b79383327a3efad99b9510e5582c880c5d8e5b60bdc5da0d8a4a70c573e60",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_buzzer"
     },
     {
       "module": "bsp_dr16",
       "destination": "Services/RemoteControl/DR16",
       "commit": "516a8b0e0b20617e446df33e6dbdae80c939e291",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_dr16.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：保留协议/流解帧，Serial持有DMA与HAL；RemoteControl统一worker。",
@@ -327,13 +330,14 @@
           "destination_sha256": "3d25c97fb251e482bc1bd12fcac3099f01a35f64502a557acf4b62738381c63f",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_dr16"
     },
     {
       "module": "bsp_dwt",
       "destination": "Diagnostics/Time",
       "commit": "d90e8047a40973cd82e4322b94af3bb121ebdae8",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_dwt.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -356,13 +360,14 @@
           "destination_sha256": "1c1831b530f65bceceabdcc68071e3529fdfc0b8849c77596e408e6dfc0e0e76",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_dwt"
     },
     {
       "module": "bsp_eth_lan8720a",
       "destination": null,
       "commit": "ddae15578257d04a347651106040d8cfa63394d7",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_eth_lan8720a.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "排除：仅构建占位，本批不迁移网络栈。",
@@ -370,13 +375,14 @@
       "license_files": [],
       "source_notice_files": [],
       "license_status": "原快照未发现独立许可证或源码许可声明；不推定许可证",
-      "files": []
+      "files": [],
+      "source_repository": "bsp_eth_lan8720a"
     },
     {
       "module": "bsp_fdcan",
       "destination": "IO/CAN/Native",
       "commit": "e5bbc9c8eb417706a9588cd1f0c192ad068590f2",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_fdcan.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：固定三路FDCAN由Board绑定，IO持有路由和收发。",
@@ -399,13 +405,14 @@
           "destination_sha256": "d715dd3db5959d48f89eb91a086342aa59dc533be44d0fa3efee858ebd75f167",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_fdcan"
     },
     {
       "module": "bsp_i2c",
       "destination": "IO/I2C",
       "commit": "4be281de29a401f1ec8ffefd45a9ef5416ef6a79",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_i2c",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入并修正：固定I2C4、D3 BDMA；按设备完成状态，确认abort及迟到IRQ隔离。",
@@ -428,13 +435,14 @@
           "destination_sha256": "4746dadb44b019f6bfb02b794cf53818aa1cdb22ac53ecd5b54b51c487db6e8b",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_i2c"
     },
     {
       "module": "bsp_spi",
       "destination": "IO/SPI",
       "commit": "9e14264ce8ffbd7d38f813c033b8a958cd043f9c",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_spi",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入并重写：SPI4唯一High6分发、8槽复制队列、IMU/普通公平仲裁、确认取消及故障隔离。",
@@ -457,13 +465,14 @@
           "destination_sha256": "da0f1e2730abfc45b54f5469bf8540cd5599a929daee8ae9e83a5f3873111f5c",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_spi"
     },
     {
       "module": "bsp_srn_log",
       "destination": "Services/Logging",
       "commit": "3f25c3722f381f05481f420ada04115c4fafc548",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_srn_log.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：普通日志使用USB/SWO/已声明Serial通道，删除强制复位USART1路径。",
@@ -500,13 +509,14 @@
           "destination_sha256": "0a712c9ed3c178743bcad8ff536dc5234bf523e1a0cb73872c85c6d1232cf4e4",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_srn_log"
     },
     {
       "module": "bsp_vt03",
       "destination": "Services/RemoteControl/VT03",
       "commit": "2237b8cfea59a00075d9f238b8144ae3ba26a1b9",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_vt03.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：保留协议/流解帧，Serial持有DMA与HAL；RemoteControl统一worker。",
@@ -529,13 +539,14 @@
           "destination_sha256": "f1d2a857726bc962c553b062cdbc2509ac7f50070a4e80aba281bdc2ca630d16",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_vt03"
     },
     {
       "module": "bsp_ws2812",
       "destination": "Devices/WS2812",
       "commit": "8e350616fb6f96274547f6a8f15c34f8abb8ef12",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_ws2812.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -572,13 +583,14 @@
           "destination_sha256": "6fe87a4fc84ea363d51b423a81cd3109c445c0ce4e185ce0fff5f992e768f4fb",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "bsp_ws2812"
     },
     {
       "module": "lib_24c02",
       "destination": "Devices/EEPROM",
       "commit": "8429b956d71c80cf1b7414aa48a523f90e496661",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_24c02",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "替换：旧24C02驱动/阻塞入口及格式删除；新FT24C128A由EEPROM器件层与Storage单份记录层重新实现，不保留旧布局或兼容别名。",
@@ -629,13 +641,14 @@
           "destination_sha256": "fbe7a42c9b903537b0b7b48d513ef987fa36f63bf8cad7dcc3d8bc489fb2fbb9",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_24c02"
     },
     {
       "module": "lib_adp_dji_c610",
       "destination": "Devices/Motors/C610",
       "commit": "da50148ea1431af10f78a99a2398f35fdc88d5fb",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dji_c610.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -658,13 +671,14 @@
           "destination_sha256": "bdddfe4edbabb1dfd7aca027e9c3549a8a697eca79540081fc454d7916eb03f5",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dji_c610"
     },
     {
       "module": "lib_adp_dji_c620",
       "destination": "Devices/Motors/C620",
       "commit": "6422fe74992beb491c2f2027937458884cb26130",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dji_c620.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -687,13 +701,14 @@
           "destination_sha256": "9e5248fa208c637fcb17f17e165dd4b3e47621d70855e1908d13203cb6ce7460",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dji_c620"
     },
     {
       "module": "lib_adp_dji_gm6020",
       "destination": "Devices/Motors/GM6020",
       "commit": "d06581764dfd27a62be57a733d7aa9829657beb7",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dji_gm6020.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -716,13 +731,14 @@
           "destination_sha256": "d3d2c15799b73445c45d1c82b7d61d6c672d8c3fa8416cbc8d306051cb0062a3",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dji_gm6020"
     },
     {
       "module": "lib_adp_dm_4310",
       "destination": "Devices/Motors/DM4310",
       "commit": "97817a4e77f7bffd77ba4124ae935d1e103e9519",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dm_4310.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -745,13 +761,14 @@
           "destination_sha256": "eca6e05d79503f80892323e3d94a2ae92eabea6865b63ab06ef78805563cff79",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dm_4310"
     },
     {
       "module": "lib_adp_dm_4340",
       "destination": "Devices/Motors/DM4340",
       "commit": "3e7d58ee749fed84ce1a33126557f32378ab6d4f",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dm_4340.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -774,13 +791,14 @@
           "destination_sha256": "a6ab92cd3c9a4398731790dd3fc564e890bdac0d3147767229a775958081bba4",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dm_4340"
     },
     {
       "module": "lib_adp_lk_mg8016e",
       "destination": "Devices/Motors/LK8016E",
       "commit": "60f83e5187004b5e4784878e6f6eeb1d3533a41d",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_lk_mg8016e.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -803,13 +821,14 @@
           "destination_sha256": "8fb24d7342a1c13d828dd44532a4fcd87edc80f16a475b3e6aeade56833b6cf2",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_lk_mg8016e"
     },
     {
       "module": "lib_adp_navision",
       "destination": "Devices/NaviVision",
       "commit": "3f4613c16407f1834677b12dad1120ff575e248b",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_navision.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -832,13 +851,14 @@
           "destination_sha256": "cb120fce005765d59aaf09b48b4aea1cb697263f76b80e6d47c7effac5380b9e",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_navision"
     },
     {
       "module": "lib_adp_supcap",
       "destination": "Devices/Supercapacitor",
       "commit": "31712a7e071b50030c0e5763c7f15a025c157142",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_supcap.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -861,13 +881,14 @@
           "destination_sha256": "9000dd912e5bade18c18aa065882176d9cc822b3a310948f800e051058829267",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_supcap"
     },
     {
       "module": "lib_algos",
       "destination": "Algorithms/Math",
       "commit": "3bf012afb3230c1da3e8716e954cd730d9f7c543",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_algos.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -932,13 +953,14 @@
           "destination_sha256": "00380e21af4e5a9e46eb58cd2fd1d0900d7de254db5836488c9032b99b984fcb",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_algos"
     },
     {
       "module": "lib_controls",
       "destination": "Algorithms/Control",
       "commit": "9918558a4deca5f4726ac37e59a7822b5786dc4e",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_controls.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -989,13 +1011,14 @@
           "destination_sha256": "f36b68778069606388f7c93cd4d22a63cb97b00ee64d215762ec15faa84d27f0",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_controls"
     },
     {
       "module": "lib_debug_watch",
       "destination": "Diagnostics/Watch",
       "commit": "14a265c0ed37c417e701d002d973039e8fe8e627",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_debug_watch.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -1018,13 +1041,14 @@
           "destination_sha256": "d7e0623233cbbcdaca45a3d4ac1959fc009847fa4ed810228f46b592919519e8",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_debug_watch"
     },
     {
       "module": "lib_generic_ui",
       "destination": "Services/Referee/UI",
       "commit": "2f3282d8bfa295caece252cedb14da873849f162",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_generic_ui.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：只保留ui_interface协议编码；ui_Main布局留给应用。",
@@ -1061,13 +1085,14 @@
           "destination_sha256": "36de9d4dc6febc8a52ce5b7f1071e5ec2c5952bf9c9804847c34255db2fd9627",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_generic_ui"
     },
     {
       "module": "lib_imu",
       "destination": "Devices/IMU",
       "commit": "67372a0cad612083b1750b322a66ea276d392509",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_imu",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分并替换：保留BMI驱动、Mahony及独立EKF数学/OMX协议；删除旧全局INS、方向预设、校准存储及温控worker。正式INS与统一温控位于Services/INS，原始采样位于Devices/Sensors。新增Storage单份双IMU校准，下次启动生效；无效校准降级；手动静止陀螺零偏校准由HostCmd采集并校验保存，加速度多姿态标定尚未实现。见Docs/INS.md。",
@@ -1237,13 +1262,14 @@
           "destination_sha256": null,
           "disposition": "removed or superseded; see module result"
         }
-      ]
+      ],
+      "source_repository": "lib_imu"
     },
     {
       "module": "lib_mcp2518fd",
       "destination": "Devices/MCP2518FD",
       "commit": "08f0442c4b9a0946f1fb12065b41623e21660198",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_mcp2518fd",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：保留Microchip源码内许可；器件寄存器与CAN路由分开，Board管理引脚。",
@@ -1299,13 +1325,14 @@
           "destination_sha256": "9ea035062f945ac0668dc07ea006170359cc05aea298e0d33225d207a99c3912",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_mcp2518fd"
     },
     {
       "module": "lib_modbus_rtu",
       "destination": "IO/RS485/Modbus",
       "commit": "2bbf0a29d47f756301234e77f0a403353681a667",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_modbus_rtu.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入并适配共享RS485完整请求/应答调度。",
@@ -1328,13 +1355,14 @@
           "destination_sha256": "ea6f80c9f077ca70ff3a7b5300d5abb071fef3ca014e3a80e5be2d32678bcc4f",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_modbus_rtu"
     },
     {
       "module": "lib_mpu_dcache",
       "destination": "Core/Memory",
       "commit": "96da546834b488ec50ec5088f779fec0ed759530",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_mpu_dcache.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：公共内存合同在Core/Memory；早期初始化及完整链接布局在Board。",
@@ -1364,13 +1392,14 @@
           "destination_sha256": "d68a8f0019894a1fd8a2fd6c3c9be5eb2b2706397d62eceb739ec6e59860edc8",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_mpu_dcache"
     },
     {
       "module": "lib_params",
       "destination": "Services/Parameters",
       "commit": "65ff1da3f45590fe505d9b02d8c6cdd93fc9992e",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_params",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "重写：Persistent稳定ID/默认值/约束、冻结注册、一致快照和代次；由Storage管理FT24C128A单份记录，旧24C02格式不迁移。",
@@ -1421,13 +1450,14 @@
           "destination_sha256": "2a6abc33eceef8b3cd4d392bf3412050310430e504343cd977ccc8fc6d687c5d",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_params"
     },
     {
       "module": "lib_power_control",
       "destination": "Algorithms/Power",
       "commit": "41bba925810e9e079f456df7e81b787a874dde26",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_power_control.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：只保留通用功率估计/限额模型，移除裁判/SuperCap比赛策略依赖。",
@@ -1450,13 +1480,14 @@
           "destination_sha256": "d7f6a3f6b063bdd74073f0880d5b0c50fcbad06d7e6d3f6c34f24474f21b8774",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_power_control"
     },
     {
       "module": "lib_referee",
       "destination": "Services/Referee",
       "commit": "ff6e61d483fe7a062d870757774246146bd72eaa",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_referee.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "拆分：协议/状态与Serial传输分离，绑定初始化后冻结。",
@@ -1479,13 +1510,14 @@
           "destination_sha256": "08a7a28aeb465c942bf83206b938868d5b31fdc0961e81b217ee792a09213e1f",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_referee"
     },
     {
       "module": "lib_remote_control",
       "destination": "Services/RemoteControl",
       "commit": "acec94f35a315ec05baaa8dcb7ac27d7e0507d06",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_remote_control.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：来源仲裁保留，优先级/超时/映射注册冻结。",
@@ -1508,13 +1540,14 @@
           "destination_sha256": "6800062422f7573a0e30167573a0c2678f0e234e18c00e43562e2c02b6db86a3",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_remote_control"
     },
     {
       "module": "lib_rs485_lc_tl42r",
       "destination": "Devices/TL42R",
       "commit": "e46539b4559a8d5ae2acb6c79007515891e509e3",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_rs485_lc_tl42r",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：使用RS485总线endpoint，配置时声明，默认不控制设备。",
@@ -1537,13 +1570,14 @@
           "destination_sha256": "08caba5281d83025c2127fc37c3b9ae4ff622da70888f4485cb5b7251f3b68f7",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_rs485_lc_tl42r"
     },
     {
       "module": "lib_serial_servo_h12h",
       "destination": "Devices/H12H",
       "commit": "b4d9d696ada7d7ee670de2dab98831f87a1767be",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_serial_servo_h12h.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入并适配Serial事务；默认未绑定，不假设板卡具备单线电气接线。",
@@ -1566,13 +1600,14 @@
           "destination_sha256": "ddce426367531a975a8bdae179c4455cba2588c5aecf30736df3831bc33e5616",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_serial_servo_h12h"
     },
     {
       "module": "lib_serial_servo_hd",
       "destination": null,
       "commit": "d98f0e8e8e56f37e2ff651f17a9ac83f52d1162d",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_serial_servo_hd.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "排除：没有可迁入的实际实现。",
@@ -1580,13 +1615,14 @@
       "license_files": [],
       "source_notice_files": [],
       "license_status": "原快照未发现独立许可证或源码许可声明；不推定许可证",
-      "files": []
+      "files": [],
+      "source_repository": "lib_serial_servo_hd"
     },
     {
       "module": "lib_srn_cobs",
       "destination": "Services/HostLink/Codec",
       "commit": "c076719104b6071792d8a165ee4420f9ca3daf82",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_srn_cobs",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -1651,7 +1687,8 @@
           "destination_sha256": "3ddf62909fceed9c02b4dc619692b6dc39b6632141c0d787aa8d236cef4576b7",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "lib_srn_cobs"
     },
     {
       "module": "lib_swerve",
@@ -1671,7 +1708,7 @@
       "module": "lib_uart_router",
       "destination": null,
       "commit": "e97fc233f686c929ac6bcf42a75aebe818869e3c",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_uart_router",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "替换：物理端口/Serial通道/协议/服务拆分；旧路由接口不保留。",
@@ -1679,13 +1716,14 @@
       "license_files": [],
       "source_notice_files": [],
       "license_status": "原快照未发现独立许可证或源码许可声明；不推定许可证",
-      "files": []
+      "files": [],
+      "source_repository": "lib_uart_router"
     },
     {
       "module": "tskptt_exfdcan_router",
       "destination": "IO/CAN/External",
       "commit": "42f24a98c2cf0472a05189b5ae454b65c4253c8d",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_exfdcan_router",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -1729,13 +1767,14 @@
           "destination_sha256": "dbdc14955e72b2f8fa922dcc6217ab94e08a46c580178235a435aba9d58e850e",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_exfdcan_router"
     },
     {
       "module": "tskptt_host_comm",
       "destination": "Services/HostLink",
       "commit": "9c426abdad48c5d940d99bdf51b414749b3fbab4",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_host_comm",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入并完善：注册冻结、CDC1会话隔离、FIFO与有界处理；父项目Telemetry目录独立缓存、SOURCE V2最新值至1kHz，V1及专用流保留。见Docs/HostLink.md。",
@@ -1793,13 +1832,14 @@
           "destination_sha256": "146ab7b6d1a00215bd72e61d3deeb92a3d01889de7d21ad126454fda309d7e33",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_host_comm"
     },
     {
       "module": "tskptt_hskp",
       "destination": "Diagnostics/Runtime",
       "commit": "6af1f6b3bb23ce706f44ec20b62624abe99c597f",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_hskp",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "保留轻量trace与逐槽采样；SystemMonitor替代旧worker，新增托管循环统计/0x0003，基础V2流保留，无周期扫栈。",
@@ -1871,13 +1911,14 @@
           "destination_sha256": "cb946c9844e0b5d4377e539787b94254c129e4a2e42cf34b28eb18068c2f8f13",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_hskp"
     },
     {
       "module": "tskptt_imu",
       "destination": "Devices/IMU/Worker",
       "commit": "5f074ed34e3900cd3e819395ecab8b6ef59244b5",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_imu",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -1935,13 +1976,14 @@
           "destination_sha256": null,
           "disposition": "removed or superseded; see module result"
         }
-      ]
+      ],
+      "source_repository": "tskptt_imu"
     },
     {
       "module": "tskptt_log",
       "destination": "Services/Logging/Worker",
       "commit": "e2bc6e68dc8c7e554e861e5808f076e4f9e290be",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_log.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -1964,13 +2006,14 @@
           "destination_sha256": "f62acf996326ca8a3ab0e4fa2c0f74ccf7f33839148ad2d342d88dd167758f7d",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_log"
     },
     {
       "module": "tskptt_ntfdcan_router",
       "destination": "IO/CAN/Router",
       "commit": "44d1eb5ad784a63a750963975519add5d8f3abbd",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/TaskPrototypes/tskptt_ntfdcan_router.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -2070,13 +2113,14 @@
           "destination_sha256": "7b7356d9687e4fb1b3847f9639710acf7d066c4378cf4faa2886c43b4d304b47",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_ntfdcan_router"
     },
     {
       "module": "tskptt_param_console",
       "destination": "Services/Parameters/HostLink",
       "commit": "27c1789e28ae2afd4de5cddce20585444275ffde",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_param_console",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：HostLink CONFIG协议保留，只能操作明确可写业务参数；增加启动冻结的LOAD/SAVE权限门控。",
@@ -2120,13 +2164,14 @@
           "destination_sha256": "d96a00fd144333fd2aa13c1cc4417ad458652733888ff495a8db6a556a8283b4",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_param_console"
     },
     {
       "module": "tskptt_referee",
       "destination": "Services/Referee/Receiver",
       "commit": "7bb74524cb527f5c570298a008d64f8ae8eb97e2",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_referee.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "迁入：按能力归属整合，保留原协议与worker行为；公共头集中到Include/SirinEmbedOS。",
@@ -2149,13 +2194,14 @@
           "destination_sha256": "bec92abcd6278a66f9f3868b518272000c3050658590bd5101cffd3fcb6f5492",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_referee"
     },
     {
       "module": "tskptt_referee_tx",
       "destination": "Services/Referee/Transmitter",
       "commit": "4951ab2763e780b25c8d579e13409f57a1da37b0",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_referee_tx.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "合并：发送经Serial队列；空TX任务及旧兼容入口已删除，公开发送仅使用SRNOS命名及毫秒期限。",
@@ -2178,13 +2224,14 @@
           "destination_sha256": "2694d92f6a12a2d2b9c68fc16a66e9bb8ea46a693f447acc2ea9b53cc2fbaf95",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_referee_tx"
     },
     {
       "module": "tskptt_rs485_router",
       "destination": "IO/RS485",
       "commit": "c8a66ad6af4fb7f1d614083377d28d5ff9f70a99",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_rs485_router.git",
+      "source_url": null,
       "status": "",
       "commit_scope": "Framework repository",
       "result": "重写：固定UART7总线，多个endpoint串行事务、TC完成/应答超时/静默间隔。",
@@ -2207,7 +2254,9 @@
           "destination_sha256": "9420ce2e285470eb893b2df79f2965f67a729146e029cbaeaeddc370ac8cc6e5",
           "disposition": "present"
         }
-      ]
+      ],
+      "source_repository": "tskptt_rs485_router"
     }
-  ]
+  ],
+  "publication_note": "Internal repository endpoints omitted; module identities, commits, hashes and license status retained."
 }

@@ -22,7 +22,7 @@ IMU 排队期限保持 1 ms；普通请求的有限排队期限由 `timeout_ms` 
 
 ## 验证
 
-`bash Tests/IO/SPI/run_host_tests.sh` 编译实际分发器，覆盖保护外复制抢占、保留槽取消、同步总期限、通知与等待竞争、容量、FIFO/公平性、排队超时、活动取消、恢复隔离及早到/迟到完成中断。主机模型不能证明板端 DMA/IRQ 延迟、传感器连续性或统计开销。历史实测范围见 [CHANGELOG](CHANGELOG.md)。
+主机模型不能证明板端 DMA/IRQ 延迟、传感器连续性或统计开销。历史实测范围见 [CHANGELOG](CHANGELOG.md)。
 
 ## CAN4 私有事务序列
 
@@ -43,4 +43,4 @@ SRNOS_SPIStatus read_spi_status(SRNOS_SPISnapshot *snapshot) {
 }
 ```
 
-如需扩展设备，在设备实现中使用已绑定的 handle 调用传输接口，遵守上述缓冲、取消和回调合同；硬件绑定归 Board/Support。维护回归在 SDK 根执行 `bash Tests/IO/SPI/run_host_tests.sh`。验收方法见 [验证指南](../../../Docs/Validation.md)。
+如需扩展设备，在设备实现中使用已绑定的 handle 调用传输接口，遵守上述缓冲、取消和回调合同；硬件绑定归 Board/Support。

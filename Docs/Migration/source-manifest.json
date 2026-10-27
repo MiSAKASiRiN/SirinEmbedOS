@@ -1,5 +1,5 @@
 {
-  "prototype": "/Users/sirin/CLionProjects/h723vg-v2-prototype",
+  "prototype": "h723vg-v2-prototype",
   "prototype_commit": "4ae5428c6fb9447b12a79a5cc30a8f47334f8f11",
   "prototype_status": "M Core/Src/main.c\n M Project/UsbComposite/README.md\n M Project/UsbComposite/Src/omx_usbd_cdc_acm_if.c\n M Project/UsbComposite/Tests/test_cdc_dispatch.c\n M h723vg-v2-freertos-prototype.ioc",
   "modules": [
@@ -8,7 +8,7 @@
       "destination": "Core",
       "action": "import",
       "commit": "2ebb2025f1225abef0e0aeff1d2ec9a31a125caf",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/sirinos",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -216,14 +216,15 @@
           "sha256": "ddbad062c099cd14b670d72377a1756ab3bdac411d7526a1cb2346abfc268277",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "SirinOS"
     },
     {
       "module": "bsp_bmi088",
       "destination": "Devices/IMU/BMI088",
       "action": "import",
       "commit": "56977aeb879d4d9e186b15211754e14603738731",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_bmi088",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -251,14 +252,15 @@
           "sha256": "101fa7ebb298c8fdc5cb8649653844955369a123a1c3676372507143be1b5fc9",
           "destination": "Source/Devices/IMU/BMI088/bsp_bmi088.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_bmi088"
     },
     {
       "module": "bsp_buzzer",
       "destination": "Devices/Buzzer",
       "action": "import",
       "commit": "eb9d907b1348b3903d32f273c30939df3addb4a6",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_buzzer.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -281,14 +283,15 @@
           "sha256": "2129a38552f3654318d6cfbae264f5a77392964522c0d9e1830b1cc98cec529b",
           "destination": "Source/Devices/Buzzer/bsp_buzzer.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_buzzer"
     },
     {
       "module": "bsp_dr16",
       "destination": "Services/RemoteControl/DR16",
       "action": "import",
       "commit": "516a8b0e0b20617e446df33e6dbdae80c939e291",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_dr16.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -316,14 +319,15 @@
           "sha256": "d44a4ca2d332dd1d9fbc564ca76b8412f5ba17d419ca1a15491a447cb1162695",
           "destination": "Source/Services/RemoteControl/DR16/bsp_dr16.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_dr16"
     },
     {
       "module": "bsp_dwt",
       "destination": "Diagnostics/Time",
       "action": "import",
       "commit": "d90e8047a40973cd82e4322b94af3bb121ebdae8",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_dwt.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -346,14 +350,15 @@
           "sha256": "dd4e1b82771f7c99b7cf075cb9cc1ff3a65277e2fe95ef56b2dc678d82704898",
           "destination": "Source/Diagnostics/Time/bsp_dwt.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_dwt"
     },
     {
       "module": "bsp_eth_lan8720a",
       "destination": null,
       "action": "exclude",
       "commit": "ddae15578257d04a347651106040d8cfa63394d7",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_eth_lan8720a.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -361,14 +366,15 @@
           "sha256": "496b216a3cfc05c11b072a96ca77c4ef3fe67dda56a671954ff2b95eb2fe7253",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "bsp_eth_lan8720a"
     },
     {
       "module": "bsp_fdcan",
       "destination": "IO/CAN/Native",
       "action": "import",
       "commit": "e5bbc9c8eb417706a9588cd1f0c192ad068590f2",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_fdcan.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -391,14 +397,15 @@
           "sha256": "327508d2ba9c14074f47df71eec58e7d7c176ad04c84c50c43e7251e981978b5",
           "destination": "Source/IO/CAN/Native/bsp_fdcan.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_fdcan"
     },
     {
       "module": "bsp_i2c",
       "destination": "IO/I2C",
       "action": "import",
       "commit": "4be281de29a401f1ec8ffefd45a9ef5416ef6a79",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_i2c",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -421,14 +428,15 @@
           "sha256": "5234e3e44e7428e1711b2b2e1adf787ec1a9e68ff5d71123a5ac4bef587adde7",
           "destination": "Source/IO/I2C/bsp_i2c.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_i2c"
     },
     {
       "module": "bsp_spi",
       "destination": "IO/SPI",
       "action": "import",
       "commit": "9e14264ce8ffbd7d38f813c033b8a958cd043f9c",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_spi",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -451,14 +459,15 @@
           "sha256": "e40b8ad6b8b0663805e05e5e439b9833a7fb2eb1077f142f2546711f6dfc0900",
           "destination": "Source/IO/SPI/bsp_spi.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_spi"
     },
     {
       "module": "bsp_srn_log",
       "destination": "Services/Logging",
       "action": "import",
       "commit": "3f25c3722f381f05481f420ada04115c4fafc548",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_srn_log.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -491,14 +500,15 @@
           "sha256": "6205a784d685e76b92cc01058a49b977f868b8869d412ad7f402045079cfedbc",
           "destination": "Source/Services/Logging/bsp_srn_log.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_srn_log"
     },
     {
       "module": "bsp_vt03",
       "destination": "Services/RemoteControl/VT03",
       "action": "import",
       "commit": "2237b8cfea59a00075d9f238b8144ae3ba26a1b9",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_vt03.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -531,14 +541,15 @@
           "sha256": "a8425236bd756c1abd4929648b07dbf6319e88dbd0f70b8fdab5d8c7e3ea7128",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "bsp_vt03"
     },
     {
       "module": "bsp_ws2812",
       "destination": "Devices/WS2812",
       "action": "import",
       "commit": "8e350616fb6f96274547f6a8f15c34f8abb8ef12",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/BSP/bsp_ws2812.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -571,14 +582,15 @@
           "sha256": "84f4a7194e94cf7125f5ad1ee8d06ef94e0f515b2367c4a5a67d66dce8555ef7",
           "destination": "Source/Devices/WS2812/ws2812_critical.c"
         }
-      ]
+      ],
+      "source_repository": "bsp_ws2812"
     },
     {
       "module": "lib_24c02",
       "destination": "Devices/EEPROM",
       "action": "import",
       "commit": "8429b956d71c80cf1b7414aa48a523f90e496661",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_24c02",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -611,14 +623,15 @@
           "sha256": "91e91cbed30e284f6c382f3c28fa45b1c39cf3070719d1812f1a275936f637ff",
           "destination": "Source/Devices/EEPROM/lib_24c02_bl.c"
         }
-      ]
+      ],
+      "source_repository": "lib_24c02"
     },
     {
       "module": "lib_adp_dji_c610",
       "destination": "Devices/Motors/C610",
       "action": "import",
       "commit": "da50148ea1431af10f78a99a2398f35fdc88d5fb",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dji_c610.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -641,14 +654,15 @@
           "sha256": "02aa7a0323bab048f1429e2a4725e16730d9b75b3a9d6ed200d15019422cdfee",
           "destination": "Source/Devices/Motors/C610/lib_adp_dji_c610.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dji_c610"
     },
     {
       "module": "lib_adp_dji_c620",
       "destination": "Devices/Motors/C620",
       "action": "import",
       "commit": "6422fe74992beb491c2f2027937458884cb26130",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dji_c620.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -671,14 +685,15 @@
           "sha256": "3477dc3ef64433ff0e83a59b5e71e2a1b6201f24fdfe17fe7ff3438401f7d8a9",
           "destination": "Source/Devices/Motors/C620/lib_adp_dji_c620.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dji_c620"
     },
     {
       "module": "lib_adp_dji_gm6020",
       "destination": "Devices/Motors/GM6020",
       "action": "import",
       "commit": "d06581764dfd27a62be57a733d7aa9829657beb7",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dji_gm6020.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -701,14 +716,15 @@
           "sha256": "768a35f4b00e051dc443598f58cd63d9750a56692a8c14247a3591fc25f2f0c5",
           "destination": "Source/Devices/Motors/GM6020/lib_adp_dji_gm6020.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dji_gm6020"
     },
     {
       "module": "lib_adp_dm_4310",
       "destination": "Devices/Motors/DM4310",
       "action": "import",
       "commit": "97817a4e77f7bffd77ba4124ae935d1e103e9519",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dm_4310.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -731,14 +747,15 @@
           "sha256": "f64a7ba2a49cb531e2ef0390e8c5c61ee0fe7938fe6664f5579a4f19922690a6",
           "destination": "Source/Devices/Motors/DM4310/lib_adp_dm_4310.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dm_4310"
     },
     {
       "module": "lib_adp_dm_4340",
       "destination": "Devices/Motors/DM4340",
       "action": "import",
       "commit": "3e7d58ee749fed84ce1a33126557f32378ab6d4f",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_dm_4340.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -761,14 +778,15 @@
           "sha256": "4dc113c9bd68eef34056eba27fd372bac1e2b2801d2374222a47c67deb9d3e8c",
           "destination": "Source/Devices/Motors/DM4340/lib_adp_dm_4340.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_dm_4340"
     },
     {
       "module": "lib_adp_lk_mg8016e",
       "destination": "Devices/Motors/LK8016E",
       "action": "import",
       "commit": "60f83e5187004b5e4784878e6f6eeb1d3533a41d",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_lk_mg8016e.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -801,14 +819,15 @@
           "sha256": "74c9c43d0f5ca4debd57196547b824e8388bae0e49a027fd3638116456867409",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "lib_adp_lk_mg8016e"
     },
     {
       "module": "lib_adp_navision",
       "destination": "Devices/NaviVision",
       "action": "import",
       "commit": "3f4613c16407f1834677b12dad1120ff575e248b",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_navision.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -831,14 +850,15 @@
           "sha256": "f0cfa9aea6df2446c47be658d78b477923b2d1c6151fbdb788081bfc3669c7b1",
           "destination": "Source/Devices/NaviVision/lib_adp_navision.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_navision"
     },
     {
       "module": "lib_adp_supcap",
       "destination": "Devices/Supercapacitor",
       "action": "import",
       "commit": "31712a7e071b50030c0e5763c7f15a025c157142",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_adp_supcap.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -861,14 +881,15 @@
           "sha256": "b099b3c1782c5c521b83a4111d105791710b91a1a3d4b2585d3390143e8f683c",
           "destination": "Source/Devices/Supercapacitor/lib_adp_supcap.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_adp_supcap"
     },
     {
       "module": "lib_algos",
       "destination": "Algorithms/Math",
       "action": "import",
       "commit": "3bf012afb3230c1da3e8716e954cd730d9f7c543",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_algos.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -921,14 +942,15 @@
           "sha256": "604b975556196714481c677b753ea8aad84c55e9dc364c991f3ba8602c37552e",
           "destination": "Tests/Algorithms/Math/test_algos.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_algos"
     },
     {
       "module": "lib_controls",
       "destination": "Algorithms/Control",
       "action": "import",
       "commit": "9918558a4deca5f4726ac37e59a7822b5786dc4e",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_controls.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -971,14 +993,15 @@
           "sha256": "62f3a4fed764942ed8fc663cd61f4abf33ba90263da65e197792fb79180edf8a",
           "destination": "Tests/Algorithms/Control/test_pid.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_controls"
     },
     {
       "module": "lib_debug_watch",
       "destination": "Diagnostics/Watch",
       "action": "import",
       "commit": "14a265c0ed37c417e701d002d973039e8fe8e627",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_debug_watch.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1001,14 +1024,15 @@
           "sha256": "f0b1405afc1f76f426e7ac1e20b268b0da343a372fe5f5adff9752db7808cd14",
           "destination": "Source/Diagnostics/Watch/omx_debug_watch.c"
         }
-      ]
+      ],
+      "source_repository": "lib_debug_watch"
     },
     {
       "module": "lib_generic_ui",
       "destination": "Services/Referee/UI",
       "action": "import",
       "commit": "2f3282d8bfa295caece252cedb14da873849f162",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_generic_ui.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1046,14 +1070,15 @@
           "sha256": "43dbeef4f8852493bf8411de5e5df6b517604c5b83530df00e410ac1e06d8512",
           "destination": "Source/Services/Referee/UI/ui_interface.c"
         }
-      ]
+      ],
+      "source_repository": "lib_generic_ui"
     },
     {
       "module": "lib_imu",
       "destination": "Devices/IMU",
       "action": "import",
       "commit": "67372a0cad612083b1750b322a66ea276d392509",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_imu",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1181,14 +1206,15 @@
           "sha256": "fb819f4ed979b076c072935ed0ade2b7a8759aaa1fddb825c0ceecbf3dfbb197",
           "destination": "Tests/Devices/IMU/test_ins_attitude.c"
         }
-      ]
+      ],
+      "source_repository": "lib_imu"
     },
     {
       "module": "lib_mcp2518fd",
       "destination": "Devices/MCP2518FD",
       "action": "import",
       "commit": "08f0442c4b9a0946f1fb12065b41623e21660198",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_mcp2518fd",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1231,14 +1257,15 @@
           "sha256": "1ab2569b762e9cf43a6d701038ec45507ccc89e9bc6037cdb08af5403d9e59b4",
           "destination": "Source/Devices/MCP2518FD/drv_spi.c"
         }
-      ]
+      ],
+      "source_repository": "lib_mcp2518fd"
     },
     {
       "module": "lib_modbus_rtu",
       "destination": "IO/RS485/Modbus",
       "action": "import",
       "commit": "2bbf0a29d47f756301234e77f0a403353681a667",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_modbus_rtu.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1261,14 +1288,15 @@
           "sha256": "0bcaa46570d9298f67c8d250bbb2d3036f36d0fc307a49899240cbb2176ab53b",
           "destination": "Source/IO/RS485/Modbus/lib_modbus_rtu.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_modbus_rtu"
     },
     {
       "module": "lib_mpu_dcache",
       "destination": "Core/Memory",
       "action": "import",
       "commit": "96da546834b488ec50ec5088f779fec0ed759530",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_mpu_dcache.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1296,14 +1324,15 @@
           "sha256": "5f939a243ff61ce9e3048e34b66b70cc610fa3aa054f21d4cc62c13731328af4",
           "destination": "Source/Core/Memory/mem_sections.c"
         }
-      ]
+      ],
+      "source_repository": "lib_mpu_dcache"
     },
     {
       "module": "lib_params",
       "destination": "Services/Parameters",
       "action": "import",
       "commit": "65ff1da3f45590fe505d9b02d8c6cdd93fc9992e",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_params",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1346,14 +1375,15 @@
           "sha256": "714f3722296e94ecf44a460d46201020efb5ec7f1ebe88b52f4b1d920e31433b",
           "destination": "Tests/Services/Parameters/test_unaligned_binary.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_params"
     },
     {
       "module": "lib_power_control",
       "destination": "Algorithms/Power",
       "action": "import",
       "commit": "41bba925810e9e079f456df7e81b787a874dde26",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_power_control.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1376,14 +1406,15 @@
           "sha256": "2800d9eeadcbac5fb328da25b8cea59af39a776fd202bbb6d9be4fad3011eda6",
           "destination": "Source/Algorithms/Power/lib_power_control.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_power_control"
     },
     {
       "module": "lib_referee",
       "destination": "Services/Referee",
       "action": "import",
       "commit": "ff6e61d483fe7a062d870757774246146bd72eaa",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_referee.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1411,14 +1442,15 @@
           "sha256": "fc0384b6576186b29678f557046d0bf303561e604eb73d4014076e8781b7ce1f",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "lib_referee"
     },
     {
       "module": "lib_remote_control",
       "destination": "Services/RemoteControl",
       "action": "import",
       "commit": "acec94f35a315ec05baaa8dcb7ac27d7e0507d06",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_remote_control.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1441,14 +1473,15 @@
           "sha256": "59228a7ab9488b8f0dc33da559f97cc692713960daa739c511c85c922ed4118f",
           "destination": "Source/Services/RemoteControl/lib_remote_control.c"
         }
-      ]
+      ],
+      "source_repository": "lib_remote_control"
     },
     {
       "module": "lib_rs485_lc_tl42r",
       "destination": "Devices/TL42R",
       "action": "import",
       "commit": "e46539b4559a8d5ae2acb6c79007515891e509e3",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_rs485_lc_tl42r",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1471,14 +1504,15 @@
           "sha256": "7a7924487ad5f4afcd09e47a9ee0656833fb19c40ed9fd842312ec2951cb6aaf",
           "destination": "Source/Devices/TL42R/lib_rs485_lc_tl42r.cpp"
         }
-      ]
+      ],
+      "source_repository": "lib_rs485_lc_tl42r"
     },
     {
       "module": "lib_serial_servo_h12h",
       "destination": "Devices/H12H",
       "action": "import",
       "commit": "b4d9d696ada7d7ee670de2dab98831f87a1767be",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_serial_servo_h12h.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1506,14 +1540,15 @@
           "sha256": "9a7fb688c9255b6bb0b25070655712f0a57c1a91ed348eb8f7c0bfdca981fd87",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "lib_serial_servo_h12h"
     },
     {
       "module": "lib_serial_servo_hd",
       "destination": null,
       "action": "exclude",
       "commit": "d98f0e8e8e56f37e2ff651f17a9ac83f52d1162d",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_serial_servo_hd.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1526,14 +1561,15 @@
           "sha256": "a8e22f4eb3759fbfb5bc455395bac778acde1086e74c0207e92b1652d2a1a070",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "lib_serial_servo_hd"
     },
     {
       "module": "lib_srn_cobs",
       "destination": "Services/HostLink/Codec",
       "action": "import",
       "commit": "c076719104b6071792d8a165ee4420f9ca3daf82",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_srn_cobs",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1586,7 +1622,8 @@
           "sha256": "64506b9c4c264307e613c6c8593bc26e1e73152becb1f689c6cee65d3e3c8c13",
           "destination": "Tests/Services/HostLink/Codec/test_srn_link.c"
         }
-      ]
+      ],
+      "source_repository": "lib_srn_cobs"
     },
     {
       "module": "lib_swerve",
@@ -1633,7 +1670,7 @@
       "destination": null,
       "action": "replace-with-Serial",
       "commit": "e97fc233f686c929ac6bcf42a75aebe818869e3c",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/LIB/lib_uart_router",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1656,14 +1693,15 @@
           "sha256": "90db20c6fda003adf4c17dab4b032e3b42b554960a7719c5682428212c4188e2",
           "destination": null
         }
-      ]
+      ],
+      "source_repository": "lib_uart_router"
     },
     {
       "module": "tskptt_exfdcan_router",
       "destination": "IO/CAN/External",
       "action": "import",
       "commit": "42f24a98c2cf0472a05189b5ae454b65c4253c8d",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_exfdcan_router",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1701,14 +1739,15 @@
           "sha256": "ec0ffe3cc03b643eda16308d07625c1657e8b02760ecbc750fcaf12bc676ee34",
           "destination": "Source/IO/CAN/External/tskptt_exfdcan_tx_router.cpp"
         }
-      ]
+      ],
+      "source_repository": "tskptt_exfdcan_router"
     },
     {
       "module": "tskptt_host_comm",
       "destination": "Services/HostLink",
       "action": "import",
       "commit": "9c426abdad48c5d940d99bdf51b414749b3fbab4",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_host_comm",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1756,14 +1795,15 @@
           "sha256": "317ca5f36a9783746e865f67f4120889e9fd35f44988ae558631fc8294a0e52a",
           "destination": "Tests/Services/HostLink/test_host_comm.c"
         }
-      ]
+      ],
+      "source_repository": "tskptt_host_comm"
     },
     {
       "module": "tskptt_hskp",
       "destination": "Diagnostics/Runtime",
       "action": "import",
       "commit": "6af1f6b3bb23ce706f44ec20b62624abe99c597f",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_hskp",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1801,14 +1841,15 @@
           "sha256": "ec4c0abd333458984e0fb0625e3b20535c60ffde46c429524d9ca82735c17575",
           "destination": "Source/Diagnostics/Runtime/tskptt_hskp_trace.c"
         }
-      ]
+      ],
+      "source_repository": "tskptt_hskp"
     },
     {
       "module": "tskptt_imu",
       "destination": "Devices/IMU/Worker",
       "action": "import",
       "commit": "5f074ed34e3900cd3e819395ecab8b6ef59244b5",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_imu",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1856,14 +1897,15 @@
           "sha256": "cd16dba41f07772bee0c7c285fa9cdc430e9622bc4d5f8ad357c5abe25185037",
           "destination": "Source/Devices/IMU/Worker/tskptt_imu_snapshot.c"
         }
-      ]
+      ],
+      "source_repository": "tskptt_imu"
     },
     {
       "module": "tskptt_log",
       "destination": "Services/Logging/Worker",
       "action": "import",
       "commit": "e2bc6e68dc8c7e554e861e5808f076e4f9e290be",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_log.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1886,14 +1928,15 @@
           "sha256": "54bbbd3c022e22e157a3d8bfa3e8fbc16602b21321bef23b47b9e82a4384380c",
           "destination": "Source/Services/Logging/Worker/tskptt_log.c"
         }
-      ]
+      ],
+      "source_repository": "tskptt_log"
     },
     {
       "module": "tskptt_ntfdcan_router",
       "destination": "IO/CAN/Router",
       "action": "import",
       "commit": "44d1eb5ad784a63a750963975519add5d8f3abbd",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/TaskPrototypes/tskptt_ntfdcan_router.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -1971,14 +2014,15 @@
           "sha256": "7fa75094c8f9bd561d8498b990accd2c2f05f57942165eeca9362b52eff23fa4",
           "destination": "Tests/IO/CAN/Router/stubs/task.h"
         }
-      ]
+      ],
+      "source_repository": "tskptt_ntfdcan_router"
     },
     {
       "module": "tskptt_param_console",
       "destination": "Services/Parameters/HostLink",
       "action": "import",
       "commit": "27c1789e28ae2afd4de5cddce20585444275ffde",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_param_console",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -2016,14 +2060,15 @@
           "sha256": "cb08314e24cca6ac7b3a4d4cbbd77f71a06cb933c0f1af72e8a82fad9e34554c",
           "destination": "Tests/Services/Parameters/HostLink/test_param_service.c"
         }
-      ]
+      ],
+      "source_repository": "tskptt_param_console"
     },
     {
       "module": "tskptt_referee",
       "destination": "Services/Referee/Receiver",
       "action": "import",
       "commit": "7bb74524cb527f5c570298a008d64f8ae8eb97e2",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_referee.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -2046,14 +2091,15 @@
           "sha256": "e797528c4b22b61ff5a1a7fa94ad0932286808bd98d7264b4f3dc21b815a6e0d",
           "destination": "Source/Services/Referee/Receiver/tskptt_referee.cpp"
         }
-      ]
+      ],
+      "source_repository": "tskptt_referee"
     },
     {
       "module": "tskptt_referee_tx",
       "destination": "Services/Referee/Transmitter",
       "action": "import",
       "commit": "4951ab2763e780b25c8d579e13409f57a1da37b0",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_referee_tx.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -2076,14 +2122,15 @@
           "sha256": "865baa9d6929a899fe9f21199f4f2df2238e0f81019b7c8c3dbaeb87715fd09c",
           "destination": "Source/Services/Referee/Transmitter/tskptt_referee_tx.c"
         }
-      ]
+      ],
+      "source_repository": "tskptt_referee_tx"
     },
     {
       "module": "tskptt_rs485_router",
       "destination": "IO/RS485",
       "action": "import",
       "commit": "c8a66ad6af4fb7f1d614083377d28d5ff9f70a99",
-      "source_url": "https://git.omni-x.net:12345/software/H7-Frameworks/taskprototypes/tskptt_rs485_router.git",
+      "source_url": null,
       "status": "",
       "files": [
         {
@@ -2106,7 +2153,9 @@
           "sha256": "f387cab7932171087c73699439ced249c21767a29cc4b069eeef956a9ef635d3",
           "destination": "Source/IO/RS485/tskptt_rs485_router.cpp"
         }
-      ]
+      ],
+      "source_repository": "tskptt_rs485_router"
     }
-  ]
+  ],
+  "publication_note": "Internal repository endpoints omitted; module identities, commits, hashes and license status retained."
 }

@@ -14,7 +14,7 @@ SirinEmbedOS 固定板载惯性服务：统一坐标，使用 BMI088 与 LSM6DS3
 | `ins_snapshot.c` | 多任务一致复制、有效性检查与复制耗时统计 |
 | `ins_internal.h` | 模块内部状态及接线，业务代码不包含此头 |
 
-公共 API 位于 [INS.h](../../../Include/SirinEmbedOS/Services/INS.h)。固定器件旋转由 [Board glue](../../../Board/Support/Devices/sensor_frames.c) 实现；驱动与 SPI/I²C 所有权仍在 Devices/IO，遥测编码位于 [ins_telemetry.c](../HostLink/ins_telemetry.c)。INS 不操作总线，不在周期循环内分配内存或等待 USB。
+公共 API 位于 [INS.h](../../../Include/SirinEmbedOS/Services/INS.h)。固定器件旋转由 [Board glue](../../../Board/Support/Devices/sensor_frames.c) 实现；驱动与 SPI/I²C 所有权仍在 Devices/IO，遥测编码位于 [ins_telemetry.c](../SirinLink/ins_telemetry.c)。INS 不操作总线，不在周期循环内分配内存或等待 USB。
 
 ## 应用接入
 
@@ -45,7 +45,7 @@ void control_cycle(void)
 
 `ins.enabled=false` 关闭融合，不等于取消 INS worker、传感器 worker 或相关静态缓冲；传感器和加热选择分别由 `sensors` 配置管理，资源裁剪须核对最终 map。
 
-这些也是默认值。配置在启动时检查并冻结：安装四元数必须有限且非零，SDK 归一化；加热目标允许 20～75°C。不能通过 HostLink 或运行期重绑修改配置。
+这些也是默认值。配置在启动时检查并冻结：安装四元数必须有限且非零，SDK 归一化；加热目标允许 20～75°C。不能通过 SirinLink 或运行期重绑修改配置。
 
 - `SRNOS_INSGetAttitude()`：小型高频姿态副本。
 - `SRNOS_INSGetSnapshot()`：姿态、四颗传感器最新测量与状态的一致副本。
@@ -72,25 +72,25 @@ INS 的 SI 向量为机器人坐标：加速度 m/s²（包含重力对应的比
 - 低动态观测连续 0.5 秒后建立重力方向，继续融合至少 2 秒且末尾 0.2 秒低动态才发布有效姿态；持续运动可使初始化继续等待。
 - 任一健康六轴温度 ≥80°C 立即关 PWM；满足触发来源重新有效且全部有效温度 <75°C 连续 5 秒后才可恢复。硬件故障保持关闭。
 
-温控只提供恒温，不含温度误差曲线补偿。EEPROM 校准记录加载/保存和 HostLink 存储默认启用；零偏/比例校正及静态校准的当前边界见下文。没有 legacy 融合或温控选择入口。
+温控只提供恒温，不含温度误差曲线补偿。EEPROM 校准记录加载/保存和 SirinLink 存储默认启用；零偏/比例校正及静态校准的当前边界见下文。没有 legacy 融合或温控选择入口。
 
-## CDC 测试与保存
+## CDC 采集与保存
 
-使用 **INSBringUp 或启用正式 INS 的固件**；SensorBringUp 关闭融合，因此不会产生姿态流。CDC0 输出文本日志，**CDC1** 承载 COBS / SRN-Link V2 二进制协议。普通串口文本终端不能直接解读。
+使用启用了正式 INS 的应用固件；关闭融合时不会产生姿态流。CDC0 输出文本日志，**CDC1** 承载 COBS / SRN-Link V2 二进制协议。普通串口文本终端不能直接解读。
 
 在 SDK 根目录执行（将 `CDC1_PATH` 换成实际 CDC1，目录必须不存在）：
 
 ```sh
-python3 -m venv build/hostlink-venv
-build/hostlink-venv/bin/pip install -r Tools/HostLink/requirements.txt
-build/hostlink-venv/bin/python -m serial.tools.list_ports -v
+python3 -m venv build/sirinlink-venv
+build/sirinlink-venv/bin/pip install -r Tools/SirinLink/requirements.txt
+build/sirinlink-venv/bin/python -m serial.tools.list_ports -v
 
 # 先观察启动、温度、姿态；此命令完成后再进行采集。
-build/hostlink-venv/bin/python Tools/HostLink/imu_telemetry.py \
+build/sirinlink-venv/bin/python Tools/SirinLink/imu_telemetry.py \
   --port CDC1_PATH --streams bmi lsm ins mag pressure --duration 10
 
 # 五路完整逐样本保存：预热记录 120 秒，随后测量 600 秒。
-build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
+build/sirinlink-venv/bin/python Tools/SirinLink/imu_capture.py \
   --port CDC1_PATH --streams bmi lsm ins mag pressure \
   --warmup 120 --duration 600 --output captures/ins-static-01 \
   --note "板子固定静置，默认60°C，记录实际振动与安装方向"
@@ -102,13 +102,11 @@ build/hostlink-venv/bin/python Tools/HostLink/imu_capture.py \
 
 采集完整性检查 `metadata.json` 的 `complete`、`quality_issues`、各流 `measurement_rows` / `measurement_rate_hz`，并核对设备溢出/失败计数。分析选 `phase=measurement`；姿态用 `attitude_us`、原始测量用 `acquisition_start_us`，不使用 USB 批次到达时间当采样时间。epoch 改变后不能直接当成同一航向参考分析。
 
-保存工具会拒绝覆盖旧目录；Ctrl-C 保存并标记 interrupted；断连保存错误，不自动拼接复位前后会话。未就绪或离线不会伪造样本。监视器的终端摘要或重定向不能替代逐样本保存。详细字段和异常收尾见 [采集工具说明](../../../Tools/HostLink/README.md)。
-
-## 验证边界
-
-在 SDK 根目录运行 `bash Tests/Services/INS/run_host_tests.sh` 检查融合状态与配置，运行 `bash Tests/Services/IMUTelemetry/run_host_tests.sh` 检查遥测。精度、动态性能和负载时序需使用目标固件分别测量；各历史验证窗口及限制见 [Validation](../../../Docs/Validation.md)与本目录 [CHANGELOG](CHANGELOG.md)。
+保存工具会拒绝覆盖旧目录；Ctrl-C 保存并标记 interrupted；断连保存错误，不自动拼接复位前后会话。未就绪或离线不会伪造样本。监视器的终端摘要或重定向不能替代逐样本保存。详细字段和异常收尾见 [采集工具说明](../../../Tools/SirinLink/README.md)。
 
 ## 板级边界
+
+姿态精度、动态性能和负载时序需使用目标固件分别测量；构建通过不代表这些指标已验收。
 
 传感器固定坐标及加热 PWM 由 Board/Support/Devices 提供，heater_board 负责输出；本服务负责融合、温控和状态。
 
@@ -145,7 +143,7 @@ SRNOS_StorageStatus save_measured_calibration(const SRNOS_IMUCalibration *measur
 
 ## 手动静态校准
 
-上位机在 CONFIG service `0x02` 发 REQUEST message `0x09`，正文 `01 03` 表示 v1、两颗 IMU；`01 01` 仅 BMI088，`01 02` 仅 LSM6DS3。无需六面放置，但整个观察窗口必须物理静止，建议温度稳定后触发。先固定板卡再发命令，不应在运动控制运行时校准。协议和完整结果字段见 [HostLink 协议](../../../Docs/HostLink.md#手动静态-imu-校准)。
+上位机在 CONFIG service `0x02` 发 REQUEST message `0x09`，正文 `01 03` 表示 v1、两颗 IMU；`01 01` 仅 BMI088，`01 02` 仅 LSM6DS3。无需六面放置，但整个观察窗口必须物理静止，建议温度稳定后触发。先固定板卡再发命令，不应在运动控制运行时校准。协议和完整结果字段见 [SirinLink 协议](../../../Docs/SirinLink.md#手动静态-imu-校准)。
 
 HostCmd 每 10 ms 读取一次最新 SENSOR 轴原始快照，收集约 5 s，估计三轴陀螺零偏和平均温度。单个未知姿态不能把重力与加速度零偏分开，因此保留 EEPROM 中有效的 accel bias/scale；无有效记录时使用 bias=0、scale=1。不会把当前重力向量作为加速度零偏扣除。IMU 也无法区分足够缓慢的匀速转动与零偏，软件静止检查不能替代实际静止要求。[ST 加速度校准说明](https://www.st.com/resource/en/application_note/an4508-parameters-and-calibration-of-a-lowg-3axis-accelerometer-stmicroelectronics.pdf)
 
@@ -167,10 +165,10 @@ SRNOS_IMUStaticResult calibrate_both(SRNOS_IMUStaticStatus *result)
  * 下次启动应用。失败读取 result 的 failed_sensor/saved_mask/storage_status。 */
 ```
 
-静态校准不使用独立线程、运行期内存分配或高优先级采样 hook。固定整数/浮点累计器在 HostCmd 中运行，仅进度副本使用短保护；等待时让出 CPU。主机回归、固件资源及尚未板测的范围见 [静态校准验证记录](../../../Docs/Validation/StaticIMU-20260929/README.md)。
+静态校准不使用独立线程、运行期内存分配或高优先级采样 hook。固定整数/浮点累计器在 HostCmd 中运行，仅进度副本使用短保护；等待时让出 CPU。
 
 分区、v1 48 B / v2 60 B校准记录正文、启动解析和单份失败语义统一见 [EEPROM 设计](../../../Docs/Storage.md)。
 
 ### 转台生成的v2记录
 
-v2在既有零偏/加速度对角修正之外加入`gyro_scale[3]`，范围0.8..1.2；INS在传感器轴上先减陀螺零偏再乘比例，随后做板/安装旋转。v1存量记录继续加载并使用比例1；保存v1仍输出48字节，v2为60字节。静态陀螺校准保留已存v2比例，不自动重估。SDK仅验证、持久化和应用系数；转台动作与拟合属于Examples/IMUTurntableBringUp和Studio插件。跨轴矩阵、温度曲线和绝对航向仍不包含。保存后下一次启动生效，不在承重状态自动复位。
+v2在既有零偏/加速度对角修正之外加入`gyro_scale[3]`，范围0.8..1.2；INS在传感器轴上先减陀螺零偏再乘比例，随后做板/安装旋转。v1存量记录继续加载并使用比例1；保存v1仍输出48字节，v2为60字节。静态陀螺校准保留已存v2比例，不自动重估。SDK仅验证、持久化和应用系数；转台动作与拟合由应用自行实现。跨轴矩阵、温度曲线和绝对航向仍不包含。保存后下一次启动生效，不在承重状态自动复位。

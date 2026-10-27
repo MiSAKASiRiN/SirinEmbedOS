@@ -1,7 +1,0 @@
-Memory region         Used Size  Region Size  %age Used
-         DTCMRAM:        128 KB       128 KB    100.00%
-          RAM_D1:      277856 B       320 KB     84.79%
-          RAM_D2:        6848 B        32 KB     20.90%
-          RAM_D3:         544 B        16 KB      3.32%
-         ITCMRAM:       63104 B        64 KB     96.29%
-           FLASH:      288128 B         1 MB     27.48%

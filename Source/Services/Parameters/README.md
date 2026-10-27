@@ -30,7 +30,7 @@ C 项目使用 `SRNOS_PersistentParameterDefinition`、`SRNOS_ParametersRegister
 - 启动时在父项目线程放行前加载；坏 CRC、空白、应用身份/兼容版本不符或超时使用声明默认值。相同应用/版本内按稳定 ID 加载：未知 ID 忽略，缺失、类型改变或越界项使用该项默认值，并分别计数。
 - `GetState` 返回当前/已保存 generation、Storage revision、dirty、保存有效性、忙状态和最近结果。默认回退不自动覆盖 EEPROM。新代 generation 回绕时撤销“已保存”判断，防止误判相等。
 
-无参数时允许 application_id=0；有参数时必须非零，兼容版本也必须非零。`LoadWithTimeout/SaveWithTimeout` 的 0 分别选 2000/5000 ms 默认总期限，有限值不超过 INT32_MAX。调用者会协作阻塞，不得放入实时控制 step；HostLink SAVE/LOAD 在 HostCmd 执行，HostComm、INS 不等存储。多次 Parameters 存储互斥；与身份/校准存储竞争由 Storage 返回 BUSY。父项目无需自己创建存储线程。
+无参数时允许 application_id=0；有参数时必须非零，兼容版本也必须非零。`LoadWithTimeout/SaveWithTimeout` 的 0 分别选 2000/5000 ms 默认总期限，有限值不超过 INT32_MAX。调用者会协作阻塞，不得放入实时控制 step；SirinLink SAVE/LOAD 在 HostCmd 执行，HostComm、INS 不等存储。多次 Parameters 存储互斥；与身份/校准存储竞争由 Storage 返回 BUSY。父项目无需自己创建存储线程。
 
 ## 格式与资源
 
@@ -40,8 +40,10 @@ PARAMETERS payload：8 B 头（LE32 `0x31505253`、LE16 格式 1、LE16 条数�
 
 默认固定槽表保存 32 组元数据和四份 4 B 数值（当前/默认/上下界），SAVE 工作缓冲为 `8+12×32=392 B`；LOAD 仅暂存 32 个值和 12 B 片段，允许旧记录超过当前注册数量，不分配 8 KiB 镜像。值保护区只做有限复制/提交，编码、遍历和 EEPROM I/O 在保护区外；没有独立 worker 或运行期动态分配。
 
-## 验证
+## 关联接口
 
-`bash Tests/Services/Parameters/run_host_tests.sh` 覆盖 C/C++ 注册、默认/范围、冻结/容量、批量一致性、ID 顺序、未知/缺失项、流式字段断点、镜像大于注册容量、末尾 CRC 失败、保存与 WRITE、加载与 WRITE 竞争及总期限状态。`HostLink/run_host_tests.sh` 覆盖 CONFIG 01–08。主机测试不证明掉电电气行为、EEPROM 寿命或板端时序。
+`SRNOS_ParametersDumpDebugPort()` 在调度运行或锁定期间，从任务上下文把 `name=value` 逐行交给 SDK Logging，使用 INFO 等级、`Parameters` 来源及正常日志前缀。非空表在没有启用后端或 INFO 被全部过滤时返回 DISABLED；队列/消息池拒绝返回 NO_SPACE，完整行超过日志正文容量返回 BUFFER_TOO_SMALL。首个失败立即结束，已经接纳的前缀不回滚。OK 只表示全部逐行接纳，日志的丢旧和后端丢弃策略仍适用；需要自行管理完整导出时使用 `SRNOS_ParametersDumpRegistry()` 回调。
 
-跨模块用法和完整磁盘布局见 [EEPROM 设计](../../../Docs/Storage.md)；完整 SCHEMA/READ/WRITE/SAVE/LOAD 字段见 [参数协议](HostLink/README.md)。
+掉电恢复、EEPROM 寿命和板端时序需要在实际应用条件下验证。
+
+跨模块用法和完整磁盘布局见 [EEPROM 设计](../../../Docs/Storage.md)；完整 SCHEMA/READ/WRITE/SAVE/LOAD 字段见 [参数协议](SirinLink/README.md)。

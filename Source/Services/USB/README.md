@@ -1,6 +1,6 @@
 # 双 CDC USB 服务
 
-本服务装配双 CDC、日志/HostLink 传输、描述符与协议栈生命周期；板级 PCD、FIFO、端点及 PA11/12 接线由 Board/Support/USB 持有。CDC0 用于 ASCII 日志，CDC1 用于 HostLink 二进制协议。
+本服务装配双 CDC、日志/SirinLink 传输、描述符与协议栈生命周期；板级 PCD、FIFO、端点及 PA11/12 接线由 Board/Support/USB 持有。CDC0 用于 ASCII 日志，CDC1 用于 SirinLink 二进制协议。
 
 ## 使用示例
 
@@ -13,11 +13,11 @@ void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 {
     config->usb_enabled = true;
     config->logging_enabled = true;
-    config->host_link_enabled = true;
+    config->sirin_link_enabled = true;
 }
 ```
 
-应用发送日志使用 [Logging](../Logging/README.md)，业务命令及遥测使用 [HostLink](../HostLink/README.md)。不要直接操作 CDC transport、USB class context 或 PCD。USB 启动成功不等于主机已枚举、DTR 已打开或数据已送达。
+应用发送日志使用 [Logging](../Logging/README.md)，业务命令及遥测使用 [SirinLink](../SirinLink/README.md)。不要直接操作 CDC transport、USB class context 或 PCD。USB 启动成功不等于主机已枚举、DTR 已打开或数据已送达。
 
 ## 生命周期与资源
 
@@ -28,9 +28,8 @@ void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 在 SDK 根目录执行：
 
 ```sh
-bash Tests/Services/USB/run_host_tests.sh
-# 已准备 HostLink Python 环境时，列出实际串口并区分 CDC0/CDC1：
+# 已准备 SirinLink Python 环境时，列出实际串口并区分 CDC0/CDC1：
 python3 -m serial.tools.list_ports -v
 ```
 
-主机回归检查启动失败、重试、重复启动和回调隔离；实际 USB 枚举、拔插和 PCD 时序需要板端验证。主机环境准备及串口工具见 [Tools/HostLink](../../../Tools/HostLink/README.md)，修改和历史结果见 [CHANGELOG](CHANGELOG.md)。
+主机回归检查启动失败、重试、重复启动和回调隔离；实际 USB 枚举、拔插和 PCD 时序需要板端验证。主机环境准备及串口工具见 [Tools/SirinLink](../../../Tools/SirinLink/README.md)，修改和历史结果见 [CHANGELOG](CHANGELOG.md)。

@@ -29,4 +29,4 @@ bool read_motor(SRNOS::Devices::C620State& out) {
 
 注册后由 Router 调用反馈、tick 与 poll_tx。业务在自身控制周期检查在线状态、反馈年龄和限幅后，才更新 `set_give_cmd()`；原始命令不等于转速设定值。不同型号的使能/命令语义以对应公共头为准。
 
-主机回归在 SDK 根执行 `bash Tests/Devices/Motors/run_host_tests.sh`，默认 UBSan；`SRNOS_MOTOR_SANITIZERS=thread` 可启用 ThreadSanitizer。模型以 mutex 模拟单核临界区，不能证明板端中断延迟或电机控制行为。
+模型以 mutex 模拟单核临界区，不能证明板端中断延迟或电机控制行为。

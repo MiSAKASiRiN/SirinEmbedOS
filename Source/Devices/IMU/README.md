@@ -20,4 +20,4 @@ void update_local_filter(SRNOS_Axis3f gyro_rad_s, SRNOS_Axis3f accel_m_s2) {
 }
 ```
 
-步长必须与真实采样周期相符；示例不包含姿态有效性、标定、温控和掉线策略。常规应用应优先使用已有 INS 服务。算法与接口检查不能证明板端精度或时序，验证方法见 [验证指南](../../../Docs/Validation.md)。
+步长必须与真实采样周期相符；示例不包含姿态有效性、标定、温控和掉线策略。常规应用应优先使用已有 INS 服务。

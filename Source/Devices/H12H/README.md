@@ -20,4 +20,4 @@ int read_servo_position(int16_t *position) {
 
 初始化函数负责 Claim 通道，不应由应用提前重复 Claim。事务限任务上下文，超时单位为毫秒，发送/应答期限遵循 Serial Transceive 合同。位置原始范围为 `0..SRNOS_SERIAL_SERVO_H12H_POS_MAX`，转换角度使用 `SRNOS_SerialServoH12hPositionToDeg()`。单线舵机需要已确认的电气适配器；SDK 不自动将普通 UART 改成单线。
 
-主机协议回归入口为 `bash Tests/Serial/run_host_tests.sh`（SDK 根）。硬件时序、外部舵机应答与动作需在实际接线下验证。
+硬件时序、外部舵机应答与动作需在实际接线下验证。

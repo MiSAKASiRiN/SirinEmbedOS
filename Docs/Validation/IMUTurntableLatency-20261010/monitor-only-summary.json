@@ -1,7 +1,0 @@
-{
-  "n": 23,
-  "median": 23.9405,
-  "minimum": 23.509,
-  "maximum": 24.2507,
-  "note": "25 s capture; first three ADC reports excluded; only 1 Hz monitor streams, no motor/IMU high-rate subscriptions, powered hold unchanged."
-}

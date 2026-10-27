@@ -34,10 +34,9 @@ typedef enum
     SRNOS_DBG_MODULE_LOG   = 10u,
     SRNOS_DBG_MODULE_DR16      = 11u,
     SRNOS_DBG_MODULE_VT03      = 12u,
-    SRNOS_DBG_MODULE_REMOTE_CONTROL = 13u,
     SRNOS_DBG_MODULE_PARAMS    = 14u,
     SRNOS_DBG_MODULE_RESERVED_15 = 15u,
-    SRNOS_DBG_MODULE_HOST_LINK  = 16u,
+    SRNOS_DBG_MODULE_SIRIN_LINK  = 16u,
     SRNOS_DBG_MODULE_USB_CDC   = 17u,
 } SRNOS_DbgModuleId;
 
@@ -400,30 +399,7 @@ typedef struct
     uint32_t last_poll_frames;
 } SRNOS_DbgVT03;
 
-typedef struct
-{
-    SRNOS_DbgHeader h;
-    uint32_t active_src;
-    uint32_t online;
-    uint32_t idle;
-    uint32_t blocked;
-    uint32_t sticks_idle;
-    uint32_t SRNOS_DR16Online;
-    uint32_t SRNOS_VT03Online;
-    uint32_t last_ok_ms;
-    uint32_t source_update_count;
-    uint32_t tick_count;
-    uint32_t snapshot_get_count;
-    uint32_t status_get_count;
-    uint32_t priority_primary;
-    uint32_t priority_secondary;
-    int16_t ch[5];
-    uint8_t sw[2];
-    uint8_t sw_valid_mask;
-    uint8_t reserved0;
-    uint16_t key_v;
-    uint16_t key_v_ext;
-} SRNOS_DbgRemoteControl;
+
 
 typedef struct
 {
@@ -469,7 +445,7 @@ typedef struct
     uint32_t queue_high_water;
     uint32_t last_wait_ms;
     uint32_t max_wait_ms;
-} SRNOS_DbgHostLinkQos;
+} SRNOS_DbgSirinLinkQos;
 
 typedef struct
 {
@@ -514,8 +490,8 @@ typedef struct
     uint32_t source_missed_periods;
     uint32_t source_cycles_total;
     uint32_t source_cycles_max;
-    SRNOS_DbgHostLinkQos qos[4];
-} SRNOS_DbgHostLink;
+    SRNOS_DbgSirinLinkQos qos[4];
+} SRNOS_DbgSirinLink;
 
 typedef struct
 {
@@ -553,9 +529,8 @@ extern volatile SRNOS_DbgIns SRNOS_DebugDbgIns;
 extern volatile SRNOS_DbgLog SRNOS_DebugLog;
 extern volatile SRNOS_DbgDR16 SRNOS_DebugDbgDR16[];
 extern volatile SRNOS_DbgVT03 SRNOS_DebugDbgVT03[];
-extern volatile SRNOS_DbgRemoteControl SRNOS_DebugDbgRemoteControl;
 extern volatile SRNOS_DbgParams SRNOS_DebugDbgParams;
-extern volatile SRNOS_DbgHostLink SRNOS_DebugHostLink;
+extern volatile SRNOS_DbgSirinLink SRNOS_DebugSirinLink;
 extern volatile SRNOS_DbgUSBCdc SRNOS_DebugDbgUSBCdc[];
 
 #ifdef __cplusplus

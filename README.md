@@ -1,5 +1,7 @@
 # SirinEmbedOS
 
+Input/SirinRMT 同时支持原始通道、按键、相对增量与有类型的车体系平面速度；速度使用 SI 单位并独立过期，运动类型切换通过 motion_epoch 通知应用撤权，机器人限速/使能由父项目决定。详见 [Input 合同](Source/Services/Input/README.md)。
+
 面向固定 STM32H723 / OmniCtrl 主控的应用开发 SDK。CubeMX 管理硬件配置与 HAL；SDK 管理 FreeRTOS、总线、设备驱动及系统服务；父项目管理控制算法、设备组合和业务任务。
 
 第一次接入请从 **[QuickStart](QuickStart.md)** 开始：构建示例、创建父工程、运行周期任务，再选择通信能力。[完整文档导航](Docs/README.md)用于查询接口；修改历史只记录在各级 [CHANGELOG](CHANGELOG.md)。
@@ -11,10 +13,15 @@
 | 托管任务、通知、同步与资源统计 | [Kernel](Source/Kernel/README.md) |
 | 四路 CAN、Classic adapter 与原始 FD | [CAN](Source/IO/CAN/README.md)、[电机](Source/Devices/Motors/README.md) |
 | 串口、遥控、裁判及 RS485 | [Serial](Source/IO/Serial/README.md)、[RemoteControl](Source/Services/RemoteControl/README.md)、[Referee](Source/Services/Referee/README.md)、[RS485](Source/IO/RS485/README.md) |
+| 通用输入快照与业务消息 | [Input/SirinRMT](Source/Services/Input/README.md)、[Message](Source/Services/Message/README.md)、[完整示例](Examples/InputMessages/README.md) |
+| WFLY W.BUS 原始接收 | [WBus](Source/Services/RemoteControl/WBus/README.md)：独立解码及内置 wbus 输入来源，可按通道校准 |
 | LAN8720、静态 IPv4、UDP 与 Ping | [Ethernet](Source/IO/Ethernet/README.md)、[Network](Source/Services/Network/README.md) |
+| 启动时间与 NTP 绝对时间 | [Clock](Source/Services/Clock/README.md)：无授时保留 uptime，Unix 时间带有效性与 holdover |
+| NOR 黑匣子、异步读回 | [Blackbox](Source/Services/Blackbox/README.md)：专用 SDK worker、固定 12 MiB 环区、有界队列 |
 | 传感器、姿态与温控 | [Sensors](Docs/Sensors.md)、[INS](Docs/INS.md) |
-| 日志、USB CDC 与上位机协议 | [Logging](Source/Services/Logging/README.md)、[USB](Source/Services/USB/README.md)、[HostLink](Docs/HostLink.md) |
+| 日志、USB CDC 与上位机协议 | [Logging](Source/Services/Logging/README.md)、[USB](Source/Services/USB/README.md)、[SirinLink](Docs/SirinLink.md) |
 | 业务参数、遥测与 EEPROM | [Parameters](Source/Services/Parameters/README.md)、[Telemetry](Source/Services/Telemetry/README.md)、[Storage](Docs/Storage.md) |
+| 图传双向数据与自动遥测 | [VideoLink](Source/Services/VideoLink/README.md)：复用 VT03 UART，注册 `0310` 发送周期，接收 `0311` |
 | ADC、CPU、周期与异常记录 | [SystemMonitor](Source/Services/SystemMonitor/README.md)、[Core](Source/Core/README.md) |
 
 公共 C API 使用 `SRNOS_*`，C++ 位于 `SRNOS::` 下。应用只包含 `Include/SirinEmbedOS/` 公共头；HAL、CMSIS、FreeRTOS 和 SDK 私有头不向应用传播。已有源码升级参照 [SDKMigration](Docs/SDKMigration.md)。FatFs、TCP、DHCP、DNS、IPv6 不在当前接口范围。
@@ -71,8 +78,13 @@ CAN/UART/IMU、网络、服务开关及注册在启动期冻结，恢复沿用�
 
 - [Minimal](Examples/Minimal/README.md)：启动入口与周期任务。
 - [Parameters](Examples/Parameters/README.md)、[Telemetry](Examples/Telemetry/README.md)：业务数值和只读变量。
-- [BringUp](Examples/BringUp/README.md)、[SensorBringUp](Examples/SensorBringUp/README.md)、[INSBringUp](Examples/INSBringUp/README.md)：选择观测范围；部分观测会扰动调度。
+- [InputMessages](Examples/InputMessages/README.md)：输入来源和应用消息。
 - [Board](Board/README.md)、[开发流程](Docs/Development.md)：生成边界、源码装配和检查命令。
-- [验证指南](Docs/Validation.md)：证据阅读与复现方法；历史结论只适用于对应固件、配置和负载。
 
-模块 README 和专题文档描述当前用法、示例及限制；修改原因、日期、验证结果和待验事项只写对应 CHANGELOG。原始日志、数据和固件哈希保留为证据，不把编译成功写成板端通过。
+模块 README 和专题文档描述当前用法、示例及限制；修改原因、日期、验证结果和待验事项只写对应 CHANGELOG。构建成功不代表板端验收。
+
+## 源码分发范围
+
+包含 SDK 实现、固定板配置、API 用法示例和主机工具。测试套件、专用 BringUp 固件、现场日志、Flash/EEPROM/RAM 转储及一次性迁移脚本不随源码分发。构建入口见 [开发指南](Docs/Development.md)。
+
+第三方版权和许可原样保留；自维护模块的来源与许可状态见 [迁移索引](Docs/Migration/README.md)，该索引不代表已经获得开源授权。

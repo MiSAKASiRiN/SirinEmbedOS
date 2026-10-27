@@ -1,3 +1,0 @@
-832ba8ad40cae888d4ed1100d045c96d3f4423295579bd88c066fb77e79de868  build/IMUTurntable27/board/run12.elf
-2b28d6f5ba54660d149f5130b725d7d8b80f4158ae9d4dabaf943a8b0ea0c79f  build/IMUTurntable27/board/run12/rx.bin
-309a57a2fdd7f292264065964f9dd4851135051e548d699caab67083814a6554  Examples/IMUTurntableBringUp/speed_only.hpp

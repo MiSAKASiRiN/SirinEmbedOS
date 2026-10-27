@@ -13,4 +13,4 @@ bool lan_link_ready(void) {
 }
 ```
 
-需先在启动配置中设置 `ethernet.enabled=true`。完整用法见 [Ethernet](../../IO/Ethernet/README.md)；PHY 解码维护回归在 SDK 根执行 `bash Tests/IO/Ethernet/run_host_tests.sh`，覆盖协商模式、未完成/断链和身份拒绝。测试模型不能代替实际链路验证。
+需先在启动配置中设置 `ethernet.enabled=true`。测试模型不能代替实际链路验证。

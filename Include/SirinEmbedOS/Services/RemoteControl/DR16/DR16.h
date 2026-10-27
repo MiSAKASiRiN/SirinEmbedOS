@@ -74,20 +74,26 @@ typedef struct {
     uint32_t rx_framer_drop_count;
     uint32_t rx_frame_ok_count;
     uint32_t rx_start_ret;
+    uint32_t stream_resets;
 } SRNOS_DR16Diag;
+
+typedef void (*SRNOS_DR16FrameCallback)(const SRNOS_DR16Dec *,void *);
 
 typedef struct {
     SRNOS_SerialChannel *channel;
     SRNOS_DR16RawTapCb raw_tap_cb;
     void *user;
+    SRNOS_DR16FrameCallback frame_callback; /* Each decoded frame, borrowed in polling task. */
 } SRNOS_DR16Config;
 typedef struct SRNOS_DR16S {
     SRNOS_SerialChannel *channel;
     SRNOS_DR16Framer framer;
     SRNOS_DR16RawTapCb raw_tap_cb;
     void *user;
+    SRNOS_DR16FrameCallback frame_callback; /* Each decoded frame, borrowed in polling task. */
     SRNOS_DR16Diag diag;
     uint16_t debug_index;
+    uint32_t framer_started_ms;
 } SRNOS_DR16T;
 
 int      SRNOS_DR16Init(SRNOS_DR16T* self, const SRNOS_DR16Config* cfg);

@@ -1,6 +1,0 @@
-PASS: C610 coherent RX/tick/snapshot, stale time, rollover, nested masks
-PASS: C620 coherent RX/tick/snapshot, stale time, rollover, nested masks
-PASS: GM6020 coherent RX/tick/snapshot, stale time, rollover, nested masks
-PASS: DM4310 coherent RX/tick/snapshot, stale time, rollover, nested masks
-PASS: DM4340 coherent RX/tick/snapshot, stale time, rollover, nested masks
-PASS: LK8016E coherent RX/tick/snapshot, stale time, rollover, nested masks

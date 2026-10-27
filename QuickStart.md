@@ -119,7 +119,7 @@ static bool sample_resources()
 
 - `kernel_free_bytes` / `kernel_minimum_free_bytes`：RTOS 堆当前余量 / 启动以来最小余量。
 - `capacity_bytes` / `used_bytes` / `peak_bytes`：应用对象池容量 / 占用 / 峰值；池本身来自 RTOS 堆，不能重复计数。
-- `stack_bytes`：任务配置的栈容量，**不是实际栈余量**。常规 SystemMonitor 不扫描任务栈；专用栈观测会扰动调度，见 [BringUp](Examples/BringUp/README.md)。
+- `stack_bytes`：任务配置的栈容量，**不是实际栈余量**。常规 SystemMonitor 不扫描任务栈；专用栈观测会扰动调度。
 
 由另一管理任务调用 `SRNOS_ThreadDelete(handle, timeout_ms)` 停止并回收任务，成功后才释放参数或清空句柄；超时保留资源。不能同步删除自身。完整生命周期见 [Kernel](Source/Kernel/README.md)。
 
@@ -145,19 +145,18 @@ set(SIRINEMBEDOS_CONFIG_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/Config/sdk_config.h"
 |---|---|
 | CAN 电机 | [Motors](Source/Devices/Motors/README.md)建立对象，配置阶段 Attach；[CAN](Source/IO/CAN/README.md)检查通道与模式。 |
 | UDP / Ping | [Network](Source/Services/Network/README.md)同时启用 Ethernet 和 Network、声明地址与端口，再由任务收发。 |
+| NTP 授时 | 配置 `network.ntp` 的服务器与周期；任务通过 [Clock](Source/Services/Clock/README.md) 读取 uptime/Unix 时间，先检查 `absolute_valid`。 |
+| NOR 黑匣子 | 设置 `blackbox.enabled` 和队列深度并核对启动 heap 预算；通过 [Blackbox](Source/Services/Blackbox/README.md) 的 Append/异步读接口使用 SDK 专用线程。 |
+| 通用输入与消息 | [InputMessages](Examples/InputMessages/README.md)：各来源独立通道/按键/增量快照，SirinRMT 支持 HostComm/UART/UDP/图传，自定义消息按服务分发。 |
 | 遥控 / 串口 | [Serial](Source/IO/Serial/README.md)声明端口用途、波特率及协议绑定，避免所有权冲突。 |
 | 姿态 | [INS](Docs/INS.md)声明安装旋转，消费者检查 VALID、序号及 epoch。 |
 | 参数 / 遥测 | [Parameters](Examples/Parameters/README.md)注册业务数值；[Telemetry](Examples/Telemetry/README.md)发布只读变量。 |
-| USB 上位机 | CDC0 为日志、CDC1 为 HostLink；[采集工具](Tools/HostLink/README.md)显式选择实际 CDC1 端口。 |
+| 图传遥测 | [VideoLink](Source/Services/VideoLink/README.md)：先在 ApplicationConfigure/静态初始化注册 Telemetry，再在 bind_channels 绑定图传周期；打开 VT03 UART 的 TX 和 video_link_enabled。 |
+| USB 上位机 | CDC0 为日志、CDC1 为 SirinLink；[采集工具](Tools/SirinLink/README.md)显式选择实际 CDC1 端口。 |
 
 ## 离线检查与常见问题
 
-从 SDK 根目录运行，公开头检查需要上述工具链 PATH：
-
-```sh
-python3 Tests/Build/check_structure.py --compile-commands build/Debug/compile_commands.json
-python3 Tests/Build/check_sdk.py --public-headers-only
-```
+构建步骤见上文；维护与验收边界见 [开发指南](Docs/Development.md)。
 
 | 现象 | 检查方式 |
 |---|---|
@@ -168,4 +167,4 @@ python3 Tests/Build/check_sdk.py --public-headers-only
 | RUNNING 但设备无数据 | 检查设备状态、数据年龄和有效位；RUNNING 只表示系统启动阶段。 |
 | 关闭 INS 后仍有相关任务 | 融合开关不裁剪基础采样和 INS worker；加热由独立配置项控制。 |
 
-修改历史与验证结果只写对应 `CHANGELOG.md`；使用说明维护最终行为和示例。分层检查与历史证据入口见 [验证指南](Docs/Validation.md)。
+修改历史与验证结果只写对应 `CHANGELOG.md`；使用说明维护最终行为和示例。

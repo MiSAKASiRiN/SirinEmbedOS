@@ -16,9 +16,9 @@ python3 Board/generate.py --cubemx /path/to/STM32CubeMX --timeout 300
 
 内部通过 `subprocess.run` 调用 CubeMX `-q`，不经 shell 拼接命令。临时 `.mx` 使用带引号的 IOC **绝对路径**，再执行 `project generate` 和 `exit`。IOC 使用绝对路径，不依赖进程工作目录；路径错误会使生成失败，即使 `-q` 也可能弹出错误窗口。
 
-退出码和生成 `OK` 均符合预期后，脚本运行 I2C 时序一致性检查；任一步失败返回非零。`--dry-run` 不创建文件或启动 CubeMX。脚本不自动编译、提交、烧录或操作调试会话。生成后仍需人工复核差异并执行相应构建。
+退出码和生成 `OK` 均符合预期后，脚本运行 I2C 时序一致性检查。全部通过后，只将 `newlib_lock_glue.c`、`stm32_lock.h`、`cmake/gcc-arm-none-eabi.cmake` 三项旧模板移至本次日志目录的 `unused-generated/`，并保存移除清单；SDK 使用 ST Arm Clang/Picolibc。生成或时序检查失败时保留全部生成文件并返回非零。`--dry-run` 只显示计划，不创建文件或启动 CubeMX；生成后仍需复核差异并构建，脚本不操作板卡或调试会话。
 
-`generate.mx` 中可能包含特定 checkout 的路径；日常使用 `generate.py` 自动定位。CubeMX 版本以实际执行日志为准。
+`generate.py` 根据当前检出目录生成临时调用脚本。CubeMX 版本以实际执行日志为准。
 
 生成前保留整个 Board 和当前未提交改动快照；生成后比较实际内容，确认 `USER CODE`、SDK 自维护文件、HAL/CMSIS、CMake/工具链和中断所有权。IOC 启用 `KeepUserCode=true`。生成不自动包含编译或烧录。
 
@@ -27,8 +27,6 @@ python3 Board/generate.py --cubemx /path/to/STM32CubeMX --timeout 300
 400 kHz Fast mode，固定 PLL3R=60 MHz，模拟滤波开启、数字滤波 0。IOC、生成的 `hi2c4.Init.Timing` 与 Support 常量均为 `0x10C7182D`。重新生成后核对三处一致性，并复核全部生成差异。
 
 启动仍经 USER CODE 调用 Support，验证时钟/滤波并应用相同固定时序；详细合同见 [Support](Support/README.md)。时序一致性检查为 `python3 Tools/Debug/check_i2c_timing.py`（从 SDK 根目录执行），现同时检查 IOC、生成代码和 Support。
-
-生成、构建与板测结果见 [CHANGELOG](CHANGELOG.md)；原始证据入口见[验证方法](../Docs/Validation.md)。
 
 ## Support 组织
 
@@ -53,7 +51,7 @@ FD 使用下文 P0/P1 IRQ 策略和既有任务优先级；DMA bank、共享 SPI
 
 ## ITCM 容量分配
 
-自维护链接脚本将 CAN Router 的 `.itcm_bss` 与 `.debug_watch` 放入 ITCM，DMA 仍在 D2、BDMA 仍在 D3、Fault retained 仍在 D2。`main` 的现有早期入口以 64 位写入初始化 ITCM BSS/Watch，并复制代码；不修改生成启动汇编、IOC 或 HAL。全局构造不得提前访问专用段。容量/验证见 [ITCM 迁移](../Docs/Validation/ITCM-20260929/README.md)。
+自维护链接脚本将 CAN Router 的 `.itcm_bss` 与 `.debug_watch` 放入 ITCM，DMA 仍在 D2、BDMA 仍在 D3、Fault retained 仍在 D2。`main` 的现有早期入口以 64 位写入初始化 ITCM BSS/Watch，并复制代码；不修改生成启动汇编、IOC 或 HAL。全局构造不得提前访问专用段。
 
 ## IRQ 分级
 

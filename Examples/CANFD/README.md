@@ -32,7 +32,7 @@ target_compile_definitions(CANFDExample PRIVATE SRNOS_CANFD_EXAMPLE_SEND_ONCE=1)
 
 ## 构建与验证范围
 
-`Tests/Build/Parent` 的 `CANFDExample` 提供固件目标；`Tests/Build/check_sdk.py` 检查它的公共头隔离和最终 ELF。默认目标保持只接收，单帧开关可由父项目单独启用。
+默认目标保持只接收，单帧开关可由父项目单独启用。
 
 本示例不包含 CAN FD 业务协议或电机策略。主机/构建检查不证明收发器支持 4 Mbit/s、总线终端匹配、ACK 或目标吞吐；这些需要 PCB 在线后的实际 FD 对端验证。原生驱动和模式合同见 [CAN 模块](../../Source/IO/CAN/README.md) 及 [公共接口](../../Include/SirinEmbedOS/IO/CAN/FD/CANFD.h)。
 

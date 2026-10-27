@@ -12,7 +12,7 @@ WRITE 立即更新 RAM；只有显式 SAVE 才持久化。SAVE 在 HostCmd 执�
 
 C 项目可使用 `SRNOS_ParametersRegisterPersistent` 和 `SRNOS_TelemetryRegister/Publish`。登记复制元数据，父项目在启动配置期完成注册，不在运行期新增。详细合同见 [Parameters](../../Source/Services/Parameters/README.md)、[Telemetry](../../Source/Services/Telemetry/README.md) 和 [Kernel](../../Source/Kernel/README.md)。主机/构建检查不代替板端掉电或高频吞吐验收。
 
-完整端到端目录、RAM WRITE、显式 SAVE、运行 LOAD 失败保留现值及 EEPROM 格式见 [存储总览](../../Docs/Storage.md)；主机字段见 [CONFIG 协议](../../Source/Services/Parameters/HostLink/README.md)。
+完整端到端目录、RAM WRITE、显式 SAVE、运行 LOAD 失败保留现值及 EEPROM 格式见 [存储总览](../../Docs/Storage.md)；主机字段见 [CONFIG 协议](../../Source/Services/Parameters/SirinLink/README.md)。
 
 ## 父项目装配示例
 

@@ -29,7 +29,7 @@ _Static_assert(NUMBER_OF_CDC == SRNOS_USB_CDC_CHANNEL_COUNT,
                "AL94 CDC count must match the project channel map");
 _Static_assert(SRNOS_USB_CDC_LOG_CHANNEL == 0u,
                "CDC0 is reserved for project ASCII logs");
-_Static_assert(SRNOS_USB_CDC_HOST_LINK_CHANNEL == 1u,
+_Static_assert(SRNOS_USB_CDC_SIRIN_LINK_CHANNEL == 1u,
                "CDC1 is reserved for SRN-Link V2");
 _Static_assert((SRNOS_USB_CDC_ACM_RX_SIZE % sizeof(uint32_t)) == 0u,
                "Each CDC RX staging buffer must remain word aligned");
@@ -109,7 +109,7 @@ static int8_t CDC_DeInit(uint8_t cdc_ch)
     }
     if (cdc_ch == SRNOS_USB_CDC_LOG_CHANNEL) {
         SRNOS_USBCdcLogOnDisconnect();
-    } else if (cdc_ch == SRNOS_USB_CDC_HOST_LINK_CHANNEL) {
+    } else if (cdc_ch == SRNOS_USB_CDC_SIRIN_LINK_CHANNEL) {
         SRNOS_DebugPortOnUsbDisconnect();
     }
     return (int8_t)USBD_OK;
@@ -164,7 +164,7 @@ static int8_t CDC_Control(uint8_t cdc_ch, uint8_t cmd, uint8_t *pbuf, uint16_t l
             }
             if (cdc_ch == SRNOS_USB_CDC_LOG_CHANNEL) {
                 SRNOS_USBCdcLogOnControlLineState(state);
-            } else if (cdc_ch == SRNOS_USB_CDC_HOST_LINK_CHANNEL) {
+            } else if (cdc_ch == SRNOS_USB_CDC_SIRIN_LINK_CHANNEL) {
                 SRNOS_DebugPortOnUsbControlLineState(state);
             }
         }
@@ -185,7 +185,7 @@ static int8_t CDC_Receive(uint8_t cdc_ch, uint8_t *Buf, uint32_t *Len)
     if ((Buf != NULL) && (Len != NULL)) {
         if (cdc_ch == SRNOS_USB_CDC_LOG_CHANNEL) {
             SRNOS_USBCdcLogOnReceive(*Len);
-        } else if (cdc_ch == SRNOS_USB_CDC_HOST_LINK_CHANNEL) {
+        } else if (cdc_ch == SRNOS_USB_CDC_SIRIN_LINK_CHANNEL) {
             SRNOS_DebugDbgUSBCdc[cdc_ch].rx_events++;
             SRNOS_DebugDbgUSBCdc[cdc_ch].rx_bytes += *Len;
             SRNOS_DebugDbgUSBCdc[cdc_ch].last_rx_len = *Len;
@@ -208,7 +208,7 @@ static int8_t CDC_TransmitCplt(uint8_t cdc_ch, uint8_t *Buf, uint32_t *Len, uint
     }
     if (cdc_ch == SRNOS_USB_CDC_LOG_CHANNEL) {
         SRNOS_USBCdcLogOnTransmitComplete();
-    } else if (cdc_ch == SRNOS_USB_CDC_HOST_LINK_CHANNEL) {
+    } else if (cdc_ch == SRNOS_USB_CDC_SIRIN_LINK_CHANNEL) {
         SRNOS_DebugDbgUSBCdc[cdc_ch].tx_active = 0u;
         if ((s_dtr[cdc_ch] != 0u) && (s_tx_length[cdc_ch] != 0u)) {
             SRNOS_DebugDbgUSBCdc[cdc_ch].tx_complete++;
@@ -251,7 +251,7 @@ uint8_t SRNOS_USBCdcTransmit(uint8_t ch, uint8_t *Buf, uint16_t Len)
 
     (void)USBD_CDC_SetTxBuffer(ch, &SRNOS_USBDevice, s_tx_buffer[ch], Len);
     const uint8_t status = USBD_CDC_TransmitPacket(ch, &SRNOS_USBDevice);
-    if ((status == USBD_OK) && (ch == SRNOS_USB_CDC_HOST_LINK_CHANNEL)) {
+    if ((status == USBD_OK) && (ch == SRNOS_USB_CDC_SIRIN_LINK_CHANNEL)) {
         SRNOS_DebugDbgUSBCdc[ch].tx_active = 1u;
         SRNOS_DebugDbgUSBCdc[ch].tx_events++;
         SRNOS_DebugDbgUSBCdc[ch].last_tx_len = Len;

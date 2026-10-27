@@ -32,7 +32,6 @@ enum {
     SRNOS_LOG_STATUS_QUEUE_DROP = 1u,
     SRNOS_LOG_STATUS_BACKEND_DROP = 2u,
     SRNOS_LOG_STATUS_TRUNCATED = 3u,
-    SRNOS_LOG_STATUS_UART_ERROR = 4u,
 };
 
 enum {
@@ -121,6 +120,30 @@ uint32_t SRNOS_LogGetBackendMask(void)
     return s_backend_mask;
 }
 
+bool SRNOS_LogLevelEnabled(SRNOS_LogLevel level)
+{
+    const uint32_t mask = s_backend_mask;
+    const uint32_t level_bit = SRNOS_LevelMaskBit(level);
+    uint32_t enabled_levels = 0u;
+#if SRNOS_LOG_ENABLE_USB_CDC
+    if ((mask & SRNOS_LOG_BACKEND_USB_CDC) != 0u) {
+        enabled_levels |= SRNOS_LOG_USB_LEVEL_MASK;
+    }
+#endif
+#if SRNOS_LOG_ENABLE_SWO
+    if ((mask & SRNOS_LOG_BACKEND_SWO) != 0u) {
+        enabled_levels |= SRNOS_LOG_SWO_LEVEL_MASK;
+    }
+#endif
+#if SRNOS_LOG_ENABLE_UART
+    if ((mask & SRNOS_LOG_BACKEND_UART) != 0u) {
+        enabled_levels |= SRNOS_LOG_UART_LEVEL_MASK;
+    }
+#endif
+    (void)mask;
+    return (enabled_levels & level_bit) != 0u;
+}
+
 void SRNOS_LogGetStats(SRNOS_LogStats* out)
 {
     if (out == NULL) {
@@ -173,27 +196,6 @@ void SRNOS_LogRecordTruncatedBody(void)
     SRNOS_LogInit();
     SRNOS_DebugLog.truncated_body++;
     SRNOS_DbgTouch(SRNOS_LOG_STATUS_TRUNCATED);
-}
-
-void SRNOS_LogRecordUartDmaError(void)
-{
-    SRNOS_LogInit();
-    SRNOS_DebugLog.uart_dma_error++;
-    SRNOS_DbgTouch(SRNOS_LOG_STATUS_UART_ERROR);
-}
-
-void SRNOS_LogRecordUartBusy(void)
-{
-    SRNOS_LogInit();
-    SRNOS_DebugLog.uart_busy++;
-    SRNOS_DbgTouch(SRNOS_LOG_STATUS_UART_ERROR);
-}
-
-void SRNOS_LogRecordUartDrop(void)
-{
-    SRNOS_LogInit();
-    SRNOS_DebugLog.uart_drop++;
-    SRNOS_DbgTouch(SRNOS_LOG_STATUS_BACKEND_DROP);
 }
 
 void SRNOS_LogRegisterUsbTransport(const SRNOS_LogUSBTransport *transport)

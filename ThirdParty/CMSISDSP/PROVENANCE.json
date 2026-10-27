@@ -1,6 +1,6 @@
 {
-  "source": "/Users/sirin/CLionProjects/h723vg-v2-prototype/Middlewares/ST/ARM/DSP/Inc",
-  "usage": "Headers only; SDK keeps the prototype weak matrix fallback and does not import a DSP binary.",
+  "source": "h723vg-v2-prototype/Middlewares/ST/ARM/DSP/Inc",
+  "usage": "Retained upstream header snapshot for future DSP integration; not included or linked by the current SDK. Matrix operations use Source/Algorithms/Math/Matrix.c. No DSP binary or weak matrix fallback is used.",
   "files": [
     {
       "source": "Middlewares/ST/ARM/DSP/Inc/arm_math.h",

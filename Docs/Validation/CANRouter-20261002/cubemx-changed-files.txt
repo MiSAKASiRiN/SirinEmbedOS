@@ -1,3 +1,0 @@
-Core/Src/fdcan.c
-Core/Src/gpio.c
-Core/Src/spi.c

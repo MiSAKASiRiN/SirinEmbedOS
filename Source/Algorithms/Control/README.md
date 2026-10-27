@@ -20,4 +20,4 @@ SRNOS::Control::PidResult calculate(float target, float measured, float dt_s) {
 }
 ```
 
-以上片段只计算，不下发电机。主机回归：在 SDK 根运行 `sh Tests/Algorithms/Control/run_host_tests.sh`；控制稳定性和板端耗时需要由具体应用验收。
+以上片段只计算，不下发电机。

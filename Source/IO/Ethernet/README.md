@@ -24,11 +24,11 @@ PA8 MCO1 = PLL1Q / 11 = 50 MHz，同网送至 PA1 ETH_REF_CLK 和 LAN8720A XTAL1
 
 ## 验证
 
-`Tests/IO/Ethernet/run_host_tests.sh` 在 ASan/UBSan 下覆盖禁用、配置/PHY 解码、复制和满队列、RX 饱和/过期、TX 超时、断线清队列、epoch、计时回绕和 DMA 故障恢复；同时模拟 HAL 清 head 但保留 tail 的契约，连续检查 100 组多 buffer 帧链接。父工程 `Tests/EthernetBringUp` 和 `Tools/ethernet_l2_test.py` 提供无电机输出的实验 EtherType 回显及 MCU 温度门控。历史实机范围见 [CHANGELOG](CHANGELOG.md)；主机注入不代表拔线、电气或持续高负载验证。
+历史实机范围见 [CHANGELOG](CHANGELOG.md)；主机注入不代表拔线、电气或持续高负载验证。
 
 ## 静态 IPv4 接入
 
-`SystemConfig.network` 默认关闭，预置 `192.168.1.50/24`、无网关；上层开启 `ethernet.enabled` 和 `network.enabled` 后可在启动阶段覆盖地址/掩码/网关及四个 UDP 端口。支持 UDP 和单播 Ping，ARP 为其提供邻居发现；其余网络协议关闭。网络开启后原始 Ethernet Send/Receive 返回 `SRNOS_ETHERNET_OWNED`。独立 Network worker 为优先级 15、6 KiB 栈，每轮显式等待 5 ms，保守追加 7 KiB heap 预算；固定队列和 lwIP 8 KiB 堆位于静态 D1。详见 [Network](../../Services/Network/README.md) 和公共 `Services/Network.h`。
+启用 Network 后，由其独占原始 Ethernet 收发；应用改用 UDP 接口，原始 Send/Receive 返回 `SRNOS_ETHERNET_OWNED`，状态查询仍可用。配置与资源合同见 [Network](../../Services/Network/README.md)。
 
 ## 原始帧读取示例
 
@@ -46,4 +46,4 @@ SRNOS_EthernetResult receive_frame(SRNOS_EthernetFrame *frame) {
 }
 ```
 
-调用者只在 `OK` 时读取 `frame->length` 与数据。若需要 IP/UDP，启用 Network 并改用其接口，不能让两个消费者同时读取二层队列。使用方式与验收层次见 [验证指南](../../../Docs/Validation.md)。
+调用者只在 `OK` 时读取 `frame->length` 与数据。若需要 IP/UDP，启用 Network 并改用其接口，不能让两个消费者同时读取二层队列。

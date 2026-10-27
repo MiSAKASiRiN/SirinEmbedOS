@@ -1,5 +1,3 @@
 # Changelog
 
-## 2026-10-17 文档整理
-
-- 使用说明保留当前合同、入口和示例；日期战报与修改记录归入本文件。仅调整 Markdown，代码、原始测量数据和第三方源码未改动。
+本目录保留 lwIP 2.2.1 上游快照，未应用源码补丁；版本、来源和许可见 [README](README.md)。SDK 接入变更见 [Network 记录](../../Source/Services/Network/CHANGELOG.md)。

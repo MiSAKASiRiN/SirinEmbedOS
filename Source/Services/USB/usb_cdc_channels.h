@@ -10,7 +10,7 @@ extern "C" {
 
 enum {
     SRNOS_USB_CDC_LOG_CHANNEL = 0u,
-    SRNOS_USB_CDC_HOST_LINK_CHANNEL = 1u,
+    SRNOS_USB_CDC_SIRIN_LINK_CHANNEL = 1u,
     SRNOS_USB_CDC_CHANNEL_COUNT = 2u,
 };
 
@@ -25,7 +25,7 @@ enum {
 
 #define SRNOS_USB_CDC_LOG_INTERFACE_STRING \
     "OmniX OmniCtrl 2 Pro LOG"
-#define SRNOS_USB_CDC_HOST_LINK_INTERFACE_STRING \
+#define SRNOS_USB_CDC_SIRIN_LINK_INTERFACE_STRING \
     "OmniX OmniCtrl 2 Pro SRN-LNK"
 
 const char *SRNOS_USBCdcInterfaceLabel(uint8_t cdc_ch);
