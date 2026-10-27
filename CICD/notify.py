@@ -68,7 +68,7 @@ def card(summary, environment):
     return {'msg_type': 'interactive', 'card': {'schema': '2.0',
         'config': {'update_multi': True, 'style': {'text_size': {'normal_v2': {
             'default': 'normal', 'pc': 'normal', 'mobile': 'heading'}}}},
-        'header': {'title': {'tag': 'plain_text', 'content': 'SirinEmbedOS UPDATE ' + status},
+        'header': {'title': {'tag': 'plain_text', 'content': 'OmniX Git CI/CD Compile ' + status},
                    'template': color,
                    'text_tag_list': [{'tag': 'text_tag', 'text': {'tag': 'plain_text',
                        'content': 'OK' if success else 'ERROR'}, 'color': color}]},
