@@ -34,3 +34,6 @@ core
 # Python generated caches
 __pycache__/
 *.py[cod]
+
+# CI build artifacts
+/ci-output/

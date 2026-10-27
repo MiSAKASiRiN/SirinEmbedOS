@@ -1,0 +1,43 @@
+stages: [build, notify]
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
+
+default:
+  tags: ['$SRNOS_CI_RUNNER_TAG']
+
+variables:
+  GIT_SUBMODULE_STRATEGY: none
+  SRNOS_CI_JOBS: '8'
+
+sdk_ci:
+  stage: build
+  timeout: 30m
+  script:
+    - 'if [ -n "${SRNOS_CI_ENV_FILE:-}" ]; then . "$SRNOS_CI_ENV_FILE"; fi'
+    - python3 CICD/run.py --mode sdk --source . --sdk . --target SirinEmbedOS
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - ci-output/logs/
+      - ci-output/firmware/
+      - ci-output/summary.json
+      - ci-output/SHA256SUMS
+
+notify_feishu:
+  stage: notify
+  timeout: 5m
+  when: always
+  allow_failure: true
+  dependencies: [sdk_ci]
+  rules:
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $FEISHU_WEBHOOK'
+      when: always
+    - when: never
+  script:
+    - python3 CICD/notify.py

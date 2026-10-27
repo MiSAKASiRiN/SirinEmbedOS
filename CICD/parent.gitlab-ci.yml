@@ -1,0 +1,42 @@
+# Copy into the PARENT repository, then set its firmware target and SDK path.
+# GitLab resolves includes before checkout: do not include YAML from a submodule.
+stages: [build, notify]
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
+default:
+  tags: ['$SRNOS_CI_RUNNER_TAG']
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  SIRINEMBEDOS_PATH: SirinEmbedOS
+  CI_FIRMWARE_TARGET: MyRobot
+  SRNOS_CI_JOBS: '8'
+application_ci:
+  stage: build
+  timeout: 30m
+  script:
+    - 'if [ -n "${SRNOS_CI_ENV_FILE:-}" ]; then . "$SRNOS_CI_ENV_FILE"; fi'
+    - python3 "$SIRINEMBEDOS_PATH/CICD/run.py" --mode application --source . --sdk "$SIRINEMBEDOS_PATH" --target "$CI_FIRMWARE_TARGET"
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - ci-output/logs/
+      - ci-output/firmware/
+      - ci-output/summary.json
+      - ci-output/SHA256SUMS
+notify_feishu:
+  stage: notify
+  timeout: 5m
+  when: always
+  allow_failure: true
+  dependencies: [application_ci]
+  rules:
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $FEISHU_WEBHOOK'
+      when: always
+    - when: never
+  script:
+    - python3 "$SIRINEMBEDOS_PATH/CICD/notify.py"

@@ -26,6 +26,8 @@ Input/SirinRMT 同时支持原始通道、按键、相对增量与有类型的�
 
 公共 C API 使用 `SRNOS_*`，C++ 位于 `SRNOS::` 下。应用只包含 `Include/SirinEmbedOS/` 公共头；HAL、CMSIS、FreeRTOS 和 SDK 私有头不向应用传播。已有源码升级参照 [SDKMigration](Docs/SDKMigration.md)。FatFs、TCP、DHCP、DNS、IPv6 不在当前接口范围。
 
+自动构建、产物交付与父仓库流水线配置见 [CI/CD](CICD/README.md)。
+
 ## 构建与 CLion
 
 使用 ST Arm Clang / Picolibc、CMake 和 Ninja。以下命令从 SDK 根目录执行，工具链路径按本机调整：
