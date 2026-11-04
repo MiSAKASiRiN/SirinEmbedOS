@@ -8,7 +8,10 @@ from pathlib import Path
 import struct
 import sys
 import time
-from imu_telemetry import Decoder, pack, open_port
+try:
+    from .imu_telemetry import Decoder, pack, open_port
+except ImportError:  # existing standalone script entry
+    from imu_telemetry import Decoder, pack, open_port
 
 STREAMS = {1: "tasks", 2: "adc", 3: "cycles"}
 ADC_NAMES = ("current_a", "voltage_v", "vbat_v", "vrefint_v", "temperature_c", "vdda_v")

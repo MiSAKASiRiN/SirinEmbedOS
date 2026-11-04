@@ -1,0 +1,12 @@
+schema_version = 1
+[[reads]]
+name = "uid"
+address = 0x1FF1E800
+type = "u32"
+count = 3
+
+[[reads]]
+name = "flash_vectors"
+address = 0x08000000
+type = "u32"
+count = 8

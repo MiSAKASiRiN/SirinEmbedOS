@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "srneos final result (design contract v1)",
+  "type": "object",
+  "required": ["schema_version", "tool_version", "run_id", "command", "status", "exit_code", "complete", "evidence_level", "states", "steps", "artifacts", "error", "final_state"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "command": {"type": "string", "minLength": 1},
+    "status": {"enum": ["ok", "failed", "interrupted", "planned"]},
+    "exit_code": {"enum": [0, 2, 10, 11, 12, 13, 14, 20, 21, 22, 23, 24, 30, 31, 32, 40, 41, 50, 130]},
+    "complete": {"type": "boolean"},
+    "evidence_level": {"enum": ["none", "host", "build", "hardware", "mixed"]},
+    "states": {
+      "type": "object",
+      "properties": {
+        "jlink_probe": {"enum": ["not_checked", "offline", "enumerated", "online", "busy", "permission_denied", "unknown"]},
+        "target": {"enum": ["not_checked", "offline", "online", "protected", "mismatch", "unknown"]},
+        "usb": {"enum": ["not_checked", "not_enumerated", "enumerated", "disconnected", "unknown"]},
+        "cdc0": {"$ref": "#/$defs/cdcState"},
+        "cdc1": {"$ref": "#/$defs/cdcState"},
+        "sirinlink": {"enum": ["not_checked", "no_response", "invalid_protocol", "incompatible", "ready", "disconnected", "unknown"]},
+        "log_state": {"enum": ["not_checked", "quiet", "receiving", "disconnected", "unknown"]},
+        "log_protocol": {"const": "not_applicable"}
+      },
+      "additionalProperties": false
+    },
+    "observations": {"type": "array", "items": {"type": "object"}},
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "details"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "status": {"enum": ["ok", "failed", "interrupted", "not_run", "planned"]},
+          "details": {"type": "object"},
+          "error": {"$ref": "#/$defs/error"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "kind", "complete", "bytes", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "complete": {"type": "boolean"},
+          "bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "error": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/error"}]},
+    "errors": {"type": "array", "items": {"$ref": "#/$defs/error"}},
+    "quality": {"type": "object"},
+    "final_state": {
+      "type": "object",
+      "required": ["target_run_state", "probe_released", "usb_released"],
+      "properties": {
+        "target_run_state": {"enum": ["not_checked", "running", "halted", "unknown"]},
+        "probe_released": {"type": ["boolean", "null"]},
+        "usb_released": {"type": ["boolean", "null"]},
+        "stop": {"enum": ["not_requested", "sent", "observed", "unconfirmed"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ok"}}},
+      "then": {"properties": {"exit_code": {"const": 0}, "complete": {"const": true}, "error": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "planned"}}},
+      "then": {"properties": {"exit_code": {"const": 0}, "complete": {"const": false}, "evidence_level": {"const": "none"}, "error": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "failed"}}},
+      "then": {"properties": {"exit_code": {"not": {"enum": [0, 130]}}, "error": {"$ref": "#/$defs/error"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "interrupted"}}},
+      "then": {"properties": {"exit_code": {"const": 130}, "complete": {"const": false}}}
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "cdcState": {"enum": ["not_checked", "missing", "available", "open", "busy", "permission_denied", "disconnected", "unknown"]},
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "retryable", "details"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "message": {"type": "string"},
+        "retryable": {"type": "boolean"},
+        "details": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

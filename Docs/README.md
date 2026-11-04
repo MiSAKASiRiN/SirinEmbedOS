@@ -18,6 +18,7 @@
 | 保存与读回 NOR 黑匣子记录 | [Blackbox](../Source/Services/Blackbox/README.md)、[NOR](../Source/Devices/NOR/README.md) |
 | 编写上位机，注册命令和数据流 | [SirinLink 协议](SirinLink.md)、[服务 API](../Source/Services/SirinLink/README.md) |
 | 采集 IMU/INS/CPU 遥测 | [Tools/SirinLink](../Tools/SirinLink/README.md)、[SystemMonitor](../Source/Services/SystemMonitor/README.md) |
+| 统一连接、烧录、读取、遥测、命令及主机测试 | [srneos CLI](../Tools/CmdLineTool/README.md)、[实施验收清单](../Tools/CmdLineTool/ACCEPTANCE.md) |
 | 维护硬件绑定或 CubeMX 输出 | [Board](../Board/README.md)、[BoardSupport](BoardSupport.md) |
 | 构建与维护 SDK | [Development](Development.md) |
 | 读取遥控状态或自定义消息 | [Input/SirinRMT](../Source/Services/Input/README.md)、[Message](../Source/Services/Message/README.md)、[七来源示例](../Examples/InputMessages/README.md) |

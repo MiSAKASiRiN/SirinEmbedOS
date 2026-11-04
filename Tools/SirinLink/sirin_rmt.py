@@ -6,7 +6,10 @@ import secrets
 import socket
 import struct
 import time
-from imu_telemetry import pack, pack_raw
+try:
+    from .imu_telemetry import pack, pack_raw
+except ImportError:  # existing standalone script entry
+    from imu_telemetry import pack, pack_raw
 
 SERVICE, MESSAGE = 0x21, 1
 

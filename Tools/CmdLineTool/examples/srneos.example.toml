@@ -1,0 +1,42 @@
+# Copy into the calling project and fill in selectors. Paths are relative to this file.
+schema_version = 1
+
+[tool]
+request_timeout_seconds = 10.0
+output_root = "build/srneos"
+
+[jlink]
+# library = "/absolute/path/to/libjlinkarm.dylib" # optional; otherwise PyLink discovers SEGGER
+# probe_serial = 123456789 # replace with your probe serial (not the target UID)
+device = "STM32H723VG"
+speed_khz = 1000
+# expected_uid = "REPLACE_WITH_TARGET_UID"
+
+[usb]
+# serial = "REPLACE_WITH_USB_SERIAL"
+# cdc0 = "CDC0_PATH"
+# cdc1 = "CDC1_PATH"
+
+[firmware]
+# image = "build/Release/application.elf"
+after = "halt"
+erase_policy = "preserve"
+
+[rmt]
+hz = 50
+qualification_ms = 100
+stop_settle_ms = 100
+max_duration_seconds = 60.0
+# Examples only: set the actual application-specific limits before moving.
+max_abs_vx_m_s = 0.1
+max_abs_vy_m_s = 0.1
+max_abs_wz_rad_s = 0.2
+
+[host_tests]
+# suite_root = "SirinEmbedOS/Tests" # optional private SDK suites
+
+[[commands]]
+name = "app.read_version"
+id = 256
+encoding = "bytes"
+max_request_bytes = 0

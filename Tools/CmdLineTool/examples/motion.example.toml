@@ -1,0 +1,24 @@
+# A finite single-CDC1-session plan. Actual motion requires application permission.
+schema_version = 1
+[capture]
+streams = "system"
+hz = 50
+# sources = "app.enabled,app.actual_vx" # only if registered by the parent application
+
+[[steps]]
+id = "zero_enable"
+operation = "enable"
+duration = 0.5
+
+[[steps]]
+id = "forward"
+operation = "move"
+vx = 0.1
+vy = 0.0
+wz = 0.0
+duration = 0.8
+
+[[steps]]
+id = "zero_observe"
+operation = "wait"
+duration = 0.5

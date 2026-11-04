@@ -2,6 +2,17 @@
 
 以下记录保留各次变更、验证结论及未验边界，仅适用于当时版本和负载。原始测试日志与实机转储不随源码分发；当前用法以 README 和专题指南为准。
 
+## Unreleased — srneos CLI 实现（2026-11-04）
+
+- 新增 SDK 主机 Python 包 `srneos`，统一 J-Link/目标识别、镜像烧录及独立回读、地址读取/保存、CDC 日志与 SirinLink 遥测/参数/命令、SirinRMT 有限输入测试、主机测试和单会话计划；安装和命令文档位于 `Tools/CmdLineTool/`。
+- PyLink 调用隔离为有期限子进程；USB 共用请求/事件分发和有界写盘；明确区分读取、比对、保存以及发送/业务执行证据。复用现有 Python 编解码，父项目无需复制实现，固件公共 API、调度、生成边界和内存布局不变。
+- 42 项主机用例、原 SDK Input/SirinLink Codec 回归、PTY 字节流及格式检查通过；wheel 构建成功。没有连接真实探针/板卡、烧录或运动；对应实板和 Windows/Linux 硬件验收仍待完成。
+
+## Unreleased — srneos CLI 设计（2026-11-04）
+
+- 新增 `Tools/CmdLineTool/` 体系设计、命令/状态/证据合同、结果 Schema、配置示例及实施验收计划；通用能力由 SDK 持有，父项目通过配置和公共协议调用。
+- 本次为设计文件变更，CLI 尚未实现；未连接硬件、烧录或运动，不改变固件 API、生成边界、调度及内存布局。
+
 ## Unreleased — CI/CD（2026-10-27）
 
 - 新增独立 `CICD/` 构建与产物交付工具，根 GitLab 入口引用目录内配置；不恢复 Tests、BringUp 或原始验证资料。SDK 与父项目分别构建 Debug/Release，可选发送已配置的通知。生产代码、公共 API、调度与内存布局不变。
