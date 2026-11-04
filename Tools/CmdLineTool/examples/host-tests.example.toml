@@ -1,0 +1,7 @@
+# Portable CLI smoke test; replace/add explicit argv entries for your host suites.
+schema_version = 1
+[[tests]]
+id = "srneos_help"
+argv = ["srneos", "--help"]
+cwd = "."
+timeout_seconds = 10.0

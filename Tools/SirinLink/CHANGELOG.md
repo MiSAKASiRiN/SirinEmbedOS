@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — srneos 包复用（2026-11-04）
+
+- 主机脚本支持包内相对导入并保留直接执行方式；统一 CLI wheel 将同一份源码安装为 `srneos._legacy`，没有新增第二套 COBS/CRC/SirinRMT 编码器。
+- 未修改线协议、设备固件或原独立脚本的发送策略；统一 CLI 的会话和收尾行为见 CmdLineTool。验证范围为主机导入/CLI/协议与打包检查，本轮未连接真实设备。
+
 ## Unreleased — 直接平面速度
 
 - 增加 planar_velocity() 与 --velocity=vx,vy,wz，有限 IEEE754 float32 编码；--velocity 与 --channels 互斥，通用 CLI 上限允许 100 Hz。C/Python 黄金向量、CLI 和 UDP 直接目标回归通过；Jetson 100 Hz 与架空两模式联调通过。

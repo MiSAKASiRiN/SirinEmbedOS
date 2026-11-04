@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "srneos"
+version = "0.1.0"
+description = "SirinEmbedOS host CLI: probe, flash, USB telemetry, commands and tests"
+requires-python = ">=3.11"
+dependencies = ["pyserial>=3.5,<4", "pylink-square>=1.4,<2", "pyelftools>=0.31,<1"]
+
+[project.optional-dependencies]
+test = ["jsonschema>=4,<5"]
+
+[project.scripts]
+srneos = "srneos.cli:main"
+
+[tool.setuptools]
+packages = ["srneos", "srneos._legacy"]
+package-dir = {srneos = "src/srneos", "srneos._legacy" = "../SirinLink"}

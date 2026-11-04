@@ -34,6 +34,9 @@ core
 # Python generated caches
 __pycache__/
 *.py[cod]
+*.egg-info/
+/Tools/CmdLineTool/build/
+/Tools/CmdLineTool/dist/
 
 # CI build artifacts
 /ci-output/

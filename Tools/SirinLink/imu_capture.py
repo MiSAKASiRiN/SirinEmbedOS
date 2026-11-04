@@ -12,8 +12,12 @@ import signal
 import sys
 import time
 
-from imu_telemetry import (Client, STREAMS, ALL_STREAMS, STREAM_OPTIONS, PERIODS,
-                           open_port, human_status, human_ins_status)
+try:
+    from .imu_telemetry import (Client, STREAMS, ALL_STREAMS, STREAM_OPTIONS, PERIODS,
+                                open_port, human_status, human_ins_status)
+except ImportError:  # existing standalone script entry
+    from imu_telemetry import (Client, STREAMS, ALL_STREAMS, STREAM_OPTIONS, PERIODS,
+                               open_port, human_status, human_ins_status)
 
 FILES = {0x100: "bmi088.csv", 0x101: "lsm6ds3.csv"}
 FIELDS = ["phase", "host_receive_monotonic_ns", "sequence", "state", "valid_fields",

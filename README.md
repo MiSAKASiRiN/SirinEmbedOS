@@ -6,6 +6,8 @@ Input/SirinRMT 同时支持原始通道、按键、相对增量与有类型的�
 
 第一次接入请从 **[QuickStart](QuickStart.md)** 开始：构建示例、创建父工程、运行周期任务，再选择通信能力。[完整文档导航](Docs/README.md)用于查询接口；修改历史只记录在各级 [CHANGELOG](CHANGELOG.md)。
 
+主机连接、烧录、Flash/地址读取、USB 日志/遥测、业务命令和主机测试统一入口见 [srneos CLI](Tools/CmdLineTool/README.md)。工具实现属于 SDK，父项目仅安装并提供配置；主机测试不等于实板验证。
+
 ## 能力与入口
 
 | 能力 | 使用说明 |

@@ -1,5 +1,7 @@
 # IMU / INS 遥测与采集 CLI
 
+统一安装入口与 J-Link、日志、遥测、命令、参数、SirinRMT、主机测试调用见 [srneos CLI](../CmdLineTool/README.md)。本目录的独立脚本继续可用；srneos 的安装包复用这里的编解码与内置流解码，不改变 V2/SirinRMT 线格式。需要逐样本 CSV 时仍可用下文 imu_capture.py。
+
 Python 3 + pyserial；必须显式指定 CDC1。安装、运行与完整协议见 [Docs/SirinLink.md](../../Docs/SirinLink.md)。
 
 `imu_telemetry.py` 提供共享 `pack_raw(service,message,sequence,payload,kind)` / `unpack_raw(raw)`，用于 UDP 的完整 V2 header+payload+CRC32，无 COBS。串口 `pack/unpack` 保留原行为。SirinRMT 的 `wire(...,stream=False)` 复用 raw codec；原始帧仍要求单条、最多 480 B payload，CRC/长度/版本均校验。仅用 codec/UDP 时只依赖 Python 标准库。
