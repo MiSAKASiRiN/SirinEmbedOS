@@ -70,7 +70,7 @@ uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *c)
     if (c->network.enabled) bytes += 7u * 1024u; /* 6 KiB stack/TCB; lwIP heap and queues are static D1. */
     if (c->ethernet.enabled) bytes += 5u * 1024u; /* Worker/TCB; queues are static D1. */
     if (c->serial_count) bytes += 3u * 1024u + c->serial_count * 2560u;
-    if (c->remote.dr16_port || c->remote.vt03_port || c->remote.wbus_port || c->messages.uart_port) bytes += 4u * 1024u;
+    if (c->remote.dr16_port || c->remote.vt03_port || c->remote.wbus_port || c->remote.vt02_port || c->messages.uart_port) bytes += 4u * 1024u;
     if (c->referee_port) bytes += 4u * 1024u;
     for (size_t i=0; i<c->serial_count; ++i) if (c->serial[i].port == SRNOS_SERIAL_UART7) bytes += 8u * 1024u;
     bytes += SRNOS_InputHeapBudget()+SRNOS_MessageHeapBudget()+SRNOS_MessageTransportHeapBudget();
@@ -124,19 +124,22 @@ SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *c)
     SRNOS_SerialStatus ss = SRNOS_SerialValidate(c->serial, c->serial_count);
     if (ss != SRNOS_SERIAL_OK) return ss == SRNOS_SERIAL_CONFLICT ? SRNOS_SYSTEM_CONFLICT : SRNOS_SYSTEM_INVALID;
     const SRNOS_SerialPortId roles[] = { c->remote.dr16_port, c->remote.vt03_port, c->remote.wbus_port, c->messages.uart_port, c->referee_port,
-        c->logging_enabled && (c->log_backends & SRNOS_LOG_BACKEND_UART) ? c->log_port : SRNOS_SERIAL_NONE };
+        c->logging_enabled && (c->log_backends & SRNOS_LOG_BACKEND_UART) ? c->log_port : SRNOS_SERIAL_NONE,
+        c->remote.vt02_port };
     if (c->logging_enabled && (c->log_backends & SRNOS_LOG_BACKEND_UART) && !c->log_port) return SRNOS_SYSTEM_INVALID;
     for (size_t i = 0; i < sizeof(roles)/sizeof(roles[0]); ++i) {
         if (roles[i] == SRNOS_SERIAL_NONE) continue;
         const SRNOS_SerialConfig *port = NULL;
         for (size_t j = 0; j < c->serial_count; ++j) if (c->serial[j].port == roles[i]) port = &c->serial[j];
-        if (!port || (i < 5 ? !port->rx_enabled : !port->tx_enabled)) return SRNOS_SYSTEM_INVALID;
+        if (!port || (i == 5 ? !port->tx_enabled : !port->rx_enabled)) return SRNOS_SYSTEM_INVALID;
         for (size_t j = 0; j < i; ++j) if (roles[i] == roles[j]) return SRNOS_SYSTEM_CONFLICT;
         if ((i == 0 || i == 2) && (port->baud_rate != 100000 || port->data_bits != 8 || port->stop_bits != 2 || port->parity != SRNOS_SERIAL_PARITY_EVEN)) return SRNOS_SYSTEM_INVALID;
         if (i == 1 && (port->baud_rate != 921600 || port->data_bits != 8 || port->stop_bits != 1 || port->parity != SRNOS_SERIAL_PARITY_NONE)) return SRNOS_SYSTEM_INVALID;
         if (i == 1 && c->remote.video_link_enabled && (!port->tx_enabled || port->mode != SRNOS_SERIAL_DUPLEX)) return SRNOS_SYSTEM_INVALID;
         if (i == 3 && (port->data_bits != 8 || port->stop_bits != 1 || port->parity != SRNOS_SERIAL_PARITY_NONE || !port->tx_enabled || port->mode != SRNOS_SERIAL_DUPLEX)) return SRNOS_SYSTEM_INVALID;
         if (i == 4 && (port->baud_rate != 115200 || port->data_bits != 8 || port->stop_bits != 1 || port->parity != SRNOS_SERIAL_PARITY_NONE || !port->tx_enabled)) return SRNOS_SYSTEM_INVALID;
+        if (i == 6 && (!port->rx_enabled || port->mode != SRNOS_SERIAL_DUPLEX || port->rx_inverted ||
+            port->baud_rate != 115200 || port->data_bits != 8 || port->stop_bits != 1 || port->parity != SRNOS_SERIAL_PARITY_NONE)) return SRNOS_SYSTEM_INVALID;
     }
     if(c->thread_count>SRNOS_APP_THREAD_LIMIT)return SRNOS_SYSTEM_RESOURCE;
     uint64_t app_storage=0;

@@ -14,6 +14,7 @@ Input/SirinRMT 同时支持原始通道、按键、相对增量与有类型的�
 | 四路 CAN、Classic adapter 与原始 FD | [CAN](Source/IO/CAN/README.md)、[电机](Source/Devices/Motors/README.md) |
 | 串口、遥控、裁判及 RS485 | [Serial](Source/IO/Serial/README.md)、[RemoteControl](Source/Services/RemoteControl/README.md)、[Referee](Source/Services/Referee/README.md)、[RS485](Source/IO/RS485/README.md) |
 | 通用输入快照与业务消息 | [Input/SirinRMT](Source/Services/Input/README.md)、[Message](Source/Services/Message/README.md)、[完整示例](Examples/InputMessages/README.md) |
+| VT02/VT12 双向 UART | [接入指南](Docs/VT02VT12.md)、[完整示例](Examples/VT02VT12/README.md)：115200/8N1 键鼠、自定义 RX 与显式 A5 TX |
 | WFLY W.BUS 原始接收 | [WBus](Source/Services/RemoteControl/WBus/README.md)：独立解码及内置 wbus 输入来源，可按通道校准 |
 | LAN8720、静态 IPv4、UDP 与 Ping | [Ethernet](Source/IO/Ethernet/README.md)、[Network](Source/Services/Network/README.md) |
 | 启动时间与 NTP 绝对时间 | [Clock](Source/Services/Clock/README.md)：无授时保留 uptime，Unix 时间带有效性与 holdover |

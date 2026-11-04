@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 2026-11-03：增加只读 `SRNOS_SerialGetPortStats`，供应用复用既有诊断传输读取内置协议端口统计；不新增缓冲、任务或串口所有权，不改变 RX/TX 行为。父项目Debug及C11/C++17公共头通过，CDC1板端连续读取验证通过；本轮UART9业务数据未收到，实际通信待验证。
+
 - 2026-10-03：Serial、RC、Referee、RS485 统一 UART P1（High7 / 47）；UART IRQ 与十路 DMA IRQ 统一 NVIC 6。协议、容量、栈和线程数不变，父应用 RAW 消费线程不自动提级。
 
 - 2026-10-03：公共 Serial 分发者从 AboveNormal 提至 High5（45），与 IMU/INS 同级、低于 CAN（48）；协议线程、栈、队列和 DMA 所有权保持。Serial 主机回归通过，CAN/UART 实际组合负载待板测。

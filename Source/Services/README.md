@@ -10,6 +10,7 @@
 | USB 命令和遥测 | [SirinLink](SirinLink/README.md)、[USB](USB/README.md) | CDC0 文本、CDC1 二进制，声明在启动期冻结 |
 | 可保存业务参数 | [Parameters](Parameters/README.md)、[协议](Parameters/SirinLink/README.md) | WRITE 只改 RAM，SAVE 显式持久化 |
 | 高频只读数值 | [Telemetry](Telemetry/README.md) | 最新值缓存，不提供无损历史队列 |
+| 旧 VT02/VT12 图传接收 | [VT02](RemoteControl/VT02/README.md) | 115200/8N1；0304 键鼠与0302原始自定义消息独立分发，无自动控制 |
 | 图传双向数据 | [VideoLink](VideoLink/README.md) | VT03 单所有者拆分 `0311`；注册最新值的 `0310` 发送周期 |
 | EEPROM 身份和记录 | [Storage](Storage/README.md) | 单份记录，CRC 不保证保留写入前版本 |
 | 姿态与 IMU 校准 | [INS](INS/README.md) | 使用有效位/年龄/epoch，不能只看非零值 |

@@ -67,6 +67,9 @@ typedef struct {
  * response_timeout_ms begins after TC. Both use the same finite-wait limit. */
 SRNOS_SerialStatus SRNOS_SerialTransceive(SRNOS_SerialChannel *, const SRNOS_SerialTransaction *, size_t *);
 SRNOS_SerialStatus SRNOS_SerialGetStats(SRNOS_SerialChannel *, SRNOS_SerialStats *);
+/* Task-only read-only diagnostics, including ports owned by built-in protocols.
+ * Does not claim the channel, dequeue RX, or change its configuration. */
+SRNOS_SerialStatus SRNOS_SerialGetPortStats(SRNOS_SerialPortId, SRNOS_SerialStats *);
 #ifdef __cplusplus
 }
 #endif

@@ -1,4 +1,6 @@
 #include "SirinEmbedOS/Services/SirinRMT.h"
+#include "SirinEmbedOS/Services/RemoteControl/VT02/VT02.h"
+#include "input_internal.h"
 #include "SirinEmbedOS/Core/C/Endian.h"
 #include "SirinEmbedOS/Kernel/Thread.h"
 #include <string.h>
@@ -91,6 +93,12 @@ typedef struct {
 } receiver;
 static receiver receivers[4];
 static unsigned receiver_count;
+void SRNOS_SirinRMTInvalidateVT02(uint16_t endpoint)
+{
+    for(unsigned i=0;i<receiver_count;i++)
+        if(receivers[i].owner.transport==SRNOS_MESSAGE_VT02&&receivers[i].owner.endpoint==endpoint)
+            (void)SRNOS_InputInvalidate(receivers[i].source,SRNOS_INPUT_FRAME_LOST);
+}
 static bool same_peer(const SRNOS_MessageOrigin *a,const SRNOS_MessageOrigin *b)
 {
     return a->transport==b->transport&&a->endpoint==b->endpoint&&a->peer_port==b->peer_port&&
@@ -118,7 +126,9 @@ static SRNOS_MessageResult receive(const SRNOS_MessageInfo *m,const uint8_t *dat
 SRNOS_InputResult SRNOS_SirinRMTRegister(const char *name,uint8_t transport,uint16_t endpoint,
     uint32_t timeout,SRNOS_InputSource *out)
 {
-    if(!name||!out||strlen(name)>=32||!transport||transport>8||(transport&(transport-1u))||
+    const bool vt02=transport==SRNOS_MESSAGE_VT02;
+    if(!name||!out||strlen(name)>=32||!transport||(!vt02&&transport>8)||(transport&(transport-1u))||
+       (vt02&&!endpoint)||
        receiver_count==4)return SRNOS_INPUT_INVALID;
     SRNOS_InputDescriptor d={.timeout_ms=timeout,.channel_count=16,.relative_mask=7,.buttons=UINT64_MAX,.planar_velocity=true};
     memcpy(d.name,name,strlen(name)+1);
@@ -127,9 +137,11 @@ SRNOS_InputResult SRNOS_SirinRMTRegister(const char *name,uint8_t transport,uint
     SRNOS_InputResult result=SRNOS_InputRegister(&d,&r->source);
     if(result!=SRNOS_INPUT_OK)return result;
     SRNOS_MessageRouteConfig route={.transports=transport,.endpoint=endpoint,
-        .service=SRNOS_SIRIN_RMT_SERVICE,.type=SRNOS_SIRIN_RMT_MESSAGE,
+        .service=vt02?SRNOS_VT02_CUSTOM_SERVICE:SRNOS_SIRIN_RMT_SERVICE,
+        .type=vt02?SRNOS_VT02_CUSTOM_MESSAGE:SRNOS_SIRIN_RMT_MESSAGE,
         .max_payload=30,.max_age_ms=(uint16_t)timeout,.handler=receive,.user=r};
     SRNOS_MessageRoute handle;
     if(SRNOS_MessageRegister(&route,&handle)!=SRNOS_MESSAGE_OK)return SRNOS_INPUT_FULL;
+    r->owner.transport=transport;r->owner.endpoint=endpoint;
     r->timeout_ms=timeout;*out=r->source;++receiver_count;return SRNOS_INPUT_OK;
 }

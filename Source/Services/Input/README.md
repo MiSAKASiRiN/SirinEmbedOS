@@ -49,7 +49,7 @@ if (SRNOS_InputReadSnapshot(source, &s) == SRNOS_INPUT_OK &&
 
 SirinRMT 是输入模拟协议。它发布通道、按键、相对增量、车体系平面速度及明确的使能/禁用请求，自定义业务数据使用 [Message](../Message/README.md) 的其它 service/type。旧 EJOY 名称、magic 和接收队列不作为兼容接口保留。
 
-同一 30 字节载荷经 HostComm、专用 UART、UDP 或 VT03/13 图传传输。Message service=`0x21`、type=`0x01`。所有多字节字段 little endian；保留/填充字节必须为零。
+同一 30 字节载荷经 HostComm、专用 UART、UDP 或 VT03/13 图传传输时使用 Message service=`0x21`、type=`0x01`。旧 VT02/VT12 也可显式注册接收，直接用 `0x0302` 的完整 30 B payload，复用 `SRNOS_MESSAGE_VT02` 的 `0x22/1` 路由。所有多字节字段 little endian；保留/填充字节必须为零。
 
 | 偏移 | 长度 | 内容 |
 |---|---|---|
@@ -74,10 +74,12 @@ SirinRMT 是输入模拟协议。它发布通道、按键、相对增量、车�
 
 启用 `remote.sirinrmt_transports` 后自动注册 `sirinrmt.host` / `.uart` / `.udp` / `.video`，也可启动期手动调用 SirinRMTRegister，避免同时重复注册同一传输来源。超时使用 remote.offline_ms，默认 300 ms。received_ms 是本机接收时刻，不能测量未同步的发送端到接收端传输年龄。发送方需周期刷新每个需要保持有效的通道和按键组；其它组有新包不会延长旧字段有效期。无按键上升沿的初次 held 状态需要应用明确处理。
 
+VT02/VT12 由父项目在启动期显式调用 `SRNOS_SirinRMTRegister("sirinrmt.vt02", SRNOS_MESSAGE_VT02, port, timeout_ms, &source)`，其中 `port` 为已配置的 `remote.vt02_port`，不可为零。总计最多四个接收实例，VT02 同样占用一个实例与 Input 来源；不新增轮询线程、报文队列或串口所有者。A5 包号只用于外层诊断，接收器检查 SRMT 内层 session/sequence。串口重置会使该来源失效，保留已见 session/sequence 的去重状态；键鼠来源独立。通道与使能策略由父项目定义。
+
 C 编解码器不读写硬件。Python 编码器和限时模拟器位于 `Tools/SirinLink/sirin_rmt.py`，用法见 [SirinLink 工具](../../../Tools/SirinLink/README.md)。接收回调在相应传输任务内执行；每实例只能由对应的单一传输生产者调用。
 
 ## 互斥运动目标
 
-`InputDescriptor.planar_velocity=true` 声明支持；SirinRMT 的四种传输自动声明。`InputFrame.update_planar_velocity` 与 channel_mask 互斥，三分量全部有限才发布。速度单独过期，ENABLE、按键和相对增量不能续期；SDK 不施加机器人速度上限。应用须声明车体系参考点，世界系转换由发送端负责。
+`InputDescriptor.planar_velocity=true` 声明支持；SirinRMT 注册的来源自动声明。`InputFrame.update_planar_velocity` 与 channel_mask 互斥，三分量全部有限才发布。速度单独过期，ENABLE、按键和相对增量不能续期；SDK 不施加机器人速度上限。应用须声明车体系参考点，世界系转换由发送端负责。
 
 `motion_kind` 区分 NONE/CHANNELS/PLANAR_VELOCITY。通道与速度类型切换时清除两类旧有效位及旧 enable_epoch，并增加 motion_epoch；同一消费者周期内往返切换仍可检测。DISABLE 请求身份保持，不能被类型切换覆盖。应用同时观察来源 epoch 和 motion_epoch，切换时撤权并重新建流/使能；仅看到新鲜值不代表执行器获准运动。失效/重新同步清除运动有效性，保留计数用于观察。

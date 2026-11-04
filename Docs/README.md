@@ -21,6 +21,7 @@
 | 维护硬件绑定或 CubeMX 输出 | [Board](../Board/README.md)、[BoardSupport](BoardSupport.md) |
 | 构建与维护 SDK | [Development](Development.md) |
 | 读取遥控状态或自定义消息 | [Input/SirinRMT](../Source/Services/Input/README.md)、[Message](../Source/Services/Message/README.md)、[七来源示例](../Examples/InputMessages/README.md) |
+| 使用 VT02/VT12 键鼠及双向自定义数据 | [VT02/VT12 接入](VT02VT12.md)、[完整示例](../Examples/VT02VT12/README.md) |
 | 查询代码来源、许可和重命名 | [迁移索引](Migration/README.md)、[迁移历史](Migration/CHANGELOG.md) |
 
 ## 查找示例

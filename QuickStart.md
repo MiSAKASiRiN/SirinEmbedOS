@@ -148,6 +148,7 @@ set(SIRINEMBEDOS_CONFIG_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/Config/sdk_config.h"
 | NTP 授时 | 配置 `network.ntp` 的服务器与周期；任务通过 [Clock](Source/Services/Clock/README.md) 读取 uptime/Unix 时间，先检查 `absolute_valid`。 |
 | NOR 黑匣子 | 设置 `blackbox.enabled` 和队列深度并核对启动 heap 预算；通过 [Blackbox](Source/Services/Blackbox/README.md) 的 Append/异步读接口使用 SDK 专用线程。 |
 | 通用输入与消息 | [InputMessages](Examples/InputMessages/README.md)：各来源独立通道/按键/增量快照，SirinRMT 支持 HostComm/UART/UDP/图传，自定义消息按服务分发。 |
+| VT02/VT12 双向 UART | [接入指南](Docs/VT02VT12.md)、[VT02VT12 示例](Examples/VT02VT12/README.md)：键鼠 Input、原始 30 B Message 与显式 A5 TX/Flush。 |
 | 遥控 / 串口 | [Serial](Source/IO/Serial/README.md)声明端口用途、波特率及协议绑定，避免所有权冲突。 |
 | 姿态 | [INS](Docs/INS.md)声明安装旋转，消费者检查 VALID、序号及 epoch。 |
 | 参数 / 遥测 | [Parameters](Examples/Parameters/README.md)注册业务数值；[Telemetry](Examples/Telemetry/README.md)发布只读变量。 |

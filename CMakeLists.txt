@@ -25,8 +25,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 enable_language(C CXX ASM)
 
 option(SIRINEMBEDOS_BUILD_EXAMPLE "Build the selected SDK example firmware" ${_sirinos_standalone})
-set(SIRINEMBEDOS_EXAMPLE "Minimal" CACHE STRING "SDK example: Minimal or InputMessages")
-set_property(CACHE SIRINEMBEDOS_EXAMPLE PROPERTY STRINGS Minimal InputMessages)
+set(SIRINEMBEDOS_EXAMPLE "Minimal" CACHE STRING "SDK example: Minimal, InputMessages or VT02VT12")
+set_property(CACHE SIRINEMBEDOS_EXAMPLE PROPERTY STRINGS Minimal InputMessages VT02VT12)
 set(SIRINEMBEDOS_CONFIG_HEADER "" CACHE FILEPATH "Absolute path to application SDK configuration")
 add_library(sirinos_config INTERFACE)
 target_include_directories(sirinos_config INTERFACE
@@ -105,8 +105,10 @@ set_property(TARGET sirinos_platform PROPERTY INTERFACE_LINK_DEPENDS
 include(CMake/Firmware.cmake)
 
 if(SIRINEMBEDOS_BUILD_EXAMPLE)
-    if(NOT SIRINEMBEDOS_EXAMPLE STREQUAL "Minimal" AND NOT SIRINEMBEDOS_EXAMPLE STREQUAL "InputMessages")
-        message(FATAL_ERROR "Unknown SIRINEMBEDOS_EXAMPLE: ${SIRINEMBEDOS_EXAMPLE}; use Minimal or InputMessages")
+    # Explicit allowlist: public API examples, never private bench firmware.
+    set(_sirinos_examples Minimal InputMessages VT02VT12)
+    if(NOT SIRINEMBEDOS_EXAMPLE IN_LIST _sirinos_examples)
+        message(FATAL_ERROR "Unknown SIRINEMBEDOS_EXAMPLE: ${SIRINEMBEDOS_EXAMPLE}; use Minimal, InputMessages or VT02VT12")
     endif()
     sirinos_add_firmware(SirinEmbedOS "Examples/${SIRINEMBEDOS_EXAMPLE}/app_main.c")
 endif()

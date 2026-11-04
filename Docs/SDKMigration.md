@@ -1,8 +1,14 @@
 # 父项目源码迁移与公共边界
 
+## VT02/VT12 图传接入
+
+`SRNOS_RemoteControlConfig` 增加 `vt02_port`，SDK 与父项目须整体重编译；未绑定默认关闭。切换旧图传时将原端口 Serial 改为 115200/8N1、普通非反相 RX，清除该端口的 vt03_port 绑定，改设 vt02_port。Input 来源名为 `vt02`，仅有键鼠；不能沿用 VT03 模拟通道与 C/N/S 逻辑。0302 的全部 30 B 经 `SRNOS_MESSAGE_VT02`（新增 transport 位）、service/type=0x22/1、endpoint=Serial port 投递，需显式注册 Message 路由。常规 referee_port 与 VT03 VideoLink 不是这个入口。见 [VT02](../Source/Services/RemoteControl/VT02/README.md)。
+
+TX 使用同一内置绑定：Serial 显式设置 `tx_enabled=true`，任务调用 `SRNOS_VT02Send` 和可选 `SRNOS_VT02Flush`。不再申请第二个 Serial 句柄，`SRNOS_MessageSend` 的 VT02 目的端不受支持；VT03 `VideoLink` 的周期聚合/遥测格式也不适用于该入口。完整配置、超时/栈合同及示例见 [VT02/VT12 双向接入](VT02VT12.md)。现有纯 RX 应用可继续将 TX 关闭。
+
 ## 源码分发目录调整
 
-Git 分发不包含测试套件、实机验证归档和 BringUp 示例。本地测试及其 BringUp 依赖由忽略规则管理，不参与提交。公开 SDK 的独立构建可选择 Minimal 或 InputMessages；本地专用观测目标由私有测试父工程构建。内核测试适配函数也放在私有测试工程内。生产 `SirinEmbedOS::Platform`、公共 API 和 `sirinos_add_firmware()` 保持原合同。
+Git 分发不包含测试套件、实机验证归档和 BringUp 示例。本地测试及其 BringUp 依赖由忽略规则管理，不参与提交。公开 SDK 的独立构建可选择 Minimal、InputMessages 或 VT02VT12；本地专用观测目标由私有测试父工程构建。内核测试适配函数也放在私有测试工程内。生产 `SirinEmbedOS::Platform`、公共 API 和 `sirinos_add_firmware()` 保持原合同。
 
 已有父项目可在本地私有测试目录存在时复用测试桩；公开父项目不能假设 SDK 的 Git 检出包含这些文件。现场资料和历史 Git 对象不属于公开源码快照；已有私有仓库的历史发布需单独检查。
 

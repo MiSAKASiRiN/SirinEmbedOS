@@ -283,3 +283,6 @@ SRNOS_SerialStatus SRNOS_SerialGetStats(SRNOS_SerialChannel *c,SRNOS_SerialStats
  if(!valid(c)||!out||!task_context())return SRNOS_SERIAL_ARGUMENT;
  taskENTER_CRITICAL();*out=c->stats;taskEXIT_CRITICAL();return SRNOS_SERIAL_OK;
 }
+SRNOS_SerialStatus SRNOS_SerialGetPortStats(SRNOS_SerialPortId port,SRNOS_SerialStats *out) {
+ return SRNOS_SerialGetStats(lookup(port),out);
+}

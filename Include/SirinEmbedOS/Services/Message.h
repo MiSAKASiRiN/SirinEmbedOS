@@ -8,7 +8,8 @@ extern "C" {
 #define SRNOS_MESSAGE_QUEUE_BYTES_MAX 8192u
 enum {
     SRNOS_MESSAGE_HOST=1u, SRNOS_MESSAGE_UART=2u, SRNOS_MESSAGE_UDP=4u,
-    SRNOS_MESSAGE_VIDEO=8u, SRNOS_MESSAGE_LOCAL=16u
+    SRNOS_MESSAGE_VIDEO=8u, SRNOS_MESSAGE_LOCAL=16u,
+    SRNOS_MESSAGE_VT02=32u /* Legacy 0302 RX, raw 30 B, endpoint=Serial port. */
 };
 typedef uint8_t SRNOS_MessageRoute;
 typedef enum {
@@ -19,7 +20,7 @@ typedef enum {
 } SRNOS_MessageResult;
 typedef struct {
     uint8_t transport;
-    uint16_t endpoint; /* UART port ID, UDP local port, otherwise zero. */
+    uint16_t endpoint; /* UART/VT02 Serial port ID, UDP local port, otherwise zero. */
     uint8_t peer_address[4];
     uint16_t peer_port; /* UDP peer, not authentication. Zero otherwise. */
 } SRNOS_MessageOrigin;
@@ -67,6 +68,7 @@ SRNOS_MessageResult SRNOS_MessageGetStats(SRNOS_MessageRoute,SRNOS_MessageStats 
  * HOST route (registers the corresponding TX topic). UART/UDP use SirinLink V2
  * EVENT frames; UART adds COBS + zero delimiter. UDP peer comes from destination.
  * Video uplink carries a V2 frame padded to 300 bytes (max payload 284).
+ * VT02 transport is receive-only; Send returns INVALID for that destination.
  * UDP TX uses ~2.3 KiB of nested stack; budget >=4 KiB task stack and verify.
  * Success only means locally accepted, never peer receipt/execution. */
 SRNOS_MessageResult SRNOS_MessageSend(const SRNOS_MessageOrigin *destination,

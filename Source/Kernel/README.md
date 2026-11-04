@@ -247,3 +247,7 @@ Kernel 在冻结配置后装配 Network worker，并将其启动开销计入 hea
 ## 输入与消息启动顺序
 
 Serial 配置后先准备 Message 传输与内置遥控来源，再调用 bind_channels 注册应用来源、消息订阅及通道路由；Input/Message 注册表随后冻结，SirinLinkPrepare 注册对应 EVENT handler。sirin_link_setup 位于通用注册表冻结之后。配置和注册阶段不使用 RTOS heap；osKernelInitialize 完成 heap_5 注册后，Input 快照/事件环、Message 队列及 UART parser 一次分配，且纳入 SystemHeapBudget。运行期不分配。只有启用物理遥控/消息 UART 时创建 InputIO（47、3072 B、相对1 ms等待），HostComm/Network 沿用既有线程。公共用法见 [Input](../Services/Input/README.md) 和 [Message](../Services/Message/README.md)。
+
+## 旧图传启动配置
+
+`remote.vt02_port` 声明独立 VT02/VT12 图传 RX，要求普通不反相 115200/8N1；与 vt03、裁判、日志及其他串口所有者进行统一冲突检查。VT02 独立启用时同样计入 InputIO 的 4 KiB 保守堆预算；自定义消息路由按 Message 队列预算计入。详见 [VT02](../Services/RemoteControl/VT02/README.md)。

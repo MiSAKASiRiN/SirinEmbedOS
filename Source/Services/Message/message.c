@@ -18,7 +18,7 @@ SRNOS_MessageResult SRNOS_MessageRegister(const SRNOS_MessageRouteConfig *c,SRNO
 {
     if(!startup())return SRNOS_MESSAGE_CONTEXT;
     if(frozen)return SRNOS_MESSAGE_FROZEN;
-    if(!c||!out||!c->transports||(c->transports&~31u)||c->max_payload>SRNOS_MESSAGE_PAYLOAD_MAX||
+    if(!c||!out||!c->transports||(c->transports&~63u)||c->max_payload>SRNOS_MESSAGE_PAYLOAD_MAX||
        ((c->transports&SRNOS_MESSAGE_HOST)&&(c->service==0||c->service==3))||
        c->policy>SRNOS_MESSAGE_LATEST||c->max_age_ms>60000||
        (c->handler?c->depth!=0:(!c->depth||c->depth>16))||
@@ -49,7 +49,7 @@ SRNOS_MessageResult SRNOS_MessageDispatch(const SRNOS_MessageInfo *m,const void 
 {
     if(!runtime())return SRNOS_MESSAGE_CONTEXT;
     if(!m||(!data&&m->length)||m->length>SRNOS_MESSAGE_PAYLOAD_MAX||
-       !m->origin.transport||(m->origin.transport&~31u)||
+       !m->origin.transport||(m->origin.transport&~63u)||
        (m->origin.transport&(m->origin.transport-1u)))return SRNOS_MESSAGE_INVALID;
     unsigned matched=0,accepted=0,full=0;
     for(unsigned i=0;i<count;i++) {

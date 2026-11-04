@@ -4,6 +4,8 @@
 
 初始化次序为 `SerialConfigure` → 系统协议声明 → 应用 `bind_channels` → `SerialStart`。配置在 Configure 时复制并冻结；通道只能在启动前获取和 Claim。已被其他服务 Claim 或启动后的 `GetChannel` 返回空指针。应用保存自己成功 Claim 的句柄；配置但无所有者的端口阻止启动。句柄生命周期与固件相同，没有热切换或重新绑定。
 
+任务上下文可调用 `SRNOS_SerialGetPortStats(port, &stats)` 读取已配置端口的接收字节、溢出、硬件错误、恢复次数与就绪状态，包括已由内置协议占用的端口。它复用 `GetStats` 的短临界区快照，不取得通道句柄、不消费 RX、不改变所有权；未配置端口、空输出或非任务上下文返回 `SRNOS_SERIAL_ARGUMENT`。
+
 当前每通道使用 1024 字节 RX ring、256 字节 circular DMA RX、512 字节 DMA TX staging、4 条最大 512 字节 TX 复制队列，以及两个固定存储的二值信号量（RX 活动、TX 状态）。当前 ARM 配置每个控制块 80 B；通道表含保留 NONE 槽共六项，控制块固定占 960 B，另有句柄/恢复截止时间字段。信号量控制块位于 SDK 私有通道结构，运行时不分配，不使用父任务通知索引。RX HT 保持开启，读取实时 NDTR 而非延迟事件携带的旧位置；记录已经被 IDLE 消费的跨圈，防止随后 TC 重复交付。UART IRQ 和 DMA IRQ 在当前 IOC 中统一为 6，cursor 更新与 ring 写入仍由 FromISR 临界区串行化。超过硬件一圈保留时间的 ISR 延迟无法靠软件恢复丢失字节，需板端压力验证。
 
 所有运行期 I/O 是任务上下文接口。Write 完整复制一包后才报告成功；Flush 等 UART TC，不以 DMA 搬运完成代替线路发送完成。Read/Write/Flush 的毫秒超时覆盖锁等待和操作本身，有限值不得超过 INT32_MAX；公开头直接提供 `SRNOS_NO_WAIT`（0，非阻塞查询/提交）和 `SRNOS_WAIT_FOREVER`（取消调用者等待期限，硬件 watchdog 仍有效）。Transceive 的 queue_timeout_ms 覆盖取锁、前序排空、静默、提交和本次 TC，response_timeout_ms 从 TC 后单独计时。Read 等待输入时释放通道锁，允许正常全双工发送；Transceive 则覆盖排队、发送、TC、响应和超时全过程，防止其他任务插入发送或取走响应。故障恢复使用冻结参数，不改变绑定。

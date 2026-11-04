@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — VT02/VT12 SirinRMT
+
+- 显式注册 `SRNOS_MESSAGE_VT02`/串口 endpoint 时，沿用四实例上限和既有会话/序号检查，将 CRC 有效的 `0302` 30 B 原始载荷解码为独立 Input。串口流重置清除该来源的控制有效性，保留去重状态；默认 VT02 键鼠/原始 Message 合同不变。
+- 主机集成覆盖 A5→Message→SirinRMT 的四轴、ENABLE/DISABLE、CRC、异会话/重复包拒绝、UART 重置与超时；不代表真实图传持续速率或运动验证。
+
 ## Unreleased — 平面速度输入
 
 - 新增 PLANAR_VELOCITY codec 与能力声明，三个分量完整更新、独立时效。通道/速度互斥；每次切换推进 motion_epoch，取消旧 ENABLE；同消费者周期的往返切换及 DISABLE 锁存均可观察。

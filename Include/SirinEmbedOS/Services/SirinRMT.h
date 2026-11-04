@@ -33,7 +33,10 @@ typedef struct {
 bool SRNOS_SirinRMTDecode(const uint8_t *,size_t,SRNOS_SirinRMTPacket *);
 bool SRNOS_SirinRMTEncode(const SRNOS_SirinRMTPacket *,uint8_t out[SRNOS_SIRIN_RMT_BYTES]);
 /* Startup helper, at most four transport instances. Built-in startup config
- * registers sirinrmt.host/uart/udp/video. One source per transport endpoint.
+ * registers sirinrmt.host/uart/udp/video. For VT02/VT12, register explicitly
+ * with SRNOS_MESSAGE_VT02 and the bound Serial endpoint; the raw 30-byte
+ * 0302 payload uses the VT02 custom route instead of service 0x21/type 1.
+ * One source per transport endpoint.
  * The first fresh peer+session owns the source until timeout. Another peer or
  * session cannot merge into it; reconnect waits for timeout. This is ownership,
  * not authentication. Invalid/reordered traffic never renews the lease. */

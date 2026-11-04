@@ -2,17 +2,41 @@
 #include "SirinEmbedOS/Services/RemoteControl/Startup.h"
 #include "SirinEmbedOS/Services/RemoteControl/DR16/DR16.h"
 #include "SirinEmbedOS/Services/RemoteControl/VT03/VT03.h"
+#include "SirinEmbedOS/Services/RemoteControl/VT02/VT02.h"
 #include "SirinEmbedOS/Services/RemoteControl/WBus/WBus.h"
 #include "SirinEmbedOS/Services/SirinRMT.h"
 #include "../VideoLink/video_link_internal.h"
+#include "../VideoLink/codec.h"
 #include "../Message/message_internal.h"
+#include "../Input/input_internal.h"
 #include "cmsis_os2.h"
 #include <string.h>
 static SRNOS_DR16T dr16;
 static SRNOS_VT03T vt03;
+static SRNOS_VT02 vt02;
 static SRNOS_WBus wbus;
-static SRNOS_InputSource dr16_source,vt03_source,wbus_source;
+static SRNOS_InputSource dr16_source,vt03_source,wbus_source,vt02_source;
+static SRNOS_SerialPortId vt02_port;
 static bool configured,started;
+
+SRNOS_SerialStatus SRNOS_VT02Send(uint16_t command,const uint8_t *payload,
+    size_t length,uint8_t sequence,uint32_t timeout_ms)
+{
+    if((!payload&&length)||length>SRNOS_VT02_MAX_PAYLOAD)return SRNOS_SERIAL_ARGUMENT;
+    if(!started||!vt02.channel)return SRNOS_SERIAL_STATE;
+    const SRNOS_SerialConfig *cfg=SRNOS_SerialGetConfig(vt02.channel);
+    if(!cfg||!cfg->tx_enabled)return SRNOS_SERIAL_STATE;
+    uint8_t frame[SRNOS_VT02_MAX_PAYLOAD+9u];
+    const uint8_t empty=0;
+    size_t size=SRNOS_VideoLinkEncode(command,payload?payload:&empty,length,sequence,frame);
+    return SRNOS_SerialWrite(vt02.channel,frame,size,timeout_ms);
+}
+SRNOS_SerialStatus SRNOS_VT02Flush(uint32_t timeout_ms)
+{
+    if(!started||!vt02.channel)return SRNOS_SERIAL_STATE;
+    const SRNOS_SerialConfig *cfg=SRNOS_SerialGetConfig(vt02.channel);
+    return cfg&&cfg->tx_enabled?SRNOS_SerialFlush(vt02.channel,timeout_ms):SRNOS_SERIAL_STATE;
+}
 
 static void dr16_frame(const SRNOS_DR16Dec *d,void *unused)
 {
@@ -38,6 +62,23 @@ static void vt03_frame(const SRNOS_VT03Dec *d,void *unused)
         (uint64_t)!!d->pause<<19|(uint64_t)!!d->fn1<<20|(uint64_t)!!d->fn2<<21|(uint64_t)!!d->trigger<<22;
     f.relative[0]=d->mx;f.relative[1]=d->my;f.relative[2]=d->mz;
     (void)SRNOS_InputPublish(vt03_source,&f,SRNOS_TimeMs());
+}
+static void vt02_frame(const SRNOS_VT02Dec *d,void *unused)
+{
+    (void)unused;
+    SRNOS_InputFrame f={.update_buttons=true,.buttons_valid=0x3ffff,
+        .buttons=d->keyboard | (uint64_t)d->left<<16 | (uint64_t)d->right<<17,
+        .relative_mask=7,.relative={d->mouse_x,d->mouse_y,d->mouse_z}};
+    (void)SRNOS_InputPublish(vt02_source,&f,SRNOS_TimeMs());
+}
+static void vt02_custom(const uint8_t *data,uint8_t seq,void *unused)
+{
+    (void)unused;
+    const SRNOS_MessageInfo info={
+        .origin={.transport=SRNOS_MESSAGE_VT02,.endpoint=(uint16_t)vt02_port},
+        .sequence=seq,.received_ms=SRNOS_TimeMs(),.length=SRNOS_VT02_CUSTOM_LENGTH,
+        .service=SRNOS_VT02_CUSTOM_SERVICE,.type=SRNOS_VT02_CUSTOM_MESSAGE};
+    (void)SRNOS_MessageDispatch(&info,data);
 }
 static void wbus_frame(const SRNOS_WBusDec *d,void *unused)
 {
@@ -82,6 +123,13 @@ int SRNOS_RemoteControlConfigure(const SRNOS_RemoteControlConfig *cfg)
            SRNOS_WBusInit(&wbus,SRNOS_SerialGetChannel(cfg->wbus_port))!=SRNOS_SERIAL_OK)return -1;
         wbus.framer.frame_callback=wbus_frame;
     }
+    if(cfg->vt02_port) {
+        if(!register_physical("vt02",0,0,0x3ffff,cfg->offline_ms,&vt02_source)||
+           SRNOS_VT02Init(&vt02,SRNOS_SerialGetChannel(cfg->vt02_port))!=SRNOS_SERIAL_OK)return -1;
+        vt02.framer.frame_callback=vt02_frame;
+        vt02.framer.custom_callback=vt02_custom;
+        vt02_port=cfg->vt02_port;
+    }
     const char *names[]={"sirinrmt.host","sirinrmt.uart","sirinrmt.udp","sirinrmt.video"};
     for(unsigned i=0;i<4;i++)if(cfg->sirinrmt_transports&(1u<<i)) {
         SRNOS_InputSource source;
@@ -107,6 +155,14 @@ static void remote_step(void *arg)
         (void)SRNOS_WBusPoll(&wbus,&decoded,now);
         if(resets!=wbus.diag.stream_resets)(void)SRNOS_InputInvalidate(wbus_source,SRNOS_INPUT_FRAME_LOST);
     }
+    if(vt02.channel) {
+        uint32_t resets=vt02.diag.stream_resets;
+        (void)SRNOS_VT02Poll(&vt02,NULL,now);
+        if(resets!=vt02.diag.stream_resets) {
+            (void)SRNOS_InputInvalidate(vt02_source,SRNOS_INPUT_FRAME_LOST);
+            SRNOS_SirinRMTInvalidateVT02((uint16_t)vt02_port);
+        }
+    }
     SRNOS_MessagePollUART();SRNOS_VideoLinkStep(now);
 }
 static bool remote_wait(void *arg){(void)arg;osDelay(1);return true;}
@@ -119,7 +175,7 @@ int SRNOS_RemoteControlStart(void)
 {
     if(started||!configured||osKernelGetState()!=osKernelReady)return -1;started=true;
     SRNOS_VideoLinkFreeze();
-    if(!dr16.channel&&!vt03.channel&&!wbus.channel&&!SRNOS_MessageHasUART())return 0;
+    if(!dr16.channel&&!vt03.channel&&!wbus.channel&&!vt02.channel&&!SRNOS_MessageHasUART())return 0;
     const osThreadAttr_t attr={.name="SRNOS_InputIO",.stack_size=3072,.priority=osPriorityHigh7};
     return SRNOS_KernelThreadNew(remote_worker,NULL,&attr)?0:-1;
 }
