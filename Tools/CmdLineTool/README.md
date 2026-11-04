@@ -149,7 +149,7 @@ srneos telemetry capture --cdc1 CDC1_PATH --sources app.speed --hz 50 \
   --duration 10 --save speed.jsonl
 ```
 
-内置流：tasks/system/cycles/bmi/lsm/ins/mag/pressure。SystemMonitor 订阅周期固定 1 s；传感器流按 `--hz` 请求发送周期，不修改传感器 ODR。SOURCE 使用 V2 目录和订阅（5..1000 Hz、5 Hz 步长且不超过 maxHz），当前没有 V1 回退。
+内置流：tasks/system/cycles/bmi/lsm/ins/mag/pressure。`system` 对应 ADC/系统状态报告；SystemMonitor 订阅周期固定 1 s。固件内置传感器流使用固定协议周期：bmi/lsm/ins 为 1 ms，mag 为 10 ms，pressure 为 62.5 ms；CLI 自动按各流周期订阅和退订，不修改传感器 ODR，`--hz` 仅设置 SOURCE 订阅频率。SOURCE 使用 V2 目录和订阅（5..1000 Hz、5 Hz 步长且不超过 maxHz），当前没有 V1 回退。
 
 `list` 枚举 SOURCE 目录并列出主机已知专用流，未订阅流的固件支持状态标 unknown。`read` 等到每个选择项都有一条接收记录，`capture` 按时长保存。SOURCE invalid 值不算可用样本；内置流保留自身状态/有效位，用户仍需按字段判定业务健康，不能将有包等同于传感器健康。
 

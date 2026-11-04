@@ -3,7 +3,7 @@ import struct
 import time
 from .core import Failure, dumps
 from .protocols import catalog, source_sample
-from ._legacy.imu_telemetry import decode_samples
+from ._legacy.imu_telemetry import decode_samples, PERIODS
 from ._legacy.system_monitor import decode as decode_system
 STREAMS={'tasks':1,'system':2,'cycles':3,'bmi':0x100,'lsm':0x101,'ins':0x102,'mag':0x103,'pressure':0x104}
 
@@ -18,7 +18,7 @@ class Collector:
         if any(s not in STREAMS for s in self.streams): raise Failure('unknown_stream','Unknown stream name')
         self.client.handler=self.receive
         for name in self.streams:
-            sid=STREAMS[name]; period=1000000 if sid<0x100 else 1000000//self.hz
+            sid=STREAMS[name]; period=PERIODS.get(sid,1000000)
             self.client.request(4,1,struct.pack('<HIB',sid,period,1)); self.active.append(sid)
         if self.sources:
             if not 5<=self.hz<=1000 or self.hz%5: raise Failure('invalid_rate','SOURCE V2 rate must be 5..1000 in steps of 5')
@@ -67,7 +67,7 @@ class Collector:
     def close(self):
         errors=[]
         for sid in self.active:
-            try: self.client.request(4,1,struct.pack('<HIB',sid,1000000,0),timeout=0.5)
+            try: self.client.request(4,1,struct.pack('<HIB',sid,PERIODS.get(sid,1000000),0),timeout=0.5)
             except Failure as exc: errors.append(exc.record())
         if self.source_ids:
             try: self.client.request(4,0x13,struct.pack('<IB',self.source_hash,len(self.source_ids))+b''.join(struct.pack('<H',i) for i in self.source_ids),timeout=0.5)

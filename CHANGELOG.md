@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — 内置遥测固定周期（2026-11-05）
+
+- CLI 复用既有传感器协议周期表，订阅/退订使用各流固定周期；修复默认 `telemetry read --streams system,ins` 被设备以 INVALID_ARGUMENT 拒绝的问题。`--hz` 继续用于 SOURCE；固件 API、采样频率及控制行为不变。
+- 主机假客户端覆盖全部内置流订阅/退订周期，实板默认 system/ins 订阅、解码及退订通过，USB 只读验证单独记录于父项目；SDK 不携带原始现场数据。
+
+
 ## Unreleased — main 合并 CmdLineTool 与 VT02/VT12（2026-11-05）
 
 - 合并主机 `srneos` CLI 与 main 的 VT02/VT12 UART、SirinRMT 接入；保留双方 API、文档及工具，未新增固件线程或修改生成边界。
