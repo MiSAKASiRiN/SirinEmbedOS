@@ -3,9 +3,11 @@
 ## Unreleased — CAN 时间基准修复
 
 - 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。
-- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 MSwerve Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。
+- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 父项目 Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。
 
 ## Unreleased
+
+- 2026-11-11：Classic 帧/过滤器与 adapter 组帧拒绝非法 ID/flags/字段，不再静默截断；one-shot TTL 拒绝大于 INT32_MAX 的正值。Classic 上下文移除无效 0 号槽，默认 ITCM 占用从 59920 B 降为 47936 B；FD TX 存储仅按冻结的 FD 通道在启动时分配，按真实大小及每块 32 B 裕量纳入启动 heap 预算。每次分配前按同一门槛预检 heap_5 最大空闲块，容量不足先回收本次分配再返回失败，避免不可返回的 malloc-failed hook 抢先中止；保留 malloc 返回空指针的兜底，不发布不完整资源。路由、队列容量、调度及硬件协议不变；Minimal Debug/Release、示例/父项目、公共头编译与 map 核对通过（完整矩阵见根 CHANGELOG），不新增或运行主机测试，混合负载与分配失败行为待验证。
 
 - 2026-10-06：CAN4合并为P1/4KiB单线程，4RX/4TX及半满8RX/1TX，32帧或1ms有界轮次；私有TX步进保留adapter游标/group/TTL，回调在该线程执行；CAN4停止逐唤醒读取CiINT，其旧派生调试字段与tx_complete_events保留但不累计，交付由端到端确认。FD原生采样点与MCP对齐，Classic时序不变。 联合验证结果与未验边界见 [CAN4 板测摘要](CHANGELOG.md#can4-20261006)。
 
@@ -31,7 +33,7 @@
 
 - 2026-09-28：原生 CAN worker 私有文件改为 `native_can_rx.cpp`、`native_can_tx.cpp` 和 `native_can_backend_internal.h`，同步显式装配和主机测试；core/实际 RX worker 回归通过，调度和线协议不变。
 
-- CAN 公共头移除启动/worker/ISR/冻结入口；GetStats 改为任务上下文输出副本，板端 ManagedTasks 测试同步迁移。FDCAN/RS485/Indicators 自维护观测全局统一 SRNOS_ 命名。
+- CAN 公共头移除启动/worker/ISR/冻结入口；GetStats 改为任务上下文输出副本。FDCAN/RS485/Indicators 自维护观测全局统一 SRNOS_ 命名。
 
 - 保留八个 RX/TX worker；原生 RX 有界 32 帧并通知续跑、取消重复 clear，外置 drain 上限后真正 Yield。TX 空配置永久等待，one-shot 按过期点等待，adapter tick/urgent poll 保留 1 ms。主机 core 与真实 RX worker 回归通过，CAN 负载板测待验证。
 
@@ -45,7 +47,7 @@
 
 主机路由/绑定测试及父项目构建通过；CAN1/CAN3 外接物理回环的历史结果与未验范围见下文。
 
-2026-10-12 在 MSwerve 父项目发现并修复 HAL 与 RTOS 约 12 ms 原点差导致的反馈年龄回绕；主机覆盖启动/TTL/重试/超时/回绕，原生 Classic 13 个电机板测通过。CAN4/FD 本轮仅主机验证。
+2026-10-12 在 父项目发现并修复 HAL 与 RTOS 约 12 ms 原点差导致的反馈年龄回绕；主机覆盖启动/TTL/重试/超时/回绕，原生 Classic 13 个电机板测通过。CAN4/FD 本轮仅主机验证。
 
 离线测试覆盖配置互斥、精确 DLC、64 B、模式过滤、错误/超时及实际驱动和 worker 路径；CAN4 寄存器 fake 使用未修改的供应商驱动。2026-10-06 CAN1/3短接已验证80MHz、Classic1M和FD1/2/4/5/8M真实收发；Classic8B、FD8M64B各3k收发60秒及FD5M64B同档10秒通过。该次仅测CAN1/3，CAN4共享SPI结果见本文后续实测边界；CAN2、总线故障与四路/UART混合负载仍待验证。必须按长度、BRS、仲裁/数据速率计算总线占用：64 B、4 Mbit/s 的数据字段在合计 6000 帧/s 时已占 76.8%，尚未计仲裁、CRC、帧间隔、位填充和重传，不能视为达标配置。
 

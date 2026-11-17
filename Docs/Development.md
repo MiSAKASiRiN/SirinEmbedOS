@@ -38,13 +38,17 @@ cmake --build --preset Release -j 8
 python3 Tools/Debug/check_i2c_timing.py
 ```
 
-Minimal 和 InputMessages 可通过 `SIRINEMBEDOS_EXAMPLE` 选择。其余 API 用法示例由父项目按需接入。构建只生成固件，不自动下载；父项目应独立配置和构建，核对公共头隔离、最终 ELF 与资源预算。
+Minimal、InputMessages 和 VT02VT12 可通过 `SIRINEMBEDOS_EXAMPLE` 选择。其余 API 用法示例通过父工程接入，包括 [独立 C 文件的启动任务](../Examples/StartupTask/README.md) 和 [CAN FD](../Examples/CANFD/README.md)。构建只生成固件，不自动下载；父项目应独立配置和构建，核对公共头隔离、最终 ELF 与资源预算。
+
+只做编译验收时，使用独立目录，例如 `cmake -S . -B /tmp/sirinos-minimal-debug -G Ninja -DCMAKE_BUILD_TYPE=Debug`，再执行 `cmake --build /tmp/sirinos-minimal-debug -j 8`；其他配置各用独立目录。临时父项目、公共头编译片段和日志放在仓库外或已忽略目录，不加入 SDK 默认依赖。独立公共头分别用 C11/C++17 编译，父项目仅链接 `SirinEmbedOS::Platform`；编译检查不执行产生的程序，也不证明并发、控制和硬件行为。
 
 Git 分发不包含测试套件、专用实机测试固件或原始验证材料。本地已配置私有测试目录时，可从 SDK 根目录运行 `python3 Tests/run_host_tests.py`；这不是公开检出的必需构建步骤。私有测试源码和 BringUp 依赖必须保持忽略且未跟踪。历史变更记录只说明当时的实现与验证范围。
 
 ## 资源与板端验收
 
 - map 给出静态分配和预留，不能代替 heap 当前/历史最小余量或任务栈水位。常规监控不周期扫栈；专用观测会扰动调度。
+- 固定服务的启动预算由各模块根据栈/队列定义和保守余量提供，Kernel 汇总；Input/Message 的预算还依赖已完成的注册。比较配置时区分注册前预检与冻结前终检。
+- Classic CAN 只保留四个有效 ITCM 上下文；FD 发送缓存仅按冻结为 FD 的通道在启动期分配，属于 CPU 软件队列，不是 DMA 缓冲。默认全 Classic 的静态余量不能外推为启用全部 FD 后的运行堆余量。
 - DMA staging 保持可达 SRAM、对齐和 cache 合同；ITCM/DTCM 不能随意用于 DMA。链接段调整需核对早期清零/复制。
 - 系统启动、设备 READY、有效数据、吞吐、期限和故障恢复分别取证，不将其中一项视作全部验收。
 

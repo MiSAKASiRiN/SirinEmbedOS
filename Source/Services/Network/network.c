@@ -1,6 +1,5 @@
 #include "network_internal.h"
 #include "network_ntp.h"
-#include "../Message/message_internal.h"
 #include "IO/Ethernet/ethernet_internal.h"
 #include "Kernel/thread_internal.h"
 #include "queue.h"
@@ -25,11 +24,28 @@ static bool prepared, initialized, pending;
 static uint32_t next_arp;
 static struct netif interface;
 static struct udp_pcb *ports[SRNOS_UDP_PORT_LIMIT+1];
-static uint16_t message_port;
-bool SRNOS_NetworkBindMessages(uint16_t port)
+static struct {
+    uint16_t port;
+    SRNOS_NetworkDatagramHandler handler;
+    void *user;
+} listener;
+
+uint32_t SRNOS_NetworkHeapBudget(const SRNOS_NetworkConfig *config)
 {
-    if(prepared||message_port||!port)return false;
-    message_port=port;return true;
+    /* Queue storage and lwIP buffers are static; reserve the worker stack plus
+     * its TCB/TLS and allocator overhead, preserving the original 7 KiB total. */
+    return config && config->enabled ? SRNOS_NETWORK_STACK_BYTES + 1024u : 0u;
+}
+
+bool SRNOS_NetworkBindDatagramHandler(uint16_t port,
+    SRNOS_NetworkDatagramHandler handler, void *user)
+{
+    if (prepared || listener.port || !port || !handler || xPortIsInsideInterrupt() ||
+        xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) return false;
+    listener.port = port;
+    listener.handler = handler;
+    listener.user = user;
+    return true;
 }
 static QueueHandle_t tx_queue, rx_queue[SRNOS_UDP_PORT_LIMIT];
 static StaticQueue_t tx_control, rx_control[SRNOS_UDP_PORT_LIMIT];
@@ -64,7 +80,7 @@ bool SRNOS_NetworkGetStatus(SRNOS_NetworkStatus *status)
 }
 static int port_index(uint16_t port)
 {
-    if(message_port&&port==message_port)return SRNOS_UDP_PORT_LIMIT;
+    if(listener.port&&port==listener.port)return SRNOS_UDP_PORT_LIMIT;
     for (unsigned i=0;i<configuration.udp_port_count;++i)
         if (configuration.udp_ports[i]==port) return (int)i;
     return -1;
@@ -154,9 +170,7 @@ static void udp_received(void *argument, struct udp_pcb *pcb, struct pbuf *p,
         pbuf_copy_partial(p,item.datagram.data,p->tot_len,0);
         ++current.udp_received;
         if(index==SRNOS_UDP_PORT_LIMIT) {
-            SRNOS_MessageOrigin origin={.transport=SRNOS_MESSAGE_UDP,.endpoint=message_port,.peer_port=port};
-            memcpy(origin.peer_address,item.datagram.source_address,4);
-            if(SRNOS_MessageReceiveWire(&origin,item.datagram.data,item.datagram.length,item.datagram.received_ms)!=SRNOS_MESSAGE_OK)
+            if(!listener.handler(listener.user,listener.port,&item.datagram))
                 ++current.udp_rx_dropped;
             pbuf_free(p);return;
         }
@@ -198,9 +212,9 @@ static bool initialize(const SRNOS_EthernetStatus *eth)
         if (!ports[i] || udp_bind(ports[i],IP_ADDR_ANY,configuration.udp_ports[i])!=ERR_OK) return false;
         udp_recv(ports[i],udp_received,(void *)(uintptr_t)i);
     }
-    if(message_port) {
+    if(listener.port) {
         ports[SRNOS_UDP_PORT_LIMIT]=udp_new();
-        if(!ports[SRNOS_UDP_PORT_LIMIT]||udp_bind(ports[SRNOS_UDP_PORT_LIMIT],IP_ADDR_ANY,message_port)!=ERR_OK)return false;
+        if(!ports[SRNOS_UDP_PORT_LIMIT]||udp_bind(ports[SRNOS_UDP_PORT_LIMIT],IP_ADDR_ANY,listener.port)!=ERR_OK)return false;
         udp_recv(ports[SRNOS_UDP_PORT_LIMIT],udp_received,(void *)(uintptr_t)SRNOS_UDP_PORT_LIMIT);
     }
     return SRNOS_NTPInitialize(&configuration.ntp,&interface);
@@ -310,9 +324,9 @@ static void entry(void *context)
 bool SRNOS_NetworkPrepare(const SRNOS_NetworkConfig *config)
 {
     if (prepared || !SRNOS_NetworkConfigValid(config)) return false;
-    if(message_port) {
+    if(listener.port) {
         if(!config->enabled)return false;
-        for(unsigned i=0;i<config->udp_port_count;i++)if(config->udp_ports[i]==message_port)return false;
+        for(unsigned i=0;i<config->udp_port_count;i++)if(config->udp_ports[i]==listener.port)return false;
     }
     if (config->enabled && !SRNOS_EthernetClaimNetwork()) return false;
     configuration=*config;
@@ -335,7 +349,7 @@ bool SRNOS_NetworkStart(void)
         rx_queue[i]=xQueueCreateStatic(1,sizeof(rx_item_t),rx_storage[i],&rx_control[i]);
         if (!rx_queue[i]) return false;
     }
-    const osThreadAttr_t attributes={.name="SRNOS_Network",.stack_size=6144,.priority=15};
+    const osThreadAttr_t attributes={.name="SRNOS_Network",.stack_size=SRNOS_NETWORK_STACK_BYTES,.priority=15};
     worker=(TaskHandle_t)SRNOS_KernelThreadNew(entry,NULL,&attributes);
     return worker!=NULL;
 }

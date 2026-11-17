@@ -1,6 +1,9 @@
 #pragma once
 #include "SirinEmbedOS/Services/SystemMonitor.h"
 #include "../../Diagnostics/Runtime/runtime_internal.h"
+#define SRNOS_MONITOR_WORKER_STACK_BYTES 4096u
+#define SRNOS_MONITOR_WORKER_RESERVE_BYTES 1024u
+uint32_t SRNOS_SystemMonitorHeapBudget(bool enabled);
 typedef struct { uint16_t vref, temperature_30, temperature_130; } SRNOS_MonitorCalibration;
 typedef struct { uint64_t cycles, runtime; uint32_t generation; bool valid; } SRNOS_MonitorBaseline;
 void SRNOS_MonitorConvert(SRNOS_MonitorADC *,const uint16_t raw[5],const SRNOS_MonitorCalibration *,uint64_t start,uint64_t end);

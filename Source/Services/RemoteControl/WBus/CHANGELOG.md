@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — 2026-11-11 配置与资源合同
+
+- 提取模块私有纯串口校验供 SystemValidate 与 WBusInit 复用，要求普通 DUPLEX 通道，避免 UART7/RS485 配置预检通过后才在绑定阶段失败。
+- 本轮验证限定为编译，未新增或运行主机测试；未进行实际 W.Bus 输入验证，解码和极性配置行为保持。
+
 ## Unreleased — 内置 Input 的 LOST 策略
 
 - 2026-10-21：内置适配层丢弃单次 LOST 而不刷新 Input 时间戳或 epoch，保留 FAILSAFE 和串口异常失效；独立 W.Bus 解码/计数不变。更新接入说明；实帧适配与独立解码器主机回归覆盖此边界。

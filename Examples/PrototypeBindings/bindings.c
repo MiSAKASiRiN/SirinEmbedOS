@@ -1,8 +1,7 @@
 #include "SirinEmbedOS/Kernel/System.h"
 #include "SirinEmbedOS/Services/Logging/Log.h"
 
-/* Reference: prototype Tasks/Config/SRNOS_UartRouterConfig.h.
- * UART8 is Referee; UART9 is VT03 (not the reverse). No H12H binding.
+/* UART8 is Referee; UART9 is VT03. No H12H binding.
  * The SDK defaults are supplied before this hook; this example changes only
  * connector usage and leaves fixed CAN/IMU bring-up with the SDK. */
 void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)

@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Devices/TL42R/TL42R.h"
+#include "IO/RS485/rs485_internal.h"
 #include "SirinEmbedOS/Core/Array.hpp"
 
 #include <cstring>

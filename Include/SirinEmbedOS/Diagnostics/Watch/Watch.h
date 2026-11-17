@@ -1,6 +1,6 @@
 //
 // Watch.h
-// Debugger-readable watch variables for STM32H7 Frameworks modules.
+// Debugger-readable watch variables for the STM32H7 SDK.
 //
 
 #ifndef SRNOS_DEBUG_WATCH_H

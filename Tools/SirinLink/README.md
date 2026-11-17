@@ -98,7 +98,7 @@ system_monitor.py 订阅任务 0x0001、ADC 0x0002 和循环 0x0003；旧固件�
 
 SystemMonitor SAMPLE 帧使用 kind=2、service=4、message=2；流 ID 位于 payload，循环流 0x0003 不是 message=3。
 
-现有 CLI 用于 IMU/INS/监测接收和保存，不提供参数编辑、身份写入或静态校准触发命令。SOURCE V2、CONFIG 01–0A 是固件接口，不能把协议已实现理解为这些 CLI 已有对应界面。实现上位机时以 [当前协议](../../Docs/SirinLink.md) 和 [存储设计](../../Docs/Storage.md) 为准。
+本目录的 IMU/INS/系统监测脚本用于遥测订阅与采集。要订阅 SOURCE V2 业务变量或读写、保存、恢复业务参数，使用 [srneos CLI](../CmdLineTool/README.md#命令与业务参数)。身份写入和静态校准的固件协议另有权限与执行条件。实现上位机时以 [当前协议](../../Docs/SirinLink.md) 和 [存储设计](../../Docs/Storage.md) 为准。
 
 修改、采集结果与重连验证记录见 [CHANGELOG](CHANGELOG.md)。
 

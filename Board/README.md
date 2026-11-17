@@ -1,6 +1,6 @@
 # 固定板级工程
 
-`OMNICTL2_3.ioc` 为当前 STM32H723 / 2613 的 CubeMX 输入。CubeMX 管理 HAL 初始化、引脚、时钟、DMA/NVIC 与 `Core/`、`Drivers/`、`cmake/` 等生成内容；SDK 自维护 `Support/`、`Linker/`、本目录的 CMake 接入与构建 presets。日常从 SDK 根目录构建。
+本版面向 OmniCtrl 2 Pro Rev.C（2613～2616），固件使用 STM32H723VGH6。仓库以 2613 的 `OMNICTL2_3.ioc` 作为 CubeMX 生成基线。CubeMX 管理 HAL 初始化、引脚、时钟、DMA/NVIC 与 `Core/`、`Drivers/`、`cmake/` 等生成内容；SDK 自维护 `Support/`、`Linker/`、本目录的 CMake 接入与构建 presets。日常从 SDK 根目录构建。
 
 ## CubeMX CLI 生成
 
@@ -17,6 +17,8 @@ python3 Board/generate.py --cubemx /path/to/STM32CubeMX --timeout 300
 内部通过 `subprocess.run` 调用 CubeMX `-q`，不经 shell 拼接命令。临时 `.mx` 使用带引号的 IOC **绝对路径**，再执行 `project generate` 和 `exit`。IOC 使用绝对路径，不依赖进程工作目录；路径错误会使生成失败，即使 `-q` 也可能弹出错误窗口。
 
 退出码和生成 `OK` 均符合预期后，脚本运行 I2C 时序一致性检查。全部通过后，只将 `newlib_lock_glue.c`、`stm32_lock.h`、`cmake/gcc-arm-none-eabi.cmake` 三项旧模板移至本次日志目录的 `unused-generated/`，并保存移除清单；SDK 使用 ST Arm Clang/Picolibc。生成或时序检查失败时保留全部生成文件并返回非零。`--dry-run` 只显示计划，不创建文件或启动 CubeMX；生成后仍需复核差异并构建，脚本不操作板卡或调试会话。
+
+`system_stm32h7xx.h` 中的 `ExitRun0Mode` 在 ST Arm Clang 下使用普通函数声明，GCC 分支保留 `optimize("Os")`。如果 CubeMX 恢复了供应商原有的声明，`generate.py` 会在时序检查通过后补回这一处编译器判断。
 
 `generate.py` 根据当前检出目录生成临时调用脚本。CubeMX 版本以实际执行日志为准。
 

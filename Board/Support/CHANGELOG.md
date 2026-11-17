@@ -22,7 +22,7 @@
 
 - 2026-09-28：修复 HAL normal BDMA 完成后 EN 保留导致 ADC 首轮误隔离；停止 ADC 后显式关闭独占通道并核验，新增真实 READY/EN 行为回归。正常采集及软件故障路径已板测，物理卡死未测。
 
-- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
 
 - 2026-09-28：板级支撑整理为 Support/System、IO、Devices、USB；指示器策略归服务，USB 准备和 MCP 默认配置收拢，蜂鸣器/WS2812 固定硬件宏私有化。保留生成边界及现有时序/调度/内存合同；21 组主机、九个父项目目标、Minimal/Board/EEPROMBringUp 构建通过，未生成/烧录/板测。
 

@@ -150,7 +150,7 @@ bool take_stop_event(void)
 `NO_SYS=1` 不意味着忙循环：所有 lwIP 调用（含 `sys_check_timeouts`）仅发生在
 优先级 15、6 KiB 栈的 Network worker。每轮最多读取四帧、处理一条 UDP 发送，
 随后显式等待 5 ms；Kernel 的 loop period 字段仅用于统计，不能替代等待。
-服务额外保守预算 7 KiB RTOS heap，协议栈使用独立 8 KiB 静态 D1 heap，
+服务私有预算函数复用创建线程的栈常量，额外保守预算保持 7 KiB RTOS heap，协议栈使用独立 8 KiB 静态 D1 heap，
 不向应用堆动态申请内存。队列为共享 TX 两槽 + 一个 worker pending 槽、四端口各
 一个 RX 槽；未配置端口不建立 queue/PCB，固定容量存储仍计入链接预算。
 接收策略共用一个约 1.5 KiB 的 worker 静态快照缓冲，不额外增加每端口完整报文槽，
@@ -172,3 +172,5 @@ ICMP 等栈自产报文可能使用 lwIP 默认的有限 ARP 等待；不承载�
 ## 通用消息端口
 
 `SystemConfig.messages.udp_port` 可额外声明一个专用监听端口，不能与 network.udp_ports 重复。它接收 raw SirinLink V2 EVENT/CRC32 数据报，在 Network worker 内交给 [Message](../Message/README.md) 按服务/类型分发，绕过 raw UDP 的单槽/选择器，避免不同业务互相覆盖。四个 raw UDP 端口仍可同时使用；新增 PCB 使用现有 lwIP heap。该端口不能用 UDPReceive 取数据；MessageSend 的 origin.endpoint 为本地消息端口，peer 为对端地址/端口。应用回调不能从 Network 任务中阻塞或直接调用 lwIP，建议使用 Message 队列。
+
+Network 只保存一个在 Prepare 前绑定、随后冻结的私有系统 datagram 回调，不包含 Message 私有头或解析其协议。Message 的 UDP adapter 将借用的数据报转换为 origin 并执行消息解码；回调在 Network worker、SDK 锁外执行，返回前不保留 payload 指针。该固定绑定不增加公开注册 API、PCB 数量、队列或数据报副本，拒绝结果沿用 udp_rx_dropped 统计。

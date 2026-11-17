@@ -8,6 +8,15 @@
 #define SRNOS_SERIAL_RX_SIZE 1024u
 #define SRNOS_SERIAL_TX_DEPTH 4u
 typedef struct { uint16_t size; uint8_t bytes[SRNOS_SERIAL_MAX_WRITE]; } SRNOS_SerialPacket;
+_Static_assert(SRNOS_SERIAL_TX_DEPTH * sizeof(SRNOS_SerialPacket) + 2u * sizeof(StaticQueue_t) + 64u <=
+    SRNOS_SERIAL_CHANNEL_HEAP_RESERVE_BYTES, "Serial channel heap reserve must cover queue, mutex and allocator overhead");
+uint32_t SRNOS_SerialHeapBudget(size_t channel_count)
+{
+ if(!channel_count)return 0u;
+ if(channel_count>=SRNOS_SERIAL_PORT_COUNT)return UINT32_MAX;
+ return SRNOS_SERIAL_WORKER_STACK_BYTES + SRNOS_SERIAL_WORKER_RESERVE_BYTES +
+     (uint32_t)channel_count * SRNOS_SERIAL_CHANNEL_HEAP_RESERVE_BYTES;
+}
 struct SRNOS_SerialChannel {
  SRNOS_SerialConfig config;
  const void *owner;
@@ -190,7 +199,7 @@ SRNOS_SerialStatus SRNOS_SerialStart(void) {
   c->rx_event=osSemaphoreNew(1,0,&rx_attr);c->tx_event=osSemaphoreNew(1,0,&tx_attr);
   if(!c->gate||!c->tx_queue||!c->rx_event||!c->tx_event)return SRNOS_SERIAL_IO;
  }
- if(any){const osThreadAttr_t attr={.name="SRNOS_Serial",.stack_size=2048,.priority=osPriorityHigh7};
+ if(any){const osThreadAttr_t attr={.name="SRNOS_Serial",.stack_size=SRNOS_SERIAL_WORKER_STACK_BYTES,.priority=osPriorityHigh7};
   worker=SRNOS_KernelThreadNew(serial_worker,NULL,&attr);if(!worker)return SRNOS_SERIAL_IO;}
  return SRNOS_SERIAL_OK;
 }

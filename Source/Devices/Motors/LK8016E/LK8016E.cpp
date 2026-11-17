@@ -71,6 +71,7 @@ LK8016E::LK8016E(uint8_t id)
 
 void LK8016E::set_iq_raw(int16_t iq_raw)
 {
+  const Detail::StateGuard guard;
   cmd_iq_raw_.store(clamp_iq_raw(iq_raw), std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::Torque), std::memory_order_relaxed);
 }
@@ -87,6 +88,7 @@ void LK8016E::set_iq_A(float iq_A)
 
 void LK8016E::set_speed_control_raw(int32_t sc)
 {
+  const Detail::StateGuard guard;
   cmd_speed_raw_.store(sc, std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::Speed), std::memory_order_relaxed);
 }
@@ -99,6 +101,7 @@ void LK8016E::set_speed_dps(float dps)
 
 void LK8016E::set_angle_control_raw(int32_t angle_raw)
 {
+  const Detail::StateGuard guard;
   pos_multi_raw_.store(angle_raw, std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::PosMulti), std::memory_order_relaxed);
 }
@@ -111,6 +114,7 @@ void LK8016E::set_angle_deg(float deg)
 
 void LK8016E::set_angle_with_max_speed_raw(int32_t angle_raw, uint16_t max_dps)
 {
+  const Detail::StateGuard guard;
   pos_multi_raw_.store(angle_raw, std::memory_order_relaxed);
   pos_multi_maxspd_.store(max_dps, std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::PosMultiMaxSpeed), std::memory_order_relaxed);
@@ -124,6 +128,7 @@ void LK8016E::set_angle_deg_max_speed(float deg, float max_dps)
 
 void LK8016E::set_circle_angle_raw(uint32_t angle_raw, uint8_t dir)
 {
+  const Detail::StateGuard guard;
   pos_single_raw_.store(angle_raw, std::memory_order_relaxed);
   pos_single_dir_.store(static_cast<uint8_t>(dir ? 1u : 0u), std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::PosSingle), std::memory_order_relaxed);
@@ -138,6 +143,7 @@ void LK8016E::set_circle_angle_deg(float deg, bool ccw)
 
 void LK8016E::set_circle_angle_raw_max_speed(uint32_t angle_raw, uint8_t dir, uint16_t max_dps)
 {
+  const Detail::StateGuard guard;
   pos_single_raw_.store(angle_raw, std::memory_order_relaxed);
   pos_single_dir_.store(static_cast<uint8_t>(dir ? 1u : 0u), std::memory_order_relaxed);
   pos_single_maxspd_.store(max_dps, std::memory_order_relaxed);
@@ -153,6 +159,7 @@ void LK8016E::set_circle_angle_deg_max_speed(float deg, bool ccw, float max_dps)
 
 void LK8016E::set_inc_angle_raw(int32_t inc_raw)
 {
+  const Detail::StateGuard guard;
   pos_inc_raw_.store(inc_raw, std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::PosInc), std::memory_order_relaxed);
 }
@@ -165,6 +172,7 @@ void LK8016E::set_inc_angle_deg(float deg)
 
 void LK8016E::set_inc_angle_raw_max_speed(int32_t inc_raw, uint16_t max_dps)
 {
+  const Detail::StateGuard guard;
   pos_inc_raw_.store(inc_raw, std::memory_order_relaxed);
   pos_inc_maxspd_.store(max_dps, std::memory_order_relaxed);
   ctrl_mode_.store(static_cast<uint8_t>(LK8016EMode::PosIncMaxSpeed), std::memory_order_relaxed);
@@ -277,10 +285,34 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
 
   *sid = rxId();
 
-  const auto mode = static_cast<LK8016EMode>(ctrl_mode_.load(std::memory_order_relaxed));
+  struct Command {
+    LK8016EMode mode;
+    int16_t iq;
+    int32_t speed, multi;
+    uint16_t multi_speed;
+    uint32_t single;
+    uint8_t direction;
+    uint16_t single_speed;
+    int32_t increment;
+    uint16_t increment_speed;
+  } command;
+  {
+    const Detail::StateGuard guard;
+    command = {static_cast<LK8016EMode>(ctrl_mode_.load(std::memory_order_relaxed)),
+      cmd_iq_raw_.load(std::memory_order_relaxed),
+      cmd_speed_raw_.load(std::memory_order_relaxed),
+      pos_multi_raw_.load(std::memory_order_relaxed),
+      pos_multi_maxspd_.load(std::memory_order_relaxed),
+      pos_single_raw_.load(std::memory_order_relaxed),
+      pos_single_dir_.load(std::memory_order_relaxed),
+      pos_single_maxspd_.load(std::memory_order_relaxed),
+      pos_inc_raw_.load(std::memory_order_relaxed),
+      pos_inc_maxspd_.load(std::memory_order_relaxed)};
+  }
+  const auto mode = command.mode;
   switch (mode) {
     case LK8016EMode::Speed: {
-      const int32_t sc = cmd_speed_raw_.load(std::memory_order_relaxed);
+      const int32_t sc = command.speed;
       out[0] = 0xA2;
       out[1] = 0;
       out[2] = 0;
@@ -289,7 +321,7 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       return true;
     }
     case LK8016EMode::PosMulti: {
-      const int32_t ang = pos_multi_raw_.load(std::memory_order_relaxed);
+      const int32_t ang = command.multi;
       out[0] = 0xA3;
       out[1] = 0;
       out[2] = 0;
@@ -298,8 +330,8 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       return true;
     }
     case LK8016EMode::PosMultiMaxSpeed: {
-      const int32_t ang = pos_multi_raw_.load(std::memory_order_relaxed);
-      const uint16_t ms = pos_multi_maxspd_.load(std::memory_order_relaxed);
+      const int32_t ang = command.multi;
+      const uint16_t ms = command.multi_speed;
       out[0] = 0xA4;
       out[1] = 0;
       wr_le_u16(&out[2], ms);
@@ -307,8 +339,8 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       return true;
     }
     case LK8016EMode::PosSingle: {
-      const uint32_t ang = pos_single_raw_.load(std::memory_order_relaxed);
-      const uint8_t dir = pos_single_dir_.load(std::memory_order_relaxed);
+      const uint32_t ang = command.single;
+      const uint8_t dir = command.direction;
       out[0] = 0xA5;
       out[1] = dir;
       out[2] = 0;
@@ -317,9 +349,9 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       return true;
     }
     case LK8016EMode::PosSingleMaxSpeed: {
-      const uint32_t ang = pos_single_raw_.load(std::memory_order_relaxed);
-      const uint8_t dir = pos_single_dir_.load(std::memory_order_relaxed);
-      const uint16_t ms = pos_single_maxspd_.load(std::memory_order_relaxed);
+      const uint32_t ang = command.single;
+      const uint8_t dir = command.direction;
+      const uint16_t ms = command.single_speed;
       out[0] = 0xA6;
       out[1] = dir;
       wr_le_u16(&out[2], ms);
@@ -327,7 +359,7 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       return true;
     }
     case LK8016EMode::PosInc: {
-      const int32_t ang = pos_inc_raw_.load(std::memory_order_relaxed);
+      const int32_t ang = command.increment;
       out[0] = 0xA7;
       out[1] = 0;
       out[2] = 0;
@@ -336,8 +368,8 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       return true;
     }
     case LK8016EMode::PosIncMaxSpeed: {
-      const int32_t ang = pos_inc_raw_.load(std::memory_order_relaxed);
-      const uint16_t ms = pos_inc_maxspd_.load(std::memory_order_relaxed);
+      const int32_t ang = command.increment;
+      const uint16_t ms = command.increment_speed;
       out[0] = 0xA8;
       out[1] = 0;
       // Protocol text may mention uint32, but the frame only carries 2 bytes at data[2..3].
@@ -350,7 +382,7 @@ bool LK8016E::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
       break;
   }
 
-  const int16_t iq = clamp_iq_raw(cmd_iq_raw_.load(std::memory_order_relaxed));
+  const int16_t iq = clamp_iq_raw(command.iq);
   out[0] = 0xA1;
   out[1] = 0;
   out[2] = 0;

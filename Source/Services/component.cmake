@@ -1,4 +1,4 @@
-# Explicit service sources: no source-tree scan and no prototype dependencies.
+# Explicit service source list.
 get_filename_component(_srnos_services_root "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 set(_srnos_usb "${_srnos_services_root}/ThirdParty/USBDevice")
 set(_srnos_usb_glue "${CMAKE_CURRENT_LIST_DIR}/USB")

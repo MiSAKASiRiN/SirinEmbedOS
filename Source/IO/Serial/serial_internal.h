@@ -1,6 +1,10 @@
 #pragma once
 #include "SirinEmbedOS/IO/Serial/Serial.h"
 #define SRNOS_SERIAL_RX_DMA_SIZE 256u
+#define SRNOS_SERIAL_WORKER_STACK_BYTES 2048u
+#define SRNOS_SERIAL_WORKER_RESERVE_BYTES 1024u
+#define SRNOS_SERIAL_CHANNEL_HEAP_RESERVE_BYTES 2560u
+uint32_t SRNOS_SerialHeapBudget(size_t channel_count);
 /* Board owns DMA buffers and HAL; callbacks provide already coherent spans. */
 const SRNOS_SerialConfig *SRNOS_SerialBoardConfig(SRNOS_SerialPortId);
 int SRNOS_SerialBoardIsInISR(void);

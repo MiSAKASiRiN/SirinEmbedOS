@@ -4,7 +4,11 @@
 
 ## 启用与注册
 
+只读取摇杆、档位和键鼠时，可按 [VT03/VT13 接收示例](../RemoteControl/README.md#vt03vt13-接入) 配置 RX。下面的设置用于在同一链路上收发业务数据。
+
 在 `SRNOS_ApplicationConfigure` 中配置 VT03 通道为 921600/8N1、RX/TX 全双工，设置 `config->remote.vt03_port` 和 `config->remote.video_link_enabled=true`。默认关闭。在线路上连接 MCU TX → 接收机 RX、接收机 TX → MCU RX 及共地。
+
+VT03 的基础串口格式与 VideoLink 的 RX/TX 全双工要求分别由模块纯校验函数维护，系统预检和实际绑定复用这些规则；不额外创建串口所有者或发送线程。
 
 在 `SRNOS_ApplicationConfigure`（或静态初始化）中注册 Telemetry 字段，早于 SirinLink 准备时冻结目录。在稍后的 `config->bind_channels` 回调中绑定图传路由，此时 Serial/RemoteControl 已准备好，VideoLink 路由尚未冻结：
 
@@ -57,7 +61,7 @@ static bool bind_telemetry(void *user) {
 
 描述从偏移 16 开始：`id:u16, type:u8, name_length:u8, unit_length:u8, reserved:u8, period_ms:u16, max_age_ms:u32`；偏移 28 后紧跟名称和单位 UTF-8 字节，不附 NUL。名称 1..63 字节、单位 0..15 字节。接收端按 ID 合并描述与样本。
 
-`0311` 保留请求为 30 字节：`SRVL`、版本 1、操作码（`0x80` 请求目录，`0x81` Ping）、两个零字节、`request_id:u32`、18 字节调用方内容。ACK 偏移 16..45 原样回传完整 30 字节，供端到端匹配；操作 `0x80` 同时重新安排目录。其他请求交给 FIFO，不作为运动命令。
+`0311` 保留请求为 30 字节：`SRVL`、版本 1、操作码（`0x80` 请求目录，`0x81` Ping）、两个零字节、`request_id:u32`、18 字节调用方内容。ACK 偏移 16..45 原样回传完整 30 字节，供端到端匹配；操作 `0x80` 同时重新安排目录。其余载荷按 SRMT 或 SM 格式解码，并按 service/type 分发至已注册的 Message 路由。消费方式由该路由选择 FIFO、LATEST 或回调；格式无效、无匹配路由或分发失败会计入丢弃。
 
 无认证、加密或可靠事务语义；有副作用的业务命令需父项目另行定义权限、时效和幂等性。当前服务只提供数据通路。
 

@@ -91,7 +91,11 @@ typedef struct {
 void SRNOS_SystemConfigDefaults(SRNOS_SystemConfig *config);
 /* Conservative kernel heap reservation (bytes), including fixed workers,
  * optional service queues, fixed application object pool, lifecycle/statistics
- * storage and allocation overhead. Runtime pool exhaustion is recoverable. */
+ * storage and allocation overhead. Includes the CURRENT Input/Message registry,
+ * so estimates made before binding/registration are incomplete. Startup checks
+ * again after registration and before freeze. Static/DMA sections remain a
+ * separate link-map constraint; a budget is not measured free heap. Runtime
+ * pool exhaustion is recoverable. */
 uint32_t SRNOS_SystemHeapBudget(const SRNOS_SystemConfig *config);
 SRNOS_SystemResult SRNOS_SystemValidate(const SRNOS_SystemConfig *config);
 bool SRNOS_SystemConfigurationFrozen(void);

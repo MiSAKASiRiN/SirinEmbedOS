@@ -19,12 +19,19 @@
 | `SRNOS_CANFDExampleRxCount` / `LastRx` | RX worker 更新的接收计数和最后帧，包含实际 BRS/ESI；仅供调试器观察，不是跨任务一致快照 API。 |
 | `SRNOS_CANFDExamplePostAttempted` / `PostResult` | 可选单帧发送是否尝试以及软件入队结果。 |
 
-## 可选单帧发送
+## 接入父项目
 
-父项目可对示例目标添加：
+在父项目的 `add_subdirectory(SirinEmbedOS)` 后加入以下目标，默认只接收：
 
 ```cmake
-sirinos_add_firmware(CANFDExample "${SDK_DIR}/Examples/CANFD/app_main.c")
+sirinos_add_firmware(CANFDExample SirinEmbedOS/Examples/CANFD/app_main.c)
+```
+
+## 可选单帧发送
+
+确需向对端发送一次测试帧时，在上述目标之后添加：
+
+```cmake
 target_compile_definitions(CANFDExample PRIVATE SRNOS_CANFD_EXAMPLE_SEND_ONCE=1)
 ```
 

@@ -124,7 +124,11 @@ typedef struct
  * TransferAsync/TransferDMA explicitly use the default 5 ms queue limit.
  * Expiry then waits for cancellation acknowledgement before returning; this
  * cleanup can extend the elapsed call time. RX is never released while a
- * request may still copy into it. No direct DMA or external bus lock entry. */
+ * request may still copy into it. Caller deadline cancellation returns TIMEOUT;
+ * explicit SPICancel returns CANCELLED to the request's completion recipient.
+ * The first cancellation cause recorded before result publication wins;
+ * cancellation and publication share one guard. A published result is retained.
+ * No direct DMA or external bus lock entry. */
 SRNOS_SPIStatus SRNOS_SPICancel(SRNOS_SPIDevice *dev);
 void SRNOS_SPIGetStatistics(const SRNOS_SPIDevice *, SRNOS_SPIStatistics *);
 

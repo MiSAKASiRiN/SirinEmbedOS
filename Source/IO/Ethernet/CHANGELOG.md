@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — 2026-11-11 配置与资源合同
+
+- worker 创建与模块私有启动预算共用 4096 B 栈常量，保持启用时 5 KiB 预留；静态 D1 队列、D2 DMA 区、线程数和优先级保持。
+- 本轮验证限定为编译，未新增或运行主机测试，未进行以太网板端验证。
+
 ## Unreleased — 静态 IPv4
 
 - 2026-10-14：固定 lwIP 2.2.1 / IPv4+ARP+UDP+ICMP，默认 IP 192.168.1.50/24；网络、可选网关和 UDP 端口由上层启动配置冻结。Network 单线程持有协议栈和二层收发，不改变 MCO/RMII/DMA/IRQ。新增 6 KiB 栈、7 KiB heap 预算及约 22 KiB 静态 D1；明确排队期限、link epoch 和原始接口所有权。主机/构建及父项目板测记录见 Network 文档。

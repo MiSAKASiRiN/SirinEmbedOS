@@ -44,7 +44,7 @@ TX 入队与完成通知立即唤醒，无 adapter 和排队项时永久阻塞�
 
 Classic 每路固定预留 64 个 adapter 槽和 64 个 RX 路由槽；原始订阅与 adapter 共用 RX 槽。注册只占用已有槽位，不按协议数追加 heap；设备对象、应用缓存及扩大编译期容量另占 RAM。应检查 Attach/Subscribe 返回值，不能把固定上限当成所有注册一定成功。
 
-Classic CAN Router 的 `s_ctx`（默认 59920 B，包含通道路由、adapter、one-shot 队列、group shadow、发送暂存与统计）通过 `SRNOS_ITCM_BSS` 放入 ITCM；SDK 在 ApplicationConfigure/总线注册之前清零。禁止全局构造中访问该专用状态。FD 的四路上下文固定放在普通 D1 BSS（默认合计 23312 B），每路 32 个订阅和 64 个 TX 槽即使配置 Classic 也预留，不从 heap 分配。Classic 使用七个 worker（见上表），原生 RX 每轮预算为 32 帧，每次仅搬运 4 帧以留出 FD 回调栈空间。原生 RX ring 仍在 DTCM，SPI/DMA staging 仍在可达 SRAM，软件上下文不是 DMA 缓冲。
+Classic CAN Router 的 `s_ctx` 只保存四个有效通道（默认 47936 B，包含通道路由、adapter、one-shot 队列、group shadow、发送暂存与统计），通道 1..4 映射到索引 0..3，通过 `SRNOS_ITCM_BSS` 放入 ITCM；SDK 在 ApplicationConfigure/总线注册之前清零。禁止全局构造中访问该专用状态。FD 每路 32 个订阅、统计与 backend 元数据保留在普通 D1 BSS，支持 heap 建立前的配置注册。64 个 TX 槽及其索引仅为冻结成 FD 的通道在 SDK 启动阶段各分配一块 heap_5 存储；Classic 通道不占 FD TX 存储。预算按实际私有存储大小加每次分配 32 B 裕量计入 `SRNOS_SystemHeapBudget()`；每次分配前以同一预算检查 heap_5 最大空闲块。此检查仅在 heap 已建立、调度未启动且 ISR 禁止分配时执行；32 B 覆盖当前 8 B 块头、8 B 对齐及不拆分的尾部余量。容量不足时先回收本次已分配块再阻止继续启动，避免不可返回的 malloc-failed hook 先于清理触发；全部分配成功才发布就绪。成功分配存续至固件结束，收发路径不再分配。Classic 使用七个 worker（见上表），原生 RX 每轮预算为 32 帧，每次仅搬运 4 帧以留出 FD 回调栈空间。原生 RX ring 仍在 DTCM，SPI/DMA staging 仍在可达 SRAM，软件上下文不是 DMA 缓冲。
 
 ## 调度与恢复
 
@@ -87,6 +87,6 @@ int register_status_receiver(void) {
 }
 ```
 
-Classic 任务侧一次性发送使用 `SRNOS_CANRouterPostOneshot()`，返回成功只表示复制入队；发送完成和外部 ACK 需要相应观测。电机 adapter 示例见 [Motors](../../Devices/Motors/README.md)，FD 完整接入见 [CANFD 示例](../../../Examples/CANFD/README.md)。业务使用同一 SDK 毫秒时钟，按新鲜度判断反馈。
+Classic 任务侧一次性发送使用 `SRNOS_CANRouterPostOneshot()`，返回成功只表示复制入队；发送完成和外部 ACK 需要相应观测。 帧与过滤器 flags 仅允许 EXT，标准 ID 不超过 0x7ff、扩展 ID 不超过 0x1fffffff；帧 DLC 为 0..8，不支持 RTR。非法 ID/flags 返回参数错误，不截断为另一个目标。one-shot 的 TTL=0 使用默认 20 ms，正值限于 1..INT32_MAX；只约束软件等待，不撤回已经开始的硬件提交。adapter 原始帧遵守同样校验，组帧还要求 slot 0..3 和明确 BE/LE endian，非法项以 DROPPED 回报。电机 adapter 示例见 [Motors](../../Devices/Motors/README.md)，FD 完整接入见 [CANFD 示例](../../../Examples/CANFD/README.md)。业务使用同一 SDK 毫秒时钟，按新鲜度判断反馈。
 
 吞吐评估须按实际 ID、长度、BRS、仲裁/数据速率、填充和重传计算占用；通道合计 3 kHz 不表示支持 333 µs adapter 周期。四路并发能力不能由单路测试推导。增加容量后重新检查 map，ITCM 超量会链接失败，不会静默回落到 D1。

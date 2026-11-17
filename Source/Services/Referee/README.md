@@ -2,6 +2,8 @@
 
 公开入口为 `SirinEmbedOS/Services/Referee/referee.h`；`UI/` 提供编码，`Transmitter/RefereeTransmitter.h` 提供发送。父项目在启动配置声明 Serial 通道和 `referee_port`，使用 [PrototypeBindings](../../../Examples/PrototypeBindings/README.md) 的配置方式；SDK 负责绑定、初始化与接收 worker，应用不重复操作 UART 或调用 Feed/Poll。
 
+裁判通道要求 115200/8N1，并同时启用 RX/TX；系统配置预检和 `SRNOS_RefereeBindChannel` 共用校验。worker 使用 3072 B 栈，模块启动预算为 4 KiB，栈与预算常量一起维护。
+
 ## 读取示例
 
 ```c

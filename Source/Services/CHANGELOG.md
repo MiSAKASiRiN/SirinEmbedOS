@@ -24,6 +24,6 @@
 
 - 2026-09-28：服务统一接入托管循环与 SRNOS_ 命名，保持行为与等待；新增循环快照与遥测。验证范围为主机与构建；本次未烧录，时序与开销仍待板测。
 
-- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
 
 - 2026-09-28：新增 Indicators 服务归属，USB 服务通过 Support 准备硬件；现有 API、调度和重试语义保持。21 组主机测试及固件集成验证通过，未板测。

@@ -111,11 +111,15 @@ bool SRNOS_SystemMonitorPrepare(bool enable)
     state.adc.state=enable?SRNOS_MONITOR_ADC_STARTING:SRNOS_MONITOR_ADC_DISABLED;
     SRNOS_MonitorPublish(&state); return true;
 }
+uint32_t SRNOS_SystemMonitorHeapBudget(bool enabled)
+{
+    return enabled ? SRNOS_MONITOR_WORKER_STACK_BYTES + SRNOS_MONITOR_WORKER_RESERVE_BYTES : 0u;
+}
 bool SRNOS_SystemMonitorStart(void)
 {
     if(!prepared || started || osKernelGetState()!=osKernelReady) return false;
     if(enabled) {
-        const osThreadAttr_t attr={.name="SRNOS_Monitor",.stack_size=4096,.priority=osPriorityLow};
+        const osThreadAttr_t attr={.name="SRNOS_Monitor",.stack_size=SRNOS_MONITOR_WORKER_STACK_BYTES,.priority=osPriorityLow};
         if(!SRNOS_KernelThreadNew(worker,NULL,&attr)) return false;
     }
     started=true; return true;

@@ -1,4 +1,5 @@
 #include "thread_internal.h"
+#include "thread_config.h"
 #include "SirinEmbedOS/Config.h"
 #include "SirinEmbedOS/Diagnostics/Time/Time.h"
 #include "cycle_internal.h"
@@ -11,6 +12,8 @@
 #define SRNOS_THREAD_CONTROL_STOP 4u
 #define SRNOS_THREAD_FLAGS_MASK 0x7fffffffu
 #define SRNOS_THREAD_EXIT_BIT 1u
+#define SRNOS_THREAD_REGISTRY_HEAP_RESERVE_BYTES 8192u
+#define SRNOS_THREAD_CYCLE_HEAP_RESERVE_BYTES 8192u
 
 typedef struct {
     StaticTask_t tcb;
@@ -32,11 +35,16 @@ typedef struct {
     EventGroupHandle_t exited;
 } thread_record_t;
 static thread_record_t *records;
-_Static_assert(sizeof(void *)!=4 || sizeof(thread_record_t)*SRNOS_THREAD_RECORDS<=8192, "update registry startup budget");
+_Static_assert(sizeof(void *)!=4 || sizeof(thread_record_t)*SRNOS_THREAD_RECORDS<=SRNOS_THREAD_REGISTRY_HEAP_RESERVE_BYTES, "update registry startup budget");
 static unsigned app_count;
 static bool prepared,applications_ready;
 extern bool SRNOS_KernelPoolPrepare(void);
 extern void SRNOS_KernelPoolStatistics(SRNOS_KernelResources *);
+uint32_t SRNOS_KernelThreadHeapBudget(bool cycle_statistics)
+{
+    return SRNOS_THREAD_REGISTRY_HEAP_RESERVE_BYTES + SRNOS_APP_OBJECT_POOL_BYTES +
+        (cycle_statistics ? SRNOS_THREAD_CYCLE_HEAP_RESERVE_BYTES : 0u);
+}
 static SRNOS_Thread token(thread_record_t *r) {return ((uint64_t)r->generation<<32)|(uint32_t)(r-records+1);}
 static thread_record_t *lookup(SRNOS_Thread h)
 {

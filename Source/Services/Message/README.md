@@ -38,3 +38,5 @@ MessageSend 复制提交，OK 只代表本机队列接受，不代表对端收�
 UART parser 复用优先级 47、3072 B 栈的 InputIO，每轮最多读取 8×128 B；100 ms 不完整帧超时、超长帧、Serial 错误/溢出后丢弃到零边界重新同步。HostComm 与 Network 使用既有线程；UDP 专用监听复用 Network，每包直接分发，避开原始 UDP 的单槽控制选择器。四个 raw UDP 端口仍可用，专用消息端口是额外一个 PCB，使用现有 lwIP heap。队列不增加 worker；业务任务通过 Receive 消费。
 
 完整示例见 [InputMessages](../../../Examples/InputMessages/README.md)，输入协议见 [Input/SirinRMT](../Input/README.md)。
+
+UDP adapter 在启动时绑定 Network 的唯一私有系统 datagram 回调；Network 只交付已完成来源/长度检查的借用数据报，Message 负责 origin 和 V2 解码。绑定在 Network Prepare 时冻结，运行期不重绑；四个 raw UDP 端口及独立系统端口的容量保持。UART 的完整 8N1 全双工条件由同一个私有校验函数供 SystemValidate 与 Prepare 使用，校验通过不代替后续资源占用检查。

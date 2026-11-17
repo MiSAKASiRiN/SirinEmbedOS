@@ -29,6 +29,14 @@ typedef struct {
     void *user;
 } SRNOS_SirinLinkCoreConfig;
 
+/* A frozen stream owns this gate for the firmware lifetime. Its owner updates
+ * both fields under the same lock as the link; publishers capture a generation
+ * before encoding. The guarded call borrows the gate only until it returns. */
+typedef struct {
+    uint64_t generation;
+    bool enabled;
+} SRNOS_SirinLinkCorePublishGate;
+
 typedef struct {
     uint8_t service;
     uint8_t message;
@@ -173,6 +181,11 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkCoreSendResponse(SRNOS_SirinLinkContext *li
 SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublishEx(SRNOS_SirinLinkContext *, uint8_t service, uint8_t message,
     uint16_t key, uint32_t sequence, const uint8_t *payload, size_t length,
     SRNOS_SirinLinkPolicy policy, SRNOS_SirinLinkDeliveryFn done, void *user, uint32_t tag);
+SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublishGuarded(SRNOS_SirinLinkContext *,
+    uint8_t service, uint8_t message, uint16_t key, uint32_t sequence,
+    const uint8_t *payload, size_t length, SRNOS_SirinLinkPolicy policy,
+    SRNOS_SirinLinkDeliveryFn done, void *user, uint32_t tag,
+    const SRNOS_SirinLinkCorePublishGate *gate, uint64_t generation);
 size_t SRNOS_SirinLinkCoreDiscardStream(SRNOS_SirinLinkContext *, uint8_t service, uint8_t message, uint16_t key);
 /* In-flight memory remains owned by transport until on_tx_complete. */
 void SRNOS_SirinLinkCoreResetSession(SRNOS_SirinLinkContext *);

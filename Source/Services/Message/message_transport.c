@@ -19,17 +19,38 @@ static SRNOS_MessageTransportConfig config;
 static SRNOS_SerialChannel *uart;
 static uart_state *rx;
 static bool prepared,started;
+
+bool SRNOS_MessageSerialConfigValid(const SRNOS_SerialConfig *serial)
+{
+    return serial && serial->rx_enabled && serial->tx_enabled &&
+        serial->mode == SRNOS_SERIAL_DUPLEX && serial->data_bits == 8 &&
+        serial->stop_bits == 1 && serial->parity == SRNOS_SERIAL_PARITY_NONE;
+}
+
+static bool receive_datagram(void *user, uint16_t local_port,
+    const SRNOS_UDPDatagram *datagram)
+{
+    (void)user;
+    SRNOS_MessageOrigin origin = {
+        .transport = SRNOS_MESSAGE_UDP,
+        .endpoint = local_port,
+        .peer_port = datagram->source_port
+    };
+    memcpy(origin.peer_address, datagram->source_address, sizeof(origin.peer_address));
+    return SRNOS_MessageReceiveWire(&origin, datagram->data, datagram->length,
+        datagram->received_ms) == SRNOS_MESSAGE_OK;
+}
+
 bool SRNOS_MessageTransportPrepare(const SRNOS_MessageTransportConfig *c)
 {
     if(!c||prepared||xPortIsInsideInterrupt()||xTaskGetSchedulerState()!=taskSCHEDULER_NOT_STARTED)return false;
     if(c->uart_port) {
         uart=SRNOS_SerialGetChannel(c->uart_port);
         const SRNOS_SerialConfig *s=SRNOS_SerialGetConfig(uart);
-        if(!s||!s->rx_enabled||!s->tx_enabled||s->mode!=SRNOS_SERIAL_DUPLEX||
-           s->data_bits!=8||s->stop_bits!=1||s->parity!=SRNOS_SERIAL_PARITY_NONE||
+        if(!SRNOS_MessageSerialConfigValid(s)||
            SRNOS_SerialClaim(uart,&config)!=SRNOS_SERIAL_OK)return false;
     }
-    if(c->udp_port&&!SRNOS_NetworkBindMessages(c->udp_port))return false;
+    if(c->udp_port&&!SRNOS_NetworkBindDatagramHandler(c->udp_port,receive_datagram,NULL))return false;
     config=*c;prepared=true;return true;
 }
 uint32_t SRNOS_MessageTransportHeapBudget(void) {return uart?sizeof(uart_state)+32u:0;}

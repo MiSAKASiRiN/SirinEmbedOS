@@ -45,7 +45,7 @@
 - 公开函数与类型：Include/SirinEmbedOS；不得包含 Support 私有头。固定硬件宏从公共头移除，不保留旧路径或应用覆盖入口。
 - 每个新增实现登记显式构建清单；修改行为、接口或所有权时同步 README/CHANGELOG 和对应验证。
 
-完整边界审查见 [BoardSupport](../../Docs/BoardSupport.md)，历史文件对应见 [迁移映射](../../Docs/Migration/board-support-relocations.json)。
+完整边界审查见 [BoardSupport](../../Docs/BoardSupport.md)。
 
 ## I2C4 Fast mode
 

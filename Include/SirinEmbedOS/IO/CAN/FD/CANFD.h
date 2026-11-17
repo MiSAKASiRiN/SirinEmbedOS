@@ -53,7 +53,9 @@ SRNOS_CANFDResult SRNOS_CANFDSubscribeRaw(SRNOS_CANChannel channel,
     SRNOS_CANRxFilter filter, SRNOS_CANFDRxHandler callback, void *user);
 SRNOS_CANFDResult SRNOS_CANFDUnsubscribeRaw(SRNOS_CANChannel channel,
     SRNOS_CANRxFilter filter, SRNOS_CANFDRxHandler callback, void *user);
-/* Task context only, after freeze/resources ready. Copies the frame; OK means
+/* Each frozen FD channel reserves 64 TX slots from the SDK heap at startup;
+ * Classic channels allocate none. No allocation occurs when posting frames.
+ * Task context only, after freeze/resources ready. Copies the frame; OK means
  * queued, not delivered. Lower numeric priority wins; FIFO among equal values.
  * ttl_ms=0 selects 20 ms, otherwise 1..INT32_MAX; expiry never extends on retry.
  * Queue deadlines use SRNOS_TimeMs(), including before backend binding.

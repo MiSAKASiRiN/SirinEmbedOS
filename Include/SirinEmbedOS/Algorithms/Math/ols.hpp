@@ -14,11 +14,10 @@ class OlsWindow {
 public:
     void reset() noexcept
     {
-        times_.fill(0.0f);
+        intervals_.fill(0.0f);
         values_.fill(0.0f);
         count_ = 0U;
         next_ = 0U;
-        time_s_ = 0.0f;
     }
 
     bool push(float value, float dt_s) noexcept
@@ -26,10 +25,8 @@ public:
         if (!std::isfinite(value) || !std::isfinite(dt_s) || dt_s <= 0.0f) {
             return false;
         }
-        if (count_ != 0U) {
-            time_s_ += dt_s;
-        }
-        times_[next_] = time_s_;
+        // Store only the interval ending at this sample. No uptime accumulates.
+        intervals_[next_] = dt_s;
         values_[next_] = value;
         next_ = (next_ + 1U) % Window;
         if (count_ < Window) {
@@ -61,18 +58,26 @@ public:
         }
         float sum_t = 0.0f;
         float sum_y = 0.0f;
+        float relative_time = 0.0f;
         for (std::size_t i = 0U; i < count_; ++i) {
             const std::size_t index = physicalIndex(i);
-            sum_t += times_[index];
+            if (i != 0U) {
+                relative_time += intervals_[index];
+            }
+            sum_t += relative_time;
             sum_y += values_[index];
         }
         const float mean_t = sum_t / static_cast<float>(count_);
         const float mean_y = sum_y / static_cast<float>(count_);
         float covariance = 0.0f;
         float variance = 0.0f;
+        relative_time = 0.0f;
         for (std::size_t i = 0U; i < count_; ++i) {
             const std::size_t index = physicalIndex(i);
-            const float centered_t = times_[index] - mean_t;
+            if (i != 0U) {
+                relative_time += intervals_[index];
+            }
+            const float centered_t = relative_time - mean_t;
             covariance += centered_t * (values_[index] - mean_y);
             variance += centered_t * centered_t;
         }
@@ -86,11 +91,10 @@ private:
         return (oldest + chronological_index) % Window;
     }
 
-    std::array<float, Window> times_ {};
+    std::array<float, Window> intervals_ {};
     std::array<float, Window> values_ {};
     std::size_t count_ {0U};
     std::size_t next_ {0U};
-    float time_s_ {0.0f};
 };
 
 } // namespace SRNOS::Math

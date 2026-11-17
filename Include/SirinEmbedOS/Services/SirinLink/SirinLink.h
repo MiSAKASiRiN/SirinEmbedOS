@@ -114,6 +114,11 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkRegisterTelemetry(
 SRNOS_SirinLinkResult SRNOS_SirinLinkRegisterControl(uint16_t channel,
                                                   uint8_t *storage,
                                                   size_t capacity);
+/* Task-only copied submission; samples may be reused after return. A concurrent
+ * cancel, resubscribe or disconnect rejects an unfinished submission with BUSY.
+ * Initially disabled streams return PARAM. Rejected submissions have no delivery
+ * callback; an accepted FIFO record may later report CANCELLED. Encoding and
+ * application callbacks run outside the SDK critical section. */
 SRNOS_SirinLinkResult SRNOS_SirinLinkPublishTelemetry(
     uint16_t stream_id,
     uint32_t sample_sequence,

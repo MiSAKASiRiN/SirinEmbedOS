@@ -2,6 +2,8 @@
 
 独立图传链路 UART 收发，公开头 `SirinEmbedOS/Services/RemoteControl/VT02/VT02.h`。串口为 **115200/8N1**、普通不反相 RX，可显式启用 TX；不是电源管理模块 User 串口的裁判常规链路，也不是 VT03/VT13 的 921600/21 B 遥控协议。接口名称随 MCU 直接连接的 VT02，覆盖 VT02/VT12 设备对；RX 指选手端到 MCU，TX 指 MCU 到选手端。完整接入步骤与可编译示例见 [双向接入指南](../../../../Docs/VT02VT12.md)。
 
+通道模式必须为 `SRNOS_SERIAL_DUPLEX`。系统预检与 `SRNOS_VT02Init` 共用同一串口格式校验；TX 仍为独立选择，不因接收来源启用而自动开启。
+
 ## 官方依据与范围
 
 采用 [官方 2024 串口协议附录 V1.6.4（20240715）](https://terra-1-g.djicdn.com/b2a076471c6c4b72b574a977334d3e05/RM2024/RoboMaster%20%E8%A3%81%E5%88%A4%E7%B3%BB%E7%BB%9F%E4%B8%B2%E5%8F%A3%E5%8D%8F%E8%AE%AE%E9%99%84%E5%BD%95%20V1.6.4%EF%BC%8820240715%EF%BC%89.pdf)：第 1 节串口/A5 格式，第 4 节**图传链路**（表 4-1、4-2），附录一 CRC 示例。官方入口为 [2025 规范文件公告](https://www.robomaster.com/zh-CN/resource/pages/announcement/1768)，其中保留旧版下载；[VT02 产品页](https://www.robomaster.com/zh-CN/products/components/detail/2611) 提供 VT02&12 用户指南。协议依据固定于旧版，不采用 2026 新图传格式。

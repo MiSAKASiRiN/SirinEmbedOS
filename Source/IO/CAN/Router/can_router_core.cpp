@@ -114,7 +114,7 @@ typedef struct {
 
 /* Software queues/tables only; DMA staging remains in its reachable SRAM.
  * The SDK clears this section before ApplicationConfigure and router setup. */
-SRNOS_ITCM_BSS static SRNOS_CANRouterCtx s_ctx[SRNOS_CAN_ROUTER_CHANNEL_COUNT + 1u];
+SRNOS_ITCM_BSS static SRNOS_CANRouterCtx s_ctx[SRNOS_CAN_ROUTER_CHANNEL_COUNT];
 static const SRNOS_CANRouterBackendOps *s_backend[SRNOS_CAN_ROUTER_CHANNEL_COUNT + 1u];
 
 static bool s_configuration_frozen;
@@ -162,7 +162,7 @@ static SRNOS_CANRouterCtx *ctx_of(SRNOS_CANChannel ch)
     if ((ch == 0u) || (ch > SRNOS_CAN_ROUTER_CHANNEL_COUNT)) {
         return nullptr;
     }
-    return &s_ctx[ch];
+    return &s_ctx[ch - 1u];
 }
 
 extern "C" bool SRNOS_CANRouterCoreConfigurationCompatible(SRNOS_CANChannel ch, const SRNOS_CANControllerConfig *config)
@@ -212,24 +212,18 @@ static uint32_t clamp_period_ms(uint32_t period_ms)
     return period_ms;
 }
 
-static uint8_t norm_flags(uint8_t flags)
+static bool valid_id(uint32_t id, uint8_t flags)
 {
-    return (uint8_t)(flags & (SRNOS_CAN_FRAME_FLAG_EXT | SRNOS_CAN_FRAME_FLAG_RTR));
+    return !(flags & ~SRNOS_CAN_FRAME_FLAG_EXT) &&
+           id <= ((flags & SRNOS_CAN_FRAME_FLAG_EXT) ? 0x1FFFFFFFu : 0x7FFu);
 }
 
-static uint32_t norm_id(uint32_t id, uint8_t flags)
-{
-    return (flags & SRNOS_CAN_FRAME_FLAG_EXT) ? (id & 0x1FFFFFFFu) : (id & 0x7FFu);
-}
-
-static bool normalize_frame(SRNOS_CANFrame *frame)
+static bool prepare_frame(SRNOS_CANFrame *frame)
 {
     if (!frame) {
         return false;
     }
-    frame->flags = norm_flags(frame->flags);
-    frame->id = norm_id(frame->id, frame->flags);
-    if ((frame->flags & SRNOS_CAN_FRAME_FLAG_RTR) || (frame->dlc > SRNOS_CAN_ROUTER_MAX_DATA_BYTES)) {
+    if (!valid_id(frame->id, frame->flags) || (frame->dlc > SRNOS_CAN_ROUTER_MAX_DATA_BYTES)) {
         return false;
     }
     for (uint8_t i = frame->dlc; i < SRNOS_CAN_ROUTER_MAX_DATA_BYTES; ++i) {
@@ -238,14 +232,9 @@ static bool normalize_frame(SRNOS_CANFrame *frame)
     return true;
 }
 
-static bool normalize_filter(SRNOS_CANRxFilter *filter)
+static bool valid_filter(const SRNOS_CANRxFilter *filter)
 {
-    if (!filter) {
-        return false;
-    }
-    filter->flags = (uint8_t)(filter->flags & SRNOS_CAN_FRAME_FLAG_EXT);
-    filter->id = norm_id(filter->id, filter->flags);
-    return true;
+    return filter && valid_id(filter->id, filter->flags);
 }
 
 static void commit_item(const adapter_entry_t *adapter,
@@ -302,7 +291,7 @@ extern "C" int SRNOS_CANRouterSubscribeRaw(SRNOS_CANChannel ch,
     if(!SRNOS_CANControllerIsClassic(ch))return SRNOS_CAN_MODE_MISMATCH;
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
-    if (!ctx || !cb || !normalize_filter(&filter)) {
+    if (!ctx || !cb || !valid_filter(&filter)) {
         return -1;
     }
 
@@ -336,7 +325,7 @@ extern "C" int SRNOS_CANRouterUnsubscribeRaw(SRNOS_CANChannel ch,
 {
     if (s_configuration_frozen) return SRNOS_CAN_FROZEN;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
-    if (!ctx || !cb || !normalize_filter(&filter)) {
+    if (!ctx || !cb || !valid_filter(&filter)) {
         return -1;
     }
 
@@ -372,7 +361,7 @@ extern "C" int SRNOS_CANRouterAttachAdapter(SRNOS_CANChannel ch,
 
     SRNOS_CANRxFilter filters[SRNOS_CAN_ROUTER_MAX_RX_FILTERS_PER_ADAPTER] = {};
     for (size_t i = 0; i < filter_count; ++i) {
-        if (!ops->rx_filter_at(obj, i, &filters[i]) || !normalize_filter(&filters[i])) {
+        if (!ops->rx_filter_at(obj, i, &filters[i]) || !valid_filter(&filters[i])) {
             return -1;
         }
     }
@@ -464,12 +453,12 @@ extern "C" int SRNOS_CANRouterPostOneshot(SRNOS_CANChannel ch,
 {
     if(!SRNOS_CANControllerIsClassic(ch))return SRNOS_CAN_MODE_MISMATCH;
     SRNOS_CANRouterCtx *ctx = ctx_of(ch);
-    if (!ctx || !frame) {
+    if (!ctx || !frame || ttl_ms > INT32_MAX) {
         return -1;
     }
 
     SRNOS_CANFrame copy = *frame;
-    if (!normalize_frame(&copy)) {
+    if (!prepare_frame(&copy)) {
         return -1;
     }
     if (ttl_ms == 0u) {
@@ -572,7 +561,7 @@ extern "C" void SRNOS_CANRouterCoreOnRxFrame(SRNOS_CANChannel ch,
     }
 
     SRNOS_CANFrame copy = *frame;
-    if (!normalize_frame(&copy)) {
+    if (!prepare_frame(&copy)) {
         ctx->stats.rx_dropped++;
         return;
     }
@@ -613,7 +602,7 @@ static bool backend_try_accept(SRNOS_CANRouterCtx *ctx,
     }
 
     SRNOS_CANFrame copy = *frame;
-    if (!normalize_frame(&copy)) {
+    if (!prepare_frame(&copy)) {
         return false;
     }
 
@@ -752,15 +741,17 @@ static bool add_group_item(group_acc_t *groups,
                            const SRNOS_CANTxItem *item,
                            SRNOS_CANTxKind kind)
 {
-    if (!item || item->group_i16.slot > 3u) {
+    if (!item || item->group_i16.slot > 3u ||
+        !valid_id(item->group_i16.group_id, item->group_i16.flags) ||
+        (item->group_i16.endian != SRNOS_CAN_TX_ENDIAN_BE &&
+         item->group_i16.endian != SRNOS_CAN_TX_ENDIAN_LE)) {
         commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
         return false;
     }
 
-    const uint8_t flags = (uint8_t)(item->group_i16.flags & SRNOS_CAN_FRAME_FLAG_EXT);
-    const uint32_t group_id = norm_id(item->group_i16.group_id, flags);
-    const uint8_t endian = (item->group_i16.endian == SRNOS_CAN_TX_ENDIAN_LE) ?
-                           SRNOS_CAN_TX_ENDIAN_LE : SRNOS_CAN_TX_ENDIAN_BE;
+    const uint8_t flags = item->group_i16.flags;
+    const uint32_t group_id = item->group_i16.group_id;
+    const uint8_t endian = item->group_i16.endian;
     group_acc_t *g = find_or_alloc_group(groups, group_id, flags, endian);
     if (!g || (g->endian_set && g->endian != endian)) {
         commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
@@ -847,7 +838,7 @@ static bool transmit_raw_item(SRNOS_CANRouterCtx *ctx,
     }
 
     SRNOS_CANFrame frame = item->frame;
-    if (!normalize_frame(&frame)) {
+    if (!prepare_frame(&frame)) {
         commit_item(adapter, kind, item, SRNOS_CAN_TX_RESULT_DROPPED);
         if (kind == SRNOS_CAN_TX_KIND_PERIODIC) {
             ctx->stats.tx_periodic_dropped++;

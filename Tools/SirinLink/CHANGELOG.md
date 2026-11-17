@@ -32,7 +32,7 @@
 
 - 2026-09-28：查看/保存工具支持循环统计 0x0003 和旧双流固件，展示统计口径并保存实际支持流信息。验证范围为主机与构建；本次未烧录，时序与开销仍待板测。
 
-- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
 
 ## 2026-09-28 板端验证
 

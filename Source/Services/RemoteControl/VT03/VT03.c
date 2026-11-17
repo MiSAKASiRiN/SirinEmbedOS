@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Services/RemoteControl/VT03/VT03.h"
+#include "../remote_internal.h"
 #include "../../VideoLink/codec.h"
 #include "SirinEmbedOS/Core/C/Endian.h"
 #include "SirinEmbedOS/Core/C/Numeric.h"
@@ -212,8 +213,11 @@ static int16_t clamp_i32_to_i16(int32_t v)
 }
 
 
+bool SRNOS_VT03SerialConfigValid(const SRNOS_SerialConfig *c) {
+ return c && c->baud_rate==921600u && c->data_bits==8 && c->stop_bits==1 && c->parity==SRNOS_SERIAL_PARITY_NONE && c->rx_enabled;
+}
 uint32_t SRNOS_VT03CheckSerialConfig(const SRNOS_SerialConfig *c) {
- return !c || c->baud_rate!=921600u || c->data_bits!=8 || c->stop_bits!=1 || c->parity!=SRNOS_SERIAL_PARITY_NONE || !c->rx_enabled;
+ return !SRNOS_VT03SerialConfigValid(c);
 }
 static int stream_discontinuity(SRNOS_VT03T *s) {
  SRNOS_SerialStats serial;

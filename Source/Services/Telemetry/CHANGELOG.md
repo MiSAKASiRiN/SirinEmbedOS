@@ -6,6 +6,8 @@
 
 ## Unreleased
 
+- 2026-11-11：目录冻结和容量统一引用 SirinLink README，按实际 Kernel 启动顺序明确 bind_channels 先于 SirinLink setup，关闭 SirinLink 时仍由 Kernel 冻结。README 移除历史测试陈述；既有结果保留于本文件及 Docs CHANGELOG，不计入本轮验证。仅修正文档，遥测发布行为未改。
+
 - 2026-09-29：链接统一消息表和 SOURCE V1/V2，明确遥测与参数目录及身份分离；实现未改。
 
 - 新增独立于通信初始化的只读变量目录、C 注册/发布接口及 C++ `SRNOS::Telemetry::Value<T>`，支持四种标量类型、最多32项和静态生命周期。

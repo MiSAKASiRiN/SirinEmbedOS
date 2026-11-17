@@ -9,9 +9,6 @@
 
 #define SRNOS_POWER_CONTROL_MAX_MOTORS 16u
 
-#define SRNOS_POWER_CONTROL_CMD_CURRENT 0u
-#define SRNOS_POWER_CONTROL_CMD_VOLTAGE 1u
-
 #define SRNOS_POWER_CONTROL_PRIORITY_NONCRIT 0u
 #define SRNOS_POWER_CONTROL_PRIORITY_CRIT    1u
 #define SRNOS_POWER_CONTROL_PRIORITY_STRONG  2u
@@ -19,7 +16,6 @@
 #define SRNOS_POWER_CONTROL_DEFAULT_Q_J                 60.0f
 #define SRNOS_POWER_CONTROL_DEFAULT_PL_FALLBACK_W       40.0f
 #define SRNOS_POWER_CONTROL_DEFAULT_Z_MIN_J             10.0f
-#define SRNOS_POWER_CONTROL_DEFAULT_Z_TARGET_J          30.0f
 #define SRNOS_POWER_CONTROL_DEFAULT_T_WINDOW_S          0.10f
 #define SRNOS_POWER_CONTROL_DEFAULT_P_BURST_MAX_W       200.0f
 #define SRNOS_POWER_CONTROL_DEFAULT_BUDGET_FILTER_ALPHA 0.20f
@@ -41,7 +37,6 @@ typedef struct {
 typedef struct {
   bool    enabled;
   uint8_t priority;
-  uint8_t cmd_type;
   int16_t cmd_limit;
   float   slew_rate;
   float   k_iw;
@@ -58,7 +53,6 @@ typedef struct {
   float q_joule;
   float pl_fallback_watt;
   float z_min_joule;
-  float z_target_joule;
   float t_window_s;
   float p_burst_max_watt;
   float budget_filter_alpha;
@@ -79,7 +73,6 @@ typedef struct {
   float Z_hat;
   float scale_non;
   float scale_all;
-  uint32_t overflow_cnt;
 } SRNOS_PowerControlDebug;
 
 typedef struct {
@@ -98,6 +91,11 @@ typedef struct {
 
 void SRNOS_PowerControlInit(SRNOS_PowerControlCtx *ctx, const SRNOS_PowerControlConfig *cfg);
 void SRNOS_PowerControlReset(SRNOS_PowerControlCtx *ctx);
+/* Task-owned context/config, no internal synchronization. Finite nonnegative
+ * measured power takes precedence over the model total. The model supplies
+ * group proportions; without usable proportions, all enabled motors share
+ * one reduction factor. Command limits/slew precede the final power reduction.
+ * This is model-based command scaling, not a measured hardware power ceiling. */
 void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
                              float dt,
                              bool budget_source_online,
@@ -120,7 +118,6 @@ Example (call before CAN send, after chassis control output):
   for (int i = 0; i < 4; ++i) {
     cfg.motors[i].enabled = true;
     cfg.motors[i].priority = SRNOS_POWER_CONTROL_PRIORITY_NONCRIT;
-    cfg.motors[i].cmd_type = SRNOS_POWER_CONTROL_CMD_CURRENT;
     cfg.motors[i].cmd_limit = 16000;
     cfg.motors[i].k_iw = 0.002f;
     cfg.motors[i].use_feedback_current = true;
@@ -128,7 +125,6 @@ Example (call before CAN send, after chassis control output):
   for (int i = 0; i < 4; ++i) {
     cfg.motors[4 + i].enabled = true;
     cfg.motors[4 + i].priority = SRNOS_POWER_CONTROL_PRIORITY_CRIT;
-    cfg.motors[4 + i].cmd_type = SRNOS_POWER_CONTROL_CMD_VOLTAGE;
     cfg.motors[4 + i].cmd_limit = 16000;
     cfg.motors[4 + i].slew_rate = 8000.0f;
     cfg.motors[4 + i].k_iw = 0.001f;

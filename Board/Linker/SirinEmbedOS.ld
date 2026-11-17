@@ -271,7 +271,7 @@ SECTIONS
 
 }
 
-/* SDK memory sections derived from the prototype DMA fragment. */
+/* SDK memory sections. */
 
 /* Place non-cacheable DMA descriptors/buffers.
    NOLOAD: do not bloat image or zero-init in .data/.bss.

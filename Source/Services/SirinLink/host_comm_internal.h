@@ -3,6 +3,10 @@
 #include "Codec/link_internal.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#define SRNOS_SIRIN_LINK_COMM_STACK_BYTES 3072u
+#define SRNOS_SIRIN_LINK_COMMAND_STACK_BYTES 2048u
+#define SRNOS_SIRIN_LINK_WORK_DEPTH 4u
+#define SRNOS_SIRIN_LINK_COMPLETION_DEPTH 4u
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,6 +43,7 @@ typedef struct {
 SRNOS_SirinLinkResult SRNOS_SirinLinkConfigure(
     const SRNOS_SirinLinkConfig *config);
 bool SRNOS_SirinLinkInitResources(void);
+uint32_t SRNOS_SirinLinkHeapBudget(bool enabled);
 /* Prepare/freeze registrations before any service worker runs. */
 SRNOS_SirinLinkResult SRNOS_SirinLinkPrepareLink(void);
 void SRNOS_SirinLinkTask(void *argument);

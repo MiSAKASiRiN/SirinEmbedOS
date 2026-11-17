@@ -90,6 +90,9 @@ public:
   void request_enable();
   void request_disable();
 
+  // Command setters/export: task/pre-scheduler or IRQ priority 5..15 only.
+  // Each setter publishes all its fields together; export takes one bounded
+  // snapshot including mode. Separate setter calls are separate updates.
   // MIT-mode control (physical units)
   void set_mit_cmd(float pos_rad, float vel_rad_s, float kp, float kd, float torque_nm);
   void set_mit_pos_rad(float pos_rad);

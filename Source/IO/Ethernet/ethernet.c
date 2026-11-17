@@ -261,6 +261,10 @@ static void entry(void *context)
     const SRNOS_InternalLoop loop = {step, wait_event, NULL, 0, false};
     SRNOS_KernelRunLoop(&loop);
 }
+uint32_t SRNOS_EthernetHeapBudget(bool enabled)
+{
+    return enabled ? SRNOS_ETHERNET_WORKER_STACK_BYTES + SRNOS_ETHERNET_WORKER_RESERVE_BYTES : 0u;
+}
 bool SRNOS_EthernetStart(void)
 {
     if (!prepared) return false;
@@ -271,7 +275,7 @@ bool SRNOS_EthernetStart(void)
     if (!tx_queue || !rx_queue) return false;
     /* Below chassis control (24) and every real-time IO worker. HAL startup
      * timeout/MDIO waits cannot starve those tasks when a clock/wire is absent. */
-    const osThreadAttr_t attributes = {.name = "SRNOS_Ethernet", .stack_size = 4096,
+    const osThreadAttr_t attributes = {.name = "SRNOS_Ethernet", .stack_size = SRNOS_ETHERNET_WORKER_STACK_BYTES,
                                       .priority = osPriorityBelowNormal};
     worker = (TaskHandle_t)SRNOS_KernelThreadNew(entry, NULL, &attributes);
     return worker != NULL;

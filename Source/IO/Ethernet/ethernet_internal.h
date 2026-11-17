@@ -1,6 +1,9 @@
 #ifndef SRNOS_ETHERNET_INTERNAL_H
 #define SRNOS_ETHERNET_INTERNAL_H
 #include "SirinEmbedOS/IO/Ethernet/Ethernet.h"
+#define SRNOS_ETHERNET_WORKER_STACK_BYTES 4096u
+#define SRNOS_ETHERNET_WORKER_RESERVE_BYTES 1024u
+uint32_t SRNOS_EthernetHeapBudget(bool enabled);
 bool SRNOS_EthernetPrepare(const SRNOS_EthernetConfig *config);
 bool SRNOS_EthernetStart(void);
 void SRNOS_EthernetWakeFromISR(void);

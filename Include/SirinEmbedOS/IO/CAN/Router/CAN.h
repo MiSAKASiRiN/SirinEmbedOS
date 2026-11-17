@@ -163,6 +163,9 @@ int SRNOS_CANRouterUnsubscribeRaw(SRNOS_CANChannel ch,
                                SRNOS_CANRouterRxHandler cb,
                                void *user);
 
+/* Copies a valid Classic data frame. OK (0) means software admission only.
+ * TTL 0 selects 20 ms; positive TTL must be <= INT32_MAX. TTL bounds software
+ * queue waiting, not a hardware submission already in progress. */
 int SRNOS_CANRouterPostOneshot(SRNOS_CANChannel ch,
                             const SRNOS_CANFrame *frame,
                             uint8_t priority,
@@ -179,7 +182,11 @@ bool SRNOS_CANRouterGetStats(SRNOS_CANChannel ch, SRNOS_CANRouterStats *out);
 /* All APIs in this header carry Classic CAN frames only. Raw subscriptions
  * may use any supported Classic nominal rate; adapters require Classic 1M.
  * Final startup validation rejects registration/mode conflicts regardless of
- * declaration order. FD raw traffic uses IO/CAN/FD/CANFD.h. */
+ * declaration order. Frames/filters permit only EXT, with standard ID <=0x7ff
+ * or extended ID <=0x1fffffff; frames have DLC 0..8 and no RTR. Invalid IDs or
+ * flags are rejected (-1), never truncated. Adapter group frames follow the
+ * same rules, with slot 0..3 and explicit BE/LE endian; invalid items are
+ * committed as DROPPED. FD raw traffic uses IO/CAN/FD/CANFD.h. */
 
 #ifdef __cplusplus
 }

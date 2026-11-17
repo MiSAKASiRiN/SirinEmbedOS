@@ -67,6 +67,10 @@ public:
   void request_enable();
   void request_disable();
 
+  // Command setters/export: task/pre-scheduler or IRQ priority 5..15 only.
+  // Each setter publishes all its fields together; export takes one bounded
+  // snapshot including mode. Separate setter calls are separate updates.
+  // MIT mapping limits are also read together by feedback decoding.
   // MIT mapping limits (must match motor-side PMAX/VMAX/TMAX)
   void set_mit_limits(float pmax_rad, float vmax_rad_s, float tmax_nm);
 

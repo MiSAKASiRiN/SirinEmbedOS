@@ -47,6 +47,8 @@ Create 成功仅表示对象创建成功；回调可能在 Create 返回前抢�
 
 ## 启动配置中的固定任务
 
+任务可以独占一个应用源文件。由任务文件提供注册函数，父项目在唯一的配置回调调用它，并检查追加结果。[独立 C 文件与 C++ 入口示例](../../Examples/StartupTask/README.md)
+
 ```c
 #include <SirinEmbedOS/Kernel/Startup.h>
 
@@ -174,6 +176,14 @@ SRNOS_Result send_value(uint32_t value) {
 
 KernelGetResources 报告池容量、当前/峰值、池分配失败及对象创建资源失败次数、父项目线程数以及 heap_5 空闲/最低空闲；池中空闲并不等于可满足任意连续分配。SDK 静态登记表和可选循环统计累加器在调度前各分配一次，保守预算各 8 KiB；32 KiB 父项目池另计。SirinLink 启用时预留 9 KiB，包含 HostComm 3 KiB、HostCmd 2 KiB 及队列/TCB/TLS。SystemHeapBudget 包含这些预留和原有服务栈/队列/TCB/TLS，不代表运行期实测余量。其他业务分配仍应单独预留。
 
+`SRNOS_SystemHeapBudget(config)` 汇总各能力在资源定义旁维护的预算，固定启动装配保留 60 KiB 基础余量。Logging 按消息池、队列、线程栈和明确的控制块/分配余量计算，且不低于 16 KiB；RS485 同样保留其最低预留。FD 通道另按实际启用数量计入发送存储。预算精确化可能使超额组合更早返回 `SRNOS_SYSTEM_RESOURCE`，不会自动扩大 heap 或压缩服务容量。
+
+该查询还包含当前已注册的 Input/Message 资源，注册前的估计不完整。SDK 在配置回调之后预检，并在绑定、注册完成后再次校验才冻结。静态 BSS、ITCM 与 DMA 区仍需独立检查 map；预算通过不等于当前空闲 heap 或板端可用性。
+
+当前 ARM 配置中，未追加 Input/Message 注册的默认全 Classic 启动预算为 163088 B；每路改为 FD 增加 5284 B，1/2/3/4 路 FD 分别为 168372/173656/178940/184224 B。默认两区 heap 合计 196608 B。以上来自源码与编译常量核算，不是板端测量；应用选择、编译期覆盖及注册内容会改变结果。
+
+内置串口角色共用各协议的纯配置校验：系统预检与协议 Init/Bind 使用同一规则，端口冲突检查仅处理所有权。W.Bus 需要普通 DUPLEX 通道，不能绑定固定 RS485 的 UART7；VT03 图传发送额外要求 RX/TX 全双工。未启用 UART 日志后端时，`log_port` 不参与日志绑定。
+
 ## 运行期内存观测示例
 
 在已经放行的应用任务中取得副本；应用对象池与 heap_5 分开计量：
@@ -230,7 +240,7 @@ SystemConfig包含`storage.enabled`（默认true）、`storage.factory_identity_
 
 `SRNOS_SystemConfig.can[4]` 在 ApplicationConfigure/bind_channels 返回后校验、复制并与注册表一起冻结，均早于 `osKernelInitialize()`。四路分别选择 Classic 或 FD，默认全部 Classic 1 Mbit/s；FD 仲裁/数据速率/BRS 必须显式声明。注册类型和最终模式不一致会拒绝启动。现有 adapter 仅允许 Classic 1 Mbit/s，配置不进入可远程写入的业务参数表。公开接口与速率/帧合同见 [CAN](../IO/CAN/README.md#启动模式与-fd-接口)。
 
-原生模式选择复用每路RX/TX worker；CAN4合并为单个P1服务，总计七个CAN线程；父项目无需为 FD 新建驱动线程。FD 每路 32 个订阅、64 个待发槽固定分配在 D1 BSS，四路合计默认 23312 B，不从 RTOS heap 分配，也不占用 Classic Router 的 ITCM 上下文。软件资源准备与冻结不等于设备就绪；原生在启动阶段应用冻结配置，CAN4 由 worker 完成模式握手，成功后才发布通知句柄。初始化失败保留失败状态，不把已退出任务句柄暴露给中断。
+原生模式选择复用每路RX/TX worker；CAN4合并为单个P1服务，总计七个CAN线程；父项目无需为 FD 新建驱动线程。FD 每路 32 个订阅及统计元数据静态保留；64 个待发槽和索引仅在该通道冻结为 FD 时，于内核 heap 初始化后一次分配并计入启动预算。全部 Classic 时不分配 FD 发送存储，运行期不扩容或重绑；软件存储不作为 DMA 缓冲，也不占用 Classic Router 的 ITCM 上下文。软件资源准备与冻结不等于设备就绪；原生在启动阶段应用冻结配置，CAN4 由 worker 完成模式握手，成功后才发布通知句柄。初始化失败保留失败状态，不把已退出任务句柄暴露给中断。
 
 ## 固定通信优先级
 
@@ -248,6 +258,8 @@ Kernel 在冻结配置后装配 Network worker，并将其启动开销计入 hea
 
 Serial 配置后先准备 Message 传输与内置遥控来源，再调用 bind_channels 注册应用来源、消息订阅及通道路由；Input/Message 注册表随后冻结，SirinLinkPrepare 注册对应 EVENT handler。sirin_link_setup 位于通用注册表冻结之后。配置和注册阶段不使用 RTOS heap；osKernelInitialize 完成 heap_5 注册后，Input 快照/事件环、Message 队列及 UART parser 一次分配，且纳入 SystemHeapBudget。运行期不分配。只有启用物理遥控/消息 UART 时创建 InputIO（47、3072 B、相对1 ms等待），HostComm/Network 沿用既有线程。公共用法见 [Input](../Services/Input/README.md) 和 [Message](../Services/Message/README.md)。
 
-## 旧图传启动配置
+## 图传启动配置
 
-`remote.vt02_port` 声明独立 VT02/VT12 图传 RX，要求普通不反相 115200/8N1；与 vt03、裁判、日志及其他串口所有者进行统一冲突检查。VT02 独立启用时同样计入 InputIO 的 4 KiB 保守堆预算；自定义消息路由按 Message 队列预算计入。详见 [VT02](../Services/RemoteControl/VT02/README.md)。
+VT03/VT13 在启动时绑定 `remote.vt03_port` 并登记 `vt03` 输入来源。921600/8N1 的 RX 即可接收摇杆与键鼠；启用双向 VideoLink 时同一端口还需 TX。基础接收和图传消息均复用 InputIO。[初始化配置](../../Docs/Config.md) · [VT03 读取示例](../Services/RemoteControl/README.md#vt03vt13-接入)
+
+`remote.vt02_port` 声明 VT02/VT12 图传通道，可仅启用 RX 或额外启用 TX 以显式发送 A5 帧，要求普通不反相 115200/8N1；与 vt03、裁判、日志及其他串口所有者进行统一冲突检查。VT02 独立启用时同样计入 InputIO 的 4 KiB 保守堆预算；自定义消息路由按 Message 队列预算计入。详见 [VT02](../Services/RemoteControl/VT02/README.md)。

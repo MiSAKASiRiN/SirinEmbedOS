@@ -1,5 +1,41 @@
 # Changelog
 
+## Unreleased — 项目许可
+
+- 自有代码采用 [MPL 2.0](LICENSE)。[第三方许可说明](THIRD_PARTY_NOTICES.md) 列出固件依赖、板级模板和供应商驱动的适用条款，以及 MCP2518FD 源码公开再分发尚待确认的范围。
+
+## Unreleased — 父项目接入文档（2026-11-18）
+
+- 新增[初始化配置指南](Docs/Config.md)与[单文件任务示例](Examples/StartupTask/README.md)，首页和 QuickStart 优先说明 VT03/VT13、业务任务、日志、遥测和 EEPROM 参数；补全模块入口并校正过时示例。固件与文档验证结果见[文档变更记录](Docs/CHANGELOG.md)。
+
+## Unreleased — ST Arm Clang 编译诊断（2026-11-18）
+
+- 修正 CMSIS 启动函数声明的编译器判断，保留其他属性诊断。Minimal Debug/Release 构建通过，两份可烧录镜像分别与修改前一致。详见 [板级变更记录](Board/CHANGELOG.md)。
+
+## Unreleased — 源码文档整理（2026-11-17）
+
+- 文档导航直接指向现行接口、示例及第三方组件。清理前后使用同一工作区和工具链完整构建 Minimal Release，两份 264160 B 固件镜像逐字节一致。
+
+## Unreleased — 框架修复与维护收口（2026-11-11）
+
+- DM4310/DM4340/LK8016E 组合 setter 与发送端使用短临界区发布/复制整组命令，DM4340 MIT 范围在发送和反馈换算时一致读取；连续独立 setter 不构成事务。Classic CAN 严格校验 ID、flags、DLC、过滤器和组合项，不再掩码纠正，one-shot 拒绝超过 INT32_MAX 的 TTL。
+- 功率限制按模型分组占比分配有效实测总功率，无比例时统一缩放；限幅和变化率先于模型估算及最终功率缩放，last_cmd 保存最终输出。OLS 改存相邻间隔并重建窗口相对时间。SPI 在完成发布时保留首次取消原因；SirinLink 以订阅代次覆盖发布、取消、重订阅和断连窗口，构建中的槽由原构建者回收。
+- RS485 Start/IsFrozen 改为私有装配、worker 改为文件内部函数；删除空恢复入口及公共可写统计，GetStats 改为 bool + 输出副本。删除功率配置中未生效的 cmd_type、z_target_joule、对应常量和 overflow_cnt。父项目须整体重编译，现行接口见 [RS485](Source/IO/RS485/README.md) 和 [功率约束](Source/Algorithms/Power/README.md)。
+- 协议模块的纯串口校验由系统预检与 Init/Bind 共用；Network 用固定启动期 UDP 回调槽承接 Message。Parameters 展开控制流并复用 Core Endian，持久化格式、CRC 和事务语义保持。统一 SirinLink/Telemetry 注册顺序和容量说明。
+- 各服务持有栈/队列常量及私有预算函数，Kernel 汇总并在注册后终检。Logging 预算纠正为 22288 B；默认全 Classic 启动预算为 163088 B，每个 FD 通道增加 5284 B。InputMessages 为保留默认 heap 容量，显式关闭可选托管周期统计，注册后预算为 190536/196608 B；SystemMonitor、CPU 统计、线程数量及优先级保持。预算值来自 ARM 布局和源码核算，不是运行水位。
+- Classic 上下文由五份降为四份，符号从 59920 B 降至 47936 B。FD 注册元数据保留静态，TX 存储每个启用 FD 的通道在内核初始化后分配 5252 B；最大空闲块预检避免 malloc-failed hook 抢先终止，失败先清理本次分配再中止启动，运行期不分配。FD 静态 context 从 23312 B 降至 2336 B，净释放 20976 B；全 Classic 不分配 FD TX 存储。
+- ST Arm Clang 21.1.1 离线编译链接通过：Minimal Debug/Release、InputMessages Debug、VT02VT12 Debug、从 QuickStart 提取的临时父项目，以及全 Classic、混合 Classic/FD、全 FD、串口/网络四个临时接入固件。接入片段覆盖新 RS485 签名、三个电机类及功率/OLS；父项目未获得 HAL/RTOS/私有 include。102 个公共头的 179 项独立 C11/C++17 编译全部通过。构建仅保留已有 CMSIS optimize 属性警告。
+
+Minimal ELF/map 对比（字节，包含对应区域的固定预留）：
+
+| 配置 | D1 修改前 → 修改后 | D1 余量增加 | ITCM 修改前 → 修改后 | ITCM 余量增加 |
+|---|---:|---:|---:|---:|
+| Debug | 321600 → 300896 | 20704 | 62976 → 50976 | 12000 |
+| Release | 321632 → 300896 | 20736 | 62976 → 50976 | 12000 |
+
+- 当前 Minimal D1 余量 26784 B，ITCM 余量 14560 B；ITCM 总收益包含对齐变化。D2/D3 用量保持 16064/544 B，DMA、BDMA、Ethernet DMA 及 retained 段地址/大小均不变；heap_5 仍预留 DTCM 64 KiB + D1 128 KiB，网络缓存分配方式不变。
+- 源码复核覆盖非法 CAN 参数、SPI 完成/取消交错、遥测取消后重订阅、FD 失败清理和电机快照边界；Parameters 规范排版后比较仅有 Endian 委托差异。本轮未运行行为模拟或主机测试，未新增测试套件或默认测试依赖，临时源文件与产物均在仓库外；未 Generate HAL、烧录、操作调试会话、提交或推送。并发时序、功率控制、取消确认、FD 启动失败及混合负载仍待实机验证，不将编译通过视为行为通过。
+
 ## Unreleased — 内置遥测固定周期（2026-11-05）
 
 - CLI 复用既有传感器协议周期表，订阅/退订使用各流固定周期；修复默认 `telemetry read --streams system,ins` 被设备以 INVALID_ARGUMENT 拒绝的问题。`--hz` 继续用于 SOURCE；固件 API、采样频率及控制行为不变。
@@ -55,16 +91,16 @@
 
 ## Unreleased — SDK 内容整理（2026-10-25）
 
-- 精简公开文档中的私有机构调试历史和重复板测摘要，集中网络资源合同与历史验证索引；保留本地私有测试及来源、许可台账。
-- 移除废弃的 `SRNOS_RefereeTxInit()`；发送仍由启动配置和 Serial 服务初始化。`ParametersDumpDebugPort` 保留入口，改用正式 Logging 队列并报告失败。迁移方法见 [SDKMigration](Docs/SDKMigration.md)。
+- 精简公开文档中的私有机构调试历史和重复板测摘要，集中网络资源合同与历史验证索引；保留本地私有测试。
+- 移除废弃的 `SRNOS_RefereeTxInit()`；发送仍由启动配置和 Serial 服务初始化。`ParametersDumpDebugPort` 保留入口，改用正式 Logging 队列并报告失败。
 - 删除 `Watch.c` 占位编译单元、无调用的 `ParameterBinary.cpp` 和私有 DebugPort 旧发送接口，保留正式诊断与参数能力。CMSIS-DSP 快照与 WS2812 critical 实现保留，说明按实际集成状态修正；IMU/INS 实现和相关主机工具未改动。
 - 删除三项未装配的 GCC/Newlib 模板；生成脚本仅在生成与时序检查通过后，将这三项重新生成的文件归档移出源码树。
 - SDK Minimal、Board、父项目 Release 和 12 个集成固件目标通过；101 个公共头、178 个 C11/C++17 单元、结构和文档链接检查通过。主机回归 37/38 通过，既有 IMUTurntable 回零断言（`test_control.cpp:25`）仍失败；本轮未实际运行 CubeMX、烧录或进行板测。
 
 ## Unreleased — 源码分发与文档整理
 
-- 2026-10-24：公开树保留 SDK、API 示例和通用工具，移除原始验证归档、一次性迁移脚本及固定路径脚本。测试源码与五个 BringUp 示例恢复为本地私有内容，由 Git 忽略且取消跟踪；测试构建适配留在私有父工程。
-- 清理个人路径、内部端点和设备标识，保留来源、提交、哈希及许可状态；合并重复文档说明，移除失效引用，修正私有测试指南。生产实现、公共 API、板级配置、调度及内存布局未改动。
+- 2026-10-24：公开树保留 SDK、API 示例和通用工具，移除原始验证归档及固定路径脚本。测试源码与五个 BringUp 示例恢复为本地私有内容，由 Git 忽略且取消跟踪；测试构建适配留在私有父工程。
+- 清理个人路径、内部端点和设备标识；合并重复文档说明，移除失效引用，修正私有测试指南。生产实现、公共 API、板级配置、调度及内存布局未改动。
 - SDK Minimal、InputMessages 和父项目 Release 重新构建通过；父项目固件与清理前逐字节一致，第三方 362 项哈希检查通过。此项为源码树清理，不表示 Git 历史已脱敏或许可证已补齐。
 
 ## Unreleased — W25Q128 Blackbox
@@ -89,7 +125,7 @@
 
 ## Unreleased — SirinLink 命名与 SirinRMT DISABLE
 
-- 2026-10-21：HostLink 当前公开 API、路径、宏、启动配置、实现、示例、测试和工具统一改为 SirinLink，不提供旧名兼容别名；HostComm 仍是传输任务名称。外层 V2 编码、COBS/CRC、service/message ID 保持，迁移见 `Docs/SDKMigration.md`。
+- 2026-10-21：HostLink 当前公开 API、路径、宏、启动配置、实现、示例、测试和工具统一改为 SirinLink，不提供旧名兼容别名；HostComm 仍是传输任务名称。外层 V2 编码、COBS/CRC、service/message ID 保持。
 - SirinRMT v1 保持 30 字节，增加 DISABLE（kind=5、全零 body），Input Frame/Snapshot 增加独立停止请求身份；保留输入字段及时间，清除旧 ENABLE 有效性。应用负责权限，需同时消费两种请求并对同周期停止优先；INVALIDATE/重新同步隔离旧请求。
 - 公共结构变化要求 SDK/应用整体重编译。100 公共头、176 C11/C++17 单元、公共命名/依赖检查及 12 个集成固件目标通过。SDK 全量 35/36 通过；既有转台回零断言在隔离 HEAD 复现，相关 7 个依赖文件未变化。Input 与 SirinLink 专项通过，七来源示例 heap 预算为 192672/196608 B。未烧录。
 
@@ -106,12 +142,12 @@
 
 ## Unreleased — 明确的输入使能请求
 
-- 2026-10-21：SirinRMT v1 增加 kind=4 ENABLE；Input Frame/Snapshot 保存请求计数、时间和 epoch，失效/恢复隔离旧请求。SDK 不执行机器人使能，不改变通道、按键、相对量时效；应用消费请求并实施安全门。Python 工具增加默认关闭的 `--enable`，只发送一次。公共结构扩展须整体重编译，见 SDKMigration。
+- 2026-10-21：SirinRMT v1 增加 kind=4 ENABLE；Input Frame/Snapshot 保存请求计数、时间和 epoch，失效/恢复隔离旧请求。SDK 不执行机器人使能，不改变通道、按键、相对量时效；应用消费请求并实施安全门。Python 工具增加默认关闭的 `--enable`，只发送一次。公共结构扩展须整体重编译。
 - Input/Message/SirinRMT、物理适配器和 C/Python 黄金向量通过；公共头 C11/C++17 检查和父项目 Debug/Release 链接通过。七来源示例主机 heap 预算 192616/196608 B；未新增线程、修改 CubeMX 生成区或烧录，板端运行与栈水位待验。
 
 ## Unreleased — 输入与消息
 
-- 2026-10-21：通用 Message 分发与独立 Input 快照/事件、SirinRMT v1 接入 HostComm/UART/UDP/图传；保留 DR16/VT03/13/W.Bus，删除旧 RC 仲裁/固定五通道 API 和图传全局命令 FIFO。新增 InputMessages 示例与 Python 编码器；父项目旧 API 待单独迁移，本轮未烧录。
+- 2026-10-21：通用 Message 分发与独立 Input 快照/事件、SirinRMT v1 接入 HostComm/UART/UDP/图传；保留 DR16/VT03/13/W.Bus，删除旧 RC 仲裁/固定五通道 API 和图传全局命令 FIFO。新增 InputMessages 示例与 Python 编码器；本轮未烧录。
 
 - 验证：InputMessages Release 链接、99个公共头的C11/C++17检查、12个SDK集成固件、源文件覆盖及内存布局检查通过；新增输入/消息测试与真实lwIP第五端口测试通过。全套主机回归仍有未改动的IMUTurntableBringUp控制测试第25行断言失败；与本次输入代码无依赖的旧测试问题单列保留。未修改父项目、未烧录或接管PCB。
 
@@ -122,7 +158,7 @@
 ## Unreleased — 图传双向数据与遥测
 
 - 2026-10-20：新增公共 `Services/VideoLink.h`，为已有 Telemetry handle 注册图传周期、稳定 wire ID 与新鲜度上限。VT03 单接收所有者拆分 `0311` 和遥控帧，原 RC worker 自动聚合 `0310`，40 Hz 总限速及有界队列。默认关闭，不改变电机或遥控仲裁语义。使用见 [VideoLink](Source/Services/VideoLink/README.md)。
-- RemoteControl 配置/VT03 结构新增字段，父项目须整体重编译，迁移步骤见 SDKMigration。无新增线程/优先级/硬件引脚变更。注册、发送节奏、背压、失效值、CRC、混合帧和 C5 解码通过主机测试；全 SDK 构建及公共边界检查通过。具体板端结果由 EngNaviTest 父项目验证记录维护，不推广为线速或长期热稳定证明。
+- RemoteControl 配置/VT03 结构新增字段，父项目须整体重编译。无新增线程/优先级/硬件引脚变更。注册、发送节奏、背压、失效值、CRC、混合帧和 C5 解码通过主机测试；全 SDK 构建及公共边界检查通过。具体板端结果由 EngNaviTest 父项目验证记录维护，不推广为线速或长期热稳定证明。
 
 ## Unreleased — SDK 使用文档整理
 
@@ -148,7 +184,7 @@
 ## Unreleased — CAN 时间基准修复
 
 - 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。
-- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 MSwerve Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。
+- 增加 HAL 领先 12 ms 的回归、绑定前入队和回绕验证；Router/Native/External/FD/六种 Motors、公共头与 父项目 Debug/Release 构建通过。移除父项目补丁后板上 13/13 在线，年龄正常；CAN4/FD/物理断线本轮未板测。
 
 ## 2026-10-10 诊断与校准
 
@@ -178,7 +214,7 @@
 
 - 2026-09-29：完成首次持久化/静态校准板测，参数保存及复位加载、SAVE期间WRITE隔离、CRC与EEPROM恢复通过；静态判定噪声阈值不适配，校准未通过，8路1kHz变量实收约7284标量/s。新增仅EEPROMBringUp的显式主机备份恢复入口，未调整生产算法；最终Minimal Release运行且释放探针。
 
-- 2026-09-29：整理当前文档入口：新增 Docs/README.md 导航和 Docs/Storage.md 持久化总览；补齐 COBS/CRC 帧样例、消息表、CONFIG 01–0A 与 SOURCE V1/V2，澄清记录/参数身份、默认加载和示例开关。同步模块、工具及迁移说明，保留历史板测；只改文档/索引，协议与固件行为不变。 已检查 20 篇文档的 186 个本地链接/锚点、COBS/CRC 样例与字段长度，现有 Codec、参数协议、Storage/EEPROM 主机测试和结构检查通过；未重新编译或烧录固件。
+- 2026-09-29：整理当前文档入口：新增 Docs/README.md 导航和 Docs/Storage.md 持久化总览；补齐 COBS/CRC 帧样例、消息表、CONFIG 01–0A 与 SOURCE V1/V2，澄清记录/参数身份、默认加载和示例开关。同步模块与工具说明，保留历史板测；只改文档/索引，协议与固件行为不变。 已检查 20 篇文档的 186 个本地链接/锚点、COBS/CRC 样例与字段长度，现有 Codec、参数协议、Storage/EEPROM 主机测试和结构检查通过；未重新编译或烧录固件。
 
 - 2026-09-29：实现上位机手动静态 IMU 陀螺零偏校准（任意静止姿态），保留有效加速度校正，约 5 s 观察及异常拒绝后保存单份 EEPROM，新值下次启动生效。新增 CONFIG 0x09/0x0A、完整错误/部分保存状态，复用 HostCmd，无新增线程或动态工作区；验证范围为主机与构建，未烧录或实板验证。
 
@@ -191,17 +227,17 @@
 
 - 本轮最终验证：23 套主机回归、87 个公共头/151 单元及闭包、十个父项目固件、13 条应用编译命令隔离、110 个 SDK 对象符号、Debug/Release 和结构/第三方哈希通过。SPI/I2C/Serial 统一 SRNOS_NO_WAIT/WAIT_FOREVER，同步消费者保证在途 buffer 生命周期；板端性能待测，未自动烧录。
 
-- 2026-09-28：完成自维护模块 SRNOS 命名及公共依赖隔离。删除旧 API/头路径/兼容入口，HostLink 注册上下文不透明，Logging 取消无效 timeout 参数，SPI 设备与 HAL/供应商/worker 接口私有，矩阵改用 SDK 类型。Platform 完整链接能力保留，应用编译不再得到 RTOS/CMSIS/HAL/Board/Source include；源码破坏性迁移见 [指南](Docs/SDKMigration.md)。
+- 2026-09-28：完成自维护模块 SRNOS 命名及公共依赖隔离。删除旧 API/头路径/兼容入口，HostLink 注册上下文不透明，Logging 取消无效 timeout 参数，SPI 设备与 HAL/供应商/worker 接口私有，矩阵改用 SDK 类型。Platform 完整链接能力保留，应用编译不再得到 RTOS/CMSIS/HAL/Board/Source include。
 - HostComm/SPI/I2C/Serial/Indicators 按事件及截止时间等待；HostComm RX 每轮最多 1024 B，CAN RX 最多 32 帧并公平续跑，CAN RX/TX、HostComm/HostCmd、Indicators/Monitor 保持分离。HostLink 活动请求 10 项与 4 项/2 秒重放缓存分离，固定持有一份待发送结果，交付回调锁外执行；长命令与断连不重复执行业务。
 - SPI/I2C 使用预留—复制—发布槽生命周期，修复复制期间取消确认；Serial 总期限覆盖锁竞争，日志运行期耗尽不退化为直接输出，IMU/INS 遥测改逐条短快照。保持线协议、EEPROM 格式、采样频率、硬件时序、线程优先级和默认栈。本轮没有烧录，开销与真实负载验收待完成。
 
-- 2026-09-28：补齐父项目线程建立与管理文档：两种创建路径、句柄/参数所有权、初始化状态、协作回收、延时/通知/同步及原生 API 迁移；同步根 README、Kernel、Minimal、开发约定与 AGENTS。仅文档变更，未改变运行行为或烧录。 文档中根 C++17 / Kernel C11 示例语法及本地链接检查通过。
+- 2026-09-28：补齐父项目线程建立与管理文档：两种创建路径、句柄/参数所有权、初始化状态、协作回收、延时/通知/同步；同步根 README、Kernel、Minimal、开发约定与 AGENTS。仅文档变更，未改变运行行为或烧录。 文档中根 C++17 / Kernel C11 示例语法及本地链接检查通过。
 
 - 2026-09-28：完成托管任务/SystemMonitor 板端验证；修复 ADC BDMA READY/EN 停止确认、主机 SAMPLE 消息号；优化循环统计热点并新增生命周期/CPU 对照/CDC/ADC 注入板测。
 
 - 2026-09-28：父项目线程合同从 entry 切换为 init/step/cleanup；增加不透明生命周期句柄、协作停止/删除、时间/同步接口及默认 32 KiB 有界池。全部 SDK worker 接入统一外层循环并以 SRNOS_ 命名，保持优先级/栈及私有等待；增加低干扰循环统计、0x0003 遥测和 JSONL，容量 8→12。旧 entry 不兼容；生成代码和第三方内核未改动。验证范围为主机与构建；本次未烧录，时序与开销仍待板测。
 
-- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。22组主机、Debug/Release、九个父项目构建及结构检查通过；未烧录/板测。
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。Indicators/生成文件不变。22组主机、Debug/Release、九个父项目构建及结构检查通过；未烧录/板测。
 
 - 2026-09-28：板级支撑整理为 Support/System、IO、Devices、USB；指示器策略归服务，USB 准备和 MCP 默认配置收拢，蜂鸣器/WS2812 固定硬件宏私有化。保留生成边界及现有时序/调度/内存合同；21 组主机、九个父项目目标、Minimal/Board/EEPROMBringUp 构建通过，未生成/烧录/板测。
 
@@ -214,7 +250,7 @@
 - I2C4 原回调线程改为 High6/3 KiB 唯一分发者：LIS/SPA 保留槽、后台两槽、周期优先与后台防饥饿、64 B 事务上限、排队/活动期限、完成信号量及按请求取消。启动同步预算增加 512 B，未增加生产线程或改变 IOC/MPU/链接段。
 - FT24C128A 读/写/校验统一最多 32 B，保留 64 B 页边界；LIS/SPA 改用 30 ms 排队完成等待。20 组主机套件、九个父项目构建及 Debug/Release 通过；32.864 秒整片并发板测 20 项通过并恢复，LIS约88–93 Hz/SPA约16 Hz，无离线或总线错误。模块 README/CHANGELOG 已同步。
 
-- FT24C128A 增加独立 `SRNOS_EEPROM*` 阻塞/非阻塞状态机：16 KiB、两字节地址、64 B 页边界、分段读写、写周期后逐页读回校验、超时及设备级取消。无新增常驻线程或驱动堆分配；旧参数/HostLink/INS 存储保持未迁移及默认关闭。
+- FT24C128A 增加独立 `SRNOS_EEPROM*` 阻塞/非阻塞状态机：16 KiB、两字节地址、64 B 页边界、分段读写、写周期后逐页读回校验、超时及设备级取消。无新增常驻线程或驱动堆分配；对应版本的参数/HostLink/INS 存储默认关闭。
 - 增加 EEPROMBringUp、模块 README/CHANGELOG 和 ASan/UBSan 主机测试；20 组主机套件、专用 Debug/Release 构建通过。板端 20 项检查通过，整片恢复后与外部备份逐字节一致，测试前完整 Flash 已恢复并比对一致。记录现有 LIS/SPA 将总线 BUSY 判为离线的共享访问限制，测试后恢复 READY。
 
 - 补充 `Source/Services/INS/README.md` 与模块 `CHANGELOG.md`；主机保存工具增加 `--streams`，支持双 IMU、INS、磁场、气压全量 CSV、INS/温控状态和 epoch 变化检查，旧默认命令及双 IMU CSV 列保持兼容。主机模拟串口/黄金向量回归通过，本次文档与采集工具更新未改固件、未操作实板。
@@ -283,9 +319,9 @@
 
 硬件记录证明的是修复前的失效原因，修复后的板端验证仍待执行；本次不操作用户保留的 GDB/J-Link 会话，不烧录、复位或继续 MCU。修复固件使用独立构建目录，保留原调试 ELF。
 
-#### 迁移收尾与 BringUp 观测应用
+#### BringUp 观测应用
 
-- 增加 `Docs/Development.md`，将源码迁入完成与板端运行验收分开，列出启动/内存、固定硬件、串口协议、双 CDC/参数和父项目 API 收尾顺序。
+- 增加 `Docs/Development.md`，区分离线检查与板端运行验收，列出启动/内存、固定硬件、串口协议、双 CDC/参数和父项目 API 收尾顺序。
 - 新增可选 `Examples/BringUp`，在现有应用线程中每 5 秒采集启动状态、heap_5 余量、任务栈高水位、IMU 快照年龄和日志统计，提供调试符号与 CDC0 日志摘要。关闭本示例的启动业务参数恢复，保留固定服务默认行为。
 - 根入口通过 `SIRINEMBEDOS_EXAMPLE=Minimal|BringUp` 选择应用，默认保持 Minimal；父项目构建回归加入 BringUp，第七种目标覆盖示例接入。同步 README、AGENTS 和示例说明。
 
@@ -293,16 +329,15 @@
 
 限制：未烧录或实测。全任务栈扫描会挂起调度器，适合低频资源观察，不能作为实时压力验证；`RUNNING`、USB 启动和 IMU 数据新鲜均不等于整板健康。SDK 默认 IMU 温控/校准行为继续保留。
 
-#### Framework 源码整合与初始化冻结
+#### 启动配置与资源冻结
 
-- 将 prototype 的通用基础操作、Fault、内存、诊断、总线、固定设备、协议与服务源码直接纳入 SDK，移除对几十个 Framework 子仓库的组织依赖；父项目只引入一个 SirinEmbedOS 子模块。具体迁移/保留/排除项、来源与许可见 `Docs/Migration/README.md`。
 - 公共基础操作及启动入口统一为 `SRNOS_*` / `SRNOS::`，应用使用 `SRNOS_ApplicationConfigure` 和 `SRNOS_ApplicationMain`。应用算法、控制状态机、业务线程和具体设备组合仍由父项目管理。
 - 增加 `SRNOS_SystemConfig` 声明、冲突和启动预算校验、统一冻结及应用线程装配。CAN/UART/IMU/服务/线程等结构配置初始化后不可重载；服务注册在内核初始化前完成，资源与硬件启动按内核阶段执行。应用线程等待参数加载尝试及 USB 启动阶段结束；启动状态与具体设备健康分别观测。
-- 整合三路原生 CAN、外置 CAN、SPI/I2C、IMU/EEPROM、板级指示器和诊断。默认集成硬件访问能力，不自动执行电机使能或业务运动。FatFs、LwIP 未迁入。
+- 整合三路原生 CAN、外置 CAN、SPI/I2C、IMU/EEPROM、板级指示器和诊断。默认集成硬件访问能力，不自动执行电机使能或业务运动。
 - Serial 成为 UART 的唯一 HAL/DMA/回调所有者，协议服务和原始通道通过初始化声明获得独占资源；普通 UART 默认未绑定。DR16、VT03、裁判、H12H、日志按通道拆分，UART7 保持固定 RS485 总线。端口参数、owner 和缓冲预算冻结，错误恢复不改变用途。
 - 正常日志改用 Serial/USB sink，不再复位 USART1 或调用 Emergency。调度前日志仅捕获到有界 RAM 启动缓冲，避免触发 FreeRTOS 尚未就绪的临界区；stdio 明确提供正常输出和失败返回策略。
 - 参数注册表初始化后冻结，默认只读，只有显式 `SRNOS_PARAMETERS_MUTABLE_BUSINESS` 的业务值可远程写入；系统结构配置不进入主机可写表。新增受锁保护的标量和一致快照、先校验后原子应用的批量写入。持久化加载完整验证后仅更新可写业务值，失败保留当前值；默认启动加载先于 USB 接收主机命令。
-- 迁入固定 AL94 USB Composite **1.0.3** 的 Core/COMPOSITE/CDC_ACM，CDC0 用于日志、CDC1 用于 HostLink；保留 vendor 原文、许可和哈希，原 descriptor 补丁由构建目录派生。SDK glue 补齐 PA11/PA12，复用生成的 PCD。CDC class 使用静态存储，移除未使用的 libc 分配别名，不增加其他 USB class。
+- 集成 AL94 USB Composite **1.0.3** 的 Core/COMPOSITE/CDC_ACM，CDC0 用于日志、CDC1 用于 HostLink；保留 vendor 原文、许可和哈希，原 descriptor 补丁由构建目录派生。SDK glue 补齐 PA11/PA12，复用生成的 PCD。CDC class 使用静态存储，移除未使用的 libc 分配别名，不增加其他 USB class。
 - Fault 向量、retained record、HSKP/Debug Watch 和 MPU/Cache 专用段接入 SDK；基础 API 更名不改变 Fault v2 二进制布局。默认紧急输出只保留 RAM 记录，可在初始化时显式预留；不自动占用串口。
 - 最终链接采用 `Board/Linker/SirinEmbedOS.ld`，普通 data/TLS/BSS 放 D1，DTCM 保留热数据、RTOS heap 和 MSP；加入 D2 DMA/Watch/retained、D3 BDMA、ITCM 复制和独立 libc arena。Picolibc 静态递归锁接入 FreeRTOS，IRQ 不允许动态分配；生成基线文件保留原位置。
 - 新增 `Examples/Parameters` 业务 PID 增益和快照示例、`Examples/PrototypeBindings` 串口用途示例；重写 README 和 AGENTS 的当前能力、父项目接入、初始化冻结与验证边界。
@@ -313,16 +348,14 @@
 
 ### 2026-09-25
 
-以下为当时的阶段记录，其中旧 API 名、链接布局和“尚未迁入”范围已由后续条目取代。
-
-#### SDK 构建与 FreeRTOS 迁入
+#### SDK 构建与 FreeRTOS 配置
 
 - 根目录改为可独立构建、也可由父项目 `add_subdirectory()` 引入的 SDK，提供 `SirinEmbedOS::Platform`、Board/Kernel 组成目标和 `sirinos_add_firmware()`。父项目决定工程名、固件目标和应用源码，SDK 作为子目录时不自动创建示例固件。
 - `Board/CMakeLists.txt` 将生成清单接入对象库，在局部作用域隔离 CubeMX 对 `CMAKE_PROJECT_NAME` 的依赖；Board 独立入口复用同一 SDK，生成清单、基础链接脚本和启动汇编保持原样。
 - ST Arm Clang 工具链适配将链接脚本与 map 从生成的全局参数移到 SDK/固件 target。Board preset 改用同一适配工具链；旧 Board 缓存需刷新，否则会继续加载原工具链。配置阶段检测该情况并给出清理提示。
-- 从 prototype 导入 FreeRTOS **10.6.2**、CMSIS-RTOS2 wrapper/API、原 CM4F 浮点 port 和 heap_5；第三方文件保持字节一致，附来源、参考 commit、许可证和 SHA256 清单，没有升级依赖或引入嵌套子模块。
+- 固定 FreeRTOS **10.6.2**、CMSIS-RTOS2 wrapper/API、CM4F 浮点 port 和 heap_5；第三方文件保持字节一致，附来源、参考 commit、许可证和 SHA256 清单，没有升级依赖或引入嵌套子模块。
 - 新增 SDK 管理的 FreeRTOS 配置、Kernel 启动和基础失败 hooks，以及 `Board/Glue` 接线。生成 `main()` 的 USER CODE 在 HAL 初始化后调用启动入口，SDK 启动唯一一次调度器，在 Application 线程调用父项目的 `OS_ApplicationMain()`；应用入口可创建线程或返回。
-- 保留 1 kHz Kernel tick、TIM7 HAL tick、56 级线程优先级及 IRQ syscall 门限 5；SVC/PendSV 由 port 实现，SysTick 由 CMSIS wrapper 实现。启用 Picolibc 的每任务 TLS，关闭旧 Newlib reentrancy；没有迁入旧 HSKP trace 回调。
+- 保留 1 kHz Kernel tick、TIM7 HAL tick、56 级线程优先级及 IRQ syscall 门限 5；SVC/PendSV 由 port 实现，SysTick 由 CMSIS wrapper 实现。启用 Picolibc 的每任务 TLS，关闭旧 Newlib reentrancy。
 - 使用自维护链接片段保留 DTCM 64 KiB + AXI SRAM 128 KiB heap_5；两区均为 NOLOAD，heap_5 在内核初始化时注册并初始化管理结构，payload 不保证清零。链接检查 SRAM 边界，并确保 libc 的 `_end` 位于 DTCM RTOS heap 之后。
 - 增加 `SIRINEMBEDOS_CONFIG_HEADER` 接口，父项目可统一覆盖初始应用线程栈（默认 4096 字节）、CMSIS 优先级（默认 24）和堆容量；同一构建内 SDK 使用一套配置。
 - 增加最小 heartbeat 应用、接入 README、父项目 CMake/C++/TLS 构建回归，并同步 AGENTS 的已实现范围。
@@ -331,7 +364,7 @@
 
 构建检查通过：第三方哈希、含空格的父项目路径、父工程名保持、两个不同固件名、helper 与直接链接 Platform 两种接入、应用配置覆盖、C++ 构造/TLS 段、强 IRQ/hook 符号和 NOLOAD heap 布局均完成静态检查。生成边界另行核对：只有 `main.c` 的 USER CODE 区、项目维护的 Board 入口和 preset 发生修改，IOC 未改、未重新 generate。
 
-限制：尚未烧录；实际调度、FPU 上下文、TLS 隔离与外设行为仍需板端验证。CMSIS 原有 `optimize("Os")` 被 Clang 忽略的警告仍在。完整 Fault/Debug Watch、运行统计、DMA/BDMA 段、libc malloc/new/stdio 的 RTOS 锁、其他 middleware 和系统服务未包含在本次迁移内。普通 heap_5 分配不能作为 DMA 缓冲使用。
+限制：尚未烧录；实际调度、FPU 上下文、TLS 隔离与外设行为仍需板端验证。CMSIS 原有 `optimize("Os")` 被 Clang 忽略的警告仍在。完整 Fault/Debug Watch、运行统计、DMA/BDMA 段、libc malloc/new/stdio 的 RTOS 锁、其他 middleware 和系统服务不在该次验证范围内。普通 heap_5 分配不能作为 DMA 缓冲使用。
 
 #### 早前工程记录
 
@@ -344,9 +377,8 @@
 #### 工程与架构
 
 - 新增 SDK 根目录 CMake 入口、Debug/Release presets 和 ST Arm Clang 工具链路径适配，CLion 可直接打开 `SirinEmbedOS/`；复用 Board 生成源码清单，不修改生成文件。根目录构建目标为 `SirinEmbedOS.elf`，新增 IDE/构建输出忽略规则。
-- 建立面向固定 STM32H723 主控硬件的 SirinEmbedOS 重构基线，参考工程为 `h723vg-v2-prototype`。
 - 在 `AGENTS.md` 明确单一 SDK 子模块的组织方式：SDK 提供固定硬件能力和公共服务，父项目管理特有控制算法、业务任务与配置。
-- 写入 SDK 和父项目的目录规划、CubeMX 生成边界、CMake 接入与启动所有权规则。目录按需建立，规划中的系统能力尚未迁入。
+- 写入 SDK 和父项目的目录规划、CubeMX 生成边界、CMake 接入与启动所有权规则。目录按需建立。
 - 明确 CAN、板载 IMU 等固定能力默认集成，UART 等可变用途资源保留配置和占用管理空间。
 
 #### HAL 生成基线
@@ -368,7 +400,6 @@
 
 #### 已知限制与待接入项
 
-- FreeRTOS Kernel、系统服务、应用接入 API 和目录规划中的其他组件尚未完成迁入。
 - HardFault、MemManage、BusFault、UsageFault 仍为 CubeMX 生成的死循环处理函数；接入 SirinOS Fault 前需要统一所有权。
 - USB HAL MSP 当前仅生成 PA9 VBUS GPIO 配置，未生成 PA11/PA12 的 GPIO 初始化；后续板级 glue 需要复核并补齐 USB 准备流程。
 - 当前基础链接脚本尚未接入 SDK 的 DMA/BDMA 专用内存段；ADC3 BDMA 缓冲的 SRAM4/D3 放置与初始化需要后续实现。
@@ -395,7 +426,7 @@
 
 2026-10-06 CAN4 单服务与 SPI 序列优化完成；完整测量值、负载条件和恢复范围见 [CAN4 板测摘要](Source/IO/CAN/CHANGELOG.md#can4-20261006)。
 
-CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`，设备反馈时间可以直接与应用任务时间比较；不与 HAL/DWT 原点混用。该时间基准修复已在 MSwerve 父项目实测。
+CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`，设备反馈时间可以直接与应用任务时间比较；不与 HAL/DWT 原点混用。该时间基准修复已在 父项目实测。
 
 2026-09-29 已完成持久化板测，并按实测噪声提高静态校准阈值：连续两次双IMU校准保存成功，软件复位后revision2加载一致、INS未校准标记清除。当前保留新固件及校准记录。真实断电、校准绝对精度仍待验收。
 
@@ -403,7 +434,7 @@ CAN adapter 的毫秒时间、发送 TTL 和重试统一使用 `SRNOS_TimeMs()`�
 
 CubeMX 生成、构建与调试会话维护方法见 [Board 指南](Board/README.md)和[开发指南](Docs/Development.md)。
 
-2026-09-26 用户首次板端记录已确认 RUNNING/IMU 初步运行，同时定位到启动事件屏障将成功返回 `0x3` 误判失败而复位。两处等待已改为错误位检查加所需位掩码；13 组主机套件和修复版 Debug/Release 构建通过，修复后板端尚待复测。前文“未烧录”的迁移基线描述不再代表最新硬件观测，不得主动操作用户保留的暂停调试会话。
+2026-09-26 用户首次板端记录已确认 RUNNING/IMU 初步运行，同时定位到启动事件屏障将成功返回 `0x3` 误判失败而复位。两处等待已改为错误位检查加所需位掩码；13 组主机套件和修复版 Debug/Release 构建通过，修复后板端尚待复测。
 
 18 组主机套件、根 Debug/Release、两个 BringUp、Board 独立入口、八种父项目目标与 SensorBringUp Release 构建已有通过记录。2026-09-27 短测实板 BMI/LSM/LIS/SPA 均 READY，LSM=0x6A、LIS=0x40、SPA=0x11；历史 LSM OFFLINE 不代表当前状态。双 IMU 遥测约 1 kHz，十分钟长测由用户执行，不能据短测宣称完整验收。检查当前会话所有权再操作探针；
 

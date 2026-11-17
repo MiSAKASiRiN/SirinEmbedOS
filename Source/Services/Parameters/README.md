@@ -24,6 +24,8 @@ C 项目使用 `SRNOS_PersistentParameterDefinition`、`SRNOS_ParametersRegister
 
 ## RAM 修改、保存和加载
 
+连接板上的 CDC1 后，`srneos parameters list` 可列出应用登记的参数；write 按稳定 ID 修改 RAM，persist 显式保存，state 可检查保存期间是否又有新的 RAM 修改。端口与选项见 [主机参数命令](../../../Tools/CmdLineTool/README.md#命令与业务参数)。
+
 - WRITE、`Set`、`ResetDefaults` 只改变 RAM；相同值不会增加 generation，不自动写 EEPROM。
 - `Save` 将当前值冻结成固定快照，锁外编码并调用 Storage。保存期间仍允许 WRITE；成功报告 `saved_generation`，新的 RAM 修改保持 dirty。已经确认保存且内容未变时不再执行存储写入。
 - `Load` 先流式读取到暂存值，只有整条 Storage CRC、版本和记录布局通过才提交。期间 generation 改变时返回 CONFLICT，不能覆盖并发 WRITE。运行期加载失败保留当前 RAM，标记保存状态不可确认。

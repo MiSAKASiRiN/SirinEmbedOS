@@ -14,6 +14,8 @@
 - HAL 原有四个 RX/TX 描述符留在 `.dma_nc`；五个 1536 B RX buffer 和一个 1536 B TX buffer 共 9216 B 在 `.eth_dma` D2 非缓存区。HAL ReadData 在返还帧前补 descriptor，因此 RX 比描述符多一个 buffer。NOLOAD 早期清零和每次初始化显式复位；控制结构/复制队列在 D1。
 - 静态 D1 队列及 D2 DMA 缓冲在构建中固定预留，运行期开关不回收这些区域。启用时启动 heap 预算增加 5 KiB；应用应在总堆预算内保留该容量。
 
+worker 创建与模块预算共用 4096 B 栈常量，额外 1024 B 保留给 TCB/TLS/分配开销；Kernel 只汇总模块报告的预算。此预算不包含静态队列和 DMA 区，也不改变它们的所有权。
+
 ## 固定板接入
 
 `Board/Support/IO/ethernet_board.c` 是唯一运行期 MAC/HAL/IRQ owner，复用 CubeMX 的 MSP 引脚和描述符，直接受控调用 HAL_ETH_Init，避免生成的 `MX_ETH_Init` 默认 MAC 和 Error_Handler。生成函数仍保留但不调用，CubeMX 生成区不修改。

@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/IO/RS485/Modbus/ModbusRTU.h"
+#include "../rs485_internal.h"
 
 #include "FreeRTOS.h"
 #include "task.h"

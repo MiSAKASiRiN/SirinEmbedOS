@@ -9,6 +9,7 @@
 #include "SirinEmbedOS/Kernel/Startup.h"
 #include "SirinEmbedOS/Kernel/System.h"
 #include "SirinEmbedOS/Services/Services.h"
+#include "SirinEmbedOS/Services/Logging/Log.h"
 #include "SirinEmbedOS/Services/Referee/Startup.h"
 #include "../Services/SystemMonitor/monitor_internal.h"
 #include "SirinEmbedOS/Services/SirinLink/SystemMonitorTelemetry.h"
@@ -17,7 +18,7 @@
 #include "IO/CAN/Native/fdcan_internal.h"
 #include "IO/CAN/can_startup.h"
 #include "IO/CAN/can_controller_internal.h"
-#include "SirinEmbedOS/IO/RS485/RS485.h"
+#include "IO/RS485/rs485_internal.h"
 #include "../Services/INS/ins_internal.h"
 #include "../Services/INS/imu_calibration_internal.h"
 #include "Services/Parameters/parameters_internal.h"
@@ -105,6 +106,25 @@ typedef struct {
     osPriority_t priority;
     bool wait_board;
 } system_thread_t;
+/* Fixed CAN/BMI/bus/indicator workers, native idle/timer and shared startup
+ * overhead. Keep this conservative allowance until board measurements justify
+ * a separate change; optional service reservations are owned by each service. */
+#define SRNOS_KERNEL_FIXED_HEAP_RESERVE_BYTES (60u * 1024u)
+#define SRNOS_KERNEL_THREAD_OVERHEAD_BYTES 512u
+#define SRNOS_KERNEL_INS_STACK_BYTES 3072u
+#define SRNOS_KERNEL_SENSOR_STACK_BYTES 2048u
+#define SRNOS_KERNEL_BUS_COMPLETION_RESERVE_BYTES 2560u
+
+uint64_t SRNOS_KernelStartupHeapBudget(const SRNOS_SystemConfig *config)
+{
+    uint64_t bytes = (uint64_t)SRNOS_KERNEL_FIXED_HEAP_RESERVE_BYTES + config->application_stack_bytes +
+        SRNOS_KERNEL_THREAD_OVERHEAD_BYTES + SRNOS_KERNEL_INS_STACK_BYTES +
+        SRNOS_KERNEL_THREAD_OVERHEAD_BYTES + SRNOS_KERNEL_BUS_COMPLETION_RESERVE_BYTES;
+    if (config->sensors.lsm_enabled) bytes += SRNOS_KERNEL_SENSOR_STACK_BYTES + SRNOS_KERNEL_THREAD_OVERHEAD_BYTES;
+    if (config->sensors.lis_enabled || config->sensors.spa_enabled)
+        bytes += SRNOS_KERNEL_SENSOR_STACK_BYTES + SRNOS_KERNEL_THREAD_OVERHEAD_BYTES;
+    return bytes;
+}
 static const system_thread_t system_threads[] = {
     {"SRNOS_CAN1_RX",SRNOS_NativeCANRxRouterWorker,(void *)1,4096,osPriorityRealtime,true},
     {"SRNOS_CAN1_TX",SRNOS_NativeCANTxRouterWorker,(void *)1,4096,osPriorityRealtime,true},
@@ -114,7 +134,7 @@ static const system_thread_t system_threads[] = {
     {"SRNOS_CAN3_TX",SRNOS_NativeCANTxRouterWorker,(void *)3,4096,osPriorityRealtime,true},
     {"SRNOS_CAN4",SRNOS_ExternalCANWorker,NULL,4096,osPriorityHigh7,false},
     {"SRNOS_BMI",SRNOS_BMIWorker,NULL,2048,osPriorityRealtime,false},
-    {"SRNOS_INS",SRNOS_INSWorker,NULL,3072,osPriorityRealtime,false},
+    {"SRNOS_INS",SRNOS_INSWorker,NULL,SRNOS_KERNEL_INS_STACK_BYTES,osPriorityRealtime,false},
     {"SRNOS_Indic",SRNOS_IndicatorsWorker,NULL,1024,osPriorityLow,false},
 };
 static void system_thread_entry(void *arg)
@@ -143,7 +163,9 @@ void SRNOS_KernelStart(void)
     configASSERT(SRNOS_RemoteControlConfigure(&draft.remote) == 0);
     configASSERT(SRNOS_RefereeConfigure(draft.referee_port) == 0);
     if (draft.logging_enabled) {
-        configASSERT(SRNOS_LoggingPrepare(draft.log_backends, SRNOS_SerialGetChannel(draft.log_port)));
+        SRNOS_SerialChannel *log_channel = (draft.log_backends & SRNOS_LOG_BACKEND_UART) ?
+            SRNOS_SerialGetChannel(draft.log_port) : NULL;
+        configASSERT(SRNOS_LoggingPrepare(draft.log_backends, log_channel));
     }
     if (draft.bind_channels) configASSERT(draft.bind_channels(draft.bind_channels_user));
     configASSERT(SRNOS_InputFreeze());
@@ -200,8 +222,8 @@ void SRNOS_KernelStart(void)
         const system_thread_t *t=&system_threads[i];
         make_thread(t->name, system_thread_entry, (void *)t, t->stack, t->priority);
     }
-    if(c->sensors.lsm_enabled) make_thread("SRNOS_LSM", SRNOS_LSMWorker, NULL, 2048, osPriorityRealtime);
-    if(c->sensors.lis_enabled || c->sensors.spa_enabled) make_thread("SRNOS_Env", SRNOS_EnvironmentWorker, NULL, 2048, osPriorityNormal);
+    if(c->sensors.lsm_enabled) make_thread("SRNOS_LSM", SRNOS_LSMWorker, NULL, SRNOS_KERNEL_SENSOR_STACK_BYTES, osPriorityRealtime);
+    if(c->sensors.lis_enabled || c->sensors.spa_enabled) make_thread("SRNOS_Env", SRNOS_EnvironmentWorker, NULL, SRNOS_KERNEL_SENSOR_STACK_BYTES, osPriorityNormal);
     for (size_t i=0; i<c->thread_count; ++i) {
         const SRNOS_ThreadConfig *t = &c->threads[i];
         SRNOS_Thread handle;

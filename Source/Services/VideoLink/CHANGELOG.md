@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — 2026-11-11 配置与资源合同
+
+- RX/TX 全双工条件提取为私有纯校验，供系统预检与 VideoLinkPrepare 共用；保持 VT03 单所有者、现有协议和任务行为。
+- 本轮验证限定为编译，未新增或运行主机测试，未进行图传板端验证。
+
 ## Unreleased — 输入与消息
 
 - 2026-10-21：0311 交给 Message 按服务/类型分发 SRMT/SM，移除全局命令 FIFO 与 Receive；统计 rx_commands 改为 rx_messages，服务节奏统一 SRNOS_TimeMs。

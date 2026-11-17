@@ -1,6 +1,8 @@
 #ifndef SRNOS_CAN_FD_INTERNAL_H
 #define SRNOS_CAN_FD_INTERNAL_H
 #include "SirinEmbedOS/IO/CAN/FD/CANFD.h"
+#include "SirinEmbedOS/IO/CAN/Controller.h"
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,7 +15,10 @@ typedef struct {
 } SRNOS_CANFDBackendOps;
 bool SRNOS_CANFDCoreHasRegistrations(SRNOS_CANChannel channel);
 void SRNOS_CANFDCoreFreeze(void);
-void SRNOS_CANFDCorePrepareResources(void);
+/* Startup thread only, after freeze/heap initialization, before scheduling.
+ * Insufficient largest heap block releases this attempt and returns false. */
+bool SRNOS_CANFDCorePrepareResources(void);
+size_t SRNOS_CANFDCoreHeapBudget(const SRNOS_CANControllerConfig configs[SRNOS_CAN_CONTROLLER_COUNT]);
 void SRNOS_CANFDCoreSetBackend(SRNOS_CANChannel channel, const SRNOS_CANFDBackendOps *ops);
 void SRNOS_CANFDCoreOnRxFrame(SRNOS_CANChannel channel, const SRNOS_CANFDFrame *frame, uint32_t now_ms);
 void SRNOS_CANFDCoreNoteRxRejected(SRNOS_CANChannel channel);

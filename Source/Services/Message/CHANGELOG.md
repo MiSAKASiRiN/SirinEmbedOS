@@ -13,4 +13,6 @@
 
 ## Unreleased
 
+- 2026-11-11：UDP adapter 通过 Network 的固定私有回调接收数据报，移除 Network 对 Message 协议的直接依赖；不增加报文副本、PCB 或线程。UART 配置条件收敛到供 SystemValidate/Prepare 共用的私有校验函数。静态复核及固件编译结果见根 CHANGELOG；未运行主机测试或板端通信验证。
+
 - 2026-10-20：增加启动注册、队列/回调分发、通用消息封装和 HostComm/UART/UDP/图传适配；有界资源、运行期零分配。主机回归与 SDK 示例编译验证，未烧录，物理链路及实时栈高水位待板测。

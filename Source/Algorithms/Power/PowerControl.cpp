@@ -1,5 +1,6 @@
 // power_control.cpp
 #include "SirinEmbedOS/Algorithms/Power/PowerControl.h"
+#include <cmath>
 
 /* ===================== SECTION: types/config ===================== */
 static inline float pc_absf(float x) {
@@ -134,7 +135,6 @@ void SRNOS_PowerControlReset(SRNOS_PowerControlCtx *ctx) {
   ctx->dbg.Z_hat = 0.0f;
   ctx->dbg.scale_non = 1.0f;
   ctx->dbg.scale_all = 1.0f;
-  ctx->dbg.overflow_cnt = 0u;
 }
 
 void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
@@ -148,7 +148,7 @@ void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
                              int16_t *cmd_inout,
                              uint32_t motor_count) {
   if (!ctx || !ctx->cfg || !meas || !cmd_inout) return;
-  if (dt <= 0.0f || dt > 0.1f) dt = 0.001f;
+  if (!std::isfinite(dt) || dt <= 0.0f || dt > 0.1f) dt = 0.001f;
 
   const SRNOS_PowerControlConfig *cfg = ctx->cfg;
   const float q_joule = pc_cfg_or_default(cfg->q_joule, SRNOS_POWER_CONTROL_DEFAULT_Q_J);
@@ -198,6 +198,16 @@ void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
     }
   }
 
+  // Slew may retain part of an earlier command. Apply it before model estimation
+  // and final power scaling, so command fallback includes that retained output.
+  for (uint32_t i = 0; i < count; ++i) {
+    const SRNOS_PowerControlMotorCfg *mcfg = &cfg->motors[i];
+    if (mcfg->enabled) {
+      cmd_inout[i] = pc_apply_limit_slew(cmd_inout[i], ctx->last_cmd[i],
+                                        mcfg->cmd_limit, mcfg->slew_rate, dt);
+    }
+  }
+
   float p_total_est = 0.0f;
   float p_crit = 0.0f;
   float p_non = 0.0f;
@@ -213,13 +223,21 @@ void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
   }
 
   float p_total_meas = 0.0f;
-  bool p_meas_valid = P_meas_valid;
-  if (!p_meas_valid || P_meas_watt < 0.0f) {
-    p_meas_valid = false;
-  } else {
+  const bool p_meas_valid = P_meas_valid && std::isfinite(P_meas_watt) &&
+                            P_meas_watt >= 0.0f;
+  if (p_meas_valid) {
     p_total_meas = P_meas_watt;
   }
   const float p_total_used = p_meas_valid ? p_total_meas : p_total_est;
+  const bool group_proportions_valid = std::isfinite(p_total_est) &&
+      p_total_est > 0.0f && std::isfinite(p_crit) && std::isfinite(p_non);
+  if (p_meas_valid && group_proportions_valid) {
+    // Allocate the same total used for the over-budget decision. The model
+    // provides relative shares, not a second, potentially smaller budget basis.
+    const float critical_share = pc_clampf(p_crit / p_total_est, 0.0f, 1.0f);
+    p_crit = p_total_used * critical_share;
+    p_non = p_total_used - p_crit;
+  }
 
   ctx->z_hat = pc_clampf(ctx->z_hat - (p_total_used - ctx->pl_hat) * dt, 0.0f, q_joule);
 
@@ -237,7 +255,7 @@ void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
   float scale_non = 1.0f;
   float scale_all = 1.0f;
   if (p_total_used > p_budget && p_total_used > 0.0f) {
-    if (p_crit > p_budget) {
+    if (!group_proportions_valid || p_crit > p_budget) {
       scale_all = pc_clampf(p_budget / p_total_used, 0.0f, 1.0f);
       for (uint32_t i = 0; i < count; ++i) {
         const SRNOS_PowerControlMotorCfg *mcfg = &cfg->motors[i];
@@ -259,16 +277,6 @@ void SRNOS_PowerControlUpdate1kHz(SRNOS_PowerControlCtx *ctx,
   }
 
   for (uint32_t i = 0; i < count; ++i) {
-    const SRNOS_PowerControlMotorCfg *mcfg = &cfg->motors[i];
-    if (!mcfg->enabled) {
-      ctx->last_cmd[i] = cmd_inout[i];
-      continue;
-    }
-    cmd_inout[i] = pc_apply_limit_slew(cmd_inout[i],
-                                       ctx->last_cmd[i],
-                                       mcfg->cmd_limit,
-                                       mcfg->slew_rate,
-                                       dt);
     ctx->last_cmd[i] = cmd_inout[i];
   }
 

@@ -22,7 +22,8 @@ typedef struct {
     uint8_t tx[SRNOS_SPI_DMA_STAGING_SIZE];
     uint8_t *rx;
     size_t len;
-    bool synchronous, cancel;
+    bool synchronous;
+    SRNOS_SPIStatus cancel_status; /* OK until the first cancellation request. */
     SRNOS_SPIStatus result;
     osSemaphoreId_t done;
 } SRNOS_SPIRequest;
@@ -58,9 +59,19 @@ static void histogram(uint32_t bins[6], uint32_t us) {
     unsigned i=us<=25?0:us<=100?1:us<=250?2:us<=500?3:us<=1000?4:5;
     ++bins[i];
 }
+/* Called under the request-state guard. Completion or an earlier cancellation
+ * already owns the result; later cleanup must not rewrite its cause. */
+static void request_cancel(SRNOS_SPIRequest *r, SRNOS_SPIStatus status)
+{
+    if(r->state!=SRNOS_SPI_SLOT_DONE && r->cancel_status==SRNOS_SPI_OK)
+        r->cancel_status=status;
+}
 static void finish(SRNOS_SPIRequest *r, SRNOS_SPIStatus status, bool count_success)
 {
     uint32_t m=enter();
+    /* Cancellation and result publication share one commit point. A caller
+     * may have expired while the worker copied RX or prepared the next step. */
+    if(r->cancel_status!=SRNOS_SPI_OK) status=r->cancel_status;
     SRNOS_SPIDevice *dev=r->dev;
     SRNOS_SPICallback cb=r->cb;
     void *ctx=r->ctx;
@@ -109,18 +120,18 @@ static SRNOS_SPIRequest *oldest(unsigned first, unsigned end, bool can)
     }
     return r;
 }
-/* One bounded dispatch pass, also driven directly by the host HAL simulator. */
+/* One bounded dispatch pass. */
 static void service_once(void)
 {
     uint64_t now=SRNOS_TimeGetUptimeUs();
     SRNOS_SPIRequest *r=bus.active;
     if(r) {
         unsigned completion=bus.completion;
-        if(completion || r->cancel || bus.recover_requested || now-r->started>=5000 || (r->prepare && now-r->submitted>=r->deadline_us)) {
+        if(completion || r->cancel_status!=SRNOS_SPI_OK || bus.recover_requested || now-r->started>=5000 || (r->prepare && now-r->submitted>=r->deadline_us)) {
             SRNOS_SPIStatus status=SRNOS_SPI_OK;
-            bool abort_needed=completion!=1 || r->cancel || bus.recover_requested;
+            bool abort_needed=completion!=1 || r->cancel_status!=SRNOS_SPI_OK || bus.recover_requested;
             if(abort_needed) {
-                status=r->cancel?SRNOS_SPI_CANCELLED:completion==2?SRNOS_SPI_ERROR:SRNOS_SPI_TIMEOUT;
+                status=r->cancel_status!=SRNOS_SPI_OK?r->cancel_status:completion==2?SRNOS_SPI_ERROR:SRNOS_SPI_TIMEOUT;
                 (void)abort_active();
             } else {
                 bus.accepting_irq=false;
@@ -156,9 +167,9 @@ static void service_once(void)
     now=SRNOS_TimeGetUptimeUs();
     for(unsigned i=0;i<8;i++) {
         r=&bus.slots[i];
-        if(r->state==SRNOS_SPI_SLOT_QUEUED && (r->cancel || bus.faulted || now-r->submitted>=r->deadline_us)) {
-            if(!r->cancel && !bus.faulted) ++r->dev->statistics.queue_expired;
-            finish(r,r->cancel?SRNOS_SPI_CANCELLED:bus.faulted?SRNOS_SPI_ERROR:SRNOS_SPI_TIMEOUT,false);
+        if(r->state==SRNOS_SPI_SLOT_QUEUED && (r->cancel_status!=SRNOS_SPI_OK || bus.faulted || now-r->submitted>=r->deadline_us)) {
+            if(r->cancel_status==SRNOS_SPI_OK && !bus.faulted) ++r->dev->statistics.queue_expired;
+            finish(r,r->cancel_status!=SRNOS_SPI_OK?r->cancel_status:bus.faulted?SRNOS_SPI_ERROR:SRNOS_SPI_TIMEOUT,false);
         }
     }
     if(bus.active || bus.faulted) return;
@@ -205,10 +216,10 @@ static uint32_t next_wait(void)
         if(r->state==SRNOS_SPI_SLOT_ACTIVE) {
             uint64_t end=r->started+5000;
             if(r->prepare && r->submitted+r->deadline_us<end) end=r->submitted+r->deadline_us;
-            if(r->cancel) { leave(m);return 0; }
+            if(r->cancel_status!=SRNOS_SPI_OK) { leave(m);return 0; }
             if(end<deadline)deadline=end;
         } else if(r->state==SRNOS_SPI_SLOT_QUEUED) {
-            if(!bus.active || r->cancel || bus.faulted) { leave(m);return 0; }
+            if(!bus.active || r->cancel_status!=SRNOS_SPI_OK || bus.faulted) { leave(m);return 0; }
             uint64_t end=r->submitted+r->deadline_us;
             if(end<deadline)deadline=end;
         }
@@ -269,7 +280,7 @@ static SRNOS_SPIStatus transfer(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t *rx
     for(unsigned i=first;i<first+4;i++) if(bus.slots[i].state==SRNOS_SPI_SLOT_FREE) { r=&bus.slots[i]; break; }
     if(!r) { ++d->statistics.queue_full; ++SRNOS_SPI_DBG.xfer_busy; leave(m); return SRNOS_SPI_BUSY; }
     r->dev=d; r->rx=rx; r->len=len; r->cb=cb; r->ctx=ctx;
-    r->synchronous=blocking!=0; r->cancel=false;
+    r->synchronous=blocking!=0; r->cancel_status=SRNOS_SPI_OK;
     r->prepare=prepare; r->sequence_completed=0;
     r->order=++bus.order; r->submitted=r->enqueued=SRNOS_TimeGetUptimeUs();
     r->deadline_us=d->imu_priority?1000U:(uint64_t)(timeout_ms==SRNOS_WAIT_FOREVER?5U:timeout_ms)*1000U;
@@ -289,7 +300,7 @@ static SRNOS_SPIStatus transfer(SRNOS_SPIDevice *d,const uint8_t *tx,uint8_t *rx
     uint32_t remaining=timeout_ms==SRNOS_WAIT_FOREVER?osWaitForever:
         elapsed<budget_us?ticks_us(budget_us-elapsed):0;
     if(osSemaphoreAcquire(r->done,remaining)!=osOK) {
-        m=enter(); if(r->state!=SRNOS_SPI_SLOT_DONE) r->cancel=true; leave(m); wake();
+        m=enter(); request_cancel(r,SRNOS_SPI_TIMEOUT); leave(m); wake();
         (void)osSemaphoreAcquire(r->done,osWaitForever);
     }
     m=enter(); SRNOS_SPIStatus result=r->result; r->state=SRNOS_SPI_SLOT_FREE; leave(m);
@@ -325,7 +336,7 @@ SRNOS_SPIStatus SRNOS_SPICancel(SRNOS_SPIDevice *d)
 {
     if(!d || d->bus!=&bus || __get_IPSR() || osThreadGetId()==worker) return SRNOS_SPI_INVALID_PARAM;
     uint32_t m=enter(); bool pending=bus.callback_dev==d;
-    for(unsigned i=0;i<8;i++) if(bus.slots[i].state!=SRNOS_SPI_SLOT_FREE && bus.slots[i].state!=SRNOS_SPI_SLOT_DONE && bus.slots[i].dev==d) { bus.slots[i].cancel=true; pending=true; }
+    for(unsigned i=0;i<8;i++) if(bus.slots[i].state!=SRNOS_SPI_SLOT_FREE && bus.slots[i].state!=SRNOS_SPI_SLOT_DONE && bus.slots[i].dev==d) { request_cancel(&bus.slots[i],SRNOS_SPI_CANCELLED); pending=true; }
     leave(m); if(pending) wake();
     /* Nonblocking: BUSY means buffers still owned. Retry until OK. */
     return pending?SRNOS_SPI_BUSY:SRNOS_SPI_OK;

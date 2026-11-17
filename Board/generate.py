@@ -56,6 +56,24 @@ def archive_unused_templates(board, run):
     return removed
 
 
+def adapt_exit_run0_declaration(board):
+    """Apply the ST Arm Clang guard only to the known CMSIS declaration."""
+    header = board / 'Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h'
+    if not header.resolve().is_relative_to(board.resolve()):
+        raise OSError(f'CMSIS 头文件位于 Board 目录以外：{header}')
+    data = header.read_bytes()
+    guard = b'#if defined(__GNUC__) && !defined(__ARMCC_VERSION)'
+    decl = b'  extern void ExitRun0Mode(void) __attribute__((optimize("Os")));'
+    for eol in (b'\n', b'\r\n'):
+        original = eol.join((guard, decl, b'#else', b'  extern void ExitRun0Mode(void);'))
+        if original in data:
+            notice = b'/* Modified by SirinEmbedOS: the GCC optimize attribute is unavailable in Clang. */'
+            updated = notice + eol + original.replace(guard, guard + b' && !defined(__clang__)', 1)
+            header.write_bytes(data.replace(original, updated, 1))
+            print('已为 CMSIS ExitRun0Mode 的 GCC 属性补回 Clang 条件。')
+            return
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cubemx', default=os.environ.get('STM32CUBEMX'),
@@ -79,6 +97,7 @@ def main():
     commands = f'config load "{ioc.as_posix()}"\nproject generate\nexit\n'
     print(f'CubeMX: {executable}\n工作目录: {BOARD}\n脚本:\n{commands}', flush=True)
     print('生成和时序检查通过后归档移除旧模板：' + ', '.join(UNUSED_GENERATED_TEMPLATES))
+    print('若 CMSIS 恢复了 ExitRun0Mode 的原始声明，补回 Clang 条件。')
     if args.dry_run:
         return 0
 
@@ -109,6 +128,7 @@ def main():
             if check.returncode != 0:
                 print('Generate 成功；时序检查失败，保留全部生成文件，请检查日志。')
             else:
+                adapt_exit_run0_declaration(BOARD)
                 removed = archive_unused_templates(BOARD, run)
                 status = 0
                 print('Generate 和时序检查通过；旧模板已归档移除：' +

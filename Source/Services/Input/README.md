@@ -49,7 +49,7 @@ if (SRNOS_InputReadSnapshot(source, &s) == SRNOS_INPUT_OK &&
 
 SirinRMT 是输入模拟协议。它发布通道、按键、相对增量、车体系平面速度及明确的使能/禁用请求，自定义业务数据使用 [Message](../Message/README.md) 的其它 service/type。旧 EJOY 名称、magic 和接收队列不作为兼容接口保留。
 
-同一 30 字节载荷经 HostComm、专用 UART、UDP 或 VT03/13 图传传输时使用 Message service=`0x21`、type=`0x01`。旧 VT02/VT12 也可显式注册接收，直接用 `0x0302` 的完整 30 B payload，复用 `SRNOS_MESSAGE_VT02` 的 `0x22/1` 路由。所有多字节字段 little endian；保留/填充字节必须为零。
+同一 30 字节载荷经 HostComm、专用 UART、UDP 或 VT03/VT13 图传传输时使用 Message service=`0x21`、type=`0x01`。旧 VT02/VT12 也可显式注册接收，直接用 `0x0302` 的完整 30 B payload，复用 `SRNOS_MESSAGE_VT02` 的 `0x22/1` 路由。所有多字节字段 little endian；保留/填充字节必须为零。
 
 | 偏移 | 长度 | 内容 |
 |---|---|---|

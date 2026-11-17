@@ -2,6 +2,8 @@
 
 固定 H723 板低优先级监测，默认启用；不与 Indicators 共用线程。单个 Low / 4096 B 线程每秒采集 ADC 五参数并分批读取线程统计。启动配置 `system_monitor_enabled` 冻结后不支持远程修改；禁用时不启动 ADC、不创建本线程，Fault 元数据及 DWT/调度 trace 仍保持。
 
+模块启动预算与 worker 创建共用 4096 B 栈常量，启用时计入栈与 1024 B 的 TCB/TLS/分配余量，共 5 KiB；禁用时该项为零。Kernel 汇总预算，静态快照及 ADC/DMA 存储仍独立检查 map。
+
 ## 使用与数据合同
 
 公共头为 `SirinEmbedOS/Services/SystemMonitor.h`。任务上下文调用 `SRNOS_SystemMonitorGetSnapshot()`、`SRNOS_SystemMonitorGetTask(slot, out)`；返回值表示参数/调用上下文合法，健康检查 `flags`、`valid_fields` 和 ADC `state`。返回独立副本，不借出内部指针。任务槽为 1..64；槽号与 generation 共同识别一次任务生命周期，CPU 第一次采样尚无基线。超过 3 秒的缓存清 CPU/ADC 有效位并标过期，旧数值仍保留。

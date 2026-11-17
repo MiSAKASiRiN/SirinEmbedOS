@@ -87,6 +87,9 @@ public:
     return s;
   }
 
+  // Command setters/export: task/pre-scheduler or IRQ priority 5..15 only.
+  // Each setter publishes its command fields and selected mode together;
+  // export takes one bounded snapshot. Separate calls remain separate updates.
   /** @brief Reference DM style mode control. */
   void set_mode(LK8016EMode m) {
     ctrl_mode_.store(static_cast<uint8_t>(m), std::memory_order_relaxed);

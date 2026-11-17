@@ -567,6 +567,7 @@ SRNOS_LogResult SRNOS_LogPrintf(SRNOS_LogLevel level,
 bool SRNOS_LogBindUart(SRNOS_SerialChannel *channel)
 {
     if (s_transports_frozen) return false;
+    if (channel != NULL && !SRNOS_LoggingSerialConfigValid(SRNOS_SerialGetConfig(channel))) return false;
     if (channel != NULL && SRNOS_SerialClaim(channel, &s_uart_channel) != SRNOS_SERIAL_OK) return false;
     s_uart_channel = channel;
     return true;

@@ -59,8 +59,6 @@ typedef struct {
     uint32_t uart_errors;
 } SRNOS_RS485RouterStats;
 
-extern volatile SRNOS_RS485RouterStats SRNOS_RS485Statistics[SRNOS_RS485_ROUTER_PORT_COUNT];
-
 int SRNOS_RS485RouterRegisterRaw(uint8_t port,
                               void *owner,
                               SRNOS_RS485RouterRawMatchFn match,
@@ -77,6 +75,8 @@ int SRNOS_RS485RouterRegisterModbus(uint8_t port,
 
 int SRNOS_RS485RouterUnregister(SRNOS_RS485RouterHandle handle);
 
+/* Task context after scheduler start. Success copies the request into the
+ * queue; timeout_ms limits admission, not the frozen response window. */
 int SRNOS_RS485RouterSendRaw(SRNOS_RS485RouterHandle handle,
                           const void *data,
                           uint16_t len,
@@ -89,15 +89,9 @@ int SRNOS_RS485RouterSendModbusAdu(SRNOS_RS485RouterHandle handle,
 
 bool SRNOS_RS485RouterIsReady(uint8_t port);
 
-const SRNOS_RS485RouterStats *SRNOS_RS485RouterGetStats(uint8_t port);
-
-int SRNOS_RS485RouterForceRearmRx(uint8_t port);
-
-/* Register endpoints before startup; registrations freeze even when no endpoint exists.
- * Queue timeout is supplied per send, response timeout is frozen here. */
-int SRNOS_RS485Start(uint32_t response_timeout_ms);
-bool SRNOS_RS485IsFrozen(void);
-void SRNOS_RS485RouterTask(void *argument);
+/* Task-only coherent copy. Invalid port/context/output returns false without
+ * modifying out. An unused fixed port has zero statistics. */
+bool SRNOS_RS485RouterGetStats(uint8_t port, SRNOS_RS485RouterStats *out);
 
 #ifdef __cplusplus
 }

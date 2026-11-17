@@ -1,5 +1,6 @@
 #pragma once
 #include "SirinEmbedOS/Services/Logging/Log.h"
+#include "logging_internal.h"
 
 #include "stm32h7xx_hal.h"
 #include "cmsis_os2.h"

@@ -139,10 +139,9 @@ bool SRNOS_SirinLinkStart(void)
 {
     if (!prepared || comm_thread || command_thread) return false;
     if (!SRNOS_SirinLinkInitResources()) return false;
-    const osThreadAttr_t command={.name="SRNOS_HostCmd",.stack_size=2048,.priority=osPriorityLow1};
-    /* RX codec -> application handler -> deferred queue includes FP context.
-     * Keep SRNOS_SystemHeapBudget's SirinLink reserve in sync with this stack. */
-    const osThreadAttr_t comm={.name="SRNOS_HostComm",.stack_size=3072,.priority=osPriorityNormal};
+    const osThreadAttr_t command={.name="SRNOS_HostCmd",.stack_size=SRNOS_SIRIN_LINK_COMMAND_STACK_BYTES,.priority=osPriorityLow1};
+    /* Stack constants also feed this service's startup heap reservation. */
+    const osThreadAttr_t comm={.name="SRNOS_HostComm",.stack_size=SRNOS_SIRIN_LINK_COMM_STACK_BYTES,.priority=osPriorityNormal};
     command_thread=SRNOS_KernelThreadNew(SRNOS_SirinLinkWorkerTask,NULL,&command);
     if (!command_thread) return false;
     comm_thread=SRNOS_KernelThreadNew(SRNOS_SirinLinkTask,NULL,&comm);

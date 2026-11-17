@@ -1,4 +1,5 @@
 #include "thread_internal.h"
+#include "remote_internal.h"
 #include "SirinEmbedOS/Services/RemoteControl/Startup.h"
 #include "SirinEmbedOS/Services/RemoteControl/DR16/DR16.h"
 #include "SirinEmbedOS/Services/RemoteControl/VT03/VT03.h"
@@ -171,11 +172,16 @@ static void remote_worker(void *arg)
     (void)arg;if(dr16.channel)SRNOS_DR16Start(&dr16);if(vt03.channel)SRNOS_VT03Start(&vt03);
     const SRNOS_InternalLoop loop={remote_step,remote_wait,NULL,0,false};SRNOS_KernelRunLoop(&loop);
 }
+uint32_t SRNOS_RemoteControlHeapBudget(bool worker_enabled)
+{
+    return worker_enabled ? SRNOS_REMOTE_WORKER_STACK_BYTES + SRNOS_REMOTE_WORKER_RESERVE_BYTES : 0u;
+}
+
 int SRNOS_RemoteControlStart(void)
 {
     if(started||!configured||osKernelGetState()!=osKernelReady)return -1;started=true;
     SRNOS_VideoLinkFreeze();
     if(!dr16.channel&&!vt03.channel&&!wbus.channel&&!vt02.channel&&!SRNOS_MessageHasUART())return 0;
-    const osThreadAttr_t attr={.name="SRNOS_InputIO",.stack_size=3072,.priority=osPriorityHigh7};
+    const osThreadAttr_t attr={.name="SRNOS_InputIO",.stack_size=SRNOS_REMOTE_WORKER_STACK_BYTES,.priority=osPriorityHigh7};
     return SRNOS_KernelThreadNew(remote_worker,NULL,&attr)?0:-1;
 }

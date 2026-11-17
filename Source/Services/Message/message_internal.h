@@ -4,6 +4,7 @@
 bool SRNOS_MessageFreeze(void);
 bool SRNOS_MessageStart(void);
 uint32_t SRNOS_MessageHeapBudget(void);
+bool SRNOS_MessageSerialConfigValid(const SRNOS_SerialConfig *config);
 bool SRNOS_MessageTransportPrepare(const SRNOS_MessageTransportConfig *);
 bool SRNOS_MessageTransportStart(void);
 uint32_t SRNOS_MessageTransportHeapBudget(void);

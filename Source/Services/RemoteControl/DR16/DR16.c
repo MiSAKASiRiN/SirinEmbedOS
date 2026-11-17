@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Services/RemoteControl/DR16/DR16.h"
+#include "../remote_internal.h"
 #include "SirinEmbedOS/Core/C/Endian.h"
 #include "SirinEmbedOS/Core/C/Numeric.h"
 #include <string.h>
@@ -141,8 +142,11 @@ size_t SRNOS_DR16FramerFeed(SRNOS_DR16Framer* f,
 }
 
 
+bool SRNOS_DR16SerialConfigValid(const SRNOS_SerialConfig *c) {
+ return c && c->baud_rate==100000u && c->data_bits==8 && c->stop_bits==2 && c->parity==SRNOS_SERIAL_PARITY_EVEN && c->rx_enabled;
+}
 uint32_t SRNOS_DR16CheckSerialConfig(const SRNOS_SerialConfig *c) {
- return !c || c->baud_rate!=100000u || c->data_bits!=8 || c->stop_bits!=2 || c->parity!=SRNOS_SERIAL_PARITY_EVEN || !c->rx_enabled;
+ return !SRNOS_DR16SerialConfigValid(c);
 }
 static int stream_discontinuity(SRNOS_DR16T *s) {
  SRNOS_SerialStats serial;

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — 2026-11-11 配置与资源合同
+
+- DR16/VT03/W.Bus/VT02 的串口格式校验供系统配置和 Init 共用，保留 DR16/VT03 公开 CheckSerialConfig 返回约定；W.Bus 非 DUPLEX 配置在系统预检阶段拒绝。InputIO 创建与 4 KiB 启动预留共用栈常量。
+- 协议载荷、反相选择、线程优先级和相对等待周期保持；本轮验证限定为编译，未新增或运行主机测试，未进行板端验证。
+
 ## Unreleased — VT02 SirinRMT 串口恢复
 
 - 旧图传 InputIO 在 VT02 串口流重置时同时使显式注册的 SirinRMT 来源失效；保留键鼠与自定义数据的独立路由、接收任务和串口所有权。ASan/UBSan 主机集成覆盖溢出、重复包和恢复后的新数据，未进行板端测试。
@@ -39,6 +44,6 @@
 
 - 2026-10-03：SRNOS_RC 纳入 UART P1，统一 High7（47）；执行周期、协议、栈和线程数不变。随 Serial 主机回归及父项目/Debug/Release 构建验证，板端时延待验。
 
-- 2026-09-28：DR16、VT03 与仲裁接口统一使用 `SRNOS_*`，公开头位于 `Services/RemoteControl/`，不依赖 HAL/CMSIS/FreeRTOS。设备协议值和映射不变，Serial 通道由启动配置冻结，父项目只通过公开状态和仲裁 API 使用输入。旧头及名称已删除；迁移说明见 `Docs/SDKMigration.md`。验证范围为主机与构建；未重新烧录。
+- 2026-09-28：DR16、VT03 与仲裁接口统一使用 `SRNOS_*`，公开头位于 `Services/RemoteControl/`，不依赖 HAL/CMSIS/FreeRTOS。设备协议值和映射不变，Serial 通道由启动配置冻结，父项目只通过公开状态和仲裁 API 使用输入。验证范围为主机与构建；未重新烧录。
 
 - 2026-09-28：SRNOS_RC 接入托管单轮与相对 1 ms 等待，解码与仲裁行为保留。验证范围为主机与构建；本次未烧录，时序与开销仍待板测。

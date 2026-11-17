@@ -77,19 +77,19 @@ CONTROL 正文为 `channel:u16, generation:u32, deadline_us:u32, data[]`。SDK �
 
 ## 父项目服务接入
 
-公共入口为 `SirinEmbedOS/Services/SirinLink/SirinLink.h`，不需要 FreeRTOS/CMSIS/HAL 头。`sirin_link_setup` 接收仅在启动回调期间有效的 `SRNOS_SirinLinkRegistration *`：用 `SRNOS_SirinLinkRegisterExec/RegisterTelemetryEx/RegisterControl` 声明业务能力，自定义消息/主动事件分别使用 `SRNOS_SirinLinkRegisterHandler/RegisterTxTopic`。线程与 transport 由 SDK 管理，注册冻结后不能新增或改绑。完整示例、调用上下文、资源所有权及旧接口迁移见 [SirinLink README](../Source/Services/SirinLink/README.md)。
+公共入口为 `SirinEmbedOS/Services/SirinLink/SirinLink.h`，不需要 FreeRTOS/CMSIS/HAL 头。`sirin_link_setup` 接收仅在启动回调期间有效的 `SRNOS_SirinLinkRegistration *`：用 `SRNOS_SirinLinkRegisterExec/RegisterTelemetryEx/RegisterControl` 声明业务能力，自定义消息/主动事件分别使用 `SRNOS_SirinLinkRegisterHandler/RegisterTxTopic`。线程与 transport 由 SDK 管理，注册冻结后不能新增或改绑。完整示例、调用上下文与资源所有权见 [SirinLink README](../Source/Services/SirinLink/README.md)。
 
-所有能力注册（命令、二进制流、标量源、控制邮箱、自定义消息和发送主题）均在启动装配后冻结，并检查重复 ID、重叠消息方向及内置路由冲突。订阅只改变已注册流的发送状态，不能重新注册或改变底层采样周期。EXEC、参数 SAVE/LOAD 和静态校准在 HostCmd 执行；目录/READ/WRITE、编码发送与轻量回调在 HostComm。
+启动注册顺序、冻结时机与固定容量统一见 [SirinLink 启动注册与容量](../Source/Services/SirinLink/README.md#启动注册与容量)。注册检查重复 ID、重叠消息方向及内置路由冲突。订阅只改变已注册流的发送状态，不能重新注册或改变底层采样周期。EXEC、参数 SAVE/LOAD 和静态校准在 HostCmd 执行；目录/READ/WRITE、编码发送与轻量回调在 HostComm。
 
 ### 请求、完成与重放
 
-活动请求表固定 10 项，在执行处理器之前保留槽位；它与完成后的 4 项重放缓存分开。活动身份为 `(service, message, sequence)`，同时记录请求指纹；同身份同内容的未完成重试返回 ACCEPTED，不重复执行；同身份不同内容返回 CONFLICT。活动表满则返回 BUSY，不执行新工作。未完成请求不按时间淘汰；同步请求在完成结果写入重放缓存后释放活动槽，延后请求保留至完成结果成功进入发送队列。会话重置会清理活动槽。
+活动请求在执行处理器之前保留槽位；活动表与完成重放缓存分开，容量见[启动注册与容量](../Source/Services/SirinLink/README.md#启动注册与容量)。活动身份为 `(service, message, sequence)`，同时记录请求指纹；同身份同内容的未完成重试返回 ACCEPTED，不重复执行；同身份不同内容返回 CONFLICT。活动表满则返回 BUSY，不执行新工作。未完成请求不按时间淘汰；同步请求在完成结果写入重放缓存后释放活动槽，延后请求保留至完成结果成功进入发送队列。会话重置会清理活动槽。
 
-完成重放缓存保留至多 4 个结果，TTL 为 2 秒；满时可淘汰已完成记录，不影响活动请求。同步处理结果在发送尝试前保存，因此发送槽拥塞时同一请求的重试不会重新执行处理器。缓存容量与 TTL 是有界去重窗口，不能用作长期幂等保证。
+完成重放缓存满时可淘汰已完成记录，不影响活动请求。同步处理结果在发送尝试前保存，因此发送槽拥塞时同一请求的重试不会重新执行处理器。缓存容量与 TTL 是有界去重窗口，不能用作长期幂等保证。
 
-HostCmd 工作队列与完成队列各 4 项。HostComm 从完成队列取出的结果由独立 **1 项 pending 槽**持有，直到发送队列接受或会话失效；拥塞时不重新塞回可能已被填满的完成队列。10 项活动容量对应工作队列 4 + 正在执行/等待提交完成的工作 1 + 完成队列 4 + pending 1。`SRNOS_SirinLinkSubmitDeferred()` 仅允许当前 HostComm 请求处理器提交准确匹配的身份，每个请求最多接受一次；其他任务、错误身份及重复提交返回 BUSY。旧会话的工作完成不会响应到新会话。
+HostComm 从完成队列取出的结果由独立 pending 槽持有，直到发送队列接受或会话失效；拥塞时不重新塞回可能已被填满的完成队列。工作队列、执行中记录、完成队列和 pending 共用活动容量约束。`SRNOS_SirinLinkSubmitDeferred()` 仅允许当前 HostComm 请求处理器提交准确匹配的身份，每个请求最多接受一次；其他任务、错误身份及重复提交返回 BUSY。旧会话的工作完成不会响应到新会话。
 
-FIFO 的完成/失败/取消通知暂存在原发送槽中，固定受 12 个 TX 槽约束，不另建无界队列。HostComm 在短临界区内取得回调并释放槽，随后在锁外调用，已接受的带回调记录最多通知一次；回调必须有界、非阻塞。回调只支持 FIFO，LATEST 不接受完成回调。
+FIFO 的完成/失败/取消通知暂存在原发送槽中，受发送槽总量约束，不另建无界队列。HostComm 在短临界区内取得回调并释放槽，随后在锁外调用，已接受的带回调记录最多通知一次；回调必须有界、非阻塞。回调只支持 FIFO，LATEST 不接受完成回调。
 
 ### 事件与截止时间调度
 
@@ -99,7 +99,7 @@ HostComm 等待 RX、TX 完成、工作完成和生产者提交通知，并按�
 
 ### 固定存储预算
 
-活动请求、完成重放与 pending 的固定存储不因 SOURCE V2 扩大：context 为 4800 B，活动记录 10 × 12 B 和重放 4 × 520 B 包含在其中；pending 为144 B，注册对象8 B。12项二进制遥测注册表仍为720 B，TX槽元数据每项44 B，回调不另建队列。SOURCE V2 的只读缓存为32 × 120 B加count/frozen共3843 B；HostComm的source目录引用为32 × 8 B、频率组为32 × 12 B。这些是固定存储容量；对象之间的链接对齐、最终 D1 用量和结构布局以当前构建 map 为准。
+注册表、活动请求、完成重放、pending、发送槽元数据与 SOURCE 缓存均有固定容量，见[启动注册与容量](../Source/Services/SirinLink/README.md#启动注册与容量)。二进制遥测注册项包含用于取消及重订阅隔离的私有代次门控；完成回调复用发送槽，不另建队列。私有结构的大小与对齐不是线协议或公共 API 合同，不在本指南固定字节数；应按对应固件的 `.map` 核对对象（例如 `SirinLink.c` 的 `s_telemetry`）、最终 D1 用量与链接对齐。启动 heap 预算与静态 BSS 分开核算。
 
 ## 原始 IMU 观测配置
 
@@ -162,6 +162,8 @@ void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *config)
 状态正文为版本 u8=1、设备数 u8=2、保留 u16=0，然后两条 44 B `<HBBIQHH6I>`：stream、state、enabled、最新序号、last_sample_us、缓存深度、历史最高深度，以及 enqueued/overflow/sent/failed/discarded/samples 六个 u32。计数从启动累计；取消/重连清理的样本记入 discarded，不清零计数。`sent` 是 USB 完成的样本数，`samples` 是驱动发布数，未订阅时也会增长。健康快照与通信计数各自一致，不是跨任务原子采样。计数做差需处理 u32 环绕。
 
 ## Python CLI
+
+统一主机工具 `srneos` 可列出只读变量、采集 SOURCE V2 并读写业务参数。下文的独立 Python 脚本适合观察 IMU 或导出逐样本 CSV。[srneos 用法](../Tools/CmdLineTool/README.md)
 
 需要保存完整逐样本数据时使用 `Tools/SirinLink/imu_capture.py`，见 [采集说明](../Tools/SirinLink/README.md)。它输出双 CSV、原始接收字节、每秒状态与元数据，支持预热/定时停止，断连后停止而不拼接会话。下述 `imu_telemetry.py` 仍为只显示的监视器。
 
@@ -239,7 +241,7 @@ build/sirinlink-venv/bin/python Tools/SirinLink/imu_telemetry.py \
   --port CDC1_PATH --streams bmi lsm ins mag pressure --duration 600 --json
 ```
 
-默认省略`--streams`仍仅两路原始流。终端每秒显示姿态、温度、来源/权重、温稳/保护状态和速率；`--json`附完整状态及每10秒实际发布/接收速率。重连重新握手和订阅，退出取消。`imu_capture.py` 默认保存双 IMU，也支持 `--streams bmi lsm ins mag pressure` 分流保存五路 CSV；未选择的流不创建文件。现有工具不发送参数 SAVE/LOAD 或静态校准命令。
+默认省略`--streams`仍仅两路原始流。终端每秒显示姿态、温度、来源/权重、温稳/保护状态和速率；`--json`附完整状态及每10秒实际发布/接收速率。重连重新握手和订阅，退出取消。`imu_capture.py` 默认保存双 IMU，也支持 `--streams bmi lsm ins mag pressure` 分流保存五路 CSV；未选择的流不创建文件。这些采集脚本仅操作订阅。主机显式保存和加载业务参数分别使用 `srneos parameters persist` 和 `srneos parameters restore`。[参数命令](../Tools/CmdLineTool/README.md#命令与业务参数)
 
 ## SystemMonitor V2
 
@@ -262,7 +264,7 @@ build/sirinlink-venv/bin/python Tools/SirinLink/system_monitor.py \
 
 ## 托管循环统计 0x0003
 
-遥测注册上限 12，继续启动期冻结和 ID 冲突校验。0x0001/0x0002 仍使用上述 V2 记录；0x0003 记录版本为 1，每秒最多四条，每条 112 B，LATEST 策略。使用相同 service=4/message=2/14 B 外层头，sample_period_us=0；device_time_us 是本次系统 updated_us 低 32 位。连续订阅、正常链路下 64 槽最多 16 秒轮转；采样仍每秒独立执行，拥塞或断连不积压、不影响采样。
+该流计入[二进制遥测注册容量](../Source/Services/SirinLink/README.md#启动注册与容量)，继续启动期冻结和 ID 冲突校验。0x0001/0x0002 仍使用上述 V2 记录；0x0003 记录版本为 1，每秒最多四条，每条 112 B，LATEST 策略。使用相同 service=4/message=2/14 B 外层头，sample_period_us=0；device_time_us 是本次系统 updated_us 低 32 位。连续订阅、正常链路下 64 槽最多 16 秒轮转；采样仍每秒独立执行，拥塞或断连不积压、不影响采样。
 
 | 偏移 | 类型 | 字段 |
 |---|---|---|
@@ -296,7 +298,7 @@ V1 为 5–100 Hz、步进 5，V1 合计≤500 标量/s；与 V2 合计≤8000 �
 
 ## 只读 SOURCE V2
 
-只读变量来自启动期冻结的 `SRNOS_TelemetryRegister()` / `SRNOS::Telemetry::Value<T>` 目录，与可远程写入的业务 Parameters 完全分开。支持 type=1 float32、2 int32、3 uint32、4 bool；前3种值为4 B，bool为1 B。目录最多32项，ID是冻结目录槽号，名称唯一。业务主动发布，HostComm只取缓存副本；未发布值 valid=0、sequence=0。采样时间由业务传入，编码时间由HostComm生成，两者不可混用。实际频率和记录完整性受主机读取及USB拥塞影响。
+只读变量来自启动期冻结的 `SRNOS_TelemetryRegister()` / `SRNOS::Telemetry::Value<T>` 目录，与可远程写入的业务 Parameters 完全分开。支持 type=1 float32、2 int32、3 uint32、4 bool；前3种值为4 B，bool为1 B。目录容量与冻结时机见[启动注册与容量](../Source/Services/SirinLink/README.md#启动注册与容量)；ID是冻结目录槽号，名称唯一。业务主动发布，HostComm只取缓存副本；未发布值 valid=0、sequence=0。采样时间由业务传入，编码时间由HostComm生成，两者不可混用。实际频率和记录完整性受主机读取及USB拥塞影响。
 
 为避免与现有 IMU/INS 状态请求 `0x08/0x09` 冲突，SOURCE V2 固定使用 **`0x10..0x14`**，不使用早期计划的 `0x08..0x0C`，均属于 TELEMETRY service=4；旧状态查询和二进制流保持。以下所有整数显式小端，不传C结构体。
 
@@ -314,13 +316,13 @@ LIST响应去除通用status u16后，头为catalogHash u32、total u16、nextCu
 
 DATA V2头16 B：catalogHash u32（0）、encodeTimeUs u64（4）、count u8（12）、reserved[3]=0（13）。随后最多16项：index u16（0）、type u8（2）、valid u8（3，0或1）、sequence u32（4）、sampleTimeUs u64（8）、value（16，按type为4或1 B）。单项最大20 B，包最大336 B。无效值仍携带发布时的值、序号、时间；valid为0时不得当作正常测量。序号每次Publish递增，可回绕；LATEST覆盖、订阅限频和断连会造成序号间隔，这是预期的最新值策略，不代表无损记录。
 
-同频率且同版本的源加入固定组槽。包按目录索引0～15/16～31两半分组，key由组槽和半区产生；同组旧报告可被新报告替换，不让一个频率组覆盖另一频率组。最多扫描32组，未建立200项空频率表。延迟调度只发当前最新轮次并记录错过次数，不集中补发历史值。Publish不唤醒HostComm，不受订阅、断连或TX拥塞影响；目录缓存每项单独短临界区复制，字段编码在锁外。
+同频率且同版本的源加入固定组槽。包按目录索引0～15/16～31两半分组，key由组槽和半区产生；同组旧报告可被新报告替换，不让一个频率组覆盖另一频率组。只扫描固定组槽，组数上限见[启动注册与容量](../Source/Services/SirinLink/README.md#启动注册与容量)。延迟调度只发当前最新轮次并记录错过次数，不集中补发历史值。Publish不唤醒HostComm，不受订阅、断连或TX拥塞影响；目录缓存每项单独短临界区复制，字段编码在锁外。
 
-主机测试覆盖C/C++登记、类型/容量/冻结、显式时间/有效性/序号、V1旧格式、V2分页/限额与原子拒绝、版本替换、16项分包、多频率背压合并、调度时钟回绕及断连。此次不提供上位机实现，也未烧录；高频吞吐与对INS/CAN影响须另做板端验收。
+订阅限额不保证相同的实际交付吞吐；高频吞吐与对 INS/CAN 的影响须按实际负载做板端验收。历史主机验证范围见[文档变更记录](CHANGELOG.md#历史-source-v2-验证)。
 
 ## 手动静态 IMU 校准
 
-CONFIG service=`0x02`，REQUEST `0x09`（执行）和 `0x0A`（读取最近任务状态），不改变既有 CONFIG/TELEMETRY 编码。公共常量位于 `Services/SirinLink/IMUCalibrationProtocol.h`。注册在启动期冻结；与自定义路由冲突时启动失败，不能覆盖。默认固定路由使用22/40槽，其余由通用Message和父项目显式handler共享；发送主题另有16槽上限。
+CONFIG service=`0x02`，REQUEST `0x09`（执行）和 `0x0A`（读取最近任务状态），不改变既有 CONFIG/TELEMETRY 编码。公共常量位于 `Services/SirinLink/IMUCalibrationProtocol.h`。注册在启动期冻结；与自定义路由冲突时启动失败，不能覆盖。校准路由计入内置服务，共享容量见[启动注册与容量](../Source/Services/SirinLink/README.md#启动注册与容量)。
 
 `0x09` 正文严格为 `[u8 version=1, u8 sensor_mask]`：mask 1=BMI088，2=LSM6DS3，3=两颗。例：`01 03`。`sirin_link_storage_enabled=false` 时拒绝执行；只读查询仍可用。命令在低优先级 HostCmd 中观察约 5 s、校验后保存 EEPROM，完成才返回最终响应。最长执行期限 20 s，不含队列等待及发送拥塞；主机应留出这些余量。状态查询不进入耗时队列，可以在校准中发出。
 

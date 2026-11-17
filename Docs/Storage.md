@@ -93,6 +93,8 @@ Storage 默认读 2 s、写 5 s，接口的 timeout=0 表示使用默认总期�
 
 ## 父项目及主机接入
 
+父项目在启动期登记参数、设置应用 ID 与兼容版本。主机通过 `srneos parameters write` 修改 RAM，显式执行 `srneos parameters persist` 保存；`srneos parameters state` 可查看 dirty 和 generation。CLI 的 `--save FILE` 将结果写到开发机。启动配置、命令选项和端口选择见 [配置指南](Config.md) 和 [srneos 参数命令](../Tools/CmdLineTool/README.md#命令与业务参数)。
+
 - 变量声明、默认值与一致快照：[Parameters](../Source/Services/Parameters/README.md)、[示例](../Examples/Parameters/README.md)。
 - 编码器等只读发布：[Telemetry](../Source/Services/Telemetry/README.md)。单源上限 1 kHz、总预算 8000 标量/s，不承诺任意负载下无丢样。
 - 参数目录/READ/WRITE/SAVE/LOAD/STATE/IDENTITY：[CONFIG 01–08](../Source/Services/Parameters/SirinLink/README.md)。

@@ -20,4 +20,6 @@ SRNOS_MatrixStatus multiply_example(float out[2]) {
 }
 ```
 
+`OlsWindow<N>` 保存最近 N 项值及相邻采样间隔；`push(value, dt_s)` 的时间单位为秒，拒绝非有限值和非正间隔。斜率只使用当前窗口内重建的相对时间，不随设备运行时间累计绝对 `float` 时间。`reset()` 清空窗口，少于两项或时间方差过小时 `slope()` 返回零；对象由调用任务持有，不提供内部并发同步。
+
 算法精度要求和控制效果由应用验证。

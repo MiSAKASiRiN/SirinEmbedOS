@@ -4,6 +4,8 @@
 
 ## 父项目如何建立线程
 
+若希望把一项固定任务的注册与实现放入自己的 `.c` 文件，见 [StartupTask](../StartupTask/README.md)。下面的 Minimal 演示需要管理句柄时如何在应用线程内创建任务。
+
 本示例采用运行期创建：SDK 调度并完成应用启动屏障后调用 `SRNOS_ApplicationMain()`；该入口声明 Heartbeat 的 `SRNOS_ThreadConfig`，调用 `SRNOS_ThreadCreate()`，将句柄保存到 `application_task`，然后返回。Heartbeat 每 1000 ms 执行一次 `application_step`，更新 `sirinos_minimal_heartbeat`，等待与循环由 SDK 完成。创建后的任务不随 ApplicationMain 返回而结束。
 
 | 字段/变量 | 本例含义 |
@@ -60,7 +62,7 @@ Minimal 默认不启用网络。需要 UDP 时，在配置回调中同时开启 
 在 SDK 根目录运行：
 
 ```sh
-cmake --preset Debug
+cmake --preset Debug -DSIRINEMBEDOS_EXAMPLE=Minimal
 cmake --build --preset Debug
 ```
 

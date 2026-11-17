@@ -35,8 +35,7 @@ static void host_exit_critical(void)
 
 #define SRNOS_SIRIN_LINK_NOTIFY_RX          (1u << 0)
 #define SRNOS_SIRIN_LINK_RX_BUDGET_BYTES    1024u
-#define SRNOS_SIRIN_LINK_WORK_DEPTH         4u
-#define SRNOS_SIRIN_LINK_COMPLETION_DEPTH   4u
+#define SRNOS_SIRIN_LINK_RUNTIME_RESERVE_BYTES (4u * 1024u)
 #define SRNOS_SIRIN_LINK_EXEC_COUNT         8u
 #define SRNOS_SIRIN_LINK_TELEMETRY_COUNT    12u
 #define SRNOS_SIRIN_LINK_SOURCE_RATE_GROUPS 32u
@@ -103,15 +102,27 @@ typedef struct {
 
 typedef struct {
     uint8_t used;
-    uint8_t enabled;
     uint16_t stream_id;
     uint16_t max_sample_size;
+    SRNOS_SirinLinkCorePublishGate gate;
     SRNOS_SirinLinkTelemetryConfig extended;
     uint32_t period_us;
     uint32_t next_poll_ms;
     SRNOS_SirinLinkTelemetryConfigFn on_config;
     void *user;
 } telemetry_entry_t;
+
+/* The remaining reserve covers queue control, TCB/TLS and heap allocation
+ * overhead. Keep the queue payloads bounded within the original 9 KiB budget. */
+_Static_assert(SRNOS_SIRIN_LINK_WORK_DEPTH * sizeof(work_item_t) +
+    SRNOS_SIRIN_LINK_COMPLETION_DEPTH * sizeof(completion_t) + 2048u <=
+    SRNOS_SIRIN_LINK_RUNTIME_RESERVE_BYTES, "SirinLink queue reservation exceeded");
+
+uint32_t SRNOS_SirinLinkHeapBudget(bool enabled)
+{
+    return enabled ? SRNOS_SIRIN_LINK_COMM_STACK_BYTES +
+        SRNOS_SIRIN_LINK_COMMAND_STACK_BYTES + SRNOS_SIRIN_LINK_RUNTIME_RESERVE_BYTES : 0u;
+}
 
 typedef struct {
     const SRNOS_TelemetryDescriptor *descriptor;
@@ -292,11 +303,22 @@ static void clear_source_subscriptions(void)
 static void clear_all_telemetry_subscriptions(void)
 {
     clear_source_subscriptions();
-    for(unsigned i=0;i<SRNOS_SIRIN_LINK_TELEMETRY_COUNT;++i) {
-        telemetry_entry_t *e=&s_telemetry[i];if(!e->used || !e->enabled)continue;
-        e->enabled=0;if(e->on_config)e->on_config(e->user,false,e->period_us);
+    uint32_t notify_mask = 0;
+    SRNOS_SIRIN_LINK_ENTER_CRITICAL();
+    for (unsigned i = 0; i < SRNOS_SIRIN_LINK_TELEMETRY_COUNT; ++i) {
+        telemetry_entry_t *entry = &s_telemetry[i];
+        if (!entry->used) continue;
+        if (entry->gate.enabled) notify_mask |= UINT32_C(1) << i;
+        entry->gate.enabled = false;
+        if (entry->gate.generation != UINT64_MAX) ++entry->gate.generation;
     }
     (void)SRNOS_SirinLinkCoreDiscardTopic(&s_link,SRNOS_SIRIN_LINK_SERVICE_TELEMETRY,SRNOS_SIRIN_LINK_TELEMETRY_MESSAGE_SAMPLE);
+    SRNOS_SIRIN_LINK_EXIT_CRITICAL();
+    for (unsigned i = 0; i < SRNOS_SIRIN_LINK_TELEMETRY_COUNT; ++i) {
+        telemetry_entry_t *entry = &s_telemetry[i];
+        if ((notify_mask & (UINT32_C(1) << i)) && entry->on_config)
+            entry->on_config(entry->user, false, entry->period_us);
+    }
     discard_source_data();
 }
 static uint16_t build_source_summary(uint8_t *response,size_t cap,size_t *length)
@@ -525,10 +547,19 @@ static uint16_t handle_subscribe(void *user,
         uint16_t result=entry->extended.validate(entry->user,enabled,period_us);
         if(result!=SRNOS_SIRIN_LINK_STATUS_OK) return result;
     }
-    (void)SRNOS_SirinLinkCoreDiscardStream(&s_link,SRNOS_SIRIN_LINK_SERVICE_TELEMETRY,SRNOS_SIRIN_LINK_TELEMETRY_MESSAGE_SAMPLE,stream_id);
-    entry->enabled = enabled ? 1u : 0u;
+    SRNOS_SIRIN_LINK_ENTER_CRITICAL();
+    if (enabled && entry->gate.generation == UINT64_MAX) {
+        SRNOS_SIRIN_LINK_EXIT_CRITICAL();
+        return SRNOS_SIRIN_LINK_STATUS_INTERNAL_ERROR;
+    }
+    /* Never recycle a generation while a suspended publisher can still hold it.
+     * Exhaustion forbids re-enabling, but cancellation remains available. */
+    if (entry->gate.generation != UINT64_MAX) ++entry->gate.generation;
+    entry->gate.enabled = enabled;
     entry->period_us = period_us;
     entry->next_poll_ms=link_now_ms(NULL);
+    (void)SRNOS_SirinLinkCoreDiscardStream(&s_link,SRNOS_SIRIN_LINK_SERVICE_TELEMETRY,SRNOS_SIRIN_LINK_TELEMETRY_MESSAGE_SAMPLE,stream_id);
+    SRNOS_SIRIN_LINK_EXIT_CRITICAL();
     if (entry->on_config != NULL) {
         entry->on_config(entry->user, enabled, period_us);
     }
@@ -733,7 +764,7 @@ static void poll_once(void)
         for(unsigned n=0;n<SRNOS_SIRIN_LINK_TELEMETRY_COUNT;n++) {
             telemetry_entry_t *e=&s_telemetry[(s_poll_cursor+n)%SRNOS_SIRIN_LINK_TELEMETRY_COUNT];
             const uint32_t now=link_now_ms(NULL);
-            if(e->used && e->enabled && e->extended.poll && (int32_t)(now-e->next_poll_ms)>=0) {
+            if(e->used && e->gate.enabled && e->extended.poll && (int32_t)(now-e->next_poll_ms)>=0) {
                 e->extended.poll(e->user,now);
                 e->next_poll_ms=now+telemetry_poll_interval(e);
             }
@@ -870,7 +901,7 @@ static uint32_t next_wait_ms(void)
     if(s_transport_connected) {
         for(unsigned i=0;i<SRNOS_SIRIN_LINK_TELEMETRY_COUNT;i++) {
             const telemetry_entry_t *entry=&s_telemetry[i];
-            if(!entry->used || !entry->enabled || !entry->extended.poll)continue;
+            if(!entry->used || !entry->gate.enabled || !entry->extended.poll)continue;
             uint32_t due=wait_to_deadline(now,entry->next_poll_ms);if(due<wait)wait=due;
         }
         for(unsigned i=0;i<SRNOS_SIRIN_LINK_SOURCE_RATE_GROUPS;i++) {
@@ -1044,7 +1075,11 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkPublishTelemetry(
     if (entry == NULL) {
         return SRNOS_SIRIN_LINK_ERR_NOT_FOUND;
     }
-    if ((entry->enabled == 0u) || (sample_count == 0u) || (samples == NULL) ||
+    SRNOS_SIRIN_LINK_ENTER_CRITICAL();
+    const bool enabled = entry->gate.enabled;
+    const uint64_t generation = entry->gate.generation;
+    SRNOS_SIRIN_LINK_EXIT_CRITICAL();
+    if (!enabled || (sample_count == 0u) || (samples == NULL) ||
         (samples_len > entry->max_sample_size) ||
         ((samples_len + 14u) > SRNOS_PROTOCOL_MAX_PAYLOAD) ||
         ((samples_len % sample_count) != 0u) ||
@@ -1063,10 +1098,11 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkPublishTelemetry(
     (void)SRNOS_Memory_Copy(SRNOS_Memory_MutableBytes(&payload[14],
                                                  sizeof(payload) - 14u),
                          SRNOS_Memory_Bytes(samples, samples_len));
-    const SRNOS_SirinLinkResult result=SRNOS_SirinLinkCorePublishEx(&s_link, SRNOS_SIRIN_LINK_SERVICE_TELEMETRY,
+    const SRNOS_SirinLinkResult result=SRNOS_SirinLinkCorePublishGuarded(&s_link, SRNOS_SIRIN_LINK_SERVICE_TELEMETRY,
                             SRNOS_SIRIN_LINK_TELEMETRY_MESSAGE_SAMPLE, stream_id,
                             sample_sequence, payload, samples_len + 14u,
-                            entry->extended.policy,entry->extended.on_delivery,entry->user,sample_count);
+                            entry->extended.policy,entry->extended.on_delivery,entry->user,sample_count,
+                            &entry->gate,generation);
     if(result==SRNOS_SIRIN_LINK_OK)wake_comm();
     return result;
 }

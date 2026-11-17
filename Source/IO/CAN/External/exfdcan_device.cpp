@@ -334,7 +334,7 @@ extern "C" void SRNOS_CAN_PrepareResources(void)
         SRNOS_ExternalCANCtx *ctx=SRNOS_ExternalCANCtxOf(dev);
         configASSERT(ctx != nullptr && ctx->task == nullptr);
     }
-    SRNOS_CANFDCorePrepareResources();
+    configASSERT(SRNOS_CANFDCorePrepareResources());
 }
 
 #include "Devices/MCP2518FD/spi_adapter_internal.h"

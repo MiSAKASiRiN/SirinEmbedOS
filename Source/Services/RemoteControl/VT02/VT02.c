@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Services/RemoteControl/VT02/VT02.h"
+#include "../remote_internal.h"
 #include "../../VideoLink/codec.h"
 #include <string.h>
 
@@ -78,14 +79,19 @@ size_t SRNOS_VT02FramerFeed(SRNOS_VT02Framer *f, const uint8_t *data,
     return count;
 }
 
+bool SRNOS_VT02SerialConfigValid(const SRNOS_SerialConfig *config)
+{
+    return config && config->mode == SRNOS_SERIAL_DUPLEX && config->rx_enabled && !config->rx_inverted &&
+        config->baud_rate == 115200 && config->data_bits == 8 && config->stop_bits == 1 &&
+        config->parity == SRNOS_SERIAL_PARITY_NONE;
+}
+
 SRNOS_SerialStatus SRNOS_VT02Init(SRNOS_VT02 *self, SRNOS_SerialChannel *channel)
 {
     if (!self || !channel) return SRNOS_SERIAL_ARGUMENT;
     if (self->channel) return SRNOS_SERIAL_STATE;
     const SRNOS_SerialConfig *c = SRNOS_SerialGetConfig(channel);
-    if (!c || c->mode != SRNOS_SERIAL_DUPLEX || !c->rx_enabled || c->rx_inverted ||
-        c->baud_rate != 115200 || c->data_bits != 8 || c->stop_bits != 1 ||
-        c->parity != SRNOS_SERIAL_PARITY_NONE) return SRNOS_SERIAL_ARGUMENT;
+    if (!SRNOS_VT02SerialConfigValid(c)) return SRNOS_SERIAL_ARGUMENT;
     SRNOS_SerialStatus result = SRNOS_SerialClaim(channel, self);
     if (result != SRNOS_SERIAL_OK) return result;
     memset(self, 0, sizeof(*self));

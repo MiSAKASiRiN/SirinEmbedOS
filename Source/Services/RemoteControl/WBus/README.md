@@ -2,6 +2,8 @@
 
 公共头：`SirinEmbedOS/Services/RemoteControl/WBus/WBus.h`。用于 WFLY 接收机的 S.BUS 兼容输出，串口为 100000 bit/s、8 数据位、偶校验、2 停止位。直连本板 RX 时启用 `rx_inverted`；外部已经反相时应关闭。供电、电平和接收机输出模式需按实际硬件确认。
 
+通道必须是 `SRNOS_SERIAL_DUPLEX` 且启用 RX；固定 RS485 的 UART7 不可用于 W.Bus。内置启动配置预检与 `SRNOS_WBusInit` 共用这一校验，不会把不匹配模式留到绑定阶段才发现。
+
 25 字节格式：`0x0F`、22 字节低位优先打包的 16×11 bit 通道、标志、`0x00` 尾字节。标志 bit0/1 为数字通道 17/18，bit2 为 frame lost，bit3 为 failsafe；高四位必须为零。本模块不接收 S.BUS2 遥测尾字节。协议无 CRC，包头/尾和保留位检查不能排除所有载荷损坏。
 
 格式依据：[WFLY ET08A 原厂手册的 RF206S 说明（镜像，第 37 页）](https://www.manualslib.com/manual/3701261/Wfly-Et08a.html?page=37) 和 [Bolder Flight Systems 的 S.BUS 协议说明](https://github.com/bolderflight/sbus)。实现独立编写，没有导入第三方代码。

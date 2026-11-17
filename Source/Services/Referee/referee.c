@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Services/Referee/referee.h"
+#include "referee_internal.h"
 #include "SirinEmbedOS/Core/C/Array.h"
 
 #include <string.h>
@@ -238,9 +239,13 @@ volatile uint32_t SRNOS_DebugRefereeCRCFailCntDbg = 0;
 volatile uint32_t SRNOS_DebugRefereeLastRobotStateMsDbg = 0;
 
 static void SRNOS_RefereeParserReset(void);
+bool SRNOS_RefereeSerialConfigValid(const SRNOS_SerialConfig *config) {
+ return config && config->rx_enabled && config->tx_enabled && config->baud_rate==115200u &&
+     config->data_bits==8 && config->stop_bits==1 && config->parity==SRNOS_SERIAL_PARITY_NONE;
+}
 bool SRNOS_RefereeBindChannel(SRNOS_SerialChannel *channel) {
  const SRNOS_SerialConfig *cfg=SRNOS_SerialGetConfig(channel);
- if(!cfg||!cfg->rx_enabled||SRNOS_DebugRefereeInitialized||(SRNOS_DebugRefereeChannel&&SRNOS_DebugRefereeChannel!=channel))return false;
+ if(!SRNOS_RefereeSerialConfigValid(cfg)||SRNOS_DebugRefereeInitialized||(SRNOS_DebugRefereeChannel&&SRNOS_DebugRefereeChannel!=channel))return false;
  if(SRNOS_SerialClaim(channel,&SRNOS_DebugRefereeChannel)!=SRNOS_SERIAL_OK)return false;
  SRNOS_DebugRefereeChannel=channel;return SRNOS_RefereeTxBindChannel(channel);
 }

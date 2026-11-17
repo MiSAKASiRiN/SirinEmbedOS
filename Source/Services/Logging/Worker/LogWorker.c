@@ -4,14 +4,26 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 #include <stdint.h>
 #include <string.h>
 
 const SRNOS_LogConfig SRNOS_LOG_DEFAULT_CONFIG = {
-    .queue_depth = 20u,
-    .pool_count = 64u,
+    .queue_depth = SRNOS_LOG_DEFAULT_QUEUE_DEPTH,
+    .pool_count = SRNOS_LOG_DEFAULT_POOL_COUNT,
     .backend_mask = SRNOS_LOG_BACKEND_USB_CDC,
 };
+
+uint32_t SRNOS_LoggingHeapBudget(bool enabled)
+{
+    if (!enabled) return 0u;
+    /* CMSIS memory-pool bookkeeping, TLS/alignment and allocator headers are
+     * covered by the explicit margin; pool payload and queue/TCB are exact. */
+    const size_t bytes = SRNOS_LOG_WORKER_STACK_BYTES + sizeof(StaticTask_t) +
+        SRNOS_LOG_DEFAULT_QUEUE_DEPTH * sizeof(uintptr_t) + sizeof(StaticQueue_t) +
+        SRNOS_LOG_DEFAULT_POOL_COUNT * sizeof(SRNOS_LogMsg) + SRNOS_LOG_RESOURCE_MARGIN_BYTES;
+    return bytes > SRNOS_LOG_MINIMUM_HEAP_RESERVE_BYTES ? (uint32_t)bytes : SRNOS_LOG_MINIMUM_HEAP_RESERVE_BYTES;
+}
 
 static const osMessageQueueAttr_t s_log_queue_attr = {
     .name = "SRNOS_LogQueue",

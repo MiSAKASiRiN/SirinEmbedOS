@@ -12,7 +12,7 @@
 
 - 2026-09-28：清除 MemorySections 旧别名与 Version/头保护旧名，配置宏统一 SRNOS_CONFIG_HEADER；FreeRTOS trace 声明转为私有。
 
-- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。迁移system_monitor_enabled及HostLinkPrepareEx合同；Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
+- 2026-09-28：SystemMonitor替代Diagnostics线程，1 Hz ADC/任务统计与HostLink发布；增加ADC板级BDMA接入、逐槽统计和主机工具，默认取消扫栈。Indicators/生成文件不变。验证范围为主机与构建，未烧录/板测。
 
 - 板级早期启动、Fault/libc 实现在 Board/Support/System；Core 公共操作及内存段合同不变。验证范围为主机与构建；未板测。
 - 2026-09-29：Watch 迁出 D2 后 retained 地址随布局调整，不承诺跨本次固件升级保留；同一固件的软件复位保留合同不变。

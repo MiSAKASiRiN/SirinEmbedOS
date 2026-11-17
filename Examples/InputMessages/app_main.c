@@ -36,6 +36,10 @@ static bool bind(void *user)
 }
 void SRNOS_ApplicationConfigure(SRNOS_SystemConfig *c)
 {
+    /* Seven sources plus UDP use the fixed startup heap budget. Keep normal
+     * SystemMonitor/CPU statistics, but omit the optional cycle storage and
+     * its conservative 8 KiB startup reservation. */
+    c->cycle_statistics_enabled=false;
     /* Example port assignment; choose ports/wiring for the actual installation. */
     c->serial_count=4;
     c->serial[0]=(SRNOS_SerialConfig){.port=SRNOS_SERIAL_UART8,.baud_rate=100000,.data_bits=8,

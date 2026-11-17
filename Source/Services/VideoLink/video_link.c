@@ -20,10 +20,12 @@ static SRNOS_VideoLinkStats stats;
 static bool task_context(void) {
     return xPortIsInsideInterrupt()!=pdTRUE && xTaskGetSchedulerState()==taskSCHEDULER_RUNNING;
 }
+bool SRNOS_VideoLinkSerialConfigValid(const SRNOS_SerialConfig *config) {
+    return config && config->rx_enabled && config->tx_enabled && config->mode==SRNOS_SERIAL_DUPLEX;
+}
 bool SRNOS_VideoLinkPrepare(SRNOS_SerialChannel *c) {
     const SRNOS_SerialConfig *config=SRNOS_SerialGetConfig(c);
-    if(channel||frozen||!config||!config->rx_enabled||!config->tx_enabled||
-       config->mode!=SRNOS_SERIAL_DUPLEX)return false;
+    if(channel||frozen||!SRNOS_VideoLinkSerialConfigValid(config))return false;
     channel=c;return true; /* VT03 remains the sole Serial RX owner. */
 }
 void SRNOS_VideoLinkFreeze(void) { frozen=true; }

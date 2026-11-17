@@ -159,14 +159,16 @@ srneos telemetry capture --cdc1 CDC1_PATH --sources app.speed --hz 50 \
 
 ## 命令与业务参数
 
+以下 EXEC 示例需要固件在初始化时注册命令号 `0x0100`。参数示例使用示例固件中 `speed.kp` 的稳定 ID `0x1001`；连接自己的固件时先用 `parameters list` 确认目录。命令注册和持久化变量的固件侧实现见 [SirinLink 注册](../../Source/Services/SirinLink/README.md#父项目注册) 和 [Parameters 示例](../../Examples/Parameters/app_main.cpp)。
+
 ```sh
 srneos command exec --cdc1 CDC1_PATH --id 0x0100 --payload-hex "" --json
 srneos command exec --config srneos.toml --cdc1 CDC1_PATH --name app.read_version
 srneos command control --cdc1 CDC1_PATH --channel 1 --generation 1 \
   --deadline-us 50000 --payload-file command.bin
 srneos parameters list --cdc1 CDC1_PATH --json
-srneos parameters read --cdc1 CDC1_PATH --stable-id 0x1234 --save gain.json
-srneos parameters write --cdc1 CDC1_PATH --stable-id 0x1234 --value 1.5
+srneos parameters read --cdc1 CDC1_PATH --stable-id 0x1001 --save gain.json
+srneos parameters write --cdc1 CDC1_PATH --stable-id 0x1001 --value 1.5
 srneos parameters persist --cdc1 CDC1_PATH
 srneos parameters restore --cdc1 CDC1_PATH
 srneos parameters state --cdc1 CDC1_PATH

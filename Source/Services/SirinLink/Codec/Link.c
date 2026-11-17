@@ -11,6 +11,11 @@ enum {
     SRNOS_SIRIN_LINK_SLOT_DELIVERY_PENDING = 4u,
 };
 
+enum {
+    SRNOS_SIRIN_LINK_RESERVE_FULL = -1,
+    SRNOS_SIRIN_LINK_RESERVE_STALE = -2,
+};
+
 static const uint8_t k_rr_order[] = {
     SRNOS_SIRIN_LINK_QOS_RELIABLE,
     SRNOS_SIRIN_LINK_QOS_TELEMETRY,
@@ -147,16 +152,23 @@ static int reserve_slot(SRNOS_SirinLinkContext *link,
                         uint16_t key,
                         uint8_t service,
                         uint8_t message,
-                        bool *replaced, SRNOS_SirinLinkPolicy policy)
+                        bool *replaced, SRNOS_SirinLinkPolicy policy,
+                        uint8_t kind, const SRNOS_SirinLinkCorePublishGate *gate,
+                        uint64_t generation)
 {
-    int slot_index = -1;
+    int slot_index = SRNOS_SIRIN_LINK_RESERVE_FULL;
     *replaced = false;
     link_lock(link);
+    /* Recheck after caller-side payload encoding and before touching any slot. */
+    if (gate && (!gate->enabled || gate->generation != generation)) {
+        link_unlock(link);
+        return SRNOS_SIRIN_LINK_RESERVE_STALE;
+    }
     if (policy == SRNOS_SIRIN_LINK_FIFO) {
         unsigned count = 0;
         for (size_t i=0; i<SRNOS_SIRIN_LINK_TX_SLOT_COUNT; ++i)
             count += link->slots[i].state != SRNOS_SIRIN_LINK_SLOT_FREE && link->slots[i].policy == SRNOS_SIRIN_LINK_FIFO;
-        if (count >= SRNOS_SIRIN_LINK_FIFO_SLOT_LIMIT) { link_unlock(link); return -1; }
+        if (count >= SRNOS_SIRIN_LINK_FIFO_SLOT_LIMIT) { link_unlock(link); return SRNOS_SIRIN_LINK_RESERVE_FULL; }
     }
     if (policy == SRNOS_SIRIN_LINK_LATEST && ((qos == SRNOS_SIRIN_LINK_QOS_CONTROL) ||
         (qos == SRNOS_SIRIN_LINK_QOS_TELEMETRY))) {
@@ -197,13 +209,19 @@ static int reserve_slot(SRNOS_SirinLinkContext *link,
         link->stats.qos[qos].rejected++;
         link->stats.qos[qos].drop_new++;
         link_unlock(link);
-        return -1;
+        return SRNOS_SIRIN_LINK_RESERVE_FULL;
     }
     link->slots[slot_index].state = SRNOS_SIRIN_LINK_SLOT_BUILDING;
     link->slots[slot_index].policy = (uint8_t)policy;
     link->slots[slot_index].session = link->session;
     link->slots[slot_index].cancelled = 0;
     link->slots[slot_index].on_delivery = NULL;
+    /* Discard can identify an encoder-owned slot, but must never free it. */
+    link->slots[slot_index].qos = (uint8_t)qos;
+    link->slots[slot_index].key = key;
+    link->slots[slot_index].kind = kind;
+    link->slots[slot_index].service = service;
+    link->slots[slot_index].message = message;
     link_unlock(link);
     return slot_index;
 }
@@ -216,11 +234,14 @@ static bool finish_slot(SRNOS_SirinLinkContext *link,
                         uint8_t service,
                         uint8_t message,
                         size_t len,
-                        bool replaced)
+                        bool replaced, const SRNOS_SirinLinkCorePublishGate *gate,
+                        uint64_t generation)
 {
     link_lock(link);
     SRNOS_SirinLinkCoreTxSlot *slot = &link->slots[slot_index];
-    if(slot->session != link->session) {
+    if (slot->session != link->session || slot->cancelled ||
+        (gate && (!gate->enabled || gate->generation != generation))) {
+        /* The call has not accepted this record yet: no delivery callback. */
         slot->state=SRNOS_SIRIN_LINK_SLOT_FREE; slot->on_delivery=NULL;
         sync_depths(link); link_unlock(link); return false;
     }
@@ -261,7 +282,8 @@ static SRNOS_SirinLinkResult queue_protocol(SRNOS_SirinLinkContext *link,
                                         const uint8_t **frame_out,
                                         size_t *frame_len_out,
                                         SRNOS_SirinLinkPolicy policy,
-                                        SRNOS_SirinLinkDeliveryFn done, void *done_user, uint32_t tag)
+                                        SRNOS_SirinLinkDeliveryFn done, void *done_user, uint32_t tag,
+                                        const SRNOS_SirinLinkCorePublishGate *gate, uint64_t generation)
 {
     if ((link == NULL) || (link->initialized == 0u) ||
         (qos >= SRNOS_SIRIN_LINK_QOS_COUNT) ||
@@ -271,9 +293,10 @@ static SRNOS_SirinLinkResult queue_protocol(SRNOS_SirinLinkContext *link,
 
     bool replaced = false;
     const int slot_index = reserve_slot(link, qos, key, service, message,
-                                        &replaced, policy);
+                                        &replaced, policy, kind, gate, generation);
     if (slot_index < 0) {
-        return SRNOS_SIRIN_LINK_ERR_FULL;
+        return slot_index == SRNOS_SIRIN_LINK_RESERVE_STALE ?
+            SRNOS_SIRIN_LINK_ERR_BUSY : SRNOS_SIRIN_LINK_ERR_FULL;
     }
 
     const uint32_t start = link_cycles(link);
@@ -297,7 +320,7 @@ static SRNOS_SirinLinkResult queue_protocol(SRNOS_SirinLinkContext *link,
     }
     slot->on_delivery = done; slot->delivery_user = done_user; slot->tag = tag;
     if(!finish_slot(link, slot_index, qos, key, kind, service, message,
-                frame_len, replaced)) return SRNOS_SIRIN_LINK_ERR_BUSY;
+                frame_len, replaced, gate, generation)) return SRNOS_SIRIN_LINK_ERR_BUSY;
     return SRNOS_SIRIN_LINK_OK;
 }
 
@@ -307,7 +330,8 @@ static SRNOS_SirinLinkResult queue_encoded_replay(SRNOS_SirinLinkContext *link,
 {
     bool replaced = false;
     const int slot_index = reserve_slot(link, SRNOS_SIRIN_LINK_QOS_RELIABLE, 0u,
-                                        0u, 0u, &replaced, SRNOS_SIRIN_LINK_LATEST);
+                                        0u, 0u, &replaced, SRNOS_SIRIN_LINK_LATEST,
+                                        SRNOS_PROTOCOL_KIND_RESPONSE, NULL, 0);
     if (slot_index < 0) {
         return SRNOS_SIRIN_LINK_ERR_FULL;
     }
@@ -320,7 +344,7 @@ static SRNOS_SirinLinkResult queue_encoded_replay(SRNOS_SirinLinkContext *link,
                                SRNOS_PROTOCOL_FRAME_SLOT_SIZE),
         SRNOS_Memory_Bytes(frame, frame_len))) { cancel_slot(link,slot_index); return SRNOS_SIRIN_LINK_ERR_BUFFER; }
     if(!finish_slot(link, slot_index, SRNOS_SIRIN_LINK_QOS_RELIABLE, 0u,
-                SRNOS_PROTOCOL_KIND_RESPONSE, 0u, 0u, frame_len, replaced)) return SRNOS_SIRIN_LINK_ERR_BUSY;
+                SRNOS_PROTOCOL_KIND_RESPONSE, 0u, 0u, frame_len, replaced, NULL, 0)) return SRNOS_SIRIN_LINK_ERR_BUSY;
     return SRNOS_SIRIN_LINK_OK;
 }
 
@@ -473,7 +497,7 @@ static SRNOS_SirinLinkResult send_response_internal(SRNOS_SirinLinkContext *link
     }
     return queue_protocol(link,SRNOS_SIRIN_LINK_QOS_RELIABLE,0u,
         SRNOS_PROTOCOL_KIND_RESPONSE,flags,service,message,sequence,
-        link->response_payload,body_len+2u,NULL,NULL,SRNOS_SIRIN_LINK_LATEST,NULL,NULL,0);
+        link->response_payload,body_len+2u,NULL,NULL,SRNOS_SIRIN_LINK_LATEST,NULL,NULL,0,NULL,0);
 
 }
 
@@ -964,14 +988,15 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkCoreRegisterTxTopic(SRNOS_SirinLinkContext 
     return SRNOS_SIRIN_LINK_ERR_FULL;
 }
 
-SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublishEx(SRNOS_SirinLinkContext *link,
+SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublishGuarded(SRNOS_SirinLinkContext *link,
                                    uint8_t service,
                                    uint8_t message,
                                    uint16_t key,
                                    uint32_t sequence,
                                    const uint8_t *payload,
                                    size_t payload_len, SRNOS_SirinLinkPolicy policy,
-                                   SRNOS_SirinLinkDeliveryFn done, void *user, uint32_t tag)
+                                   SRNOS_SirinLinkDeliveryFn done, void *user, uint32_t tag,
+                                   const SRNOS_SirinLinkCorePublishGate *gate, uint64_t generation)
 {
     if ((policy != SRNOS_SIRIN_LINK_LATEST && policy != SRNOS_SIRIN_LINK_FIFO) ||
         (done && policy != SRNOS_SIRIN_LINK_FIFO)) return SRNOS_SIRIN_LINK_ERR_PARAM;
@@ -985,10 +1010,20 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublishEx(SRNOS_SirinLinkContext *link,
             return queue_protocol(link, (SRNOS_SirinLinkQos)topic->qos, key,
                                   SRNOS_PROTOCOL_KIND_EVENT, 0u,
                                   service, message, sequence,
-                                  payload, payload_len, NULL, NULL, policy, done, user, tag);
+                                  payload, payload_len, NULL, NULL, policy, done, user, tag,
+                                  gate, generation);
         }
     }
     return SRNOS_SIRIN_LINK_ERR_NOT_FOUND;
+}
+
+SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublishEx(SRNOS_SirinLinkContext *link,
+    uint8_t service, uint8_t message, uint16_t key, uint32_t sequence,
+    const uint8_t *payload, size_t length, SRNOS_SirinLinkPolicy policy,
+    SRNOS_SirinLinkDeliveryFn done, void *user, uint32_t tag)
+{
+    return SRNOS_SirinLinkCorePublishGuarded(link, service, message, key, sequence,
+        payload, length, policy, done, user, tag, NULL, 0);
 }
 
 SRNOS_SirinLinkResult SRNOS_SirinLinkCorePublish(SRNOS_SirinLinkContext *link, uint8_t service, uint8_t message,
@@ -1026,7 +1061,8 @@ size_t SRNOS_SirinLinkCoreDiscardStream(SRNOS_SirinLinkContext *link, uint8_t se
         SRNOS_SirinLinkCoreTxSlot *s=&link->slots[i];
         if(s->service!=service || s->message!=message || s->key!=key) continue;
         if(s->state==SRNOS_SIRIN_LINK_SLOT_QUEUED) { retire_slot(s,SRNOS_SIRIN_LINK_CANCELLED); ++count; }
-        else if(s->state==SRNOS_SIRIN_LINK_SLOT_IN_FLIGHT) s->cancelled=1;
+        else if(s->state==SRNOS_SIRIN_LINK_SLOT_IN_FLIGHT ||
+                s->state==SRNOS_SIRIN_LINK_SLOT_BUILDING) s->cancelled=1;
     }
     sync_depths(link); link_unlock(link); return count;
 }
@@ -1072,6 +1108,10 @@ size_t SRNOS_SirinLinkCoreDiscardTopic(SRNOS_SirinLinkContext *link,
             }
             retire_slot(slot,SRNOS_SIRIN_LINK_CANCELLED);
             discarded++;
+        } else if (slot->state == SRNOS_SIRIN_LINK_SLOT_BUILDING &&
+                   slot->kind == SRNOS_PROTOCOL_KIND_EVENT &&
+                   slot->service == service && slot->message == message) {
+            slot->cancelled = 1u;
         }
     }
     sync_depths(link);
@@ -1090,7 +1130,8 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkCoreSubmitLog(SRNOS_SirinLinkContext *link,
     }
     bool replaced = false;
     const int slot_index = reserve_slot(link, SRNOS_SIRIN_LINK_QOS_LOG, 0u,
-                                        0u, 0u, &replaced, SRNOS_SIRIN_LINK_LATEST);
+                                        0u, 0u, &replaced, SRNOS_SIRIN_LINK_LATEST,
+                                        0u, NULL, 0);
     if (slot_index < 0) {
         return SRNOS_SIRIN_LINK_ERR_FULL;
     }
@@ -1099,7 +1140,7 @@ SRNOS_SirinLinkResult SRNOS_SirinLinkCoreSubmitLog(SRNOS_SirinLinkContext *link,
                                SRNOS_PROTOCOL_FRAME_SLOT_SIZE),
         SRNOS_Memory_Bytes(line, len))) { cancel_slot(link,slot_index); return SRNOS_SIRIN_LINK_ERR_BUFFER; }
     if(!finish_slot(link, slot_index, SRNOS_SIRIN_LINK_QOS_LOG, 0u, 0u, 0u, 0u,
-                len, replaced)) return SRNOS_SIRIN_LINK_ERR_BUSY;
+                len, replaced, NULL, 0)) return SRNOS_SIRIN_LINK_ERR_BUSY;
     return SRNOS_SIRIN_LINK_OK;
 }
 

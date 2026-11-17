@@ -86,6 +86,7 @@ void DM4340::request_disable()
 
 void DM4340::set_mit_limits(float pmax_rad, float vmax_rad_s, float tmax_nm)
 {
+  const Detail::StateGuard guard;
   pmax_u32_.store(f32_to_u32(static_cast<float>(pmax_rad)), std::memory_order_relaxed);
   vmax_u32_.store(f32_to_u32(static_cast<float>(vmax_rad_s)), std::memory_order_relaxed);
   tmax_u32_.store(f32_to_u32(static_cast<float>(tmax_nm)), std::memory_order_relaxed);
@@ -93,6 +94,7 @@ void DM4340::set_mit_limits(float pmax_rad, float vmax_rad_s, float tmax_nm)
 
 void DM4340::set_mit_cmd(float pos_rad, float vel_rad_s, float kp, float kd, float torque_nm)
 {
+  const Detail::StateGuard guard;
   cmd_mit_pos_u32_.store(f32_to_u32(static_cast<float>(pos_rad)), std::memory_order_relaxed);
   cmd_mit_vel_u32_.store(f32_to_u32(static_cast<float>(vel_rad_s)), std::memory_order_relaxed);
   cmd_mit_kp_u32_.store(f32_to_u32(static_cast<float>(kp)), std::memory_order_relaxed);
@@ -103,36 +105,42 @@ void DM4340::set_mit_cmd(float pos_rad, float vel_rad_s, float kp, float kd, flo
 
 void DM4340::set_mit_pos_rad(float pos_rad)
 {
+  const Detail::StateGuard guard;
   cmd_mit_pos_u32_.store(f32_to_u32(static_cast<float>(pos_rad)), std::memory_order_relaxed);
   mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4340::set_mit_vel_rad_s(float vel_rad_s)
 {
+  const Detail::StateGuard guard;
   cmd_mit_vel_u32_.store(f32_to_u32(static_cast<float>(vel_rad_s)), std::memory_order_relaxed);
   mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4340::set_mit_kp(float kp)
 {
+  const Detail::StateGuard guard;
   cmd_mit_kp_u32_.store(f32_to_u32(static_cast<float>(kp)), std::memory_order_relaxed);
   mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4340::set_mit_kd(float kd)
 {
+  const Detail::StateGuard guard;
   cmd_mit_kd_u32_.store(f32_to_u32(static_cast<float>(kd)), std::memory_order_relaxed);
   mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4340::set_mit_torque_nm(float torque_nm)
 {
+  const Detail::StateGuard guard;
   cmd_mit_torque_u32_.store(f32_to_u32(static_cast<float>(torque_nm)), std::memory_order_relaxed);
   mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4340::set_posvel_cmd(float pos_rad, float vel_rad_s)
 {
+  const Detail::StateGuard guard;
   cmd_posvel_pos_u32_.store(f32_to_u32(static_cast<float>(pos_rad)), std::memory_order_relaxed);
   cmd_posvel_vel_u32_.store(f32_to_u32(static_cast<float>(vel_rad_s)), std::memory_order_relaxed);
 }
@@ -156,6 +164,7 @@ void DM4340::set_posvel_torque_cmd(float pos_rad, float vlim_rad_s, float ilimit
   if (i > 10000.0f) i = 10000.0f;
   uint16_t i_u16 = static_cast<uint16_t>(i + 0.5f);
 
+  const Detail::StateGuard guard;
   cmd_pvt_pos_u32_.store(f32_to_u32(static_cast<float>(pos_rad)), std::memory_order_relaxed);
   cmd_pvt_vlim_u16_.store(v_u16, std::memory_order_relaxed);
   cmd_pvt_ilim_u16_.store(i_u16, std::memory_order_relaxed);
@@ -198,9 +207,16 @@ void DM4340::onRxFeedback(const CANFrame& f, uint32_t now_ms)
     (static_cast<uint16_t>(d[4] & 0x0F) << 8) | d[5]
   );
 
-  const float pmax = u32_to_f32(pmax_u32_.load(std::memory_order_relaxed));
-  const float vmax = u32_to_f32(vmax_u32_.load(std::memory_order_relaxed));
-  const float tmax = u32_to_f32(tmax_u32_.load(std::memory_order_relaxed));
+  uint32_t pmax_bits, vmax_bits, tmax_bits;
+  {
+    const Detail::StateGuard guard;
+    pmax_bits = pmax_u32_.load(std::memory_order_relaxed);
+    vmax_bits = vmax_u32_.load(std::memory_order_relaxed);
+    tmax_bits = tmax_u32_.load(std::memory_order_relaxed);
+  }
+  const float pmax = u32_to_f32(pmax_bits);
+  const float vmax = u32_to_f32(vmax_bits);
+  const float tmax = u32_to_f32(tmax_bits);
 
   const uint16_t pos_u16 = static_cast<uint16_t>(pos_q16);
   const uint16_t vel_u12 = static_cast<uint16_t>(vel_q12) & 0x0FFFu;
@@ -244,7 +260,31 @@ bool DM4340::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
 {
   if (!sid || !out) return false;
 
-  const DM4340Mode m = mode();
+  struct Command {
+    DM4340Mode mode;
+    uint32_t pmax, vmax, tmax, pos, vel, kp, kd, torque;
+    uint32_t posvel_pos, posvel_vel, velocity, pvt_pos;
+    uint16_t pvt_vlim, pvt_ilim;
+  } command;
+  {
+    const Detail::StateGuard guard;
+    command = {mode(),
+      pmax_u32_.load(std::memory_order_relaxed),
+      vmax_u32_.load(std::memory_order_relaxed),
+      tmax_u32_.load(std::memory_order_relaxed),
+      cmd_mit_pos_u32_.load(std::memory_order_relaxed),
+      cmd_mit_vel_u32_.load(std::memory_order_relaxed),
+      cmd_mit_kp_u32_.load(std::memory_order_relaxed),
+      cmd_mit_kd_u32_.load(std::memory_order_relaxed),
+      cmd_mit_torque_u32_.load(std::memory_order_relaxed),
+      cmd_posvel_pos_u32_.load(std::memory_order_relaxed),
+      cmd_posvel_vel_u32_.load(std::memory_order_relaxed),
+      cmd_vel_u32_.load(std::memory_order_relaxed),
+      cmd_pvt_pos_u32_.load(std::memory_order_relaxed),
+      cmd_pvt_vlim_u16_.load(std::memory_order_relaxed),
+      cmd_pvt_ilim_u16_.load(std::memory_order_relaxed)};
+  }
+  const DM4340Mode m = command.mode;
   uint16_t base = 0x000u;
   switch (m) {
     case DM4340Mode::MIT:          base = 0x000u; break;
@@ -258,15 +298,15 @@ bool DM4340::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
   for (int i = 0; i < 8; ++i) out[i] = 0;
 
   if (m == DM4340Mode::MIT) {
-    const float pmax = u32_to_f32(pmax_u32_.load(std::memory_order_relaxed));
-    const float vmax = u32_to_f32(vmax_u32_.load(std::memory_order_relaxed));
-    const float tmax = u32_to_f32(tmax_u32_.load(std::memory_order_relaxed));
+    const float pmax = u32_to_f32(command.pmax);
+    const float vmax = u32_to_f32(command.vmax);
+    const float tmax = u32_to_f32(command.tmax);
 
-    const float p = u32_to_f32(cmd_mit_pos_u32_.load(std::memory_order_relaxed));
-    const float v = u32_to_f32(cmd_mit_vel_u32_.load(std::memory_order_relaxed));
-    const float kp = u32_to_f32(cmd_mit_kp_u32_.load(std::memory_order_relaxed));
-    const float kd = u32_to_f32(cmd_mit_kd_u32_.load(std::memory_order_relaxed));
-    const float tq = u32_to_f32(cmd_mit_torque_u32_.load(std::memory_order_relaxed));
+    const float p = u32_to_f32(command.pos);
+    const float v = u32_to_f32(command.vel);
+    const float kp = u32_to_f32(command.kp);
+    const float kd = u32_to_f32(command.kd);
+    const float tq = u32_to_f32(command.torque);
 
     const uint16_t p_u16 = float_to_uint(p, -pmax, +pmax, 16);
     const uint16_t v_u12 = float_to_uint(v, -vmax, +vmax, 12);
@@ -288,20 +328,20 @@ bool DM4340::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const
   }
 
   if (m == DM4340Mode::PosVel) {
-    wr_le_f32(&out[0], u32_to_f32(cmd_posvel_pos_u32_.load(std::memory_order_relaxed)));
-    wr_le_f32(&out[4], u32_to_f32(cmd_posvel_vel_u32_.load(std::memory_order_relaxed)));
+    wr_le_f32(&out[0], u32_to_f32(command.posvel_pos));
+    wr_le_f32(&out[4], u32_to_f32(command.posvel_vel));
     return true;
   }
 
   if (m == DM4340Mode::Velocity) {
-    wr_le_f32(&out[0], u32_to_f32(cmd_vel_u32_.load(std::memory_order_relaxed)));
+    wr_le_f32(&out[0], u32_to_f32(command.velocity));
     return true;
   }
 
   if (m == DM4340Mode::PosVelTorque) {
-    wr_le_f32(&out[0], u32_to_f32(cmd_pvt_pos_u32_.load(std::memory_order_relaxed)));
-    const uint16_t v_u16 = cmd_pvt_vlim_u16_.load(std::memory_order_relaxed);
-    const uint16_t i_u16 = cmd_pvt_ilim_u16_.load(std::memory_order_relaxed);
+    wr_le_f32(&out[0], u32_to_f32(command.pvt_pos));
+    const uint16_t v_u16 = command.pvt_vlim;
+    const uint16_t i_u16 = command.pvt_ilim;
     out[4] = static_cast<uint8_t>(v_u16 & 0xFFu);
     out[5] = static_cast<uint8_t>((v_u16 >> 8) & 0xFFu);
     out[6] = static_cast<uint8_t>(i_u16 & 0xFFu);
@@ -318,12 +358,18 @@ bool DM4340::exportPendingTxRaw8(uint16_t* sid, uint8_t out[8], uint8_t* cmd_tok
     return false;
   }
 
-  const uint8_t cmd = pending_cmd_.load(std::memory_order_acquire);
+  uint8_t cmd;
+  DM4340Mode selected_mode;
+  {
+      const Detail::StateGuard guard;
+      cmd = pending_cmd_.load(std::memory_order_acquire);
+      selected_mode = mode();
+  }
   if (!is_dm_mode_cmd(cmd)) {
     return false;
   }
 
-  *sid = static_cast<uint16_t>(dm4340_mode_base(mode()) + SRNOS_CANId);
+  *sid = static_cast<uint16_t>(dm4340_mode_base(selected_mode) + SRNOS_CANId);
   *cmd_token = cmd;
   for (uint8_t i = 0; i < 7u; ++i) {
     out[i] = 0xFFu;

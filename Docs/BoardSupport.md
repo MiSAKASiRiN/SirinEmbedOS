@@ -39,4 +39,4 @@ python3 Board/generate.py --dry-run
 
 DMA/BDMA buffer 的区域、对齐及 cache 规则属于板级合同；ITCM 软件上下文与 DTCM 堆不能作为通用 DMA 分配器。自定义 NOLOAD 段必须由早期启动显式初始化。修改向量、内存布局或 HAL callback 时检查最终 ELF/map。
 
-历史逐文件审查在 [文档 CHANGELOG](CHANGELOG.md)，旧路径映射在 [迁移索引](Migration/README.md)。原始来源与许可记录保持不变，历史路径不可直接作为新代码 include。
+板级变更和验证范围见 [文档 CHANGELOG](CHANGELOG.md)。

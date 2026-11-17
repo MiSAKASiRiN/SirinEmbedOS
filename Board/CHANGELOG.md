@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 2026-11-18：在 ST CMSIS 的 `ExitRun0Mode` 声明上将 Clang 排除在 GCC 的 `optimize("Os")` 属性分支之外。CubeMX 生成脚本对原声明补回同一判断。Minimal Debug 和 Release 完整构建中该警告均由 140 条降至 0 条，各自的可烧录镜像与修改前逐字节一致。C/C++ 的其他未知属性仍报警，ARM GCC 预处理保留原属性。已离线验证脚本处理 LF、CRLF、已修复及不同声明；未实际运行 CubeMX 或烧录。
+
 - 2026-10-25：移除未装配的 GCC/Newlib 三项模板；生成脚本仅在 CubeMX 和 I2C 检查均通过后按精确名单归档移除，保留生成前快照及失败现场。ST Arm Clang/Picolibc、Board 独立构建和 HAL/CMSIS 生成边界保持。离线流程测试、dry-run 与 Board Release 构建通过；未实际运行 CubeMX 或烧录。
 
 ## 2026-10-06 CAN1/3 板测
@@ -24,6 +26,6 @@
 ## 2026-09-28 板级支撑与生成流程
 
 - 支撑整理为 Support/System、IO、Devices、USB；指示器策略归服务，USB 准备和 MCP 默认配置收拢，蜂鸣器/WS2812 固定硬件宏私有化。保持时序、调度与内存合同；21 组主机、九个父项目目标及 Minimal/Board/EEPROMBringUp 构建通过，该项未生成、烧录或板测。
-- SystemMonitor 替代 Diagnostics 线程，接入 1 Hz ADC/任务统计和 HostLink 发布，默认取消扫栈。ADC3 五通道由 SystemMonitor 独占，板级 BDMA 适配使用 D3 专用 32 B 对齐缓冲，Support 持有完成/错误回调；IOC、生成 ADC 初始化、BDMA_Channel2 IRQ、Indicators 与链接脚本不变。迁移 `system_monitor_enabled`/`HostLinkPrepareEx` 合同，仅完成主机与构建检查。
+- SystemMonitor 替代 Diagnostics 线程，接入 1 Hz ADC/任务统计和 HostLink 发布，默认取消扫栈。ADC3 五通道由 SystemMonitor 独占，板级 BDMA 适配使用 D3 专用 32 B 对齐缓冲，Support 持有完成/错误回调；IOC、生成 ADC 初始化、BDMA_Channel2 IRQ、Indicators 与链接脚本不变。仅完成主机与构建检查。
 - 新增 `generate.py` 的 CubeMX 选择、超时、dry-run、Board 快照与日志流程。首次相对 IOC 路径调用失败且 Board 未变；改为带引号绝对路径后，从 `/tmp` 调用生成及检查通过，内容无变化。当前调用方法见 [Board 指南](README.md)。
 - CubeMX 6.18.1 实际生成返回退出码 0 和 `OK`，只更新 `Core/Src/i2c.c` 的 TIMING 为 `0x10C7182D`：PLL3R 60 MHz、400 kHz Fast mode、模拟滤波开启、数字滤波 0。407 个 USER CODE 区域及其余文件保留；Minimal Debug/Release、九个父项目构建和 IOC/生成代码/板级常量一致性检查通过，未烧录或接管板端调试会话。该记录不替代电气边沿和长期负载验收。

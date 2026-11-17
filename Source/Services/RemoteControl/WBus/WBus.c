@@ -1,4 +1,5 @@
 #include "SirinEmbedOS/Services/RemoteControl/WBus/WBus.h"
+#include "../remote_internal.h"
 #include <string.h>
 
 bool SRNOS_WBusDecode25(const uint8_t *frame, SRNOS_WBusDec *out)
@@ -62,14 +63,19 @@ size_t SRNOS_WBusFramerFeed(SRNOS_WBusFramer *f, const uint8_t *data,
     return count;
 }
 
+bool SRNOS_WBusSerialConfigValid(const SRNOS_SerialConfig *config)
+{
+    return config && config->mode == SRNOS_SERIAL_DUPLEX && config->rx_enabled &&
+        config->baud_rate == 100000 && config->data_bits == 8 && config->stop_bits == 2 &&
+        config->parity == SRNOS_SERIAL_PARITY_EVEN;
+}
+
 SRNOS_SerialStatus SRNOS_WBusInit(SRNOS_WBus *self, SRNOS_SerialChannel *channel)
 {
     if (!self || !channel) return SRNOS_SERIAL_ARGUMENT;
     if (self->channel) return SRNOS_SERIAL_STATE;
     const SRNOS_SerialConfig *cfg = SRNOS_SerialGetConfig(channel);
-    if (!cfg || cfg->mode != SRNOS_SERIAL_DUPLEX || !cfg->rx_enabled ||
-        cfg->baud_rate != 100000 || cfg->data_bits != 8 || cfg->stop_bits != 2 ||
-        cfg->parity != SRNOS_SERIAL_PARITY_EVEN) return SRNOS_SERIAL_ARGUMENT;
+    if (!SRNOS_WBusSerialConfigValid(cfg)) return SRNOS_SERIAL_ARGUMENT;
     SRNOS_SerialStatus result = SRNOS_SerialClaim(channel, self);
     if (result != SRNOS_SERIAL_OK) return result;
     memset(self, 0, sizeof(*self));

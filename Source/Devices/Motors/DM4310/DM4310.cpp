@@ -124,6 +124,7 @@ void DM4310::request_disable()
 
 void DM4310::set_mit_cmd(float pos_rad, float vel_rad_s, float kp, float kd, float torque_nm)
 {
+    const Detail::StateGuard guard;
     cmd_mit_pos_u32_.store(f2u(static_cast<float>(pos_rad)), std::memory_order_relaxed);
     cmd_mit_vel_u32_.store(f2u(static_cast<float>(vel_rad_s)), std::memory_order_relaxed);
     cmd_mit_kp_u32_.store(f2u(static_cast<float>(kp)), std::memory_order_relaxed);
@@ -134,30 +135,35 @@ void DM4310::set_mit_cmd(float pos_rad, float vel_rad_s, float kp, float kd, flo
 
 void DM4310::set_mit_pos_rad(float pos_rad)
 {
+    const Detail::StateGuard guard;
     cmd_mit_pos_u32_.store(f2u(static_cast<float>(pos_rad)), std::memory_order_relaxed);
     mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4310::set_mit_vel_rad_s(float vel_rad_s)
 {
+    const Detail::StateGuard guard;
     cmd_mit_vel_u32_.store(f2u(static_cast<float>(vel_rad_s)), std::memory_order_relaxed);
     mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4310::set_mit_kp(float kp)
 {
+    const Detail::StateGuard guard;
     cmd_mit_kp_u32_.store(f2u(static_cast<float>(kp)), std::memory_order_relaxed);
     mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4310::set_mit_kd(float kd)
 {
+    const Detail::StateGuard guard;
     cmd_mit_kd_u32_.store(f2u(static_cast<float>(kd)), std::memory_order_relaxed);
     mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
 
 void DM4310::set_mit_torque_nm(float torque_nm)
 {
+    const Detail::StateGuard guard;
     cmd_mit_torque_u32_.store(f2u(static_cast<float>(torque_nm)), std::memory_order_relaxed);
     mit_cmd_valid_.store(1u, std::memory_order_relaxed);
 }
@@ -220,26 +226,44 @@ bool DM4310::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const {
         return false;
     }
 
-    const DM4310Mode m = mode();
+    struct Command {
+        DM4310Mode mode;
+        bool mit_valid;
+        uint32_t pos, vel, kp, kd, torque, posvel_pos, posvel_vel;
+        int16_t raw_torque;
+    } command;
+    {
+        const Detail::StateGuard guard;
+        command = {mode(), mit_cmd_valid_.load(std::memory_order_relaxed) != 0,
+            cmd_mit_pos_u32_.load(std::memory_order_relaxed),
+            cmd_mit_vel_u32_.load(std::memory_order_relaxed),
+            cmd_mit_kp_u32_.load(std::memory_order_relaxed),
+            cmd_mit_kd_u32_.load(std::memory_order_relaxed),
+            cmd_mit_torque_u32_.load(std::memory_order_relaxed),
+            cmd_pos_f32_.load(std::memory_order_relaxed),
+            cmd_vel_f32_.load(std::memory_order_relaxed),
+            cmd_torque_raw_.load(std::memory_order_relaxed)};
+    }
+    const DM4310Mode m = command.mode;
     switch (m) {
         case DM4310Mode::MIT: {
             // ===== 1. Read command registers as "physical" values =====
-            const bool mit_valid = (mit_cmd_valid_.load(std::memory_order_relaxed) != 0);
+            const bool mit_valid = command.mit_valid;
             float pos;
             float vel;
             float kp;
             float kd;
             float torq;
             if (mit_valid) {
-                pos  = u2f(cmd_mit_pos_u32_.load(std::memory_order_relaxed));
-                vel  = u2f(cmd_mit_vel_u32_.load(std::memory_order_relaxed));
-                kp   = u2f(cmd_mit_kp_u32_.load(std::memory_order_relaxed));
-                kd   = u2f(cmd_mit_kd_u32_.load(std::memory_order_relaxed));
-                torq = u2f(cmd_mit_torque_u32_.load(std::memory_order_relaxed));
+                pos  = u2f(command.pos);
+                vel  = u2f(command.vel);
+                kp   = u2f(command.kp);
+                kd   = u2f(command.kd);
+                torq = u2f(command.torque);
             } else {
-                pos  = get_pos_cmd_rad();
-                vel  = get_vel_cmd_lim();
-                torq = static_cast<float>(cmd_torque_raw_.load(std::memory_order_relaxed));
+                pos  = u2f(command.posvel_pos);
+                vel  = u2f(command.posvel_vel);
+                torq = static_cast<float>(command.raw_torque);
                 kp   = 0.0f;
                 kd   = 0.0f;
             }
@@ -267,9 +291,8 @@ bool DM4310::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const {
 
         case DM4310Mode::PosVel: {
             // position + max velocity (both LE float)
-            // Modified to use get_pos_cmd_rad() / get_vel_cmd_lim() as requested
-            float p_rad = get_pos_cmd_rad();
-            float v_lim = get_vel_cmd_lim();
+            float p_rad = u2f(command.posvel_pos);
+            float v_lim = u2f(command.posvel_vel);
 
             wr_le_f32(&out[0], p_rad);
             wr_le_f32(&out[4], v_lim);
@@ -279,7 +302,7 @@ bool DM4310::exportTxRaw8(uint16_t* sid, uint8_t out[8]) const {
 
         case DM4310Mode::Velocity: {
             // Velocity mode usually takes velocity in D[0]-D[3]
-            float v = get_vel_cmd_lim();
+            float v = u2f(command.posvel_vel);
             wr_le_f32(&out[0], v);
             out[4] = out[5] = out[6] = out[7] = 0;
             *sid = static_cast<uint16_t>(0x200u + SRNOS_CANId);
@@ -299,12 +322,18 @@ bool DM4310::exportPendingTxRaw8(uint16_t* sid, uint8_t out[8], uint8_t* cmd_tok
         return false;
     }
 
-    const uint8_t cmd = pending_cmd_.load(std::memory_order_acquire);
+    uint8_t cmd;
+    DM4310Mode selected_mode;
+    {
+        const Detail::StateGuard guard;
+        cmd = pending_cmd_.load(std::memory_order_acquire);
+        selected_mode = mode();
+    }
     if (!is_dm_mode_cmd(cmd)) {
         return false;
     }
 
-    *sid = static_cast<uint16_t>(dm4310_mode_base(mode()) + SRNOS_CANId);
+    *sid = static_cast<uint16_t>(dm4310_mode_base(selected_mode) + SRNOS_CANId);
     *cmd_token = cmd;
     for (uint8_t i = 0; i < 7u; ++i) {
         out[i] = 0xFFu;

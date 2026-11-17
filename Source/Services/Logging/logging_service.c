@@ -5,6 +5,10 @@
 static bool prepared;
 static osThreadId_t worker;
 static SRNOS_LogConfig saved_config;
+bool SRNOS_LoggingSerialConfigValid(const SRNOS_SerialConfig *config)
+{
+    return config && config->tx_enabled;
+}
 bool SRNOS_LoggingPrepare(uint32_t mask, SRNOS_SerialChannel *uart)
 {
     if (prepared || osKernelGetState() == osKernelRunning) return false;
@@ -25,7 +29,7 @@ bool SRNOS_LoggingStart(void)
 {
     if (!prepared || worker != NULL) return false;
     if (!SRNOS_LogInitResources(&saved_config)) return false;
-    const osThreadAttr_t attr = { .name="SRNOS_Log", .stack_size=2048u, .priority=osPriorityLow };
+    const osThreadAttr_t attr = { .name="SRNOS_Log", .stack_size=SRNOS_LOG_WORKER_STACK_BYTES, .priority=osPriorityLow };
     worker = SRNOS_KernelThreadNew(SRNOS_LogTask, NULL, &attr);
     return worker != NULL;
 }
