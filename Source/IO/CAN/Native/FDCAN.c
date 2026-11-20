@@ -295,7 +295,11 @@ bool SRNOS_FDCANTryTx(uint8_t bus,
     if (length) memcpy(staged, payload, length);
     const uint8_t padded = (uint8_t)((length + 3u) & ~3u);
     if (padded > length) memset(staged + length, 0, padded - length);
-    if (HAL_FDCAN_AddMessageToTxFifoQ(h, (FDCAN_TxHeaderTypeDef*)tx_hdr, staged) == HAL_OK) {
+    FDCAN_TxHeaderTypeDef hal_header = *tx_hdr;
+    /* Router and rings use numeric DLC. CubeH7 encodes it at bit 0,
+     * CubeMP2 at bit 16. Convert only at the HAL boundary. */
+    hal_header.DataLength *= FDCAN_DLC_BYTES_1;
+    if (HAL_FDCAN_AddMessageToTxFifoQ(h, &hal_header, staged) == HAL_OK) {
         SRNOS_FDCANDiagnostics[bus-1].tx_ok_cnt++;
         return true;
     } else {
@@ -396,6 +400,7 @@ static void _rx_from_fifo(FDCAN_HandleTypeDef* h, uint8_t bus, uint32_t fifo) {
             ++SRNOS_FDCANDiagnostics[bus-1u].rx_error_cnt;
             break;
         }
+        dst->hdr.DataLength /= FDCAN_DLC_BYTES_1;
         ++SRNOS_FDCANDiagnostics[bus-1u].rx_isr_cnt;
         if(full) ++SRNOS_FDCANDiagnostics[bus-1u].rx_overrun_cnt;
         else {
@@ -483,22 +488,6 @@ void HAL_FDCAN_ErrorCallback(FDCAN_HandleTypeDef *h)
 
 /* ==== TX convenience wrappers (classic CAN, 0..8B, RTOS-free) ==== */
 
-// len -> DLC for classic CAN (0..8)
-static inline uint32_t _len_to_dlc_classic(uint8_t len) {
-    if (len > 8u) len = 8u;
-    switch (len) {
-        case 0:  return FDCAN_DLC_BYTES_0;
-        case 1:  return FDCAN_DLC_BYTES_1;
-        case 2:  return FDCAN_DLC_BYTES_2;
-        case 3:  return FDCAN_DLC_BYTES_3;
-        case 4:  return FDCAN_DLC_BYTES_4;
-        case 5:  return FDCAN_DLC_BYTES_5;
-        case 6:  return FDCAN_DLC_BYTES_6;
-        case 7:  return FDCAN_DLC_BYTES_7;
-        default: return FDCAN_DLC_BYTES_8;
-    }
-}
-
 bool SRNOS_FDCANTxPush(uint8_t bus, uint16_t std_id, const uint8_t* data, uint8_t len)
 {
     if (!SRNOS_CANControllerIsClassic(bus) || len > 8u || (!data && len)) return false;
@@ -507,7 +496,7 @@ bool SRNOS_FDCANTxPush(uint8_t bus, uint16_t std_id, const uint8_t* data, uint8_
     tx.Identifier          = std_id;
     tx.IdType              = FDCAN_STANDARD_ID;
     tx.TxFrameType         = FDCAN_DATA_FRAME;
-    tx.DataLength          = _len_to_dlc_classic(len);
+    tx.DataLength          = len;
     tx.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     tx.BitRateSwitch       = FDCAN_BRS_OFF;
     tx.FDFormat            = FDCAN_CLASSIC_CAN;
@@ -525,7 +514,7 @@ bool SRNOS_FDCANTxPushExt(uint8_t bus, uint32_t ext_id, const uint8_t* data, uin
     tx.Identifier          = (ext_id & 0x1FFFFFFFu);
     tx.IdType              = FDCAN_EXTENDED_ID;
     tx.TxFrameType         = FDCAN_DATA_FRAME;
-    tx.DataLength          = _len_to_dlc_classic(len);
+    tx.DataLength          = len;
     tx.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     tx.BitRateSwitch       = FDCAN_BRS_OFF;
     tx.FDFormat            = FDCAN_CLASSIC_CAN;

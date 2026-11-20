@@ -6,7 +6,7 @@
 #define SRNOS_FDCAN_H
 
 #pragma once
-#include "stm32h7xx_hal.h"
+#include "../Native/fdcan_hal.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>

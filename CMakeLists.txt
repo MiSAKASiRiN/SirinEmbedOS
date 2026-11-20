@@ -39,6 +39,16 @@ if(SIRINEMBEDOS_CONFIG_HEADER)
             SRNOS_CONFIG_HEADER="${SIRINEMBEDOS_CONFIG_HEADER}")
 endif()
 
+if(SIRINEMBEDOS_MP257_M0PLUS)
+    add_subdirectory(Board/MP257/CM0PLUS)
+    return()
+endif()
+
+if(SIRINEMBEDOS_MP257_M33)
+    add_subdirectory(Board/MP257)
+    return()
+endif()
+
 target_compile_definitions(sirinos_config INTERFACE SRNOS_MEMORY_SECTIONS=1)
 
 # Only SDK implementation objects consume the RTOS, HAL and DSP headers.

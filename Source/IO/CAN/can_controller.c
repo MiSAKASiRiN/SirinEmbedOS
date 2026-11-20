@@ -6,7 +6,10 @@
 #define SRNOS_CAN_DEFAULT_CONFIG { SRNOS_CAN_MODE_CLASSIC, 1000000u, 0u, false }
 static SRNOS_CANControllerConfig saved[SRNOS_CAN_CONTROLLER_COUNT] = {
     SRNOS_CAN_DEFAULT_CONFIG, SRNOS_CAN_DEFAULT_CONFIG,
-    SRNOS_CAN_DEFAULT_CONFIG, SRNOS_CAN_DEFAULT_CONFIG
+    SRNOS_CAN_DEFAULT_CONFIG,
+#if SRNOS_CAN_CONTROLLER_COUNT == 4
+    SRNOS_CAN_DEFAULT_CONFIG,
+#endif
 };
 static bool prepared;
 
@@ -17,6 +20,9 @@ static bool nominal_rate(uint32_t rate)
 bool SRNOS_CANControllerConfigValid(uint8_t channel, const SRNOS_CANControllerConfig *c)
 {
     if(channel<1u || channel>SRNOS_CAN_CONTROLLER_COUNT || !c || !nominal_rate(c->nominal_bitrate))return false;
+#ifdef SRNOS_MP257_M33
+    if(c->mode!=SRNOS_CAN_MODE_CLASSIC || c->nominal_bitrate!=1000000u)return false;
+#endif
     if(c->mode==SRNOS_CAN_MODE_CLASSIC)return !c->brs && c->data_bitrate==0u;
     if(c->mode!=SRNOS_CAN_MODE_FD)return false;
     if(!c->brs)return c->data_bitrate==c->nominal_bitrate;

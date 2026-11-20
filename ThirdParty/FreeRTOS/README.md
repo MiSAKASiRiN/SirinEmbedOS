@@ -1,5 +1,8 @@
 # FreeRTOS 来源、配置与使用边界
 
+MP257 M33 构建使用 STM32CubeMP2 V1.3.0 中 FreeRTOS V10.6.2 的 GCC/ARM_CM33_NTZ/non_secure port（MIT），其余内核源码继续取自本目录。[构建说明](../../Board/MP257/README.md)
+
+
 内核版本为 **10.6.2**，以 `Source/include/task.h` 为准。直接来源是参考工程 `h723vg-v2-prototype/Middlewares/Third_Party/FreeRTOS/Source/` 的本地快照，参考 HEAD 为 `4ae5428c6fb9447b12a79a5cc30a8f47334f8f11`。导入内容以 [SHA256SUMS](SHA256SUMS) 为准；参考 HEAD 不表示本地快照与上游 tag 逐字相同。
 
 上游：[FreeRTOS-Kernel](https://github.com/FreeRTOS/FreeRTOS-Kernel)、[CMSIS_5](https://github.com/ARM-software/CMSIS_5)。`CMSIS/Include/cmsis_os2.h` 与 `CMSIS/LICENSE.txt` 来自参考工程 `Drivers/CMSIS/`。内核保留 [MIT 许可证](Source/LICENSE)，CMSIS wrapper 保留源码版权声明与 [Apache-2.0 许可证](CMSIS/LICENSE.txt)。

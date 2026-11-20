@@ -7,7 +7,7 @@
 
 #include "FreeRTOS.h"
 #include "cmsis_os2.h"
-#include "stm32h7xx_hal.h"
+#include "../Native/fdcan_hal.h"
 #include "task.h"
 
 #include <cstddef>

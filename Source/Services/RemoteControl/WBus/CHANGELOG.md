@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — 2026-11-19
+
+- 将已有解码及流式组帧实现提取为独立编译单元，保留 H723 的 Serial 接口与协议行为，新增 M0+ RF206S 实帧验证。
+
 ## Unreleased — 2026-11-11 配置与资源合同
 
 - 提取模块私有纯串口校验供 SystemValidate 与 WBusInit 复用，要求普通 DUPLEX 通道，避免 UART7/RS485 配置预检通过后才在绑定阶段失败。

@@ -22,7 +22,7 @@ extern "C" {
 #define SRNOS_SYSTEM_MAX_THREADS 8u
 
 typedef struct {
-    /* Indices 0..3 map to CAN1..4. Only startup configuration; frozen after
+    /* Index zero maps to CAN1; count follows the board profile. Only startup configuration; frozen after
      * ApplicationConfigure/bind_channels. Default: Classic CAN at 1 Mbit/s. */
     SRNOS_CANControllerConfig can[SRNOS_CAN_CONTROLLER_COUNT];
     SRNOS_EthernetConfig ethernet;

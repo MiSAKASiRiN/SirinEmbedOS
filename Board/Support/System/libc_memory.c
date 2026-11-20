@@ -1,7 +1,7 @@
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "stm32h7xx.h"
+#include "device_internal.h"
 #include "System/libc_arena.h"
 
 extern unsigned char __srnos_libc_start[];

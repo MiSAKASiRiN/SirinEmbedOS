@@ -1,5 +1,8 @@
 # CAN 通路
 
+MP257 M33 目标支持 CAN1/2/3 Classic 1 Mbit/s，应用使用相同的订阅、adapter、one-shot 和统计接口。引脚和位时序见 [MP257](../../../Board/MP257/README.md)。
+
+
 Native/External 管理硬件收发，Router 管理 Classic 路由与 adapter，FD 管理独立的 FD 原始订阅与 one-shot 队列；三个 FDCAN handle、MCP 的 SPI/CS/INT 绑定与 GPIO EXTI 接线在 Board/Support/IO/can_board.cpp。硬件配置类型独立于 router context，MCP SPI 默认绑定共享同一配置。固定表之外无默认设备，显式 Attach 合同保持。
 
 ## 毫秒时间基准

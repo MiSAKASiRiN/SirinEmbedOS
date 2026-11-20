@@ -6,6 +6,8 @@
 
 [![流水线状态](https://git.omni-x.net/software/sirinembedos/sirinembedos/badges/main/pipeline.svg)](https://git.omni-x.net/software/sirinembedos/sirinembedos/-/pipelines?ref=main)
 
+ATK-DLMP257 的 Cortex-M33 入口提供 FreeRTOS、三路 Classic CAN 1 Mbit/s 及电机协议。构建与 Linux 启动步骤见 [MP257 板级指南](Board/MP257/README.md)。同板 Cortex-M0+ 的裸机 W.Bus 接收与 SSH 观测见 [M0+ 指南](Board/MP257/CM0PLUS/README.md)。三核快照协议、A35 读写命令和有效期见 [MP257 共享内存](Board/MP257/IPC/README.md)。
+
 ## 简介
 SirinEmbedOS是一个基于OmniCtrl系列机器人主控板（开源地址：[RMBBS](https://bbs.robomaster.com/article/1914397)）的开发SDK，提供了对FreeRTOS、总线、设备驱动和系统服务的管理。它支持四路CAN通信、串口通信、遥控、裁判系统、RS485通信以及通用输入快照和业务消息处理。SDK还提供了RM图传遥控器、WFLY W.BUS原始接收、LAN8720以太网通信、NOR黑匣子异步读回、传感器姿态与温控、日志记录和USB CDC通信等功能。
 

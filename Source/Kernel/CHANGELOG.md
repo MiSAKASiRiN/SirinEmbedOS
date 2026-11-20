@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — 2026-11-19
+
+- MP257 复用线程、同步、对象池、CMSIS-RTOS2 和 heap_5。新目标使用 Cortex-M33 port、SysTick 和 DDR 布局。已通过 remoteproc 运行周期任务。
+
+
 ## Unreleased — 2026-11-11 配置与资源合同
 
 - 串口角色列表仅负责占用冲突；协议纯校验同时用于系统预检和实际绑定，修正 W.Bus/UART7 模式不匹配未被预检拒绝的问题。UART 日志后端未选择时不再传入 log_port 通道。

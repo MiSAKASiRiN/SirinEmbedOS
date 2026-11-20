@@ -1,7 +1,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "stm32h7xx.h"
+#include "device_internal.h"
 #include <sys/lock.h>
 #include <stddef.h>
 

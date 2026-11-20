@@ -1,5 +1,8 @@
 # 内核与托管任务
 
+MP257 M33 目标沿用 Thread 和 Sync 实现、启动列表与应用对象池。M33 自行装配 Cortex-M33 port、时钟和 DDR heap。板级入口及支持范围见 [MP257](../../Board/MP257/README.md)。
+
+
 Kernel 在现有 FreeRTOS 10.6.2 / CMSIS-RTOS2 上管理线程生命周期、外层循环、等待和内部统计；第三方内核不修改。父项目包含 `SirinEmbedOS/Kernel/Thread.h`、`Sync.h`，通常不再调用原生 RTOS API。接口只公开 SirinOS 值句柄和类型，不借出 TCB、原生句柄或统计 hook。
 
 `System.h` 的 `SRNOS_SystemBootId()` 返回本次启动的非零随机 64 位标识；在 ApplicationConfigure 前由板级 RNG 生成，此后仅读取、不分配或访问硬件。复位重新生成，独立于 NTP、uptime 和设备身份，不用作认证；随机碰撞概率非零。内核启动前返回 0；RNG 连续三次有界初始化失败会阻止应用启动，不能退回固定标识冒充新启动。

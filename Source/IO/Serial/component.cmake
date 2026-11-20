@@ -13,6 +13,7 @@ set(SRNOS_SERIAL_SOURCES
   "${SIRINEMBEDOS_ROOT}/Source/Services/RemoteControl/VT03/VT03.c"
   "${SIRINEMBEDOS_ROOT}/Source/Services/RemoteControl/VT02/VT02.c"
   "${SIRINEMBEDOS_ROOT}/Source/Services/RemoteControl/WBus/WBus.c"
+  "${SIRINEMBEDOS_ROOT}/Source/Services/RemoteControl/WBus/wbus_framer.c"
   "${SIRINEMBEDOS_ROOT}/Source/Services/RemoteControl/remote_worker.c"
 )
 set(SRNOS_SERIAL_PRIVATE_INCLUDES "${SIRINEMBEDOS_ROOT}/Source/IO/Serial")

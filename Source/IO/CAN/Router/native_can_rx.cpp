@@ -5,7 +5,7 @@
 #include "../can_controller_internal.h"
 #include "../FD/can_fd_internal.h"
 #include "cmsis_os2.h"
-#include "stm32h7xx_hal.h"
+#include "../Native/fdcan_hal.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -22,7 +22,7 @@ static void route_rx_frame(SRNOS_CANChannel ch, const SRNOS_FDCANRxFrame *in)
     }
 
     const bool fd = SRNOS_CANControllerIsFD(ch);
-    /* The pinned HAL returns the unshifted 4-bit DLC. FDF is required even
+    /* The native ring carries the normalized four-bit DLC. FDF is required even
      * for 0..8-byte FD frames; never reinterpret them as a Classic protocol. */
     const uint8_t length = in->hdr.DataLength <= 15u ?
         SRNOS_CANFDDlcToLength((uint8_t)in->hdr.DataLength) : 0xffu;

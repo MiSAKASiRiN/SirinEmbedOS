@@ -1,0 +1,28 @@
+/dts-v1/;
+/plugin/;
+
+/* ATK-DLMP257B: J9-21 and the flash SO share PZ1. */
+&spi8 { status = "disabled"; };
+
+&gpioz {
+    w25q128-cs-hog {
+        gpio-hog;
+        gpios = <3 0>;
+        output-high;
+        line-name = "W25Q128-CS-high";
+    };
+};
+
+&pinctrl_z {
+    srnos_wbus_rx: wbus-rx-pins {
+        pins {
+            pinmux = <0x19107>; /* STM32_PINMUX('Z', 1, AF6), LPUART1_RX */
+            bias-pull-down;
+        };
+    };
+};
+
+&m0_rproc {
+    pinctrl-names = "default";
+    pinctrl-0 = <&srnos_wbus_rx>;
+};

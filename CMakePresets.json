@@ -14,12 +14,26 @@
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
     },
     {
+      "name": "MP257-M0Plus",
+      "inherits": "default",
+      "toolchainFile": "${sourceDir}/CMake/mp257-m0plus.cmake",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
+      "name": "MP257-M33",
+      "inherits": "default",
+      "toolchainFile": "${sourceDir}/CMake/mp257-m33.cmake",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
       "name": "Release",
       "inherits": "default",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     }
   ],
   "buildPresets": [
+    { "name": "MP257-M33", "configurePreset": "MP257-M33" },
+    { "name": "MP257-M0Plus", "configurePreset": "MP257-M0Plus" },
     { "name": "Debug", "configurePreset": "Debug" },
     { "name": "Release", "configurePreset": "Release" }
   ]

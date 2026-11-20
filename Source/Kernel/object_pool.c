@@ -2,7 +2,7 @@
 #include "SirinEmbedOS/Config.h"
 #include "SirinEmbedOS/Diagnostics/Time/Time.h"
 #include "semphr.h"
-#include "stm32h7xx.h"
+#include "device_internal.h"
 #include <string.h>
 #define SRNOS_POOL_BLOCK_BYTES 256u
 #define SRNOS_POOL_BLOCK_COUNT (SRNOS_APP_OBJECT_POOL_BYTES/SRNOS_POOL_BLOCK_BYTES)

@@ -1,7 +1,7 @@
 # Source arguments resolve relative to the caller, not the SDK directory.
 function(sirinos_add_firmware target)
     if(NOT ARGN)
-        message(FATAL_ERROR "sirinos_add_firmware requires sources implementing SRNOS_ApplicationMain")
+        message(FATAL_ERROR "sirinos_add_firmware requires application sources")
     endif()
     add_executable(${target} ${ARGN})
     target_link_libraries(${target} PRIVATE SirinEmbedOS::Platform)

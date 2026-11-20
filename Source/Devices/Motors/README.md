@@ -1,5 +1,8 @@
 # CAN 电机适配
 
+MP257 M33 目标使用同一组电机协议类，应用可绑定 CAN1、CAN2 或 CAN3。接口和协议字节布局与 H723 共用。[板级通道](../../../Board/MP257/README.md)
+
+
 C++17 父项目包含 `SirinEmbedOS/Devices/Motors/<型号>/<型号>.hpp`，全部类、状态和装配函数位于 `SRNOS::Devices`，例如 `SRNOS::Devices::DJI_C610 motor{1};`。支持的型号为 C610、C620、GM6020、达妙 DM4310、DM4340 V1.1、DM6006、DM8009P 和 LK8016E。达妙四款使用同一个 DM/DM.hpp 入口。
 
 反馈帧统一为 `SRNOS::Devices::CANFrame`，底层 POD 为 `SRNOS_CANDeviceFrame`；CAN router 使用自有 `SRNOS_CAN*` 公共接口。对象由父项目持有，注册后的生命周期须覆盖路由使用期。父项目明确选择设备、命令、发送周期和使能行为，包含本模块不会自行驱动电机。

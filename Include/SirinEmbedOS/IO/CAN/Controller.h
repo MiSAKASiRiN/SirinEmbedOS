@@ -5,7 +5,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#ifndef SRNOS_CAN_CONTROLLER_COUNT
 #define SRNOS_CAN_CONTROLLER_COUNT 4u
+#endif
 typedef enum {
     SRNOS_CAN_MODE_CLASSIC = 0,
     SRNOS_CAN_MODE_FD = 1
@@ -16,7 +18,8 @@ typedef struct {
     uint32_t data_bitrate;    /* Classic: 0. FD without BRS: nominal_bitrate. */
     bool brs;                /* Classic: false. TX policy fixed at startup; RX reports actual BRS. */
 } SRNOS_CANControllerConfig;
-/* Pure validation, channels 1..4. FD+BRS data rates: 500k, 1M, 2M, 4M, 5M,
+/* Pure validation, channels 1..SRNOS_CAN_CONTROLLER_COUNT. MP257 supports Classic 1M.
+ * H723 FD+BRS data rates: 500k, 1M, 2M, 4M, 5M,
  * 8M, at least nominal_bitrate. Physical transceiver capability is board-dependent. */
 bool SRNOS_CANControllerConfigValid(uint8_t channel, const SRNOS_CANControllerConfig *config);
 /* Frozen copy only; false before configuration freeze or for invalid arguments. */

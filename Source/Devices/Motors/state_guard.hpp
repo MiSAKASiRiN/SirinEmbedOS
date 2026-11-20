@@ -1,7 +1,7 @@
 #pragma once
 
 #include "FreeRTOS.h"
-#include "stm32h7xx.h"
+#include "device_internal.h"
 #include <cstdint>
 
 namespace SRNOS::Devices::Detail {

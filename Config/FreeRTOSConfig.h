@@ -16,7 +16,14 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 }
 #endif
 
+#ifdef SRNOS_MP257_M33
+#define CMSIS_device_header "stm32mp2xx.h"
+#define configENABLE_TRUSTZONE 0
+#define USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION 1
+#else
 #define CMSIS_device_header "stm32h7xx.h"
+#define USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION 0
+#endif
 #define configENABLE_FPU 1
 #define configENABLE_MPU 0
 #define configUSE_PREEMPTION 1
@@ -48,7 +55,9 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 #define configTIMER_TASK_PRIORITY 2
 #define configTIMER_QUEUE_LENGTH 10
 #define configTIMER_TASK_STACK_DEPTH 256
+#ifndef SRNOS_MP257_M33
 #define configGENERATE_RUN_TIME_STATS 1
+#endif
 #define configRUN_TIME_COUNTER_TYPE uint64_t
 #define configUSE_TRACE_FACILITY 1
 #define INCLUDE_xTaskGetIdleTaskHandle 1
@@ -89,7 +98,7 @@ __attribute__((noreturn)) void SRNOS_KernelFailure(const char *reason, const cha
 #define configASSERT(x) do { if (!(x)) SRNOS_KernelFailure(#x, __FILE__, __LINE__); } while (0)
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
-/* CMSIS-RTOS2 owns SysTick_Handler; TIM7 remains HAL's timebase. */
-#define USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION 0
+#ifndef SRNOS_MP257_M33
 #include "Diagnostics/Runtime/trace_internal.h"
+#endif
 #endif

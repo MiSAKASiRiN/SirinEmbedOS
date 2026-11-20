@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — 2026-11-19
+
+- MP257 提供三路 Classic 1 Mbit/s。Native 层在 HAL 边界转换 DLC，RX/TX worker 和路由共用，三路内部回环通过。
+
+
 ## Unreleased — CAN 时间基准修复
 
 - 2026-10-12：统一原生/外置 Classic/FD CAN 的回调、发送 TTL、适配器周期与重试到 `SRNOS_TimeMs()`，修复应用读取反馈年龄时混用 HAL 原点的问题；未绑定 backend 的截止点保持同域。公共函数签名和线程/内存布局不变。

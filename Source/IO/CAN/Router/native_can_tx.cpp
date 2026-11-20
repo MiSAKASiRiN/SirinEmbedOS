@@ -6,7 +6,7 @@
 #include "../can_controller_internal.h"
 #include "../FD/can_fd_internal.h"
 #include "cmsis_os2.h"
-#include "stm32h7xx_hal.h"
+#include "../Native/fdcan_hal.h"
 
 #include <cstdint>
 
