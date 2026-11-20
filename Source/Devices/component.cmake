@@ -25,8 +25,7 @@ set(SRNOS_DEVICES_SOURCES
     Source/Devices/MCP2518FD/SPIAdapter.c
     Source/Devices/Motors/C610/C610.cpp
     Source/Devices/Motors/C620/C620.cpp
-    Source/Devices/Motors/DM4310/DM4310.cpp
-    Source/Devices/Motors/DM4340/DM4340.cpp
+    Source/Devices/Motors/DM/DM.cpp
     Source/Devices/Motors/GM6020/GM6020.cpp
     Source/Devices/Motors/LK8016E/LK8016E.cpp
     Source/Devices/Buzzer/Buzzer.c
